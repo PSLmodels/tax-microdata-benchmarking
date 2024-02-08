@@ -30,13 +30,35 @@ class tc_MARS(TaxCalcVariableAlias):
             "WIDOW": 5,
         }
         return pd.Series(filing_status).map(CODE_MAP)
+    
+class tc_e00200p(TaxCalcVariableAlias):
+    def formula(tax_unit, period, parameters):
+        person = tax_unit.members
+        employment_income = person("employment_income", period)
+        is_tax_unit_head = person("is_tax_unit_head", period)
+        return tax_unit.sum(employment_income * is_tax_unit_head)
 
+class tc_e00200s(TaxCalcVariableAlias):
+    def formula(tax_unit, period, parameters):
+        person = tax_unit.members
+        employment_income = person("employment_income", period)
+        is_tax_unit_spouse = person("is_tax_unit_spouse", period)
+        return tax_unit.sum(employment_income * is_tax_unit_spouse)
+
+class tc_e00200(TaxCalcVariableAlias):
+    adds = [
+        "tc_e00200p",
+        "tc_e00200s",
+    ]
 
 class taxcalc_extension(Reform):
     def apply(self):
         self.add_variables(
             tc_RECID,
             tc_MARS,
+            tc_e00200p,
+            tc_e00200s,
+            tc_e00200,
         )
 
 
