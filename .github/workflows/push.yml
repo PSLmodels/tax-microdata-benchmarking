@@ -21,7 +21,15 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
-      - name: Install dependencies
-        run: make install
-      - name: Test the repo
-        run: make test
+      - name: Build container
+        run: docker build . -t ghcr.io/pslmodels/tax-microdata-benchmarking
+      - name: Log in to the Container registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build container
+        run: docker build . -t ghcr.io/pslmodels/tax-microdata-benchmarking
+      - name: Push container
+        run: docker push ghcr.io/pslmodels/tax-microdata-benchmarking
