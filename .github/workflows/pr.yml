@@ -23,7 +23,7 @@ jobs:
       - name: Test the repo
         run: make test
       - name: Log in to the Container registry
-        uses: docker/login-action
+        uses: docker/login-action@v1
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
