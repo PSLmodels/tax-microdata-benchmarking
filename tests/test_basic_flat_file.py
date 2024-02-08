@@ -1,5 +1,8 @@
 def test_flat_file_runs():
     import taxcalc as tc
+    from initial_flat_file.create_flat_file import create_flat_file
+
+    create_flat_file()
 
     input_data = tc.Records("tax_microdata.csv.gz")
     policy = tc.Policy()
