@@ -7,7 +7,7 @@ setup(
     install_requires=[
         "policyengine_us==0.631.0",
         "taxcalc==3.4.1",
-        "paramtools=0.18.1",
+        "paramtools==0.18.1",
         "pytest",
         "black",
     ],
