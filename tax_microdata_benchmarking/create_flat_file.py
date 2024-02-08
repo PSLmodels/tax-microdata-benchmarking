@@ -80,6 +80,8 @@ def create_flat_file():
 
     # Extra quality-control checks to do with different data types, nothing major
     df.e00200 = df.e00200p + df.e00200s
+    df.RECID = df.RECID.astype(int)
+    df.MARS = df.MARS.astype(int)
 
     df.to_csv("tax_microdata.csv.gz", index=False, compression="gzip")
 
