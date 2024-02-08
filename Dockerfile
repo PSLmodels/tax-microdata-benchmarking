@@ -1,4 +1,5 @@
-FROM python:3.10
+FROM python:3.9
 WORKDIR /app
 COPY . .
-RUN pip install .
+RUN make install
+RUN make test
