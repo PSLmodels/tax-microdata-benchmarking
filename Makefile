@@ -3,3 +3,6 @@ install:
 
 test:
 	pytest .
+
+format:
+	black . -l 79
