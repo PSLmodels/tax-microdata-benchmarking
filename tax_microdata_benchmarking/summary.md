@@ -2,7 +2,7 @@
 
 This file contains a summary of the Tax-Calculator microdata file. It is intended to be used as a reference for the Tax-Calculator microdata file.
 
-The flat file currently has 20 out of 68 (29%) columns in the Tax-Calculator CPS microdata file.
+The flat file currently has 38 out of 68 (56%) columns in the Tax-Calculator CPS microdata file.
 
 ## RECID
 
@@ -26,7 +26,7 @@ wages less pension contributions (spouse)
 
 ## e00200
 
-TaxCalc Variable Alias
+wages less pension contributions
 
 
 ## age_head
@@ -102,4 +102,94 @@ number of elderly dependents
 ## f2441
 
 CDCC-qualifying children
+
+
+## e00900p
+
+self-employment income
+
+
+## e00900s
+
+self-employment income (spouse)
+
+
+## e00900
+
+self-employment income
+
+
+## e02100p
+
+farm income
+
+
+## e02100s
+
+farm income (spouse)
+
+
+## e02100
+
+farm income
+
+
+## e01500p
+
+pension income
+
+
+## e01500s
+
+pension income (spouse)
+
+
+## e01500
+
+pension income
+
+
+## e00800p
+
+alimony income
+
+
+## e00800s
+
+alimony income (spouse)
+
+
+## e00800
+
+alimony income
+
+
+## e02400p
+
+social security income
+
+
+## e02400s
+
+social security income (spouse)
+
+
+## e02400
+
+social security income
+
+
+## e02300p
+
+unemployment compensation
+
+
+## e02300s
+
+unemployment compensation (spouse)
+
+
+## e02300
+
+unemployment compensation
 
