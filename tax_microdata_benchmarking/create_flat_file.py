@@ -342,7 +342,7 @@ class tc_e02300s(TaxCalcVariableAlias):
 
 class tc_e02300(TaxCalcVariableAlias):
     label = "unemployment compensation"
-    adds = ["tc_302300p", "tc_302300s"]
+    adds = ["tc_e02300p", "tc_e02300s"]
 
 
 class taxcalc_extension(Reform):
@@ -403,6 +403,12 @@ def create_flat_file():
 
     # Extra quality-control checks to do with different data types, nothing major
     df.e00200 = df.e00200p + df.e00200s
+    df.e00900 = df.e00900p + df.e00900s
+    df.e02100 = df.e02100p + df.e02100s
+    df.e01500 = df.e01500p + df.e01500s
+    df.e00800 = df.e00800p + df.e00800s
+    df.e02400 = df.e02400p + df.e02400s
+    df.e02300 = df.e02300p + df.e02300s
     df.RECID = df.RECID.astype(int)
     df.MARS = df.MARS.astype(int)
 
