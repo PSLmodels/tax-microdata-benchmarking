@@ -131,7 +131,66 @@ class tc_EIC(TaxCalcVariableAlias):
     label = "EITC-qualifying children"
 
     def formula(tax_unit, period, parameters):
-        return add(tax_unit, period, ["is_eitc_qualifying_child"])
+        return min_(
+            add(tax_unit, period, ["is_eitc_qualifying_child"]),
+            3,  # Must be capped in the data rather than the policy for Tax-Calculator
+        )
+
+
+class tc_nu18(TaxCalcVariableAlias):
+    label = "number of people under 18"
+
+    def formula(tax_unit, period, parameters):
+        person = tax_unit.members
+        age = person("age", period)
+        return tax_unit.sum(age < 18)
+
+
+class tc_n1820(TaxCalcVariableAlias):
+    label = "number of people 18-20"
+
+    def formula(tax_unit, period, parameters):
+        person = tax_unit.members
+        age = person("age", period)
+        return tax_unit.sum((age >= 18) & (age <= 20))
+
+
+class tc_nu13(TaxCalcVariableAlias):
+    label = "number of people under 13"
+
+    def formula(tax_unit, period, parameters):
+        person = tax_unit.members
+        age = person("age", period)
+        return tax_unit.sum(age < 13)
+
+
+class tc_nu06(TaxCalcVariableAlias):
+    label = "number of people under 6"
+
+    def formula(tax_unit, period, parameters):
+        person = tax_unit.members
+        age = person("age", period)
+        return tax_unit.sum(age < 6)
+
+
+class tc_n24(TaxCalcVariableAlias):
+    label = "number of people eligible for the CTC"
+    adds = ["ctc_qualifying_children"]
+
+
+class tc_elderly_dependents(TaxCalcVariableAlias):
+    label = "number of elderly dependents"
+
+    def formula(tax_unit, period, parameters):
+        person = tax_unit.members
+        age = person("age", period)
+        is_tax_unit_dependent = person("is_tax_unit_dependent", period)
+        return tax_unit.sum((age >= 65) * is_tax_unit_dependent)
+
+
+class tc_f2441(TaxCalcVariableAlias):
+    label = "CDCC-qualifying children"
+    adds = ["count_cdcc_eligible"]
 
 
 class taxcalc_extension(Reform):
@@ -150,6 +209,13 @@ class taxcalc_extension(Reform):
             tc_s006,
             tc_FLPDYR,
             tc_EIC,
+            tc_nu18,
+            tc_n1820,
+            tc_nu13,
+            tc_nu06,
+            tc_n24,
+            tc_elderly_dependents,
+            tc_f2441,
         )
 
 
