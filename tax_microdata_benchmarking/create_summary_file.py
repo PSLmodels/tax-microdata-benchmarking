@@ -20,7 +20,11 @@ for variable in variables.values():
 
 # Add 'The flat file currently has X out of Y (Z%) columns in the Tax-Calculator CPS microdata file'.
 
-summary_file += f"\nThe flat file currently has {len(added_columns)} out of 68 ({len(added_columns) / len(taxcalc_cps.columns):.0%}) columns in the Tax-Calculator CPS microdata file.\n"
+summary_file += f"\nThe flat file currently has {len(added_columns)} out of 68 ({len(added_columns) / len(taxcalc_cps.columns):.0%}) columns in the Tax-Calculator CPS microdata file.\n\n"
+missing_columns = [
+    column for column in taxcalc_cps.columns if column not in added_columns
+]
+summary_file += f"Missing columns: \n- " + "\n- ".join(missing_columns) + "\n"
 
 for variable in variables.values():
     if variable.name.startswith("tc_"):
