@@ -2,7 +2,7 @@
 
 This file contains a summary of the Tax-Calculator microdata file. It is intended to be used as a reference for the Tax-Calculator microdata file.
 
-The flat file currently has 58 out of 68 (85%) columns in the Tax-Calculator CPS microdata file.
+The flat file currently has 62 out of 68 (91%) columns in the Tax-Calculator CPS microdata file.
 
 Missing columns: 
 - mcare_ben
@@ -18,11 +18,7 @@ Missing columns:
 - other_ben
 - e19800
 - e20100
-- e03210
-- e03150
 - agi_bin
-- pencon_p
-- pencon_s
 
 ## RECID
 
@@ -312,4 +308,24 @@ child and dependent care expenses
 ## e17500
 
 medical and dental expenses
+
+
+## pencon_p
+
+pension contributions (filer)
+
+
+## pencon_s
+
+pension contributions (spouse)
+
+
+## e03150
+
+deductible IRA contributions
+
+
+## e03210
+
+student loan interest
 
