@@ -2,7 +2,27 @@
 
 This file contains a summary of the Tax-Calculator microdata file. It is intended to be used as a reference for the Tax-Calculator microdata file.
 
-The flat file currently has 38 out of 68 (56%) columns in the Tax-Calculator CPS microdata file.
+The flat file currently has 58 out of 68 (85%) columns in the Tax-Calculator CPS microdata file.
+
+Missing columns: 
+- mcare_ben
+- vet_ben
+- wic_ben
+- h_seq
+- a_lineno
+- ffpos
+- e20400
+- e03240
+- e19200
+- e18500
+- other_ben
+- e19800
+- e20100
+- e03210
+- e03150
+- agi_bin
+- pencon_p
+- pencon_s
 
 ## RECID
 
@@ -192,4 +212,104 @@ unemployment compensation (spouse)
 ## e02300
 
 unemployment compensation
+
+
+## XTOT
+
+total exemptions
+
+
+## ssi_ben
+
+SSI
+
+
+## mcaid_ben
+
+Medicaid
+
+
+## tanf_ben
+
+TANF
+
+
+## snap_ben
+
+SNAP
+
+
+## housing_ben
+
+housing subsidy
+
+
+## DSI
+
+dependent filer
+
+
+## n21
+
+number of people 21 or over
+
+
+## e00600
+
+ordinary dividends included in AGI
+
+
+## e18400
+
+State income tax
+
+
+## e00650
+
+qualified dividends
+
+
+## e00300
+
+taxable interest income
+
+
+## e00400
+
+tax-exempt interest income
+
+
+## e01700
+
+taxable pension income
+
+
+## e01100
+
+capital gains not on Sch. D
+
+
+## e01400
+
+taxable IRA distributions
+
+
+## e03300
+
+SEP, SIMPLE and qualified plan contributions
+
+
+## e03270
+
+self-employed health insurance deduction
+
+
+## e32800
+
+child and dependent care expenses
+
+
+## e17500
+
+medical and dental expenses
 

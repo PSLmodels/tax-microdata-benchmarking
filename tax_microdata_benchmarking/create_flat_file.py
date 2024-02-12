@@ -345,6 +345,114 @@ class tc_e02300(TaxCalcVariableAlias):
     adds = ["tc_e02300p", "tc_e02300s"]
 
 
+class tc_XTOT(TaxCalcVariableAlias):
+    label = "total exemptions"
+
+    def formula(tax_unit, period, parameters):
+        return tax_unit.nb_persons()
+
+
+class tc_ssi_ben(TaxCalcVariableAlias):
+    label = "SSI"
+    adds = ["ssi"]
+
+
+class tc_mcaid_ben(TaxCalcVariableAlias):
+    label = "Medicaid"
+    adds = ["medicaid"]
+
+
+class tc_tanf_ben(TaxCalcVariableAlias):
+    label = "TANF"
+    adds = ["tanf"]
+
+
+class tc_snap_ben(TaxCalcVariableAlias):
+    label = "SNAP"
+    adds = ["snap"]
+
+
+class tc_housing_ben(TaxCalcVariableAlias):
+    label = "housing subsidy"
+    adds = ["spm_unit_capped_housing_subsidy"]
+
+
+class tc_DSI(TaxCalcVariableAlias):
+    label = "dependent filer"
+
+    def formula(tax_unit, period, parameters):
+        return 0
+
+
+class tc_n21(TaxCalcVariableAlias):
+    label = "number of people 21 or over"
+
+    def formula(tax_unit, period, parameters):
+        person = tax_unit.members
+        age = person("age", period)
+        return tax_unit.sum(age >= 21)
+
+
+class tc_e00600(TaxCalcVariableAlias):
+    label = "ordinary dividends included in AGI"
+    adds = ["dividend_income"]
+
+
+class tc_e18400(TaxCalcVariableAlias):
+    label = "State income tax"
+    adds = ["state_income_tax"]
+
+
+class tc_e00650(TaxCalcVariableAlias):
+    label = "qualified dividends"
+    adds = ["qualified_dividend_income"]
+
+
+class tc_e00300(TaxCalcVariableAlias):
+    label = "taxable interest income"
+    adds = ["taxable_interest_income"]
+
+
+class tc_e00400(TaxCalcVariableAlias):
+    label = "tax-exempt interest income"
+    adds = ["tax_exempt_interest_income"]
+
+
+class tc_e01700(TaxCalcVariableAlias):
+    label = "taxable pension income"
+    adds = ["taxable_pension_income"]
+
+
+class tc_e01100(TaxCalcVariableAlias):
+    label = "capital gains not on Sch. D"
+    adds = ["non_sch_d_capital_gains"]
+
+
+class tc_e01400(TaxCalcVariableAlias):
+    label = "taxable IRA distributions"
+    adds = ["regular_ira_distributions"]
+
+
+class tc_e03300(TaxCalcVariableAlias):
+    label = "SEP, SIMPLE and qualified plan contributions"
+    adds = ["sep_simple_qualified_plan_contributions"]
+
+
+class tc_e03270(TaxCalcVariableAlias):
+    label = "self-employed health insurance deduction"
+    adds = ["self_employed_health_insurance_premiums"]
+
+
+class tc_e32800(TaxCalcVariableAlias):
+    label = "child and dependent care expenses"
+    adds = ["cdcc_relevant_expenses"]
+
+
+class tc_e17500(TaxCalcVariableAlias):
+    label = "medical and dental expenses"
+    adds = ["medical_expense"]
+
+
 class taxcalc_extension(Reform):
     def apply(self):
         self.add_variables(
@@ -386,6 +494,26 @@ class taxcalc_extension(Reform):
             tc_e02300p,
             tc_e02300s,
             tc_e02300,
+            tc_XTOT,
+            tc_ssi_ben,
+            tc_mcaid_ben,
+            tc_tanf_ben,
+            tc_snap_ben,
+            tc_housing_ben,
+            tc_DSI,
+            tc_n21,
+            tc_e00600,
+            tc_e18400,
+            tc_e00650,
+            tc_e00300,
+            tc_e00400,
+            tc_e01700,
+            tc_e01100,
+            tc_e01400,
+            tc_e03300,
+            tc_e03270,
+            tc_e32800,
+            tc_e17500,
         )
 
 
@@ -402,13 +530,18 @@ def create_flat_file():
             )
 
     # Extra quality-control checks to do with different data types, nothing major
-    df.e00200 = df.e00200p + df.e00200s
-    df.e00900 = df.e00900p + df.e00900s
-    df.e02100 = df.e02100p + df.e02100s
-    df.e01500 = df.e01500p + df.e01500s
-    df.e00800 = df.e00800p + df.e00800s
-    df.e02400 = df.e02400p + df.e02400s
-    df.e02300 = df.e02300p + df.e02300s
+    FILER_SUM_COLUMNS = [
+        "e00200",
+        "e00900",
+        "e02100",
+        "e01500",
+        "e00800",
+        "e02400",
+        "e02300",
+    ]
+    for column in FILER_SUM_COLUMNS:
+        df[column] = df[column + "p"] + df[column + "s"]
+
     df.RECID = df.RECID.astype(int)
     df.MARS = df.MARS.astype(int)
 
