@@ -1,0 +1,12 @@
+2524.85 2474.638 from_FY23-24_iitax_CBO_baselines_in_2023-05_report
+
+NOTE:in_2023_CBO_was_predicting_a_recession_in_the_near_term
+revenue,Individual_Income_Taxes,Individual_Income_Taxes,2023-05-01,FALSE,FALSE,2023,1,2524.85
+revenue,Individual_Income_Taxes,Individual_Income_Taxes,2023-05-01,FALSE,FALSE,2024,2,2474.638
+
+
+1562.308 1632.919 from_FY23-24_paytax_CBO_baselines_in_2023-05_report
+
+revenue,Payroll_Taxes,Payroll_Taxes,2023-05-01,FALSE,FALSE,2023,1,1562.308
+revenue,Payroll_Taxes,Payroll_Taxes,2023-05-01,FALSE,FALSE,2024,2,1632.919
+
