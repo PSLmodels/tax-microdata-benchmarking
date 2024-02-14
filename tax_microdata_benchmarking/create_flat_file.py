@@ -470,7 +470,7 @@ class tc_pencon_s(TaxCalcVariableAlias):
 
 class tc_e03150(TaxCalcVariableAlias):
     label = "deductible IRA contributions"
-    adds = ["ira_contributions"]
+    adds = ["traditional_ira_contributions"]
 
 
 class tc_e03210(TaxCalcVariableAlias):
@@ -538,8 +538,6 @@ class taxcalc_extension(Reform):
             tc_e03270,
             tc_e32800,
             tc_e17500,
-            tc_pencon_p,
-            tc_pencon_s,
             tc_e03150,
             tc_e03210,
         )
