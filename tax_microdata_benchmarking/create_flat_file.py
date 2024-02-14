@@ -576,6 +576,8 @@ def create_flat_file():
     for column in FILER_SUM_COLUMNS:
         df[column] = df[column + "p"] + df[column + "s"]
 
+    df.e01700 = np.minimum(df.e01700, df.e01500)
+
     df.RECID = df.RECID.astype(int)
     df.MARS = df.MARS.astype(int)
 
