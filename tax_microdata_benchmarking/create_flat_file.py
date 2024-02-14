@@ -430,12 +430,7 @@ class tc_e01100(TaxCalcVariableAlias):
 
 class tc_e01400(TaxCalcVariableAlias):
     label = "taxable IRA distributions"
-    adds = ["regular_ira_distributions"]
-
-
-class tc_e03300(TaxCalcVariableAlias):
-    label = "SEP, SIMPLE and qualified plan contributions"
-    adds = ["sep_simple_qualified_plan_contributions"]
+    adds = ["taxable_ira_distributions"]
 
 
 class tc_e03270(TaxCalcVariableAlias):
@@ -540,7 +535,6 @@ class taxcalc_extension(Reform):
             tc_e01700,
             tc_e01100,
             tc_e01400,
-            tc_e03300,
             tc_e03270,
             tc_e32800,
             tc_e17500,
