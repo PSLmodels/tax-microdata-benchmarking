@@ -2,7 +2,7 @@
 
 This file contains a summary of the Tax-Calculator microdata file. It is intended to be used as a reference for the Tax-Calculator microdata file.
 
-The flat file currently has 46 out of 68 (49%) columns in the Tax-Calculator CPS microdata file.
+The flat file currently has 46 out of 68 (49%) columns in the Tax-Calculator PUF microdata file.
 
 Missing columns: 
 - MIDR

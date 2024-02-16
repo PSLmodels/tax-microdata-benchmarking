@@ -34,7 +34,7 @@ for variable in variables.values():
             added_unnecessary_columns.append(tc_name)
 
 
-summary_file += f"\nThe flat file currently has {len(added_columns)} out of 68 ({len(added_columns) / len(tc_puf_variables):.0%}) columns in the Tax-Calculator CPS microdata file.\n\n"
+summary_file += f"\nThe flat file currently has {len(added_columns)} out of 68 ({len(added_columns) / len(tc_puf_variables):.0%}) columns in the Tax-Calculator PUF microdata file.\n\n"
 missing_columns = [
     column for column in tc_puf_variables if column not in added_columns
 ]
