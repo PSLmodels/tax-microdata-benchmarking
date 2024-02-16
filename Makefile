@@ -1,6 +1,5 @@
 install:
-	pip install uv
-	uv pip install -e .
+	pip install -e .
 
 test:
 	pytest .
@@ -10,5 +9,6 @@ format:
 
 flat-file:
 	python tax_microdata_benchmarking/create_flat_file.py
+	python tax_microdata_benchmarking/create_summary_file.py
 
 all: format test
