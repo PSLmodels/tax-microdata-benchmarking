@@ -1,5 +1,6 @@
 install:
-	pip install -e .
+	pip install uv
+	uv pip install -e .
 
 test:
 	pytest .
