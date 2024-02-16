@@ -2,23 +2,72 @@
 
 This file contains a summary of the Tax-Calculator microdata file. It is intended to be used as a reference for the Tax-Calculator microdata file.
 
-The flat file currently has 62 out of 68 (91%) columns in the Tax-Calculator CPS microdata file.
+The flat file currently has 46 out of 68 (49%) columns in the Tax-Calculator CPS microdata file.
 
 Missing columns: 
-- mcare_ben
-- vet_ben
-- wic_ben
-- h_seq
+- MIDR
 - a_lineno
-- ffpos
-- e20400
+- agi_bin
+- cmbtp
+- data_source
+- e00700
+- e01200
+- e02000
+- e03220
+- e03230
 - e03240
-- e19200
+- e03290
+- e03300
+- e03400
+- e03500
+- e07240
+- e07260
+- e07300
+- e07400
+- e07600
+- e09700
+- e09800
+- e09900
+- e11200
 - e18500
-- other_ben
+- e19200
 - e19800
 - e20100
-- agi_bin
+- e20400
+- e24515
+- e24518
+- e26270
+- e27200
+- e58990
+- e62900
+- e87521
+- e87530
+- f6251
+- ffpos
+- g20500
+- h_seq
+- k1bx14p
+- k1bx14s
+- p08000
+- p22250
+- p23250
+- pencon_p
+- pencon_s
+
+Extra, non-taxdata-PUF columns: 
+- e01500p
+- e01500s
+- e00800p
+- e00800s
+- e02400p
+- e02400s
+- e02300p
+- e02300s
+- ssi_ben
+- mcaid_ben
+- tanf_ben
+- snap_ben
+- housing_ben
 
 ## RECID
 
@@ -290,11 +339,6 @@ capital gains not on Sch. D
 taxable IRA distributions
 
 
-## e03300
-
-SEP, SIMPLE and qualified plan contributions
-
-
 ## e03270
 
 self-employed health insurance deduction
@@ -308,16 +352,6 @@ child and dependent care expenses
 ## e17500
 
 medical and dental expenses
-
-
-## pencon_p
-
-pension contributions (filer)
-
-
-## pencon_s
-
-pension contributions (spouse)
 
 
 ## e03150
