@@ -452,6 +452,7 @@ class tc_pencon_p(TaxCalcVariableAlias):
     label = "pension contributions (filer)"
 
     def formula(tax_unit, period, parameters):
+        return 0 # For now given definitions - should revisit and check how best to handle.
         person = tax_unit.members
         employment_income = person("pension_contributions", period)
         is_tax_unit_head = person("is_tax_unit_head", period)
@@ -462,6 +463,7 @@ class tc_pencon_s(TaxCalcVariableAlias):
     label = "pension contributions (spouse)"
 
     def formula(tax_unit, period, parameters):
+        return 0 # For now given definitions - should revisit and check how best to handle.
         person = tax_unit.members
         employment_income = person("pension_contributions", period)
         is_tax_unit_spouse = person("is_tax_unit_spouse", period)
@@ -538,6 +540,8 @@ class taxcalc_extension(Reform):
             tc_e03270,
             tc_e32800,
             tc_e17500,
+            tc_pencon_p,
+            tc_pencon_s,
             tc_e03150,
             tc_e03210,
         )
