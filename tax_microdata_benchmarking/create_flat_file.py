@@ -411,6 +411,21 @@ class tc_e03210(TaxCalcVariableAlias):
     adds = ["student_loan_interest"]
 
 
+class tc_p22250(TaxCalcVariableAlias):
+    label = "net short-term capital gains"
+    adds = ["short_term_capital_gains"]
+
+
+class tc_p23250(TaxCalcVariableAlias):
+    label = "net long-term capital gains"
+    adds = ["long_term_capital_gains"]
+
+
+class tc_wic_ben(TaxCalcVariableAlias):
+    label = "WIC"
+    adds = ["wic"]
+
+
 class taxcalc_extension(Reform):
     def apply(self):
         self.add_variables(
@@ -467,6 +482,9 @@ class taxcalc_extension(Reform):
             tc_pencon_s,
             tc_e03150,
             tc_e03210,
+            tc_p22250,
+            tc_p23250,
+            tc_wic_ben,
         )
 
 
