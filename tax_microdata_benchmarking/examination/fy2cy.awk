@@ -4,14 +4,16 @@
 #
 # USAGE:  awk -f fy2cy.awk INFILE
 #
-#   where each line of the space-delimited INFILE contains two consecutive
+#   where each line of the CSV-formatted INFILE contains two consecutive
 #   FY amounts followed by at least one field containing metadata.
 #   The returned amount is an estimate of the CY amount corresponding to
 #   the first FY amount plus the third field containing metadata.
-#   Note that all lines without three space-delimited fields are skipped
+#   Note that all lines without three comma-separated fields are skipped
 #   and can, therefore, be used for documentation.
 
 BEGIN {
+    # expects CSV-formatted INFILE
+    FS = ","
     # middle of subsequent FY Q1 is 0.625 years after the middle of prior FY
     frac = 0.625
 }

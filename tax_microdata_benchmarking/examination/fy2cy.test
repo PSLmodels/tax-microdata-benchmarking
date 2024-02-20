@@ -1,6 +1,6 @@
 fy2cy.awk testfile:
 
-2000 2100 two_fy_amounts
+2000,2100,two_fy_amounts
 
 Test execution: awk -f fy2cy.awk fy2cy.test
 Test results: "2025.0   two_fy_amounts"
