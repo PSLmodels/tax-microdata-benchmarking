@@ -1,0 +1,44 @@
+DATA SOURCE:
+Table 2b estimates from FY2024 report (updated March 2023)
+https://home.treasury.gov/policy-issues/tax-policy/tax-expenditures
+
+
+108.36,109.47,CTC CY23
+
+67,520 68,130 , Line 135:Child tax credit
+Footnote 13: In addition, the effect of the child tax credit on receipts has outlay effects of (in millions of dollars): ...; 2023 $40,840; 2024 $41,340;...
+
+
+62.48,66.93,EITC CY23
+
+2,700 3,010 , Line154:Earned income tax credit
+Footnote 14: In addition, the earned income tax credit on receipts has outlay effects of (in millions of dollars): ... 2023 $59,780; 2024 $63,920; ...
+
+
+
+31.35,31.73,SSBEN CY23
+
+31,350 31,730 , Line156:Exclusion of social security benefits: Social Security benefits for retired and disabled workers and spouses
+
+
+NIIT Tsy does not have a separate estimate for this item
+
+
+153.17,156.26,CGQD CY23
+
+34,830 36,440 , Line69:Treatment of qualified dividends
+118,340 119,820 Line70:Capital gains (except agriculture, timber, iron ore, and coal)
+
+
+50.23,50.77,QBID CY23
+
+50,230 50,770 , Line81:Allow 20-percent deduction to certain pass-through income
+
+
+54.84,47.28,ACA PTC CY23
+
+9,830 7,380 , Line128:Refundable Premium Assistance Tax Credit
+Footnote 11: In addition, the premium assistance credit provision has outlay effects (in millions of dollars) as follows: ... 2023 $45,010; 2024 $39,900; ...
+
+
+237,400 252,430 , Line123:Exclusion of employer contributions for medical insurance premiums and medical care(excludes effects on payroll tax receipts of FY23:149,18 and FY24:159,42)
