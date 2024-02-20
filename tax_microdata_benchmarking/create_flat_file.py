@@ -112,7 +112,6 @@ class tc_fips(TaxCalcVariableAlias):
         return tax_unit.household("state_fips", period)
 
 
-
 class tc_s006(TaxCalcVariableAlias):
     label = "tax unit weight"
 

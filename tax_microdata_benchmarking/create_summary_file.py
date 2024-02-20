@@ -12,7 +12,8 @@ with open(FOLDER / "taxcalc_variable_metadata.yaml") as file:
 
 tc_variables = taxcalc_variable_metadata["read"]
 tc_puf_variables = [
-    key for key, data in tc_variables.items()
+    key
+    for key, data in tc_variables.items()
     if "taxdata_puf" in data["availability"]
 ]
 
@@ -40,7 +41,11 @@ missing_columns = [
 ]
 summary_file += f"Missing columns: \n- " + "\n- ".join(missing_columns) + "\n"
 
-summary_file += f"\nExtra, non-taxdata-PUF columns: \n- " + "\n- ".join(added_unnecessary_columns) + "\n"
+summary_file += (
+    f"\nExtra, non-taxdata-PUF columns: \n- "
+    + "\n- ".join(added_unnecessary_columns)
+    + "\n"
+)
 
 for variable in variables.values():
     if variable.name.startswith("tc_"):
