@@ -2,7 +2,7 @@
 
 This file contains a summary of the Tax-Calculator microdata file. It is intended to be used as a reference for the Tax-Calculator microdata file.
 
-The flat file currently has 46 out of 68 (49%) columns in the Tax-Calculator PUF microdata file.
+The flat file currently has 48 out of 68 (51%) columns in the Tax-Calculator PUF microdata file.
 
 Missing columns: 
 - MIDR
@@ -51,8 +51,6 @@ Missing columns:
 - p08000
 - p22250
 - p23250
-- pencon_p
-- pencon_s
 
 Extra, non-taxdata-PUF columns: 
 - e01500p
@@ -352,6 +350,16 @@ child and dependent care expenses
 ## e17500
 
 medical and dental expenses
+
+
+## pencon_p
+
+pension contributions (filer)
+
+
+## pencon_s
+
+pension contributions (spouse)
 
 
 ## e03150
