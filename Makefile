@@ -7,5 +7,8 @@ test:
 format:
 	black . -l 79
 
-flat_file:
-	python initial_flat_file/create_flat_file.py
+flat-file:
+	python tax_microdata_benchmarking/create_flat_file.py
+	python tax_microdata_benchmarking/create_summary_file.py
+
+all: format test
