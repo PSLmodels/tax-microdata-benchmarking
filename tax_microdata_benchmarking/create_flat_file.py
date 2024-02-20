@@ -56,15 +56,6 @@ class tc_e00200s(TaxCalcVariableAlias):
         return tax_unit.sum(employment_income * is_tax_unit_spouse)
 
 
-class tc_e00200(TaxCalcVariableAlias):
-    label = "wages less pension contributions"
-
-    adds = [
-        "tc_e00200p",
-        "tc_e00200s",
-    ]
-
-
 class tc_age_head(TaxCalcVariableAlias):
     label = "age of head of tax unit"
 
@@ -242,104 +233,44 @@ class tc_e02100(TaxCalcVariableAlias):
     adds = ["tc_e02100p", "tc_e02100s"]
 
 
-class tc_e01500p(TaxCalcVariableAlias):
-    label = "pension income"
-
-    def formula(tax_unit, period, parameters):
-        person = tax_unit.members
-        pension_income = person("pension_income", period)
-        is_tax_unit_head = person("is_tax_unit_head", period)
-        return tax_unit.sum(pension_income * is_tax_unit_head)
-
-
-class tc_e01500s(TaxCalcVariableAlias):
-    label = "pension income (spouse)"
-
-    def formula(tax_unit, period, parameters):
-        person = tax_unit.members
-        pension_income = person("pension_income", period)
-        is_tax_unit_spouse = person("is_tax_unit_spouse", period)
-        return tax_unit.sum(pension_income * is_tax_unit_spouse)
-
-
 class tc_e01500(TaxCalcVariableAlias):
     label = "pension income"
-    adds = ["tc_e01500p", "tc_e01500s"]
-
-
-class tc_e00800p(TaxCalcVariableAlias):
-    label = "alimony income"
 
     def formula(tax_unit, period, parameters):
         person = tax_unit.members
-        alimony_income = person("alimony_income", period)
-        is_tax_unit_head = person("is_tax_unit_head", period)
-        return tax_unit.sum(alimony_income * is_tax_unit_head)
-
-
-class tc_e00800s(TaxCalcVariableAlias):
-    label = "alimony income (spouse)"
-
-    def formula(tax_unit, period, parameters):
-        person = tax_unit.members
-        alimony_income = person("alimony_income", period)
-        is_tax_unit_spouse = person("is_tax_unit_spouse", period)
-        return tax_unit.sum(alimony_income * is_tax_unit_spouse)
+        pension_income = person("pension_income", period)
+        is_tax_unit_dependent = person("is_tax_unit_dependent", period)
+        return tax_unit.sum(pension_income * ~is_tax_unit_dependent)
 
 
 class tc_e00800(TaxCalcVariableAlias):
     label = "alimony income"
-    adds = ["tc_e00800p", "tc_e00800s"]
-
-
-class tc_e02400p(TaxCalcVariableAlias):
-    label = "social security income"
 
     def formula(tax_unit, period, parameters):
         person = tax_unit.members
-        social_security_income = person("social_security", period)
-        is_tax_unit_head = person("is_tax_unit_head", period)
-        return tax_unit.sum(social_security_income * is_tax_unit_head)
-
-
-class tc_e02400s(TaxCalcVariableAlias):
-    label = "social security income (spouse)"
-
-    def formula(tax_unit, period, parameters):
-        person = tax_unit.members
-        social_security_income = person("social_security", period)
-        is_tax_unit_spouse = person("is_tax_unit_spouse", period)
-        return tax_unit.sum(social_security_income * is_tax_unit_spouse)
+        pension_income = person("alimony_income", period)
+        is_tax_unit_dependent = person("is_tax_unit_dependent", period)
+        return tax_unit.sum(pension_income * ~is_tax_unit_dependent)
 
 
 class tc_e02400(TaxCalcVariableAlias):
     label = "social security income"
-    adds = ["tc_e02400p", "tc_e02400s"]
-
-
-class tc_e02300p(TaxCalcVariableAlias):
-    label = "unemployment compensation"
 
     def formula(tax_unit, period, parameters):
         person = tax_unit.members
-        unemployment_compensation = person("unemployment_compensation", period)
-        is_tax_unit_head = person("is_tax_unit_head", period)
-        return tax_unit.sum(unemployment_compensation * is_tax_unit_head)
-
-
-class tc_e02300s(TaxCalcVariableAlias):
-    label = "unemployment compensation (spouse)"
-
-    def formula(tax_unit, period, parameters):
-        person = tax_unit.members
-        unemployment_compensation = person("unemployment_compensation", period)
-        is_tax_unit_spouse = person("is_tax_unit_spouse", period)
-        return tax_unit.sum(unemployment_compensation * is_tax_unit_spouse)
+        pension_income = person("social_security", period)
+        is_tax_unit_dependent = person("is_tax_unit_dependent", period)
+        return tax_unit.sum(pension_income * ~is_tax_unit_dependent)
 
 
 class tc_e02300(TaxCalcVariableAlias):
     label = "unemployment compensation"
-    adds = ["tc_e02300p", "tc_e02300s"]
+
+    def formula(tax_unit, period, parameters):
+        person = tax_unit.members
+        pension_income = person("unemployment_compensation", period)
+        is_tax_unit_dependent = person("is_tax_unit_dependent", period)
+        return tax_unit.sum(pension_income * ~is_tax_unit_dependent)
 
 
 class tc_XTOT(TaxCalcVariableAlias):
@@ -504,17 +435,9 @@ class taxcalc_extension(Reform):
             tc_e02100p,
             tc_e02100s,
             tc_e02100,
-            tc_e01500p,
-            tc_e01500s,
             tc_e01500,
-            tc_e00800p,
-            tc_e00800s,
             tc_e00800,
-            tc_e02400p,
-            tc_e02400s,
             tc_e02400,
-            tc_e02300p,
-            tc_e02300s,
             tc_e02300,
             tc_XTOT,
             tc_ssi_ben,
@@ -559,10 +482,6 @@ def create_flat_file():
         "e00200",
         "e00900",
         "e02100",
-        "e01500",
-        "e00800",
-        "e02400",
-        "e02300",
     ]
     for column in FILER_SUM_COLUMNS:
         df[column] = df[column + "p"] + df[column + "s"]
