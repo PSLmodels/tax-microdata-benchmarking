@@ -56,6 +56,11 @@ class tc_e00200s(TaxCalcVariableAlias):
         return tax_unit.sum(employment_income * is_tax_unit_spouse)
 
 
+class tc_e00200(TaxCalcVariableAlias):
+    label = "wages less pension contributions"
+    adds = ["tc_e00200p", "tc_e00200s"]
+
+
 class tc_age_head(TaxCalcVariableAlias):
     label = "age of head of tax unit"
 
