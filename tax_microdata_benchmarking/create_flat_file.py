@@ -112,14 +112,12 @@ class tc_fips(TaxCalcVariableAlias):
         return tax_unit.household("state_fips", period)
 
 
-# h_seq, a_lineno, ffpos skipped, just ID variables (household, person, family)
-
 
 class tc_s006(TaxCalcVariableAlias):
     label = "tax unit weight"
 
     def formula(tax_unit, period, parameters):
-        return tax_unit("tax_unit_weight", period)
+        return tax_unit.household("household_weight", period)
 
 
 class tc_FLPDYR(TaxCalcVariableAlias):
@@ -452,9 +450,8 @@ class tc_pencon_p(TaxCalcVariableAlias):
     label = "pension contributions (filer)"
 
     def formula(tax_unit, period, parameters):
-        return 0 # For now given definitions - should revisit and check how best to handle.
         person = tax_unit.members
-        employment_income = person("pension_contributions", period)
+        employment_income = person("pre_tax_contributions", period)
         is_tax_unit_head = person("is_tax_unit_head", period)
         return tax_unit.sum(employment_income * is_tax_unit_head)
 
@@ -463,9 +460,8 @@ class tc_pencon_s(TaxCalcVariableAlias):
     label = "pension contributions (spouse)"
 
     def formula(tax_unit, period, parameters):
-        return 0 # For now given definitions - should revisit and check how best to handle.
         person = tax_unit.members
-        employment_income = person("pension_contributions", period)
+        employment_income = person("pre_tax_contributions", period)
         is_tax_unit_spouse = person("is_tax_unit_spouse", period)
         return tax_unit.sum(employment_income * is_tax_unit_spouse)
 
@@ -555,7 +551,7 @@ def create_flat_file():
 
     for variable in sim.tax_benefit_system.variables:
         if variable.startswith("tc_"):
-            df[variable[3:]] = sim.calculate(variable).values.astype(
+            df[variable[3:]] = sim.calculate(variable, 2024).values.astype(
                 np.float64
             )
 
@@ -577,7 +573,7 @@ def create_flat_file():
     df.RECID = df.RECID.astype(int)
     df.MARS = df.MARS.astype(int)
 
-    print(f"Completed data generation for {len(df.columns)}/68 variables.")
+    print(f"Completed data generation for {len(df.columns)} variables.")
 
     df.to_csv("tax_microdata.csv.gz", index=False, compression="gzip")
 
