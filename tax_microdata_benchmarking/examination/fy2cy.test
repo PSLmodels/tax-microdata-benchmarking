@@ -1,8 +1,7 @@
-fy2cy.awk testfile:
+fy23amt,fy24amt,cy23label,metadata
+,,,"fy2cy.awk testfile:"
 
-2000,2100,two_fy_amounts
+2000,2100,cy amount from two fy amounts,
 
-Test execution: awk -f fy2cy.awk fy2cy.test
-Test results: "2025.0   two_fy_amounts"
-
-
+,,,"Test execution: awk -f fy2cy.awk fy2cy.test"
+,,,"Test results: '2025.0   cy amount from two fy amounts'"

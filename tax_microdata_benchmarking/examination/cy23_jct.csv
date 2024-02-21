@@ -1,39 +1,39 @@
-DATA SOURCE:
-Table 1 estimates from JCX-59-23 (December 07, 2023)
-https://www.jct.gov/publications/2023/jcx-59-23/
+,,,"DATA SOURCE:"
+,,,"Table 1 estimates from JCX-59-23 (December 07, 2023)"
+,,,"https://www.jct.gov/publications/2023/jcx-59-23/"
 
 
-122.2,121.9,CTC CY23
+122.2,121.9,CTC CY23,
 
-122.2 121.9:Credit for children and other dependents(p.36)
-
-
-71.2,74.1,EITC CY23
-
-71.2 74.1:Earned income credit(p.37)
+,,,"122.2 121.9:Credit for children and other dependents(p.36)"
 
 
-45.3,47.7,SSBEN CY23
+71.2,74.1,EITC CY23,
 
-45.3 47.7:Exclusion of untaxed Social Security and railroad retirement benefits(p.38)
-
-
--57.3,-54.2,NIIT CY23
-
--57.3 -54.2:Surtax on net investment income(p.33)
+,,,"71.2 74.1:Earned income credit(p.37)"
 
 
-265.1,241.9,CGQD CY23
+45.3,47.7,SSBEN CY23,
 
-265.1 241.9:Reduced rates of tax on dividends and long-term capital gains(p.31)
-
-
-55.7,57.6,QBID CY23
-
-55.7 57.6:20-percent deduction for qualified business income(p.32)
+,,,"45.3 47.7:Exclusion of untaxed Social Security and railroad retirement benefits(p.38)"
 
 
-79.8,96.1,ACA PTC CY23
+-57.3,-54.2,NIIT CY23,
 
-79.8 96.1:Subsidies for insurance purchased through health benefit exchanges(p.36)
+,,,"-57.3 -54.2:Surtax on net investment income(p.33)"
+
+
+265.1,241.9,CGQD CY23,
+
+,,,"265.1 241.9:Reduced rates of tax on dividends and long-term capital gains(p.31)"
+
+
+55.7,57.6,QBID CY23,
+
+,,,"55.7 57.6:20-percent deduction for qualified business income(p.32)"
+
+
+79.8,96.1,ACA PTC CY23,
+
+,,,"79.8 96.1:Subsidies for insurance purchased through health benefit exchanges(p.36)"
 

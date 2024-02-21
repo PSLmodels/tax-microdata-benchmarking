@@ -1,14 +1,15 @@
-DATA SOURCE:
-https://github.com/US-CBO/eval-projections/blob/main/input_data/baselines.csv
+fy23amt,fy24amt,cy23label,metadata
+,,,"DATA SOURCE:"
+,,,"https://github.com/US-CBO/eval-projections/blob/main/input_data/baselines.csv"
 
 
-2524.85,2474.638,from FY23-24 iitax CBO baselines in 2023-05 report
+2524.85,2474.638,from FY23-24 iitax CBO baselines in 2023-05 report,
 
-revenue,Individual Income Taxes,Individual Income Taxes,2023-05-01,FALSE,FALSE,2023,1,2524.85
-revenue,Individual Income Taxes,Individual Income Taxes,2023-05-01,FALSE,FALSE,2024,2,2474.638
+,,,"revenue,Individual Income Taxes,Individual Income Taxes,2023-05-01,FALSE,FALSE,2023,1,2524.85"
+,,,"revenue,Individual Income Taxes,Individual Income Taxes,2023-05-01,FALSE,FALSE,2024,2,2474.638"
 
 
-1562.308,1632.919,from FY23-24 paytax CBO baselines in 2023-05 report
+1562.308,1632.919,from FY23-24 paytax CBO baselines in 2023-05 report,
 
-revenue,Payroll Taxes,Payroll Taxes,2023-05-01,FALSE,FALSE,2023,1,1562.308
-revenue,Payroll Taxes,Payroll Taxes,2023-05-01,FALSE,FALSE,2024,2,1632.919
+,,,"revenue,Payroll Taxes,Payroll Taxes,2023-05-01,FALSE,FALSE,2023,1,1562.308"
+,,,"revenue,Payroll Taxes,Payroll Taxes,2023-05-01,FALSE,FALSE,2024,2,1632.919"
