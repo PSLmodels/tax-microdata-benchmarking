@@ -1,0 +1,5 @@
+// Eliminate lower tax rates on LTCG & qualified dividends beginning in CY2015
+// (tax capgains and qualdivid at normal income tax rates)
+{
+    "CG_nodiff": {"2015": true}
+}
