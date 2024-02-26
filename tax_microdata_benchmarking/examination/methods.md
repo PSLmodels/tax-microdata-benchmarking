@@ -5,7 +5,7 @@ This document describes the methods used to compare model-plus-dataset
 estimates of basic federal tax amounts against corresponding federal
 agency estimates.
 
-The basic calendar year 2023 tax amounts that are compared include:
+The basic calendar year 2023 tax amounts that will be compared include:
 * **Payroll Tax Liability** (federal employee plus employer share)
 * **Individual Income Tax Liability** (federal individual income tax)
 * **CTC Tax Expenditure** (from the federal child tax credit)
@@ -28,12 +28,12 @@ simple linear interpolation and linear extrapolation of the two fiscal
 year estimate to produce a calendar year estimate.  This linear
 adjustment is done by the [fy2cy.awk]() script using as input one of
 three files containing estimates for fiscal years 2023 and 2024:
-[cy23_cbo.txt](./cy23_cbo.txt), [cy23_jct.txt](./cy23_jct.txt), or
-[cy23_tsy.txt](./cy23_tsy.txt).  These three `.txt` files contain
+[cy23_cbo.csv](./cy23_cbo.csv), [cy23_jct.csv](./cy23_jct.csv), or
+[cy23_tsy.csv](./cy23_tsy.csv).  These three `.csv` files contain
 detailed information about the source of the federal agency estimates.
 
-Model-plus-Dataset Estimates
-----------------------------
+Model-plus-Dataset Estimates for Phase 1
+----------------------------------------
 
 In the first phase of this project, the
 [Tax-Calculator](https://github.com/PSLmodels/Tax-Calculator)
@@ -47,26 +47,27 @@ repository](https://github.com/PSLmodels/taxdata).  It contains 2011
 TSY SOI PUF data, supplemented with CPS data, that is extrapolated to
 calendar year 2023.
 
-The second, which is called the `phase 1 dataset`, is an CSV-formatted
+The second, which is called the `phase 1 dataset`, is a CSV-formatted
 version of the hierarchical dataset created for the
 [Policyengine-US](https://github.com/PolicyEngine) microsimulation
 model.  It contains 2022 CPS data, enhanced with 2015 TSY SOI PUF
-data, that is extrapolated to calendar year 2023.
+data, that is extrapolated to calendar year 2023.  (Subsequent phases
+of this project will develop other datasets.)
 
 In both these input dataset cases, the same procedure is used to
 estimate the amounts corresponding to the federal agency estimates.
 This procedure involves using the Tax-Calculator's
 command-line-interface tool,
 [`tc`](https://taxcalc.pslmodels.org/guide/cli.html).  The payroll and
-individual income tax liabilities are estimated without using the `tc`
-`--reform` option so as to produce estimates for 2023 baseline tax
-policy.  Each tax expenditure estimate is generated using a simple
-reform that negates that feature of baseline tax policy.  The several
-`tc` runs are collected into a single shell script called
-[`runs.sh`](./taxcalculator/runs.sh), which in turn calls the
-[`execute.sh`](./taxcalculator/execute.sh) script for each run.  The
-simple tax expenditure reforms are included in the following JSON
-files:
+individual income tax liabilities are estimated using the
+[`clp.json`](./taxcalculator/clp.json) null reform to produce
+estimates for 2023 baseline tax policy.  Each tax expenditure estimate
+is generated using a simple reform that negates that feature of
+baseline tax policy.  The several `tc` runs are collected into a
+single shell script called [`runs.sh`](./taxcalculator/runs.sh), which
+in turn calls the [`execute.sh`](./taxcalculator/execute.sh) script
+for each run.  The simple tax expenditure reforms are included in the
+following JSON files:
 
 * **CTC Tax Expenditure**: [`ctc.json`](./taxcalculator/ctc.json)
 * **EITC Tax Expenditure**: [`eitc.json`](./taxcalculator/eitc.json)
@@ -75,5 +76,11 @@ files:
 * **CGQD Tax Expenditure**: [`cgqd.json`](./taxcalculator/cgqd.json)
 * **QBID Tax Expenditure**: [`qbid.json`](./taxcalculator/qbid.json)
 
-Tax-Calculator contains no logic to estimate the ACA premium tax
-credit, so there is no `ptc.json` reform file.
+Tax-Calculator is being used as the model in phase 1, but that model
+contains no logic to estimate the ACA premium tax credit, so there is
+no `ptc.json` reform file.
+
+Model-plus-Dataset Estimates for Phase 2
+----------------------------------------
+
+*Text to be added during phase 2 of the project.*
