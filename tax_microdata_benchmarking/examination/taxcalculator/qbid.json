@@ -1,0 +1,4 @@
+// Eliminate QBID beginning in CY2015 (which was before TCJA in 2018+)
+{
+    "PT_qbid_rt": {"2015": 0}
+}

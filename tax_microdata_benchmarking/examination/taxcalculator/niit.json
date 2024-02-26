@@ -1,0 +1,4 @@
+// Abolish net investment income tax (NIIT) beginning in CY2015
+{
+    "NIIT_rt": {"2015": 0}
+}
