@@ -1,0 +1,4 @@
+// Include all social security benefits in AGI beginning in CY2015
+{
+    "SS_all_in_agi": {"2015": true}
+}
