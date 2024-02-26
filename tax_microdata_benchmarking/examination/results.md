@@ -144,15 +144,12 @@ significantly lower than either federal agency estimate: about 70%
 lower than JCT and about 67% lower than TSY.  The model has been
 extensively tested with a variety of hypothetical tax units with
 qualified business income, so there is confidence that the model
-represents the QBID tax rules correctly.  However, there is a
-shortage of publicly-available information about the nature of
-the businesses generating the qualified business income, and it
-is exactly that kind of business information that is required
-to accurately estimate the QBID tax expenditure.
+represents the QBID tax rules correctly.  However, there is a shortage
+of publicly-available information about the attributes of the
+businesses generating the qualified business income, and it is exactly
+that kind of business information that is required to estimate
+accurately the QBID tax expenditure.
 
 And finally, Tax-Calculator does not include any logic for the
 Affordable Care Act premium tax credit, so it is impossible to
 generate an estimate of this tax expenditure in phase 1.
-
-
-
