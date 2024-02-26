@@ -49,10 +49,10 @@ calendar year 2023.
 
 The second, which is called the `phase 1 dataset`, is a CSV-formatted
 version of the hierarchical dataset created for the
-[Policyengine-US](https://github.com/PolicyEngine) microsimulation
-model.  It contains 2022 CPS data, enhanced with 2015 TSY SOI PUF
-data, that is extrapolated to calendar year 2023.  (Subsequent phases
-of this project will develop other datasets.)
+[Policyengine-US](https://github.com/PolicyEngine/policyengine-us)
+microsimulation model.  It contains 2022 CPS data, enhanced with 2015
+TSY SOI PUF data, that is extrapolated to calendar year 2023.
+(Subsequent phases of this project will develop other datasets.)
 
 In both these input dataset cases, the same procedure is used to
 estimate the amounts corresponding to the federal agency estimates.
