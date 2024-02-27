@@ -14,7 +14,7 @@ improve the development of this project's dataset.
 
 For more on the source of the federal agency estimates and on how the
 model-plus-dataset estimates are generated, see the [examination
-methods document](./methods.md).
+methods](./methods.md) document.
 
 <br>
 
