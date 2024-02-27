@@ -81,6 +81,10 @@ Tax-Calculator is being used as the model in phase 1, but that model
 contains no logic to estimate the ACA premium tax credit, so there is
 no `ptc.json` reform file.
 
+The results of the two sets of `tc` runs are in the
+`examination/taxcalculator/td23.res-expect` and the
+`examination/taxcalculator/pe23.res-expect` files.
+
 Model-plus-Dataset Estimates for Phase 2
 ----------------------------------------
 
