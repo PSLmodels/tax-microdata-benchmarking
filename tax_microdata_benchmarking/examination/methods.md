@@ -26,11 +26,11 @@ comparable to the model-plus-dataset estimates, the estimates for the
 two fiscal years overlapping with the calendar year are used in a
 simple linear interpolation and linear extrapolation of the two fiscal
 year estimate to produce a calendar year estimate.  This linear
-adjustment is done by the [fy2cy.awk]() script using as input one of
-three files containing estimates for fiscal years 2023 and 2024:
-[cy23_cbo.csv](./cy23_cbo.csv), [cy23_jct.csv](./cy23_jct.csv), or
-[cy23_tsy.csv](./cy23_tsy.csv).  These three `.csv` files contain
-detailed information about the source of the federal agency estimates.
+adjustment is done by the `fy2cy.awk` script using as input one of
+three files containing federal agency estimates for fiscal years 2023
+and 2024: `cy23_cbo.csv`, `cy23_jct.csv`, or `cy23_tsy.csv`.  These
+three `.csv` files contain detailed information about the source of
+the federal agency estimates.
 
 Model-plus-Dataset Estimates for Phase 1
 ----------------------------------------
@@ -49,24 +49,25 @@ calendar year 2023.
 
 The second, which is called the `phase 1 dataset`, is a CSV-formatted
 version of the hierarchical dataset created for the
-[Policyengine-US](https://github.com/PolicyEngine) microsimulation
-model.  It contains 2022 CPS data, enhanced with 2015 TSY SOI PUF
-data, that is extrapolated to calendar year 2023.  (Subsequent phases
-of this project will develop other datasets.)
+[Policyengine-US](https://github.com/PolicyEngine/policyengine-us)
+microsimulation model.  It contains 2022 CPS data, enhanced with 2015
+TSY SOI PUF data, that is extrapolated to calendar year 2023.
+(Subsequent phases of this project will develop other datasets.)
 
 In both these input dataset cases, the same procedure is used to
 estimate the amounts corresponding to the federal agency estimates.
 This procedure involves using the Tax-Calculator's
 command-line-interface tool,
-[`tc`](https://taxcalc.pslmodels.org/guide/cli.html).  The payroll and
-individual income tax liabilities are estimated using the
+[`tc`](https://taxcalc.pslmodels.org/guide/cli.html), in the
+`examination/taxcalculator` directory.  The payroll and individual
+income tax liabilities are estimated using the
 [`clp.json`](./taxcalculator/clp.json) null reform to produce
 estimates for 2023 baseline tax policy.  Each tax expenditure estimate
 is generated using a simple reform that negates that feature of
 baseline tax policy.  The several `tc` runs are collected into a
-single shell script called [`runs.sh`](./taxcalculator/runs.sh), which
-in turn calls the [`execute.sh`](./taxcalculator/execute.sh) script
-for each run.  The simple tax expenditure reforms are included in the
+single shell script called `examination/taxcalculator/runs.sh`, which
+in turn calls the `examination/taxcalculator/execute.sh` script for
+each run.  The simple tax expenditure reforms are included in the
 following JSON files:
 
 * **CTC Tax Expenditure**: [`ctc.json`](./taxcalculator/ctc.json)
@@ -80,7 +81,11 @@ Tax-Calculator is being used as the model in phase 1, but that model
 contains no logic to estimate the ACA premium tax credit, so there is
 no `ptc.json` reform file.
 
+The results of the two sets of `tc` runs are in the
+`examination/taxcalculator/td23.res-expect` and the
+`examination/taxcalculator/pe23.res-expect` files.
+
 Model-plus-Dataset Estimates for Phase 2
 ----------------------------------------
 
-*Text to be added during phase 2 of the project.*
+*Text to be added at the end of phase 2 of the project.*
