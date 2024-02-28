@@ -118,9 +118,10 @@ methods](./methods.md) document.
 Comments on Phase 1 Dataset
 ---------------------------
 
-The phase 1 dataset, which is a flat-file version of the most recent
-Policyengine-US 2023 PUF-enhanced CPS input dataset, does a pretty
-good job of getting close to federal agency estimates in most cases.
+The phase 1 dataset, which is a flat-file version of the
+Policyengine-US (0.680.0) 2023 PUF-enhanced CPS input dataset, does a
+pretty good job of getting close to federal agency estimates in most
+cases.
 
 The fact that it overestimates (relative to CBO) payroll tax liability
 by about 7% yet underestimates income tax liability (relative to CBO)
