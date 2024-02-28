@@ -29,14 +29,15 @@ year estimate to produce a calendar year estimate.  This linear
 adjustment is done by the `fy2cy.awk` script using as input one of
 three files containing federal agency estimates for fiscal years 2023
 and 2024: `cy23_cbo.csv`, `cy23_jct.csv`, or `cy23_tsy.csv`.  These
-three `.csv` files contain detailed information about the source of
-the federal agency estimates.
+three `.csv` files, all of which are in the `examination` directory,
+contain detailed information about the source of the federal agency
+estimates.
 
 Model-plus-Dataset Estimates for Phase 1
 ----------------------------------------
 
 In the first phase of this project, the
-[Tax-Calculator](https://github.com/PSLmodels/Tax-Calculator)
+[Tax-Calculator (3.5.0)](https://github.com/PSLmodels/Tax-Calculator)
 microsimulation model is used to compute tax estimates that correspond
 to the federal agency estimates described above.  Tax-Calculator is
 used with two different 2023 input datasets.
@@ -48,8 +49,8 @@ TSY SOI PUF data, supplemented with CPS data, that is extrapolated to
 calendar year 2023.
 
 The second, which is called the `phase 1 dataset`, is a CSV-formatted
-version of the hierarchical dataset created for the
-[Policyengine-US](https://github.com/PolicyEngine/policyengine-us)
+version of the hierarchical dataset created for the [Policyengine-US
+(0.680.0)](https://github.com/PolicyEngine/policyengine-us)
 microsimulation model.  It contains 2022 CPS data, enhanced with 2015
 TSY SOI PUF data, that is extrapolated to calendar year 2023.
 (Subsequent phases of this project will develop other datasets.)
