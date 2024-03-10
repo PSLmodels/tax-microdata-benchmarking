@@ -40,6 +40,9 @@ echo CGQD
 echo QBID
 ./execute.sh $1.csv 2023 qbid
 
+echo SALT
+./execute.sh $1.csv 2023 salt
+
 date
 
 head -15 $1-*clp*tab.text | awk '$1~/Wei/||$1~/Ret/||$1~/A/' > $1.res-actual

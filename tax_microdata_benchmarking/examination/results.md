@@ -104,16 +104,17 @@ methods](./methods.md) document.
 
 <br>
 
-**CY2023 ACA-PTC Tax Expenditure** ($ billion)<br>
-(from the federal ACA premium tax credit)
+**CY2023 SALT Tax Expenditure** ($ billion)<br>
+(from itemized deduction of state and local income/sales/property taxes)
 | Amount | Source |
 | ---:   | :---   |
-| 83.9   | JCT    |
-| 53.0   | TSY    |
-| ----   | Tax-Calculator + phase 1 dataset |
-| ----   | Tax-Calculator + taxdata dataset |
+| 21.2   | JCT    |
+| 26.5   | TSY    |
+|  0.4   | Tax-Calculator + phase 1 dataset |
+| 29.0   | Tax-Calculator + taxdata dataset |
 
 <br>
+
 
 Comments on Phase 1 Dataset
 ---------------------------
