@@ -1,0 +1,16 @@
+fy26amt,fy27amt,cy26label,metadata
+,,,"DATA SOURCE:"
+,,,"https://github.com/US-CBO/eval-projections/blob/main/input_data/baselines.csv"
+,,,"as updated on 2024-02-07"
+
+
+2788.673,3031.443,from FY26-27 iitax CBO baselines in 2024-02 report,
+
+,,,"revenue,Individual Income Taxes,Individual Income Taxes,2024-02-01,FALSE,TRUE,2026,3,2788.673"
+,,,"revenue,Individual Income Taxes,Individual Income Taxes,2024-02-01,FALSE,TRUE,2027,4,3031.443"
+
+
+1811.687,1884.438,from FY26-27 paytax CBO baselines in 2024-02 report,
+
+,,,"revenue,Payroll Taxes,Payroll Taxes,2024-02-01,FALSE,TRUE,2026,3,1811.687"
+,,,"revenue,Payroll Taxes,Payroll Taxes,2024-02-01,FALSE,TRUE,2027,4,1884.438"
