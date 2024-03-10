@@ -1,0 +1,40 @@
+fy26amt,fy27amt,cy26label,metadata
+,,,"DATA SOURCE:"
+,,,"Table 1 estimates from JCX-59-23 (December 07, 2023)"
+,,,"https://www.jct.gov/publications/2023/jcx-59-23/"
+
+
+62.6,42.7,CTC CY26,
+
+,,,"62.6 42.7:Credit for children and other dependents(p.36)"
+
+
+77.6,79.3,EITC CY26,
+
+,,,"77.6 79.3:Earned income credit(p.37)"
+
+
+53.6,64.8,SSBEN CY26,
+
+,,,"53.6 64.8:Exclusion of untaxed Social Security and railroad retirement benefits(p.38)"
+
+
+-53.5,-54.6,NIIT CY26,
+
+,,,"-53.5 -54.6:Surtax on net investment income(p.33)"
+
+
+238.8,242.7,CGQD CY26,
+
+,,,"238.8 242.7:Reduced rates of tax on dividends and long-term capital gains(p.31)"
+
+
+0.0,0.0,QBID CY26,
+
+,,,"24.9 ---:20-percent deduction for qualified business income(p.32)"
+,,,"QBID expires after CY2025: the 24.9 amount is the CY2025:Q4 estimate"
+
+
+139.1,187.8,SALT CY26,
+
+,,,"139.1 187.8:Deduction of nonbusiness State and local government taxes(p.38)"
