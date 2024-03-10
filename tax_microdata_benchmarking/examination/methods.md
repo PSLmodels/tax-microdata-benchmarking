@@ -5,7 +5,7 @@ This document describes the methods used to compare model-plus-dataset
 estimates of basic federal tax amounts against corresponding federal
 agency estimates.
 
-The basic calendar year 2023 tax amounts that will be compared include:
+The basic tax amounts that will be compared include:
 * **Payroll Tax Liability** (federal employee plus employer share)
 * **Individual Income Tax Liability** (federal individual income tax)
 * **CTC Tax Expenditure** (from the federal child tax credit)
@@ -14,7 +14,7 @@ The basic calendar year 2023 tax amounts that will be compared include:
 * **NIIT Tax Expenditure** (from the 3.8% federal surtax on investment income)
 * **CGQD Tax Expenditure** (from taxing long-term capital gains and qualified dividends at lower federal rates)
 * **QBID Tax Expenditure** (from the 20% federal qualified business income deduction)
-* **ACA-PTC Tax Expenditure** (from the federal ACA premium tax credit)
+* **SALT Tax Expenditure** (from the itemized deduction of state and local income and property taxes)
 
 Federal Agency Estimates
 ------------------------
@@ -27,9 +27,11 @@ two fiscal years overlapping with the calendar year are used in a
 simple linear interpolation and linear extrapolation of the two fiscal
 year estimate to produce a calendar year estimate.  This linear
 adjustment is done by the `fy2cy.awk` script using as input one of
-three files containing federal agency estimates for fiscal years 2023
-and 2024: `cy23_cbo.csv`, `cy23_jct.csv`, or `cy23_tsy.csv`.  These
-three `.csv` files, all of which are in the `examination` directory,
+three files containing federal agency estimates for a pair of fiscal years.
+For example, the following three files contain estimates for fiscal years 2023
+and 2024: `cy23_cbo.csv`, `cy23_jct.csv`, or `cy23_tsy.csv`.  There are
+three files for each of several years: `cy15`, `cy21`, `cy23`, and `cy26`.
+These `.csv` files, all of which are in the `examination` directory,
 contain detailed information about the source of the federal agency
 estimates.
 
