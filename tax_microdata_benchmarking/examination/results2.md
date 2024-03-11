@@ -22,8 +22,7 @@ following Phase 2 estimates is Tax-Calculator 3.5.1 version.
 
 **CY2023 and CY2026 Payroll Tax Liability** ($ billion)<br>
 (federal employee plus employer share)
-| CY2023 | CY2026 | Estimate |
-| Amount | Amount | Source |
+| CY23 Amount | CY26 Amount | Estimate Source |
 | ---:   | ---:   | :---   |
 | 1580.0 | 1829.9 | CBO    |
 |    ??? |    ??? | Tax-Calculator + phase 2 dataset |
@@ -33,8 +32,7 @@ following Phase 2 estimates is Tax-Calculator 3.5.1 version.
 
 **CY2023 and CY2026 Individual Income Tax Liability** ($ billion)<br>
 (federal individual income tax)
-| CY2023 | CY2026 | Estimate |
-| Amount | Amount | Source |
+| CY23 Amount | CY26 Amount | Estimate Source |
 | ---:   | ---:   | :---   |
 | 2512.3 | 2849.4 | CBO    |
 |    ??? |    ??? | Tax-Calculator + phase 2 dataset |
@@ -44,8 +42,7 @@ following Phase 2 estimates is Tax-Calculator 3.5.1 version.
 
 **CY2023 and CY2026 CTC Tax Expenditure** ($ billion)<br>
 (from the federal child tax credit)
-| CY2023 | CY2026 | Estimate |
-| Amount | Amount | Source |
+| CY23 Amount | CY26 Amount | Estimate Source |
 | ---:   | ---:   | :---   |
 | 122.1  | 57.6   | JCT    |
 | 108.6  | 55.7   | TSY    |
@@ -56,8 +53,7 @@ following Phase 2 estimates is Tax-Calculator 3.5.1 version.
 
 **CY2023 and CY2026 EITC Tax Expenditure** ($ billion)<br>
 (from the federal earned income credit)
-| CY2023 | CY2026 | Estimate |
-| Amount | Amount | Source |
+| CY23 Amount | CY26 Amount | Estimate Source |
 | ---:   | ---:   | :---   |
 | 71.9   | 78.0   | JCT    |
 | 63.6   | 71.2   | TSY    |
@@ -68,8 +64,7 @@ following Phase 2 estimates is Tax-Calculator 3.5.1 version.
 
 **CY2023 and CY2026 SSBEN Tax Expenditure** ($ billion)<br>
 (from excluding some social security benefits from federal AGI)
-| CY2023 | CY2026 | Estimate |
-| Amount | Amount | Source |
+| CY23 Amount | CY26 Amount | Estimate Source |
 | ---:   | ---:   | :---   |
 | 45.9   | 56.4   | JCT    |
 | 31.4   | 38.4   | TSY    |
@@ -80,8 +75,7 @@ following Phase 2 estimates is Tax-Calculator 3.5.1 version.
 
 **CY2023 and CY2026 NIIT Tax Expenditure** ($ billion)<br>
 (from the 3.8% federal surtax on investment income)
-| CY2023 | CY2026 | Estimate |
-| Amount | Amount | Source |
+| CY23 Amount | CY26 Amount | Estimate Source |
 | ---:   | ---:   | :---   |
 | -56.5  | -53.8  | JCT    |
 |  ----  |  ----  | TSY    |
@@ -92,8 +86,7 @@ following Phase 2 estimates is Tax-Calculator 3.5.1 version.
 
 **CY2023 and CY2026 CGQD Tax Expenditure** ($ billion)<br>
 (from taxing long-term capital gains and qualified dividends at lower federal rates)
-| CY2023 | CY2026 | Estimate |
-| Amount | Amount | Source |
+| CY23 Amount | CY26 Amount | Estimate Source |
 | ---:   | ---:   | :---   |
 | 259.3  | 239.8  | JCT    |
 | 153.9  | 182.4  | TSY    |
@@ -104,8 +97,7 @@ following Phase 2 estimates is Tax-Calculator 3.5.1 version.
 
 **CY2023 and CY2026 QBID Tax Expenditure** ($ billion)<br>
 (from the 20% federal qualified business income deduction)
-| CY2023 | CY2026 | Estimate |
-| Amount | Amount | Source |
+| CY23 Amount | CY26 Amount | Estimate Source |
 | ---:   | ---:   | :---   |
 | 56.2   |  0.0   | JCT    |
 | 50.4   |  0.0   | TSY    |
@@ -116,8 +108,7 @@ following Phase 2 estimates is Tax-Calculator 3.5.1 version.
 
 **CY2023 and CY2026 SALT Tax Expenditure** ($ billion)<br>
 (from itemized deduction of state and local income/sales/property taxes)
-| CY2023 | CY2026 | Estimate |
-| Amount | Amount | Source |
+| CY23 Amount | CY26 Amount | Estimate Source |
 | ---:   | ---:   | :---   |
 |  21.2  | 151.3  | JCT    |
 |  26.5  | 149.0  | TSY    |
