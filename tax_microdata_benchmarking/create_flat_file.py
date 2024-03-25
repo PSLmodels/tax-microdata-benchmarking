@@ -472,11 +472,19 @@ class is_tax_filer(Variable):
 
         # (a)(1)(C)
 
-        unearned_income_threshold = 500 + tax_unit("additional_standard_deduction", period)
-        unearned_income = gross_income - add(tax_unit, period, ["earned_income"])
-        unearned_income_over_threshold = unearned_income > unearned_income_threshold
+        unearned_income_threshold = 500 + tax_unit(
+            "additional_standard_deduction", period
+        )
+        unearned_income = gross_income - add(
+            tax_unit, period, ["earned_income"]
+        )
+        unearned_income_over_threshold = (
+            unearned_income > unearned_income_threshold
+        )
 
-        required_to_file = income_over_exemption_amount | unearned_income_over_threshold
+        required_to_file = (
+            income_over_exemption_amount | unearned_income_over_threshold
+        )
 
         tax_refund = tax_unit("income_tax", period) < 0
         not_required_but_likely_filer = ~required_to_file & tax_refund
@@ -484,7 +492,6 @@ class is_tax_filer(Variable):
         # (a)(1)(D) is just definitions
 
         return required_to_file | not_required_but_likely_filer
-
 
 
 class taxcalc_extension(Reform):
@@ -565,9 +572,11 @@ def create_flat_file(save_dataframe: bool = True) -> pd.DataFrame:
             df[variable[3:]] = sim.calculate(variable, 2024).values.astype(
                 np.float64
             )
-        
+
         if variable in INCLUDED_NON_TC_VARIABLES:
-            df[variable] = sim.calculate(variable, 2024).values.astype(np.float64)
+            df[variable] = sim.calculate(variable, 2024).values.astype(
+                np.float64
+            )
 
     # Extra quality-control checks to do with different data types, nothing major
     FILER_SUM_COLUMNS = [
