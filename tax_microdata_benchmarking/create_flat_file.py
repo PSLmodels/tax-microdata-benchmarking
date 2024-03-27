@@ -558,10 +558,10 @@ class taxcalc_extension(Reform):
 
 
 def create_flat_file(
-    original_dataset: str = "enhanced_cps_2022", save_dataframe: bool = True
+    source_dataset: str = "enhanced_cps_2022",
 ) -> pd.DataFrame:
     sim = Microsimulation(
-        reform=taxcalc_extension, dataset="enhanced_cps_2022"
+        reform=taxcalc_extension, dataset=source_dataset
     )
     df = pd.DataFrame()
 
@@ -594,13 +594,18 @@ def create_flat_file(
     df.RECID = df.RECID.astype(int)
     df.MARS = df.MARS.astype(int)
 
-    if save_dataframe:
-        df.to_csv("tax_microdata.csv.gz", index=False, compression="gzip")
-
     print(f"Completed data generation for {len(df.columns)} variables.")
 
     return df
 
 
 if __name__ == "__main__":
-    create_flat_file()
+    cps_based_flat_file = create_flat_file(source_dataset="enhanced_cps_2022")
+    puf_based_flat_file = create_flat_file(source_dataset="puf_2022")
+    nonfilers_file = cps_based_flat_file[cps_based_flat_file.is_tax_filer == 0]
+    stacked_file = pd.concat([puf_based_flat_file, nonfilers_file])
+
+    cps_based_flat_file.to_csv("tax_microdata_cps_based.csv.gz", index=False)
+    puf_based_flat_file.to_csv("tax_microdata_puf_based.csv.gz", index=False)
+    nonfilers_file.to_csv("tax_microdata_nonfilers.csv.gz", index=False)
+    stacked_file.to_csv("tax_microdata.csv.gz", index=False)
