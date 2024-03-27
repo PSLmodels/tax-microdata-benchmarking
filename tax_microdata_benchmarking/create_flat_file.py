@@ -557,7 +557,7 @@ class taxcalc_extension(Reform):
         )
 
 
-def create_flat_file(save_dataframe: bool = True) -> pd.DataFrame:
+def create_flat_file(original_dataset: str = "enhanced_cps_2022", save_dataframe: bool = True) -> pd.DataFrame:
     sim = Microsimulation(
         reform=taxcalc_extension, dataset="enhanced_cps_2022"
     )
