@@ -602,16 +602,18 @@ if __name__ == "__main__":
 
     try:
         puf_based_flat_file = create_flat_file(source_dataset="puf_2022")
+        nonfilers_file = cps_based_flat_file[
+            cps_based_flat_file.is_tax_filer == 0
+        ]
+        stacked_file = pd.concat([puf_based_flat_file, nonfilers_file])
+        cps_based_flat_file.to_csv(
+            "tax_microdata_cps_based.csv.gz", index=False
+        )
+        puf_based_flat_file.to_csv(
+            "tax_microdata_puf_based.csv.gz", index=False
+        )
+        nonfilers_file.to_csv("tax_microdata_nonfilers.csv.gz", index=False)
+        stacked_file.to_csv("tax_microdata.csv.gz", index=False)
     except:
         print("PUF-based data not available.")
-        puf_based_flat_file = cps_based_flat_file[
-            cps_based_flat_file.is_tax_filer == 1
-        ]
-
-    nonfilers_file = cps_based_flat_file[cps_based_flat_file.is_tax_filer == 0]
-    stacked_file = pd.concat([puf_based_flat_file, nonfilers_file])
-
-    cps_based_flat_file.to_csv("tax_microdata_cps_based.csv.gz", index=False)
-    puf_based_flat_file.to_csv("tax_microdata_puf_based.csv.gz", index=False)
-    nonfilers_file.to_csv("tax_microdata_nonfilers.csv.gz", index=False)
-    stacked_file.to_csv("tax_microdata.csv.gz", index=False)
+        cps_based_flat_file.to_csv("tax_microdata.csv.gz", index=False)
