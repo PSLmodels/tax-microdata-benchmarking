@@ -560,9 +560,7 @@ class taxcalc_extension(Reform):
 def create_flat_file(
     source_dataset: str = "enhanced_cps_2022",
 ) -> pd.DataFrame:
-    sim = Microsimulation(
-        reform=taxcalc_extension, dataset=source_dataset
-    )
+    sim = Microsimulation(reform=taxcalc_extension, dataset=source_dataset)
     df = pd.DataFrame()
 
     INCLUDED_NON_TC_VARIABLES = [
@@ -601,7 +599,15 @@ def create_flat_file(
 
 if __name__ == "__main__":
     cps_based_flat_file = create_flat_file(source_dataset="enhanced_cps_2022")
-    puf_based_flat_file = create_flat_file(source_dataset="puf_2022")
+
+    try:
+        puf_based_flat_file = create_flat_file(source_dataset="puf_2022")
+    except:
+        print("PUF-based data not available.")
+        puf_based_flat_file = cps_based_flat_file[
+            cps_based_flat_file.is_tax_filer == 1
+        ]
+
     nonfilers_file = cps_based_flat_file[cps_based_flat_file.is_tax_filer == 0]
     stacked_file = pd.concat([puf_based_flat_file, nonfilers_file])
 
