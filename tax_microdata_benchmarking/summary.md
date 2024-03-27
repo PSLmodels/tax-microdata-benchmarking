@@ -2,7 +2,7 @@
 
 This file contains a summary of the Tax-Calculator microdata file. It is intended to be used as a reference for the Tax-Calculator microdata file.
 
-The flat file currently has 48 out of 68 (51%) columns in the Tax-Calculator PUF microdata file.
+The flat file currently has 50 out of 68 (53%) columns in the Tax-Calculator PUF microdata file.
 
 Missing columns: 
 - MIDR
@@ -49,23 +49,14 @@ Missing columns:
 - k1bx14p
 - k1bx14s
 - p08000
-- p22250
-- p23250
 
 Extra, non-taxdata-PUF columns: 
-- e01500p
-- e01500s
-- e00800p
-- e00800s
-- e02400p
-- e02400s
-- e02300p
-- e02300s
 - ssi_ben
 - mcaid_ben
 - tanf_ben
 - snap_ben
 - housing_ben
+- wic_ben
 
 ## RECID
 
@@ -197,29 +188,9 @@ farm income (spouse)
 farm income
 
 
-## e01500p
-
-pension income
-
-
-## e01500s
-
-pension income (spouse)
-
-
 ## e01500
 
 pension income
-
-
-## e00800p
-
-alimony income
-
-
-## e00800s
-
-alimony income (spouse)
 
 
 ## e00800
@@ -227,29 +198,9 @@ alimony income (spouse)
 alimony income
 
 
-## e02400p
-
-social security income
-
-
-## e02400s
-
-social security income (spouse)
-
-
 ## e02400
 
 social security income
-
-
-## e02300p
-
-unemployment compensation
-
-
-## e02300s
-
-unemployment compensation (spouse)
 
 
 ## e02300
@@ -370,4 +321,19 @@ deductible IRA contributions
 ## e03210
 
 student loan interest
+
+
+## p22250
+
+net short-term capital gains
+
+
+## p23250
+
+net long-term capital gains
+
+
+## wic_ben
+
+WIC
 
