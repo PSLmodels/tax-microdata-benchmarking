@@ -26,7 +26,7 @@ following Phase 2 estimates is Tax-Calculator 3.5.1 version.
 | ---:   | ---:   | :---   |
 | 1580.0 | 1829.9 | CBO    |
 |    ??? |    ??? | Tax-Calculator + phase 2 dataset |
-| 1482.1 | 1703.2 | Tax-Calculator + taxdata dataset |
+| 1489.3 | 1711.0 | Tax-Calculator + taxdata dataset |
 
 <br>
 
@@ -36,7 +36,7 @@ following Phase 2 estimates is Tax-Calculator 3.5.1 version.
 | ---:   | ---:   | :---   |
 | 2512.3 | 2849.4 | CBO    |
 |    ??? |    ??? | Tax-Calculator + phase 2 dataset |
-| 2154.4 | 2650.2 | Tax-Calculator + taxdata dataset |
+| 2247.8 | 2742.1 | Tax-Calculator + taxdata dataset |
 
 <br>
 
@@ -47,7 +47,7 @@ following Phase 2 estimates is Tax-Calculator 3.5.1 version.
 | 122.1  | 57.6   | JCT    |
 | 108.6  | 55.7   | TSY    |
 |   ???  |  ???   | Tax-Calculator + phase 2 dataset |
-| 126.6  | 43.3   | Tax-Calculator + taxdata dataset |
+| 126.2  | 43.1   | Tax-Calculator + taxdata dataset |
 
 <br>
 
@@ -58,7 +58,7 @@ following Phase 2 estimates is Tax-Calculator 3.5.1 version.
 | 71.9   | 78.0   | JCT    |
 | 63.6   | 71.2   | TSY    |
 |  ???   |  ???   | Tax-Calculator + phase 2 dataset |
-| 75.0   | 82.3   | Tax-Calculator + taxdata dataset |
+| 73.5   | 82.0   | Tax-Calculator + taxdata dataset |
 
 <br>
 
@@ -69,7 +69,7 @@ following Phase 2 estimates is Tax-Calculator 3.5.1 version.
 | 45.9   | 56.4   | JCT    |
 | 31.4   | 38.4   | TSY    |
 |  ???   |  ???   | Tax-Calculator + phase 2 dataset |
-| 58.4   | 81.3   | Tax-Calculator + taxdata dataset |
+| 62.7   | 89.5   | Tax-Calculator + taxdata dataset |
 
 <br>
 
@@ -80,7 +80,7 @@ following Phase 2 estimates is Tax-Calculator 3.5.1 version.
 | -56.5  | -53.8  | JCT    |
 |  ----  |  ----  | TSY    |
 |   ???  |  ???   | Tax-Calculator + phase 2 dataset |
-| -56.6  | -50.6  | Tax-Calculator + taxdata dataset |
+| -55.8  | -52.1  | Tax-Calculator + taxdata dataset |
 
 <br>
 
@@ -91,7 +91,7 @@ following Phase 2 estimates is Tax-Calculator 3.5.1 version.
 | 259.3  | 239.8  | JCT    |
 | 153.9  | 182.4  | TSY    |
 |   ???  | ???    | Tax-Calculator + phase 2 dataset |
-| 224.5  | 219.1  | Tax-Calculator + taxdata dataset |
+| 217.7  | 223.6  | Tax-Calculator + taxdata dataset |
 
 <br>
 
@@ -102,7 +102,7 @@ following Phase 2 estimates is Tax-Calculator 3.5.1 version.
 | 56.2   |  0.0   | JCT    |
 | 50.4   |  0.0   | TSY    |
 |  ???   |  ???   | Tax-Calculator + phase 2 dataset |
-| 18.2   |  0.0   | Tax-Calculator + taxdata dataset |
+| 19.3   |  0.0   | Tax-Calculator + taxdata dataset |
 
 <br>
 
@@ -113,7 +113,7 @@ following Phase 2 estimates is Tax-Calculator 3.5.1 version.
 |  21.2  | 151.3  | JCT    |
 |  26.5  | 149.0  | TSY    |
 |   ???  | ???    | Tax-Calculator + phase 2 dataset |
-|  29.0  | 182.4  | Tax-Calculator + taxdata dataset |
+|  29.4  | 185.5  | Tax-Calculator + taxdata dataset |
 
 <br>
 
