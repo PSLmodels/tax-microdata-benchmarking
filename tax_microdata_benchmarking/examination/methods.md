@@ -139,11 +139,11 @@ following JSON files:
 The 2023 results from these two sets of `tc` runs are in the
 `examination/taxcalculator/puf-23.res-expect` file for the
 `taxdata dataset` and in the
-`examination/taxcalculator/xx23-23.res-expect` file for the
+`examination/taxcalculator/xb23-23.res-expect` file for the
 `phase 2 dataset`.
 
 The 2026 results from these two sets of `tc` runs are in the
 `examination/taxcalculator/puf-26.res-expect` file for the
 `taxdata dataset` and in the
-`examination/taxcalculator/xx26-26.res-expect` file for the
+`examination/taxcalculator/xb26-26.res-expect` file for the
 `phase 2 dataset`.
