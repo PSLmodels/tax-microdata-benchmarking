@@ -3,8 +3,41 @@
 import taxcalc as tc
 from policyengine_us import Microsimulation
 from policyengine_us.model_api import *
+from policyengine_us.system import system
 import numpy as np
 import pandas as pd
+from policyengine_core.periods import instant
+
+UPRATING_VARIABLES = [
+    "employment_income",
+    "self_employment_income",
+    "farm_income",
+    "pension_income",
+    "alimony_income",
+    "social_security",
+    "unemployment_compensation",
+    # "ssi",
+    # "medicaid",
+    # "tanf",
+    # "snap",
+    # "housing_subsidy",
+    "dividend_income",
+    "qualified_dividend_income",
+    "taxable_interest_income",
+    "tax_exempt_interest_income",
+    "taxable_pension_income",
+    "non_sch_d_capital_gains",
+    "taxable_ira_distributions",
+    "self_employed_health_insurance_premiums",
+    "cdcc_relevant_expenses",
+    "medical_expense",
+    "pre_tax_contributions",
+    "traditional_ira_contributions",
+    "student_loan_interest",
+    "short_term_capital_gains",
+    "long_term_capital_gains",
+    "wic",
+]
 
 
 class TaxCalcVariableAlias(Variable):
@@ -559,13 +592,20 @@ class taxcalc_extension(Reform):
 
 def create_flat_file(
     source_dataset: str = "enhanced_cps_2022",
+    target_year: int = 2024,
 ) -> pd.DataFrame:
     sim = Microsimulation(reform=taxcalc_extension, dataset=source_dataset)
-    df = pd.DataFrame()
 
-    INCLUDED_NON_TC_VARIABLES = [
-        "is_tax_filer",
-    ]
+    for variable in UPRATING_VARIABLES:
+        original_value = sim.calculate(variable, 2024)
+        uprating_factor = get_variable_uprating(
+            variable,
+            source_time_period=2024,
+            target_time_period=target_year,
+        )
+        sim.set_input(variable, 2024, original_value * uprating_factor)
+
+    df = pd.DataFrame()
 
     for variable in sim.tax_benefit_system.variables:
         if variable.startswith("tc_"):
@@ -573,7 +613,7 @@ def create_flat_file(
                 np.float64
             )
 
-        if variable in INCLUDED_NON_TC_VARIABLES:
+        if variable == "is_tax_filer":
             df[variable] = sim.calculate(variable, 2024).values.astype(
                 np.float64
             )
@@ -588,32 +628,88 @@ def create_flat_file(
         df[column] = df[column + "p"] + df[column + "s"]
 
     df.e01700 = np.minimum(df.e01700, df.e01500)
+    df.e00650 = np.minimum(df.e00650, df.e00600)
 
     df.RECID = df.RECID.astype(int)
-    df.MARS = df.MARS.astype(int)
-
-    print(f"Completed data generation for {len(df.columns)} variables.")
+    df.MARS = df.MARS.fillna(1).astype(int)
+    df.FLPDYR = target_year
 
     return df
 
 
-if __name__ == "__main__":
-    cps_based_flat_file = create_flat_file(source_dataset="enhanced_cps_2022")
+def get_variable_uprating(
+    variable: str, source_time_period: str, target_time_period: str
+) -> str:
+    """
+    Get the uprating factor for a given variable between two time periods.
 
-    try:
-        puf_based_flat_file = create_flat_file(source_dataset="puf_2022")
+    Args:
+        variable (str): The variable to uprate.
+        source_time_period (str): The source time period.
+        target_time_period (str): The target time period.
+
+    Returns:
+        str: The uprating factor.
+    """
+
+    calibration = system.parameters.calibration
+    if variable in calibration.gov.irs.soi.children:
+        parameter = calibration.gov.irs.soi.children[variable]
+    else:
+        parameter = calibration.gov.cbo.income_by_source.adjusted_gross_income
+    source_value = parameter(source_time_period)
+    target_value = parameter(target_time_period)
+
+    uprating_factor = target_value / source_value
+    return uprating_factor
+
+
+def create_stacked_flat_file(
+    target_year: int = 2024, use_puf: bool = True, add_tc_outputs: bool = True
+):
+    print(f"Creating CPS flat file for {target_year}")
+    cps_based_flat_file = create_flat_file(
+        source_dataset="enhanced_cps_2022", target_year=target_year
+    )
+    if use_puf:
+        print(f"Creating PUF flat file for {target_year}")
+        puf_based_flat_file = create_flat_file(
+            source_dataset="puf_2022", target_year=target_year
+        )
         nonfilers_file = cps_based_flat_file[
             cps_based_flat_file.is_tax_filer == 0
         ]
         stacked_file = pd.concat([puf_based_flat_file, nonfilers_file])
-        cps_based_flat_file.to_csv(
-            "tax_microdata_cps_based.csv.gz", index=False
+    else:
+        stacked_file = cps_based_flat_file
+
+    if add_tc_outputs:
+        print(
+            f"Adding Tax-Calculator outputs to the flat file for {target_year}"
         )
-        puf_based_flat_file.to_csv(
-            "tax_microdata_puf_based.csv.gz", index=False
+        input_data = tc.Records(data=stacked_file)
+        policy = tc.Policy()
+        simulation = tc.Calculator(records=input_data, policy=policy)
+        simulation.calc_all()
+        taxcalc_file = simulation.dataframe(None, all_vars=True)
+        combined_file = pd.concat(
+            [stacked_file.reset_index(), taxcalc_file.reset_index()], axis=1
         )
-        nonfilers_file.to_csv("tax_microdata_nonfilers.csv.gz", index=False)
-        stacked_file.to_csv("tax_microdata.csv.gz", index=False)
-    except:
-        print("PUF-based data not available.")
-        cps_based_flat_file.to_csv("tax_microdata.csv.gz", index=False)
+        combined_file = combined_file[
+            [col for col in combined_file.columns if not col.endswith(".1")]
+        ]
+        return combined_file
+
+    return stacked_file
+
+
+if __name__ == "__main__":
+    for target_year in range(2015, 2027):
+        stacked_file = create_stacked_flat_file(
+            target_year=target_year, use_puf=True
+        )
+        stacked_file.to_csv(
+            f"tax_microdata_{target_year}.csv.gz",
+            index=False,
+            compression="gzip",
+        )
