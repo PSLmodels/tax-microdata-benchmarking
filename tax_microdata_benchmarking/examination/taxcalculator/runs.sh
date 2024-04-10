@@ -2,7 +2,11 @@
 # Execute several Tax-Calculator runs using the execute.sh script.
 # USAGE:
 #   ./runs.sh  DATAFILE(without_trailing_.csv) YEAR(tailing_two_digits)
-#   DATAFILES: puf|pe23  (where puf is from the taxdata repository)
+#   DATAFILES: puf|pe23|xb23|xb26|xc23|xc26
+#              (where puf is from the taxdata repository)
+#              (where pe23 is the Phase 1 work product)
+#              (where xb23 and xb26 are Phase 2 work products)
+#              (where xc23 and xc26 are Phase 3 work products)
 
 D="DATAFILE(without_trailing_.csv)"
 Y="YEAR(tailing_two_digits)"
@@ -20,6 +24,42 @@ if [[ "$1" == "pe23" ]]; then
     if [[ "$2" != "23" ]]; then
         echo "ERROR: YEAR not equal to 23" >&2
         echo "USAGE: ./runs.sh pe23 23" >&2
+        exit 1
+    fi
+    OK=1
+fi
+if [[ "$1" == "xb23" ]]; then
+    unzip -oq xb23.csv.zip
+    if [[ "$2" != "23" ]]; then
+        echo "ERROR: YEAR not equal to 23" >&2
+        echo "USAGE: ./runs.sh xb23 23" >&2
+        exit 1
+    fi
+    OK=1
+fi
+if [[ "$1" == "xb26" ]]; then
+    unzip -oq xb26.csv.zip
+    if [[ "$2" != "26" ]]; then
+        echo "ERROR: YEAR not equal to 26" >&2
+        echo "USAGE: ./runs.sh xb26 26" >&2
+        exit 1
+    fi
+    OK=1
+fi
+if [[ "$1" == "xc23" ]]; then
+    unzip -oq xc23.csv.zip
+    if [[ "$2" != "23" ]]; then
+        echo "ERROR: YEAR not equal to 23" >&2
+        echo "USAGE: ./runs.sh xc23 23" >&2
+        exit 1
+    fi
+    OK=1
+fi
+if [[ "$1" == "xc26" ]]; then
+    unzip -oq xc26.csv.zip
+    if [[ "$2" != "26" ]]; then
+        echo "ERROR: YEAR not equal to 26" >&2
+        echo "USAGE: ./runs.sh xc26 26" >&2
         exit 1
     fi
     OK=1
