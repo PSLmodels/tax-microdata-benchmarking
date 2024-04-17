@@ -790,8 +790,8 @@ def summary_analytics(df):
 
     for variable in df.columns:
         variables.append(variable)
-        sums.append((df[variable].sum() / 1e9).round(1))
-        nonzero_counts.append(((df[variable] > 0).sum() / 1e6).round(1))
+        sums.append(round(df[variable].sum() / 1e9, 1))
+        nonzero_counts.append(round((df[variable] > 0).sum() / 1e6, 1))
 
     summary_df = pd.DataFrame(
         {
@@ -809,7 +809,7 @@ if __name__ == "__main__":
     REMAINING_YEARS = [
         year for year in range(2015, 2027) if year not in PRIORITY_YEARS
     ]
-    for target_year in PRIORITY_YEARS + REMAINING_YEARS:
+    for target_year in PRIORITY_YEARS[2:] + REMAINING_YEARS:
         stacked_file = create_stacked_flat_file(
             target_year=target_year, use_puf=True
         )
