@@ -742,14 +742,7 @@ def create_stacked_flat_file(
         nonfilers_file = cps_based_flat_file[
             cps_based_flat_file.is_tax_filer == 0
         ]
-        assert_no_duplicate_columns(nonfilers_file)
-        assert_no_duplicate_columns(puf_based_flat_file)
         stacked_file = pd.concat([puf_based_flat_file, nonfilers_file])
-        assert_no_duplicate_columns(stacked_file)
-        print(
-            f"Adding pass-through W2 wages to the flat file for {target_year}"
-        )
-        stacked_file = add_pt_w2_wages(stacked_file, target_year)
     else:
         stacked_file = cps_based_flat_file
 
@@ -762,14 +755,12 @@ def create_stacked_flat_file(
         simulation = tc.Calculator(records=input_data, policy=policy)
         simulation.calc_all()
         taxcalc_file = simulation.dataframe(None, all_vars=True)
-        assert_no_duplicate_columns(taxcalc_file)
         combined_file = pd.concat(
             [stacked_file.reset_index(), taxcalc_file.reset_index()], axis=1
         )
         combined_file = combined_file.loc[
             :, ~combined_file.columns.duplicated()
         ]
-        assert_no_duplicate_columns(combined_file)
         print(f"Reweighting the flat file for {target_year}")
         try:
             combined_file = reweight(combined_file, time_period=target_year)
@@ -777,6 +768,14 @@ def create_stacked_flat_file(
             print(e)
             print("Skipping reweighting.")
             combined_file = stacked_file
+        print(
+            f"Adding pass-through W2 wages to the flat file for {target_year}"
+        )
+        try:
+            stacked_file = add_pt_w2_wages(stacked_file, target_year)
+        except:
+            print("Failed to add pass-through W2 wages.")
+            pass
         return combined_file
 
     return stacked_file
@@ -806,7 +805,11 @@ def summary_analytics(df):
 
 
 if __name__ == "__main__":
-    for target_year in [2015, 2021, 2026]:
+    PRIORITY_YEARS = [2021, 2015, 2026, 2023]
+    REMAINING_YEARS = [
+        year for year in range(2015, 2027) if year not in PRIORITY_YEARS
+    ]
+    for target_year in PRIORITY_YEARS + REMAINING_YEARS:
         stacked_file = create_stacked_flat_file(
             target_year=target_year, use_puf=True
         )

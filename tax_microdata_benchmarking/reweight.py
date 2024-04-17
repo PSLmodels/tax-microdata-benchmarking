@@ -69,13 +69,13 @@ def reweight(flat_file: pd.DataFrame, time_period: int = 2021):
                 f"Total AGI {fmt(INCOME_RANGES[i])}-{fmt(INCOME_RANGES[i + 1])}"
             ] = (mask * agi)
             agi_target = targets[targets.table == "tab11"][
-                targets.year == 2021
+                targets.year == time_period
             ][targets.vname.isin(["agi"])][targets.datatype == "taxable"][
                 targets.incsort - 2 == i
             ].ptarget
             targets_array.append(agi_target.iloc[0] * 1e3)
             nret_target = targets[targets.table == "tab11"][
-                targets.year == 2021
+                targets.year == time_period
             ][targets.vname.isin(["nret_all"])][targets.datatype == "taxable"][
                 targets.incsort - 2 == i
             ].ptarget
@@ -101,8 +101,9 @@ def reweight(flat_file: pd.DataFrame, time_period: int = 2021):
 
     from torch.utils.tensorboard import SummaryWriter
     from tqdm import tqdm
+    from datetime import datetime
 
-    writer = SummaryWriter()
+    writer = SummaryWriter(log_dir=FOLDER / "calibration" / f"{time_period}_{datetime.now().isoformat()}")
 
     for i in tqdm(range(10_000)):
         optimizer.zero_grad()
