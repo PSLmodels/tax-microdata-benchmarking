@@ -10,6 +10,8 @@ from policyengine_core.periods import instant
 from scipy.optimize import minimize
 from tax_microdata_benchmarking.adjust_qbi import add_pt_w2_wages
 from tax_microdata_benchmarking.reweight import reweight
+from microdf import MicroDataFrame
+import numpy as np
 
 UPRATING_VARIABLES = [
     "employment_income",
@@ -780,8 +782,31 @@ def create_stacked_flat_file(
     return stacked_file
 
 
+def summary_analytics(df):
+    df = MicroDataFrame(df.copy(), weights="s006")
+
+    variables = []
+    sums = []
+    nonzero_counts = []
+
+    for variable in df.columns:
+        variables.append(variable)
+        sums.append((df[variable].sum() / 1e9).round(1))
+        nonzero_counts.append(((df[variable] > 0).sum() / 1e6).round(1))
+
+    summary_df = pd.DataFrame(
+        {
+            "Variable": variables,
+            "Sum (bn)": sums,
+            "Nonzero count (m)": nonzero_counts,
+        }
+    )
+
+    return summary_df
+
+
 if __name__ == "__main__":
-    for target_year in [2021]:
+    for target_year in [2015, 2021, 2026]:
         stacked_file = create_stacked_flat_file(
             target_year=target_year, use_puf=True
         )
@@ -789,4 +814,8 @@ if __name__ == "__main__":
             f"tax_microdata_{target_year}.csv.gz",
             index=False,
             compression="gzip",
+        )
+        analytics_df = summary_analytics(stacked_file)
+        analytics_df.to_csv(
+            f"tax_microdata_{target_year}_analytics.csv", index=False
         )
