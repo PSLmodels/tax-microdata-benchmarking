@@ -14,6 +14,11 @@ def add_pt_w2_wages(df, time_period: int, verbose: bool = True):
     Returns:
         pd.DataFrame: The DataFrame with W2 wages added.
     """
+
+    # df["PT_binc_w2_wages"] = 0.1 * 
+
+    # Note: just calculate the share in 2021 and use for all years.
+
     qbid_tax_expenditures = {  # From JCT TE reports 2018- and 2023-
         2015: 0,
         2016: 0,
@@ -30,7 +35,7 @@ def add_pt_w2_wages(df, time_period: int, verbose: bool = True):
         2027: 0,
     }
 
-    QBID_TOTAL_21 = 205.8
+    QBID_TOTAL_21 = 205.8 # From SOI 2021
 
     target = (
         QBID_TOTAL_21
