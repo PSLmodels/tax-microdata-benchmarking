@@ -37,7 +37,6 @@ UPRATING_VARIABLES = [
 ]
 
 
-
 class TaxCalcVariableAlias(Variable):
     label = "TaxCalc Variable Alias"
     definition_period = YEAR
@@ -147,7 +146,7 @@ class tc_s006(TaxCalcVariableAlias):
 
 
 class tc_FLPDYR(TaxCalcVariableAlias):
-    label = "tax year to calculate for"  # QUESTION: how does this work? Just going to put 2023 for now.
+    label = "tax year to calculate for"
 
     def formula(tax_unit, period, parameters):
         return period.start.year
@@ -456,6 +455,7 @@ class tc_wic_ben(TaxCalcVariableAlias):
     label = "WIC"
     adds = ["wic"]
 
+
 class is_tax_filer(Variable):
     label = "tax filer"
     value_type = bool
@@ -523,6 +523,7 @@ class is_tax_filer(Variable):
 
         return required_to_file | not_required_but_likely_filer
 
+
 EXTRA_PUF_VARIABLES = [
     "e02000",
     "e26270",
@@ -568,6 +569,7 @@ for variable in EXTRA_PUF_VARIABLES:
         (TaxCalcVariableAlias,),
         {"label": variable, "adds": [variable]},
     )
+
 
 class taxcalc_extension(Reform):
     def apply(self):
@@ -711,6 +713,7 @@ def get_variable_uprating(
     uprating_factor = target_value / source_value
     return uprating_factor
 
+
 def assert_no_duplicate_columns(df):
     """
     Assert that there are no duplicate columns in the DataFrame.
@@ -719,6 +722,7 @@ def assert_no_duplicate_columns(df):
         df (pd.DataFrame): The DataFrame to check for duplicates.
     """
     assert len(df.columns) == len(set(df.columns))
+
 
 def create_stacked_flat_file(
     target_year: int = 2024, use_puf: bool = True, add_tc_outputs: bool = True
@@ -742,7 +746,6 @@ def create_stacked_flat_file(
         stacked_file = add_pt_w2_wages(stacked_file, target_year)
     else:
         stacked_file = cps_based_flat_file
-    
 
     if add_tc_outputs:
         print(
