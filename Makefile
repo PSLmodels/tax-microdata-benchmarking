@@ -9,6 +9,5 @@ format:
 
 flat-file:
 	python tax_microdata_benchmarking/create_flat_file.py
-	python tax_microdata_benchmarking/create_summary_file.py
 
 all: format test
