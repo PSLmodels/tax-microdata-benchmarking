@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
-from scipy.optimize import minimize
+from scipy.optimize import minimize, bisect
+import taxcalc as tc
+
 
 def add_pt_w2_wages(df, time_period: int, verbose: bool = True):
     """
@@ -12,7 +14,7 @@ def add_pt_w2_wages(df, time_period: int, verbose: bool = True):
     Returns:
         pd.DataFrame: The DataFrame with W2 wages added.
     """
-    qbid_tax_expenditures = { # From JCT TE reports 2018- and 2023-
+    qbid_tax_expenditures = {  # From JCT TE reports 2018- and 2023-
         2015: 0,
         2016: 0,
         2017: 0,
@@ -29,25 +31,35 @@ def add_pt_w2_wages(df, time_period: int, verbose: bool = True):
 
     QBID_TOTAL_21 = 205.8
 
-    target = QBID_TOTAL_21 * qbid_tax_expenditures[time_period] / qbid_tax_expenditures[2021]
+    target = (
+        QBID_TOTAL_21
+        * qbid_tax_expenditures[time_period]
+        / qbid_tax_expenditures[2021]
+    )
 
     qbi = np.maximum(0, df.e00900 + df.e26270 + df.e02100 + df.e27200)
 
     # Solve for scale to match the tax expenditure
 
     def expenditure_loss(scale):
-        res = (qbi * df.s006).sum()/1e9
-        deviation = (res - target)
-        print(f"Scale: {scale}, expenditure: {res}, deviation: {deviation}")
-        return deviation ** 2
-    
-    
-    scale = minimize(
-        expenditure_loss,
-        1,
-        tol=1,
-    ).x[0]
+        input_data = df.copy()
+        input_data["PT_binc_w2_wages"] = qbi * scale
+        input_data = tc.Records(data=input_data, start_year=time_period)
+        policy = tc.Policy()
+        simulation = tc.Calculator(records=input_data, policy=policy)
+        simulation.calc_all()
+        taxcalc_qbided_sum = (
+            simulation.dataframe(["qbided"]).qbided * df.s006
+        ).sum() / 1e9
+        deviation = taxcalc_qbided_sum - target
+        if verbose:
+            print(
+                f"scale: {scale}, deviation: {deviation}, total: {taxcalc_qbided_sum}"
+            )
+        return deviation
+
+    scale = bisect(expenditure_loss, 0, 2, rtol=0.01)
 
     df["PT_binc_w2_wages"] = qbi * scale
-    
+
     return df
