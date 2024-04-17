@@ -16,11 +16,6 @@ UPRATING_VARIABLES = [
     "alimony_income",
     "social_security",
     "unemployment_compensation",
-    # "ssi",
-    # "medicaid",
-    # "tanf",
-    # "snap",
-    # "housing_subsidy",
     "dividend_income",
     "qualified_dividend_income",
     "taxable_interest_income",
@@ -38,6 +33,7 @@ UPRATING_VARIABLES = [
     "long_term_capital_gains",
     "wic",
 ]
+
 
 
 class TaxCalcVariableAlias(Variable):
@@ -458,7 +454,6 @@ class tc_wic_ben(TaxCalcVariableAlias):
     label = "WIC"
     adds = ["wic"]
 
-
 class is_tax_filer(Variable):
     label = "tax filer"
     value_type = bool
@@ -526,6 +521,51 @@ class is_tax_filer(Variable):
 
         return required_to_file | not_required_but_likely_filer
 
+EXTRA_PUF_VARIABLES = [
+    "e02000",
+    "e26270",
+    "e19200",
+    "e18500",
+    "e19800",
+    "e20400",
+    "e20100",
+    "e00700",
+    "e03270",
+    "e24515",
+    "e03300",
+    "e07300",
+    "e62900",
+    "e32800",
+    "e87530",
+    "e03240",
+    "e01100",
+    "e01200",
+    "e24518",
+    "e09900",
+    "e27200",
+    "e03290",
+    "e58990",
+    "e03230",
+    "e07400",
+    "e11200",
+    "e07260",
+    "e07240",
+    "e07600",
+    "e03220",
+    "p08000",
+    "e03400",
+    "e09800",
+    "e09700",
+    "e03500",
+    "e87521",
+]
+
+for variable in EXTRA_PUF_VARIABLES:
+    globals()[f"tc_{variable}"] = type(
+        f"tc_{variable}",
+        (TaxCalcVariableAlias,),
+        {"label": variable, "adds": [variable]},
+    )
 
 class taxcalc_extension(Reform):
     def apply(self):
@@ -589,6 +629,9 @@ class taxcalc_extension(Reform):
             is_tax_filer,
         )
 
+        for variable in EXTRA_PUF_VARIABLES:
+            self.update_variable(globals()[f"tc_{variable}"])
+
 
 def create_flat_file(
     source_dataset: str = "enhanced_cps_2022",
@@ -603,7 +646,10 @@ def create_flat_file(
             source_time_period=2024,
             target_time_period=target_year,
         )
-        sim.set_input(variable, 2024, original_value * uprating_factor)
+        try:
+            sim.set_input(variable, 2024, original_value * uprating_factor)
+        except:
+            pass
 
     df = pd.DataFrame()
 
@@ -663,6 +709,15 @@ def get_variable_uprating(
     uprating_factor = target_value / source_value
     return uprating_factor
 
+def assert_no_duplicate_columns(df):
+    """
+    Assert that there are no duplicate columns in the DataFrame.
+
+    Args:
+        df (pd.DataFrame): The DataFrame to check for duplicates.
+    """
+    assert len(df.columns) == len(set(df.columns))
+
 
 def create_stacked_flat_file(
     target_year: int = 2024, use_puf: bool = True, add_tc_outputs: bool = True
@@ -679,7 +734,10 @@ def create_stacked_flat_file(
         nonfilers_file = cps_based_flat_file[
             cps_based_flat_file.is_tax_filer == 0
         ]
+        assert_no_duplicate_columns(nonfilers_file)
+        assert_no_duplicate_columns(puf_based_flat_file)
         stacked_file = pd.concat([puf_based_flat_file, nonfilers_file])
+        assert_no_duplicate_columns(stacked_file)
     else:
         stacked_file = cps_based_flat_file
 
@@ -692,19 +750,21 @@ def create_stacked_flat_file(
         simulation = tc.Calculator(records=input_data, policy=policy)
         simulation.calc_all()
         taxcalc_file = simulation.dataframe(None, all_vars=True)
+        assert_no_duplicate_columns(taxcalc_file)
         combined_file = pd.concat(
             [stacked_file.reset_index(), taxcalc_file.reset_index()], axis=1
         )
-        combined_file = combined_file[
-            [col for col in combined_file.columns if not col.endswith(".1")]
+        combined_file = combined_file.loc[
+            :, ~combined_file.columns.duplicated()
         ]
+        assert_no_duplicate_columns(combined_file)
         return combined_file
 
     return stacked_file
 
 
 if __name__ == "__main__":
-    for target_year in range(2015, 2027):
+    for target_year in [2015, 2021]:
         stacked_file = create_stacked_flat_file(
             target_year=target_year, use_puf=True
         )

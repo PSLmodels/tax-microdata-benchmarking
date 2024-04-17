@@ -2,7 +2,7 @@
 
 This file contains a summary of the Tax-Calculator microdata file. It is intended to be used as a reference for the Tax-Calculator microdata file.
 
-The flat file currently has 50 out of 68 (53%) columns in the Tax-Calculator PUF microdata file.
+The flat file currently has 83 out of 68 (88%) columns in the Tax-Calculator PUF microdata file.
 
 Missing columns: 
 - MIDR
@@ -10,45 +10,12 @@ Missing columns:
 - agi_bin
 - cmbtp
 - data_source
-- e00700
-- e01200
-- e02000
-- e03220
-- e03230
-- e03240
-- e03290
-- e03300
-- e03400
-- e03500
-- e07240
-- e07260
-- e07300
-- e07400
-- e07600
-- e09700
-- e09800
-- e09900
-- e11200
-- e18500
-- e19200
-- e19800
-- e20100
-- e20400
-- e24515
-- e24518
-- e26270
-- e27200
-- e58990
-- e62900
-- e87521
-- e87530
 - f6251
 - ffpos
 - g20500
 - h_seq
 - k1bx14p
 - k1bx14s
-- p08000
 
 Extra, non-taxdata-PUF columns: 
 - ssi_ben
@@ -280,7 +247,7 @@ taxable pension income
 
 ## e01100
 
-capital gains not on Sch. D
+e01100
 
 
 ## e01400
@@ -290,12 +257,12 @@ taxable IRA distributions
 
 ## e03270
 
-self-employed health insurance deduction
+e03270
 
 
 ## e32800
 
-child and dependent care expenses
+e32800
 
 
 ## e17500
@@ -336,4 +303,169 @@ net long-term capital gains
 ## wic_ben
 
 WIC
+
+
+## e02000
+
+e02000
+
+
+## e26270
+
+e26270
+
+
+## e19200
+
+e19200
+
+
+## e18500
+
+e18500
+
+
+## e19800
+
+e19800
+
+
+## e20400
+
+e20400
+
+
+## e20100
+
+e20100
+
+
+## e00700
+
+e00700
+
+
+## e24515
+
+e24515
+
+
+## e03300
+
+e03300
+
+
+## e07300
+
+e07300
+
+
+## e62900
+
+e62900
+
+
+## e87530
+
+e87530
+
+
+## e03240
+
+e03240
+
+
+## e01200
+
+e01200
+
+
+## e24518
+
+e24518
+
+
+## e09900
+
+e09900
+
+
+## e27200
+
+e27200
+
+
+## e03290
+
+e03290
+
+
+## e58990
+
+e58990
+
+
+## e03230
+
+e03230
+
+
+## e07400
+
+e07400
+
+
+## e11200
+
+e11200
+
+
+## e07260
+
+e07260
+
+
+## e07240
+
+e07240
+
+
+## e07600
+
+e07600
+
+
+## e03220
+
+e03220
+
+
+## p08000
+
+p08000
+
+
+## e03400
+
+e03400
+
+
+## e09800
+
+e09800
+
+
+## e09700
+
+e09700
+
+
+## e03500
+
+e03500
+
+
+## e87521
+
+e87521
 
