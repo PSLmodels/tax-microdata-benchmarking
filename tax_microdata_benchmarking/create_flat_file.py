@@ -9,6 +9,7 @@ import pandas as pd
 from policyengine_core.periods import instant
 from scipy.optimize import minimize
 from tax_microdata_benchmarking.adjust_qbi import add_pt_w2_wages
+from tax_microdata_benchmarking.reweight import reweight
 
 UPRATING_VARIABLES = [
     "employment_income",
@@ -743,6 +744,9 @@ def create_stacked_flat_file(
         assert_no_duplicate_columns(puf_based_flat_file)
         stacked_file = pd.concat([puf_based_flat_file, nonfilers_file])
         assert_no_duplicate_columns(stacked_file)
+        print(
+            f"Adding pass-through W2 wages to the flat file for {target_year}"
+        )
         stacked_file = add_pt_w2_wages(stacked_file, target_year)
     else:
         stacked_file = cps_based_flat_file
@@ -764,6 +768,13 @@ def create_stacked_flat_file(
             :, ~combined_file.columns.duplicated()
         ]
         assert_no_duplicate_columns(combined_file)
+        print(f"Reweighting the flat file for {target_year}")
+        try:
+            combined_file = reweight(combined_file, time_period=target_year)
+        except ValueError as e:
+            print(e)
+            print("Skipping reweighting.")
+            combined_file = stacked_file
         return combined_file
 
     return stacked_file
