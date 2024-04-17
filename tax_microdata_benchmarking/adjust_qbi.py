@@ -27,17 +27,25 @@ def add_pt_w2_wages(df, time_period: int, verbose: bool = True):
         2024: 57.6,
         2025: 60.9,
         2026: 24.9,
+        2027: 0,
     }
 
     QBID_TOTAL_21 = 205.8
 
     target = (
         QBID_TOTAL_21
-        * qbid_tax_expenditures[time_period]
+        * qbid_tax_expenditures[
+            time_period + 1
+        ]  # JCT figures are one year behind TC (check!)
         / qbid_tax_expenditures[2021]
     )
 
     qbi = np.maximum(0, df.e00900 + df.e26270 + df.e02100 + df.e27200)
+
+    if target == 0:
+        df["PT_binc_w2_wages"] = qbi * 0
+
+        return df
 
     # Solve for scale to match the tax expenditure
 
