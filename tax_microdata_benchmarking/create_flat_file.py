@@ -7,6 +7,8 @@ from policyengine_us.system import system
 import numpy as np
 import pandas as pd
 from policyengine_core.periods import instant
+from scipy.optimize import minimize
+from tax_microdata_benchmarking.adjust_qbi import add_pt_w2_wages
 
 UPRATING_VARIABLES = [
     "employment_income",
@@ -718,7 +720,6 @@ def assert_no_duplicate_columns(df):
     """
     assert len(df.columns) == len(set(df.columns))
 
-
 def create_stacked_flat_file(
     target_year: int = 2024, use_puf: bool = True, add_tc_outputs: bool = True
 ):
@@ -738,8 +739,10 @@ def create_stacked_flat_file(
         assert_no_duplicate_columns(puf_based_flat_file)
         stacked_file = pd.concat([puf_based_flat_file, nonfilers_file])
         assert_no_duplicate_columns(stacked_file)
+        stacked_file = add_pt_w2_wages(stacked_file, target_year)
     else:
         stacked_file = cps_based_flat_file
+    
 
     if add_tc_outputs:
         print(
@@ -764,7 +767,7 @@ def create_stacked_flat_file(
 
 
 if __name__ == "__main__":
-    for target_year in [2015, 2021]:
+    for target_year in [2021]:
         stacked_file = create_stacked_flat_file(
             target_year=target_year, use_puf=True
         )
