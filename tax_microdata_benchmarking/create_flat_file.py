@@ -814,7 +814,7 @@ if __name__ == "__main__":
         year for year in range(2015, 2027) if year not in PRIORITY_YEARS
     ]
     latest_weights = None
-    for target_year in PRIORITY_YEARS[2:] + REMAINING_YEARS:
+    for target_year in PRIORITY_YEARS + REMAINING_YEARS:
         stacked_file = create_stacked_flat_file(target_year=target_year)
         if target_year == 2021:
             latest_weights = stacked_file.s006
