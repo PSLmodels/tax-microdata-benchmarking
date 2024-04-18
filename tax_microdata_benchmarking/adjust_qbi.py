@@ -33,7 +33,7 @@ def add_pt_w2_wages(df, time_period: int, verbose: bool = True):
         2027: 0,
     }
 
-    QBID_TOTAL_21 = 205.8 # From SOI 2021
+    QBID_TOTAL_21 = 205.8  # From SOI 2021
 
     target = (
         QBID_TOTAL_21
@@ -77,8 +77,11 @@ def add_pt_w2_wages(df, time_period: int, verbose: bool = True):
 
     return df
 
+
 if __name__ == "__main__":
-    from tax_microdata_benchmarking.create_flat_file import create_stacked_flat_file
+    from tax_microdata_benchmarking.create_flat_file import (
+        create_stacked_flat_file,
+    )
 
     df = create_stacked_flat_file(2021)
 
