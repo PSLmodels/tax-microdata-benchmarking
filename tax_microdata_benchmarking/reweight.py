@@ -103,7 +103,11 @@ def reweight(flat_file: pd.DataFrame, time_period: int = 2021):
     from tqdm import tqdm
     from datetime import datetime
 
-    writer = SummaryWriter(log_dir=FOLDER / "calibration" / f"{time_period}_{datetime.now().isoformat()}")
+    writer = SummaryWriter(
+        log_dir=FOLDER
+        / "calibration"
+        / f"{time_period}_{datetime.now().isoformat()}"
+    )
 
     for i in tqdm(range(10_000)):
         optimizer.zero_grad()

@@ -770,8 +770,16 @@ def create_stacked_flat_file(
         print(
             f"Adding pass-through W2 wages to the flat file for {target_year}"
         )
-        qbi = np.maximum(0, combined_file.e00900 + combined_file.e26270 + combined_file.e02100 + combined_file.e27200)
-        combined_file["PT_binc_w2_wages"] = qbi * 0.357 # Solved in 2021 using adjust_qbi.py
+        qbi = np.maximum(
+            0,
+            combined_file.e00900
+            + combined_file.e26270
+            + combined_file.e02100
+            + combined_file.e27200,
+        )
+        combined_file["PT_binc_w2_wages"] = (
+            qbi * 0.357
+        )  # Solved in 2021 using adjust_qbi.py
         return combined_file
 
     return stacked_file
@@ -807,9 +815,7 @@ if __name__ == "__main__":
     ]
     latest_weights = None
     for target_year in PRIORITY_YEARS[2:] + REMAINING_YEARS:
-        stacked_file = create_stacked_flat_file(
-            target_year=target_year
-        )
+        stacked_file = create_stacked_flat_file(target_year=target_year)
         if target_year == 2021:
             latest_weights = stacked_file.s006
         elif target_year > 2021:
