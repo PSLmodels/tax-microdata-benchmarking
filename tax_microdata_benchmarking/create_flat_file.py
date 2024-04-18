@@ -767,7 +767,6 @@ def create_stacked_flat_file(
         except ValueError as e:
             print(e)
             print("Skipping reweighting.")
-            combined_file = stacked_file
         print(
             f"Adding pass-through W2 wages to the flat file for {target_year}"
         )
