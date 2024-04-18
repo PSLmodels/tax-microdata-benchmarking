@@ -10,5 +10,6 @@ setup(
         "paramtools==0.18.1",
         "pytest",
         "black",
+        "torch",
     ],
 )
