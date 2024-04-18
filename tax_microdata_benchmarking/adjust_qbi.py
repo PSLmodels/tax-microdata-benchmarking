@@ -15,8 +15,6 @@ def add_pt_w2_wages(df, time_period: int, verbose: bool = True):
         pd.DataFrame: The DataFrame with W2 wages added.
     """
 
-    # df["PT_binc_w2_wages"] = 0.1 * 
-
     # Note: just calculate the share in 2021 and use for all years.
 
     qbid_tax_expenditures = {  # From JCT TE reports 2018- and 2023-
@@ -41,7 +39,7 @@ def add_pt_w2_wages(df, time_period: int, verbose: bool = True):
         QBID_TOTAL_21
         * qbid_tax_expenditures[
             time_period + 1
-        ]  # JCT figures are one year behind TC (check!)
+        ]  # JCT figures are one year behind TC
         / qbid_tax_expenditures[2021]
     )
 
@@ -73,6 +71,15 @@ def add_pt_w2_wages(df, time_period: int, verbose: bool = True):
 
     scale = bisect(expenditure_loss, 0, 2, rtol=0.01)
 
+    print(f"Final scale: {scale:.1%}")
+
     df["PT_binc_w2_wages"] = qbi * scale
 
     return df
+
+if __name__ == "__main__":
+    from tax_microdata_benchmarking.create_flat_file import create_stacked_flat_file
+
+    df = create_stacked_flat_file(2021)
+
+    df = add_pt_w2_wages(df, 2021)
