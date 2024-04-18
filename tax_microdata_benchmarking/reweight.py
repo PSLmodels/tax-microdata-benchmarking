@@ -57,7 +57,7 @@ def reweight(flat_file: pd.DataFrame, time_period: int = 2021):
     def build_loss_matrix(df):
         loss_matrix = pd.DataFrame()
         agi = df.c00100
-        taxable = df.iitax - df.c07100 - df.refund > 0
+        taxable = df.c09200 - df.refund > 0
         targets_array = []
         for i in range(len(INCOME_RANGES) - 1):
             mask = (
