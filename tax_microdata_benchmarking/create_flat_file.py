@@ -770,11 +770,8 @@ def create_stacked_flat_file(
         print(
             f"Adding pass-through W2 wages to the flat file for {target_year}"
         )
-        try:
-            stacked_file = add_pt_w2_wages(stacked_file, target_year)
-        except:
-            print("Failed to add pass-through W2 wages.")
-            pass
+        qbi = np.maximum(0, combined_file.e00900 + combined_file.e26270 + combined_file.e02100 + combined_file.e27200)
+        combined_file["PT_binc_w2_wages"] = qbi * 0.357 # Solved in 2021 using adjust_qbi.py
         return combined_file
 
     return stacked_file
@@ -808,10 +805,16 @@ if __name__ == "__main__":
     REMAINING_YEARS = [
         year for year in range(2015, 2027) if year not in PRIORITY_YEARS
     ]
+    latest_weights = None
     for target_year in PRIORITY_YEARS[2:] + REMAINING_YEARS:
         stacked_file = create_stacked_flat_file(
-            target_year=target_year, use_puf=True
+            target_year=target_year
         )
+        if target_year == 2021:
+            latest_weights = stacked_file.s006
+        elif target_year > 2021:
+            stacked_file.s006 = latest_weights
+            print(f"Using 2021 solved weights for {target_year}")
         stacked_file.to_csv(
             f"tax_microdata_{target_year}.csv.gz",
             index=False,
