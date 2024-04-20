@@ -14,5 +14,5 @@ To assess, review the data examination results that compare federal
 agency tax estimates with those generated using the microdata file
 created in each project phase: [phase 1
 results](./tax_microdata_benchmarking/examination/results1.md) and
-(the as yet only partially complete) [phase 2
+[phase 2
 results](./tax_microdata_benchmarking/examination/results2.md).
