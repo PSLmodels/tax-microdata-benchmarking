@@ -808,6 +808,9 @@ def summary_analytics(df):
     return summary_df
 
 
+population = system.calibration.census.populations.total
+
+
 if __name__ == "__main__":
     PRIORITY_YEARS = [2021, 2015, 2026, 2023]
     REMAINING_YEARS = [
@@ -819,7 +822,10 @@ if __name__ == "__main__":
         if target_year == 2021:
             latest_weights = stacked_file.s006
         elif target_year > 2021:
-            stacked_file.s006 = latest_weights
+            population_uprating = population(
+                f"{target_year}-01-01"
+            ) / population("2021-01-01")
+            stacked_file.s006 = latest_weights * population_uprating
             print(f"Using 2021 solved weights for {target_year}")
         stacked_file.to_csv(
             f"tax_microdata_{target_year}.csv.gz",
