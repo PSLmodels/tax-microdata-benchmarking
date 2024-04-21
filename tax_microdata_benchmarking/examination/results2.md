@@ -121,4 +121,6 @@ following Phase 2 estimates is Tax-Calculator 3.5.3 version.
 Comments on Phase 2 Data Results
 --------------------------------
 
-The phase 2 dataset, ...
+The above results for the phase 2 dataset, plus other data-quality
+issues, will be investigated in phase 3 as part of this project's
+continuous-improvement procedures.
