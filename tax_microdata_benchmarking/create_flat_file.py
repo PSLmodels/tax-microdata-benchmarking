@@ -31,7 +31,7 @@ class tc_MARS(TaxCalcVariableAlias):
             "JOINT": 2,
             "SEPARATE": 3,
             "HEAD_OF_HOUSEHOLD": 4,
-            "WIDOW": 5,
+            "SURVIVING_SPOUSE": 5,
         }
         return pd.Series(filing_status).map(CODE_MAP)
 
