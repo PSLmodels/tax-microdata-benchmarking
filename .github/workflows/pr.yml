@@ -8,7 +8,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-python@v5
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
       - uses: psf/black@stable
         with:
           options: ". -l 79 --check"
@@ -17,7 +20,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-python@v5
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
       - name: Install dependencies
         run: make install-lite
       - name: Run tests
