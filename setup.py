@@ -5,7 +5,7 @@ setup(
     version="0.1.0",
     packages=find_packages(),
     install_requires=[
-        "policyengine_us>=0.648.0",
+        "git+https://github.com/policyengine/policyengine_us@nikhilwoodruff/issue4410",
         "taxcalc>=3.5.0",
         "paramtools==0.18.1",
         "pytest",
