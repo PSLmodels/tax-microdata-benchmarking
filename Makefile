@@ -1,5 +1,6 @@
 install-lite:
 	pip install -e .
+
 install:
 	pip install -e .[reweight]
 
