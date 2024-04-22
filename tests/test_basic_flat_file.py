@@ -23,7 +23,7 @@ EXEMPTED_VARIABLES = [
     "RECID",  # No reason to compare.
     "a_lineno",  # No reason to compare.
     "agi_bin",  # No reason to compare.
-    "blind_spouse"  # Issue here but deprioritized.
+    "blind_spouse",  # Issue here but deprioritized.
     "cmbtp",  # No reason to compare.
     "data_source",  # No reason to compare.
     "s006",  # No reason to compare.
