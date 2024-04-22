@@ -27,6 +27,9 @@ EXEMPTED_VARIABLES = [
     "cmbtp",  # No reason to compare.
     "data_source",  # No reason to compare.
     "s006",  # No reason to compare.
+    "h_seq",  # No reason to compare.
+    "fips",  # No reason to compare.
+    "ffpos",  # No reason to compare.
 ]
 
 
