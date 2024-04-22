@@ -18,7 +18,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v5
-      - uses: psf/black@stable
       - name: Install dependencies
         run: make install
       - name: Build container
