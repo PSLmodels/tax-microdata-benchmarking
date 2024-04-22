@@ -811,7 +811,7 @@ def summary_analytics(df):
 population = system.parameters.calibration.gov.census.populations.total
 
 
-if __name__ == "__main__":
+def create_all_files():
     PRIORITY_YEARS = [2021, 2015, 2026, 2023]
     REMAINING_YEARS = [
         year for year in range(2015, 2027) if year not in PRIORITY_YEARS
@@ -836,3 +836,7 @@ if __name__ == "__main__":
         analytics_df.to_csv(
             f"tax_microdata_{target_year}_analytics.csv", index=False
         )
+
+
+if __name__ == "__main__":
+    create_all_files()
