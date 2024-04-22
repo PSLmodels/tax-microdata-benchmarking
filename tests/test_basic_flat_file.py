@@ -36,7 +36,7 @@ EXEMPTED_VARIABLES = [
 EXEMPTED_VARIABLES += [
     variable
     for variable in taxcalc_variable_metadata["read"]
-    if variable.endswith("_p") or variable.endswith("_s")
+    if variable.endswith("p") or variable.endswith("s")
 ]
 
 
