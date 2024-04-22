@@ -10,6 +10,7 @@ setup(
         "paramtools==0.18.1",
         "pytest",
         "black",
-        "torch",
     ],
+    # torch in dev deps
+    extras_require={"reweight": ["torch"]},
 )

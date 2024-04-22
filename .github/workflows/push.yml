@@ -24,6 +24,6 @@ jobs:
       - name: Install dependencies
         run: make install
       - name: Run tests
-        run: make test
+        run: make test-lite
         env:
           POLICYENGINE_GITHUB_MICRODATA_AUTH_TOKEN: ${{ secrets.POLICYENGINE_GITHUB_MICRODATA_AUTH_TOKEN}}
