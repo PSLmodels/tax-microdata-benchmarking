@@ -1,5 +1,6 @@
 install:
 	pip install -e .
+	pip install git+https://github.com/policyengine/policyengine_us@nikhilwoodruff/issue4410
 
 test:
 	pytest .
