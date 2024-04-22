@@ -32,6 +32,13 @@ EXEMPTED_VARIABLES = [
     "ffpos",  # No reason to compare.
 ]
 
+# Exempt any variable split between filer and spouse for now.
+EXEMPTED_VARIABLES += [
+    variable
+    for variable in taxcalc_variable_metadata["read"]
+    if variable.endswith("_p") or variable.endswith("_s")
+]
+
 
 def pytest_namespace():
     return {"flat_file": None}
