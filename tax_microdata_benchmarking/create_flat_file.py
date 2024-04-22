@@ -3,8 +3,40 @@
 import taxcalc as tc
 from policyengine_us import Microsimulation
 from policyengine_us.model_api import *
+from policyengine_us.system import system
 import numpy as np
 import pandas as pd
+from policyengine_core.periods import instant
+from scipy.optimize import minimize
+from tax_microdata_benchmarking.adjust_qbi import add_pt_w2_wages
+from microdf import MicroDataFrame
+import numpy as np
+
+UPRATING_VARIABLES = [
+    "employment_income",
+    "self_employment_income",
+    "farm_income",
+    "pension_income",
+    "alimony_income",
+    "social_security",
+    "unemployment_compensation",
+    "dividend_income",
+    "qualified_dividend_income",
+    "taxable_interest_income",
+    "tax_exempt_interest_income",
+    "taxable_pension_income",
+    "non_sch_d_capital_gains",
+    "taxable_ira_distributions",
+    "self_employed_health_insurance_premiums",
+    "cdcc_relevant_expenses",
+    "medical_expense",
+    "pre_tax_contributions",
+    "traditional_ira_contributions",
+    "student_loan_interest",
+    "short_term_capital_gains",
+    "long_term_capital_gains",
+    "wic",
+]
 
 
 class TaxCalcVariableAlias(Variable):
@@ -116,7 +148,7 @@ class tc_s006(TaxCalcVariableAlias):
 
 
 class tc_FLPDYR(TaxCalcVariableAlias):
-    label = "tax year to calculate for"  # QUESTION: how does this work? Just going to put 2023 for now.
+    label = "tax year to calculate for"
 
     def formula(tax_unit, period, parameters):
         return period.start.year
@@ -494,6 +526,53 @@ class is_tax_filer(Variable):
         return required_to_file | not_required_but_likely_filer
 
 
+EXTRA_PUF_VARIABLES = [
+    "e02000",
+    "e26270",
+    "e19200",
+    "e18500",
+    "e19800",
+    "e20400",
+    "e20100",
+    "e00700",
+    "e03270",
+    "e24515",
+    "e03300",
+    "e07300",
+    "e62900",
+    "e32800",
+    "e87530",
+    "e03240",
+    "e01100",
+    "e01200",
+    "e24518",
+    "e09900",
+    "e27200",
+    "e03290",
+    "e58990",
+    "e03230",
+    "e07400",
+    "e11200",
+    "e07260",
+    "e07240",
+    "e07600",
+    "e03220",
+    "p08000",
+    "e03400",
+    "e09800",
+    "e09700",
+    "e03500",
+    "e87521",
+]
+
+for variable in EXTRA_PUF_VARIABLES:
+    globals()[f"tc_{variable}"] = type(
+        f"tc_{variable}",
+        (TaxCalcVariableAlias,),
+        {"label": variable, "adds": [variable]},
+    )
+
+
 class taxcalc_extension(Reform):
     def apply(self):
         self.add_variables(
@@ -556,16 +635,29 @@ class taxcalc_extension(Reform):
             is_tax_filer,
         )
 
+        for variable in EXTRA_PUF_VARIABLES:
+            self.update_variable(globals()[f"tc_{variable}"])
 
-def create_flat_file(save_dataframe: bool = True) -> pd.DataFrame:
-    sim = Microsimulation(
-        reform=taxcalc_extension, dataset="enhanced_cps_2022"
-    )
+
+def create_flat_file(
+    source_dataset: str = "enhanced_cps_2022",
+    target_year: int = 2024,
+) -> pd.DataFrame:
+    sim = Microsimulation(reform=taxcalc_extension, dataset=source_dataset)
+
+    for variable in UPRATING_VARIABLES:
+        original_value = sim.calculate(variable, 2024)
+        uprating_factor = get_variable_uprating(
+            variable,
+            source_time_period=2024,
+            target_time_period=target_year,
+        )
+        try:
+            sim.set_input(variable, 2024, original_value * uprating_factor)
+        except:
+            pass
+
     df = pd.DataFrame()
-
-    INCLUDED_NON_TC_VARIABLES = [
-        "is_tax_filer",
-    ]
 
     for variable in sim.tax_benefit_system.variables:
         if variable.startswith("tc_"):
@@ -573,7 +665,7 @@ def create_flat_file(save_dataframe: bool = True) -> pd.DataFrame:
                 np.float64
             )
 
-        if variable in INCLUDED_NON_TC_VARIABLES:
+        if variable == "is_tax_filer":
             df[variable] = sim.calculate(variable, 2024).values.astype(
                 np.float64
             )
@@ -588,17 +680,170 @@ def create_flat_file(save_dataframe: bool = True) -> pd.DataFrame:
         df[column] = df[column + "p"] + df[column + "s"]
 
     df.e01700 = np.minimum(df.e01700, df.e01500)
+    df.e00650 = np.minimum(df.e00650, df.e00600)
 
     df.RECID = df.RECID.astype(int)
-    df.MARS = df.MARS.astype(int)
-
-    if save_dataframe:
-        df.to_csv("tax_microdata.csv.gz", index=False, compression="gzip")
-
-    print(f"Completed data generation for {len(df.columns)} variables.")
+    df.MARS = df.MARS.fillna(1).astype(int)
+    df.FLPDYR = target_year
 
     return df
 
 
+def get_variable_uprating(
+    variable: str, source_time_period: str, target_time_period: str
+) -> str:
+    """
+    Get the uprating factor for a given variable between two time periods.
+
+    Args:
+        variable (str): The variable to uprate.
+        source_time_period (str): The source time period.
+        target_time_period (str): The target time period.
+
+    Returns:
+        str: The uprating factor.
+    """
+
+    calibration = system.parameters.calibration
+    if variable in calibration.gov.irs.soi.children:
+        parameter = calibration.gov.irs.soi.children[variable]
+    else:
+        parameter = calibration.gov.cbo.income_by_source.adjusted_gross_income
+    source_value = parameter(source_time_period)
+    target_value = parameter(target_time_period)
+
+    uprating_factor = target_value / source_value
+    return uprating_factor
+
+
+def assert_no_duplicate_columns(df):
+    """
+    Assert that there are no duplicate columns in the DataFrame.
+
+    Args:
+        df (pd.DataFrame): The DataFrame to check for duplicates.
+    """
+    assert len(df.columns) == len(set(df.columns))
+
+
+def create_stacked_flat_file(
+    target_year: int = 2024,
+    use_puf: bool = True,
+    add_tc_outputs: bool = True,
+    reweight: bool = True,
+):
+    print(f"Creating CPS flat file for {target_year}")
+    cps_based_flat_file = create_flat_file(
+        source_dataset="enhanced_cps_2022", target_year=target_year
+    )
+    if use_puf:
+        print(f"Creating PUF flat file for {target_year}")
+        puf_based_flat_file = create_flat_file(
+            source_dataset="puf_2022", target_year=target_year
+        )
+        nonfilers_file = cps_based_flat_file[
+            cps_based_flat_file.is_tax_filer == 0
+        ]
+        stacked_file = pd.concat([puf_based_flat_file, nonfilers_file])
+    else:
+        stacked_file = cps_based_flat_file
+
+    if add_tc_outputs:
+        print(
+            f"Adding Tax-Calculator outputs to the flat file for {target_year}"
+        )
+        input_data = tc.Records(data=stacked_file)
+        policy = tc.Policy()
+        simulation = tc.Calculator(records=input_data, policy=policy)
+        simulation.calc_all()
+        taxcalc_file = simulation.dataframe(None, all_vars=True)
+        combined_file = pd.concat(
+            [stacked_file.reset_index(), taxcalc_file.reset_index()], axis=1
+        )
+        combined_file = combined_file.loc[
+            :, ~combined_file.columns.duplicated()
+        ]
+        print(f"Reweighting the flat file for {target_year}")
+        if reweight:
+            try:
+                from tax_microdata_benchmarking.reweight import reweight
+
+                combined_file = reweight(
+                    combined_file, time_period=target_year
+                )
+            except ValueError as e:
+                print(e)
+                print("Skipping reweighting.")
+        print(
+            f"Adding pass-through W2 wages to the flat file for {target_year}"
+        )
+        qbi = np.maximum(
+            0,
+            combined_file.e00900
+            + combined_file.e26270
+            + combined_file.e02100
+            + combined_file.e27200,
+        )
+        combined_file["PT_binc_w2_wages"] = (
+            qbi * 0.357
+        )  # Solved in 2021 using adjust_qbi.py
+        return combined_file
+
+    return stacked_file
+
+
+def summary_analytics(df):
+    df = MicroDataFrame(df.copy(), weights="s006")
+
+    variables = []
+    sums = []
+    nonzero_counts = []
+
+    for variable in df.columns:
+        variables.append(variable)
+        sums.append(round(df[variable].sum() / 1e9, 1))
+        nonzero_counts.append(round((df[variable] > 0).sum() / 1e6, 1))
+
+    summary_df = pd.DataFrame(
+        {
+            "Variable": variables,
+            "Sum (bn)": sums,
+            "Nonzero count (m)": nonzero_counts,
+        }
+    )
+
+    return summary_df
+
+
+population = system.parameters.calibration.gov.census.populations.total
+
+
+def create_all_files():
+    PRIORITY_YEARS = [2021, 2015, 2026, 2023]
+    REMAINING_YEARS = [
+        year for year in range(2015, 2027) if year not in PRIORITY_YEARS
+    ]
+    latest_weights = None
+    for target_year in PRIORITY_YEARS + REMAINING_YEARS:
+        stacked_file = create_stacked_flat_file(target_year=target_year)
+        if target_year == 2021:
+            latest_weights = stacked_file.s006
+        elif target_year > 2021:
+            population_uprating = population(
+                f"{target_year}-01-01"
+            ) / population("2021-01-01")
+            stacked_file.s006 = latest_weights * population_uprating
+            print(f"Using 2021 solved weights for {target_year}")
+        stacked_file.to_csv(
+            f"tax_microdata_{target_year}.csv.gz",
+            index=False,
+            compression="gzip",
+        )
+        analytics_df = summary_analytics(stacked_file)
+        analytics_df.to_csv(
+            f"tax_microdata_{target_year}_analytics.csv", index=False
+        )
+
+
 if __name__ == "__main__":
-    create_flat_file()
+    create_all_files()
