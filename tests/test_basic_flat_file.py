@@ -17,8 +17,8 @@ with open(
     taxcalc_variable_metadata = yaml.safe_load(f)
 
 EXEMPTED_VARIABLES = [
-    "DSI"
-    "EIC"  # PUF-PE file almost certainly more correct by including CPS data
+    "DSI",
+    "EIC",  # PUF-PE file almost certainly more correct by including CPS data
     "MIDR",
     "RECID",  # No reason to compare.
     "a_lineno",  # No reason to compare.
@@ -45,11 +45,16 @@ def test_flat_file_builds():
     pytest.flat_file = flat_file
 
 
+variables_to_test = [
+    variable
+    for variable in tc_variable_totals.keys()
+    if variable not in EXEMPTED_VARIABLES
+]
+
+
 @pytest.mark.dependency(depends=["test_flat_file_builds"])
-@pytest.mark.parametrize("variable", tc_variable_totals.keys())
+@pytest.mark.parametrize("variable", variables_to_test)
 def test_tc_variable_totals(variable):
-    if variable in EXEMPTED_VARIABLES:
-        return
     meta = taxcalc_variable_metadata["read"][variable]
     name = meta.get("desc")
     flat_file = pytest.flat_file
@@ -60,4 +65,4 @@ def test_tc_variable_totals(variable):
         return
     assert (
         abs(total / tc_variable_totals[variable] - 1) < 0.5
-    ), f"{variable} ({name}) is off by {total / tc_variable_totals[variable] - 1:.1%}"
+    ), f"{variable} ({name}) is off by {total / tc_variable_totals[variable] - 1:.1%} ({total/1e9:.1f}bn vs {tc_variable_totals[variable]/1e9:.1f}bn)"
