@@ -11,6 +11,5 @@ setup(
         "pytest",
         "black",
     ],
-    # torch in dev deps
-    extras_require={"reweight": ["torch"]},
+    # extras_require={"reweight": ["torch"]},
 )
