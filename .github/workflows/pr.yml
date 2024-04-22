@@ -20,7 +20,7 @@ jobs:
       - uses: actions/setup-python@v5
       - name: Install dependencies
         run: make install
-      - name: Build container
+      - name: Run tests
         run: make test
         env:
           POLICYENGINE_GITHUB_MICRODATA_AUTH_TOKEN: ${{ secrets.POLICYENGINE_GITHUB_MICRODATA_AUTH_TOKEN}}
