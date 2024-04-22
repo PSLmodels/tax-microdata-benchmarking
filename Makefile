@@ -1,9 +1,7 @@
 install-lite:
 	pip install -e .
-	pip install git+https://github.com/policyengine/policyengine_us
 install:
 	pip install -e .[reweight]
-	pip install git+https://github.com/policyengine/policyengine_us
 
 test-lite:
 	TEST_MODE=lite pytest . -v
