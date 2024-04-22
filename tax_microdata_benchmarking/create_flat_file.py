@@ -808,7 +808,7 @@ def summary_analytics(df):
     return summary_df
 
 
-population = system.parameters.calibration.census.populations.total
+population = system.parameters.calibration.gov.census.populations.total
 
 
 if __name__ == "__main__":
