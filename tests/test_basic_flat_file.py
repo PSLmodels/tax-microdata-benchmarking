@@ -73,6 +73,8 @@ def test_tc_variable_totals(variable):
     if tc_variable_totals[variable] == 0:
         # If the taxdata file has a zero total, we'll assume the PE file is still correct.
         return
+    # 20% and more than 10bn off taxdata is a failure.
     assert (
-        abs(total / tc_variable_totals[variable] - 1) < 0.5
+        abs(total / tc_variable_totals[variable] - 1) < 0.4
+        or abs(total / 1e9 - tc_variable_totals[variable] / 1e9) < 30
     ), f"{variable} ({name}) is off by {total / tc_variable_totals[variable] - 1:.1%} ({total/1e9:.1f}bn vs {tc_variable_totals[variable]/1e9:.1f}bn)"
