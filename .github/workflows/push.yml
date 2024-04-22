@@ -11,7 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-python@v5
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
       - uses: psf/black@stable
         with:
           options: ". -l 79 --check"
@@ -19,17 +22,14 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
-      - name: Build container
-        run: docker build . -t ghcr.io/pslmodels/tax-microdata-benchmarking
-      - name: Log in to the Container registry
-        uses: docker/login-action@v1
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build container
-        run: docker build . -t ghcr.io/pslmodels/tax-microdata-benchmarking
-      - name: Push container
-        run: docker push ghcr.io/pslmodels/tax-microdata-benchmarking
+          python-version: 3.9
+      - name: Install dependencies
+        run: make install-lite
+      - name: Run tests
+        run: make test-lite
+        env:
+          POLICYENGINE_GITHUB_MICRODATA_AUTH_TOKEN: ${{ secrets.POLICYENGINE_GITHUB_MICRODATA_AUTH_TOKEN}}
