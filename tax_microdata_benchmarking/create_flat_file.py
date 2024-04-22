@@ -647,31 +647,34 @@ def create_flat_file(
     target_year: int = 2024,
 ) -> pd.DataFrame:
     sim = Microsimulation(reform=taxcalc_extension, dataset=source_dataset)
+    original_year = sim.dataset.time_period
 
     for variable in UPRATING_VARIABLES:
-        original_value = sim.calculate(variable, 2024)
+        original_value = sim.calculate(variable, original_year)
         uprating_factor = get_variable_uprating(
             variable,
-            source_time_period=2024,
+            source_time_period=original_year,
             target_time_period=target_year,
         )
         try:
-            sim.set_input(variable, 2024, original_value * uprating_factor)
-        except:
-            pass
+            sim.set_input(
+                variable, original_year, original_value * uprating_factor
+            )
+        except Exception as e:
+            print(f"Error uprating {variable}: {e}")
 
     df = pd.DataFrame()
 
     for variable in sim.tax_benefit_system.variables:
         if variable.startswith("tc_"):
-            df[variable[3:]] = sim.calculate(variable, 2024).values.astype(
-                np.float64
-            )
+            df[variable[3:]] = sim.calculate(
+                variable, original_year
+            ).values.astype(np.float64)
 
         if variable == "is_tax_filer":
-            df[variable] = sim.calculate(variable, 2024).values.astype(
-                np.float64
-            )
+            df[variable] = sim.calculate(
+                variable, original_year
+            ).values.astype(np.float64)
 
     # Extra quality-control checks to do with different data types, nothing major
     FILER_SUM_COLUMNS = [
