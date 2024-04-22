@@ -1,5 +1,5 @@
-# This file should create tax_microdata.csv.gz in the root of the repo.
-
+import warnings
+warnings.filterwarnings("ignore")
 import taxcalc as tc
 from policyengine_us import Microsimulation
 from policyengine_us.model_api import *
@@ -11,9 +11,6 @@ from scipy.optimize import minimize
 from tax_microdata_benchmarking.adjust_qbi import add_pt_w2_wages
 from microdf import MicroDataFrame
 import numpy as np
-import warnings
-
-warnings.filterwarnings("ignore")
 
 UPRATING_VARIABLES = [
     "employment_income",
