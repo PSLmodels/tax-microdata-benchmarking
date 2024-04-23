@@ -16,7 +16,7 @@ jobs:
         with:
           options: ". -l 79 --check"
   test:
-    name: Test
+    name: Main tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -28,6 +28,21 @@ jobs:
         run: make install-lite
       - name: Run tests
         run: make test-lite
+        env:
+          POLICYENGINE_GITHUB_MICRODATA_AUTH_TOKEN: ${{ secrets.POLICYENGINE_GITHUB_MICRODATA_AUTH_TOKEN}}
+  test_reweight:
+    name: Full tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+      - name: Install dependencies
+        run: make install
+      - name: Run tests
+        run: make test
         env:
           POLICYENGINE_GITHUB_MICRODATA_AUTH_TOKEN: ${{ secrets.POLICYENGINE_GITHUB_MICRODATA_AUTH_TOKEN}}
 
