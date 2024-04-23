@@ -459,6 +459,16 @@ class tc_wic_ben(TaxCalcVariableAlias):
     adds = ["wic"]
 
 
+class tc_e18500(TaxCalcVariableAlias):
+    label = "real-estate taxes paid"
+    adds = ["real_estate_taxes"]
+
+
+class tc_e19200(TaxCalcVariableAlias):
+    label = "interest expense"
+    adds = ["interest_expense"]
+
+
 class is_tax_filer(Variable):
     label = "tax filer"
     value_type = bool
@@ -634,6 +644,8 @@ class taxcalc_extension(Reform):
             tc_p23250,
             tc_wic_ben,
             is_tax_filer,
+            tc_e18500,
+            tc_e19200,
         )
 
         for variable in EXTRA_PUF_VARIABLES:
@@ -756,7 +768,20 @@ def create_stacked_flat_file(
         print(
             f"Adding Tax-Calculator outputs to the flat file for {target_year}"
         )
-        input_data = tc.Records(data=stacked_file)
+        print(
+            f"Adding pass-through W2 wages to the flat file for {target_year}"
+        )
+        qbi = np.maximum(
+            0,
+            stacked_file.e00900
+            + stacked_file.e26270
+            + stacked_file.e02100
+            + stacked_file.e27200,
+        )
+        stacked_file["PT_binc_w2_wages"] = (
+            qbi * 0.357
+        )  # Solved in 2021 using adjust_qbi.py
+        input_data = tc.Records(data=stacked_file, start_year=target_year)
         policy = tc.Policy()
         simulation = tc.Calculator(records=input_data, policy=policy)
         simulation.calc_all()
@@ -778,19 +803,6 @@ def create_stacked_flat_file(
             except ValueError as e:
                 print(e)
                 print("Skipping reweighting.")
-        print(
-            f"Adding pass-through W2 wages to the flat file for {target_year}"
-        )
-        qbi = np.maximum(
-            0,
-            combined_file.e00900
-            + combined_file.e26270
-            + combined_file.e02100
-            + combined_file.e27200,
-        )
-        combined_file["PT_binc_w2_wages"] = (
-            qbi * 0.357
-        )  # Solved in 2021 using adjust_qbi.py
         return combined_file
 
     return stacked_file
