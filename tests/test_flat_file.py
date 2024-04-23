@@ -194,3 +194,24 @@ def test_2023_tax_expenditures():
         assert (
             rel_error < 0.25
         ), f"Tax Expenditure for {name} is ${df['AllTax'][i]}bn compared to Tax-Data's ${taxdata_exp_results[i]}bn (relative error {rel_error:.1%})"
+
+# Adding explicit tests for unemployment compensation and medical expenses.
+
+@pytest.mark.dependency(depends=["test_2021_flat_file_builds"])
+def test_2021_unemployment_compensation():
+    flat_file_2021 = pytest.flat_file_2021
+
+    total = (flat_file_2021["e02300"] * flat_file_2021.s006).sum()
+    assert (
+        abs(total / 1e9 - 33) < 0.1
+    ), f"Unemployment compensation total is ${total/1e9:.1f}bn, expected $33bn"
+
+
+@pytest.mark.dependency(depends=["test_2021_flat_file_builds"])
+def test_2021_medical_expenses():
+    flat_file_2021 = pytest.flat_file_2021
+
+    total = (flat_file_2021["e17500"] * flat_file_2021.s006).sum()
+    assert (
+        abs(total / 1e9 - 215) < 0.2
+    ), f"Medical expense total is ${total/1e9:.1f}bn, expected $215bn"
