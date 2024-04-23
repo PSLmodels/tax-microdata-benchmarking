@@ -1,5 +1,6 @@
-# This file should create tax_microdata.csv.gz in the root of the repo.
+import warnings
 
+warnings.filterwarnings("ignore")
 import taxcalc as tc
 from policyengine_us import Microsimulation
 from policyengine_us.model_api import *
@@ -458,6 +459,16 @@ class tc_wic_ben(TaxCalcVariableAlias):
     adds = ["wic"]
 
 
+class tc_e18500(TaxCalcVariableAlias):
+    label = "real-estate taxes paid"
+    adds = ["real_estate_taxes"]
+
+
+class tc_e19200(TaxCalcVariableAlias):
+    label = "interest expense"
+    adds = ["interest_expense"]
+
+
 class is_tax_filer(Variable):
     label = "tax filer"
     value_type = bool
@@ -633,6 +644,8 @@ class taxcalc_extension(Reform):
             tc_p23250,
             tc_wic_ben,
             is_tax_filer,
+            tc_e18500,
+            tc_e19200,
         )
 
         for variable in EXTRA_PUF_VARIABLES:
@@ -644,31 +657,34 @@ def create_flat_file(
     target_year: int = 2024,
 ) -> pd.DataFrame:
     sim = Microsimulation(reform=taxcalc_extension, dataset=source_dataset)
+    original_year = sim.dataset.time_period
 
     for variable in UPRATING_VARIABLES:
-        original_value = sim.calculate(variable, 2024)
+        original_value = sim.calculate(variable, original_year)
         uprating_factor = get_variable_uprating(
             variable,
-            source_time_period=2024,
+            source_time_period=original_year,
             target_time_period=target_year,
         )
         try:
-            sim.set_input(variable, 2024, original_value * uprating_factor)
-        except:
-            pass
+            sim.set_input(
+                variable, original_year, original_value * uprating_factor
+            )
+        except Exception as e:
+            print(f"Error uprating {variable}: {e}")
 
     df = pd.DataFrame()
 
     for variable in sim.tax_benefit_system.variables:
         if variable.startswith("tc_"):
-            df[variable[3:]] = sim.calculate(variable, 2024).values.astype(
-                np.float64
-            )
+            df[variable[3:]] = sim.calculate(
+                variable, original_year
+            ).values.astype(np.float64)
 
         if variable == "is_tax_filer":
-            df[variable] = sim.calculate(variable, 2024).values.astype(
-                np.float64
-            )
+            df[variable] = sim.calculate(
+                variable, original_year
+            ).values.astype(np.float64)
 
     # Extra quality-control checks to do with different data types, nothing major
     FILER_SUM_COLUMNS = [
@@ -752,7 +768,20 @@ def create_stacked_flat_file(
         print(
             f"Adding Tax-Calculator outputs to the flat file for {target_year}"
         )
-        input_data = tc.Records(data=stacked_file)
+        print(
+            f"Adding pass-through W2 wages to the flat file for {target_year}"
+        )
+        qbi = np.maximum(
+            0,
+            stacked_file.e00900
+            + stacked_file.e26270
+            + stacked_file.e02100
+            + stacked_file.e27200,
+        )
+        stacked_file["PT_binc_w2_wages"] = (
+            qbi * 0.357
+        )  # Solved in 2021 using adjust_qbi.py
+        input_data = tc.Records(data=stacked_file, start_year=target_year)
         policy = tc.Policy()
         simulation = tc.Calculator(records=input_data, policy=policy)
         simulation.calc_all()
@@ -774,19 +803,6 @@ def create_stacked_flat_file(
             except ValueError as e:
                 print(e)
                 print("Skipping reweighting.")
-        print(
-            f"Adding pass-through W2 wages to the flat file for {target_year}"
-        )
-        qbi = np.maximum(
-            0,
-            combined_file.e00900
-            + combined_file.e26270
-            + combined_file.e02100
-            + combined_file.e27200,
-        )
-        combined_file["PT_binc_w2_wages"] = (
-            qbi * 0.357
-        )  # Solved in 2021 using adjust_qbi.py
         return combined_file
 
     return stacked_file

@@ -11,5 +11,5 @@ setup(
         "pytest",
         "black",
     ],
-    extras_require={"reweight": ["torch"]},
+    extras_require={"reweight": ["torch", "tensorboard"]},
 )

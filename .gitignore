@@ -2,6 +2,7 @@
 **/*.pyc
 **/*.csv.gz
 **/*.egg-info
-
 # Tensorboard
 tax_microdata_benchmarking/calibration
+
+*.ipynb
