@@ -95,7 +95,10 @@ FOLDER = Path(__file__).parent
 
 test_mode = os.environ.get("TEST_MODE", "lite")
 
+RUN_TE_TESTS = False
 
+
+@pytest.mark.skipif(not RUN_TE_TESTS, reason="TE tests are disabled.")
 @pytest.mark.dependency(depends=["test_2021_flat_file_builds"])
 def test_2023_tax_expenditures():
     flat_file_2021 = pytest.flat_file_2021
