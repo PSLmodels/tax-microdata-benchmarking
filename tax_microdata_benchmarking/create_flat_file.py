@@ -802,6 +802,7 @@ def create_stacked_flat_file(
         if reweight:
             try:
                 from tax_microdata_benchmarking.reweight import reweight
+
                 combined_file["s006_original"] = combined_file.s006
                 combined_file = reweight(
                     combined_file, time_period=target_year
