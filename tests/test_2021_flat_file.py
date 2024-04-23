@@ -50,14 +50,14 @@ def pytest_namespace():
 
 
 @pytest.mark.dependency()
-def test_flat_file_builds():
+def test_2021_flat_file_builds():
     from tax_microdata_benchmarking.create_flat_file import (
         create_stacked_flat_file,
     )
 
     flat_file = create_stacked_flat_file(2021, reweight=test_mode == "full")
 
-    pytest.flat_file = flat_file
+    pytest.flat_file_2021 = flat_file
 
 
 variables_to_test = [
@@ -67,12 +67,12 @@ variables_to_test = [
 ]
 
 
-@pytest.mark.dependency(depends=["test_flat_file_builds"])
+@pytest.mark.dependency(depends=["test_2021_flat_file_builds"])
 @pytest.mark.parametrize("variable", variables_to_test)
-def test_tc_variable_totals(variable):
+def test_2021_tc_variable_totals(variable):
     meta = taxcalc_variable_metadata["read"][variable]
     name = meta.get("desc")
-    flat_file = pytest.flat_file
+    flat_file = pytest.flat_file_2021
     weight = flat_file.s006
     total = (flat_file[variable] * weight).sum()
     if tc_variable_totals[variable] == 0:
