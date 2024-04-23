@@ -779,7 +779,7 @@ def create_stacked_flat_file(
             + stacked_file.e27200,
         )
         stacked_file["PT_binc_w2_wages"] = (
-            qbi * 0.357
+            qbi * 0.314  # Solved in 2021 using adjust_qbi.py
         )  # Solved in 2021 using adjust_qbi.py
         input_data = tc.Records(data=stacked_file, start_year=target_year)
         policy = tc.Policy()
@@ -835,7 +835,7 @@ population = system.parameters.calibration.gov.census.populations.total
 
 
 def create_all_files():
-    PRIORITY_YEARS = [2021, 2015, 2026, 2023]
+    PRIORITY_YEARS = [2021, 2023, 2026, 2015]
     REMAINING_YEARS = [
         year for year in range(2015, 2027) if year not in PRIORITY_YEARS
     ]
