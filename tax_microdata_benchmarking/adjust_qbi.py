@@ -37,9 +37,7 @@ def add_pt_w2_wages(df, time_period: int, verbose: bool = True):
 
     target = (
         QBID_TOTAL_21
-        * qbid_tax_expenditures[
-            time_period + 1
-        ]  # JCT figures are one year behind TC
+        * qbid_tax_expenditures[time_period]
         / qbid_tax_expenditures[2021]
     )
 
