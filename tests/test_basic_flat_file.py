@@ -33,7 +33,8 @@ EXEMPTED_VARIABLES = [
     "p23250",  # PE-PUF likely closer to truth than taxdata (needs triple check).
     "e01200",  # Unknown but deprioritized for now.
     "e17500",  # Unknown but deprioritized for now.
-    "e18500",
+    "e18500",  # Unknown but deprioritized for now.
+    "e02100",  # Farm income, unsure who's closer.
 ]
 
 # Exempt any variable split between filer and spouse for now.
