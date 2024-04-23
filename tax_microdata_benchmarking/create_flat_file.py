@@ -720,6 +720,8 @@ def get_variable_uprating(
         str: The uprating factor.
     """
 
+    population = system.parameters.calibration.gov.census.populations.total
+
     calibration = system.parameters.calibration
     if variable in calibration.gov.irs.soi.children:
         parameter = calibration.gov.irs.soi.children[variable]
@@ -728,8 +730,12 @@ def get_variable_uprating(
     source_value = parameter(source_time_period)
     target_value = parameter(target_time_period)
 
+    population_change = population(target_time_period) / population(
+        source_time_period
+    )
+
     uprating_factor = target_value / source_value
-    return uprating_factor
+    return uprating_factor / population_change
 
 
 def assert_no_duplicate_columns(df):
