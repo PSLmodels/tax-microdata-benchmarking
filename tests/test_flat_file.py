@@ -205,7 +205,7 @@ def test_2021_unemployment_compensation():
 
     total = (flat_file_2021["e02300"] * flat_file_2021.s006).sum()
     assert (
-        abs(total / 1e9 - 33) < 0.1
+        abs(total / 1e9 / 33 - 1) < 0.1
     ), f"Unemployment compensation total is ${total/1e9:.1f}bn, expected $33bn"
 
 
@@ -215,5 +215,5 @@ def test_2021_medical_expenses():
 
     total = (flat_file_2021["e17500"] * flat_file_2021.s006).sum()
     assert (
-        abs(total / 1e9 - 215) < 0.2
+        abs(total / 1e9 / 215 - 1) < 0.2
     ), f"Medical expense total is ${total/1e9:.1f}bn, expected $215bn"
