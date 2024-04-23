@@ -802,7 +802,7 @@ def create_stacked_flat_file(
         if reweight:
             try:
                 from tax_microdata_benchmarking.reweight import reweight
-
+                combined_file["s006_original"] = combined_file.s006
                 combined_file = reweight(
                     combined_file, time_period=target_year
                 )
@@ -858,8 +858,11 @@ def create_all_files():
             latest_weights = stacked_file.s006
         elif target_year > 2021:
             population_uprating = get_population_growth(target_year, 2021)
+            stacked_file["s006_original"] = stacked_file.s006
             stacked_file.s006 = latest_weights * population_uprating
             print(f"Using 2021 solved weights for {target_year}")
+        else:
+            stacked_file["s006_original"] = stacked_file.s006
         stacked_file.to_csv(
             f"tax_microdata_{target_year}.csv.gz",
             index=False,
