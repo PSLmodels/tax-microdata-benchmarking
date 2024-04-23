@@ -6,3 +6,4 @@
 tax_microdata_benchmarking/calibration
 
 *.ipynb
+tmp/
