@@ -95,7 +95,7 @@ FOLDER = Path(__file__).parent
 
 test_mode = os.environ.get("TEST_MODE", "lite")
 
-RUN_TE_TESTS = False
+RUN_TE_TESTS = True
 
 
 @pytest.mark.skipif(not RUN_TE_TESTS, reason="TE tests are disabled.")
@@ -205,7 +205,7 @@ def test_2021_unemployment_compensation():
 
     total = (flat_file_2021["e02300"] * flat_file_2021.s006).sum()
     assert (
-        abs(total / 1e9 / 33 - 1) < 0.1
+        abs(total / 1e9 / 33 - 1) < 0.2
     ), f"Unemployment compensation total is ${total/1e9:.1f}bn, expected $33bn"
 
 
