@@ -109,7 +109,9 @@ def test_2023_tax_expenditures():
         2023, reweight=test_mode == "full"
     )
 
-    flat_file_2023 = flat_file_2021.s006 * get_population_growth(2023, 2021)
+    flat_file_2023.s006 = flat_file_2021.s006 * get_population_growth(
+        2023, 2021
+    )
 
     tc_folder = (
         FOLDER.parent
@@ -122,7 +124,7 @@ def test_2023_tax_expenditures():
 
     # cd into taxcalculator and run bash ./runs.sh pe23 23. That produces a file called pe23-23.res.actual. Print it out.
 
-    subprocess.run(["./runs.sh", "pe23", "23"], cwd=tc_folder)
+    subprocess.run(["./runs.sh", "pe23", "23"], cwd=tc_folder.resolve())
 
     with open(tc_folder / "pe23-23.res-actual") as f:
         data = f.read().splitlines()
