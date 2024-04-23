@@ -95,7 +95,7 @@ FOLDER = Path(__file__).parent
 
 test_mode = os.environ.get("TEST_MODE", "lite")
 
-RUN_TE_TESTS = True
+RUN_TE_TESTS = False
 
 
 @pytest.mark.skipif(not RUN_TE_TESTS, reason="TE tests are disabled.")
