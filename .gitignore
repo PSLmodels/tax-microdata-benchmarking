@@ -6,3 +6,5 @@
 tax_microdata_benchmarking/calibration
 
 *.ipynb
+tmp/
+tax_microdata_benchmarking/examination/taxcalculator/pe23-23*

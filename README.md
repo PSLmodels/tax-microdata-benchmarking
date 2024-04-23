@@ -8,7 +8,7 @@ development will proceed in several phases.
 
 To install, clone the repository and run `pip install -e .` from the
 root directory.  To check that the installation was successful, run
-`make test` or `pytest .` from the root directory.
+`make test` or `pytest .` from the root directory. This needs the POLICYENGINE_GITHUB_MICRODATA_AUTH_TOKEN environment variable to be set- contact [Nikhil Woodruff](mailto:nikhil@policyengine.org) for the code if you have access to the IRS PUF.
 
 To assess, review the data examination results that compare federal
 agency tax estimates with those generated using the microdata file

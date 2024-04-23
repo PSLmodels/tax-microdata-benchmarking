@@ -720,6 +720,8 @@ def get_variable_uprating(
         str: The uprating factor.
     """
 
+    population = system.parameters.calibration.gov.census.populations.total
+
     calibration = system.parameters.calibration
     if variable in calibration.gov.irs.soi.children:
         parameter = calibration.gov.irs.soi.children[variable]
@@ -728,8 +730,12 @@ def get_variable_uprating(
     source_value = parameter(source_time_period)
     target_value = parameter(target_time_period)
 
+    population_change = population(target_time_period) / population(
+        source_time_period
+    )
+
     uprating_factor = target_value / source_value
-    return uprating_factor
+    return uprating_factor / population_change
 
 
 def assert_no_duplicate_columns(df):
@@ -780,7 +786,7 @@ def create_stacked_flat_file(
         )
         stacked_file["PT_binc_w2_wages"] = (
             qbi * 0.314  # Solved in 2021 using adjust_qbi.py
-        )  # Solved in 2021 using adjust_qbi.py
+        )
         input_data = tc.Records(data=stacked_file, start_year=target_year)
         policy = tc.Policy()
         simulation = tc.Calculator(records=input_data, policy=policy)
@@ -797,6 +803,7 @@ def create_stacked_flat_file(
             try:
                 from tax_microdata_benchmarking.reweight import reweight
 
+                combined_file["s006_original"] = combined_file.s006
                 combined_file = reweight(
                     combined_file, time_period=target_year
                 )
@@ -834,6 +841,12 @@ def summary_analytics(df):
 population = system.parameters.calibration.gov.census.populations.total
 
 
+def get_population_growth(target_year: int, source_year: int):
+    return population(f"{target_year}-01-01") / population(
+        f"{source_year}-01-01"
+    )
+
+
 def create_all_files():
     PRIORITY_YEARS = [2021, 2023, 2026, 2015]
     REMAINING_YEARS = [
@@ -845,11 +858,12 @@ def create_all_files():
         if target_year == 2021:
             latest_weights = stacked_file.s006
         elif target_year > 2021:
-            population_uprating = population(
-                f"{target_year}-01-01"
-            ) / population("2021-01-01")
+            population_uprating = get_population_growth(target_year, 2021)
+            stacked_file["s006_original"] = stacked_file.s006
             stacked_file.s006 = latest_weights * population_uprating
             print(f"Using 2021 solved weights for {target_year}")
+        else:
+            stacked_file["s006_original"] = stacked_file.s006
         stacked_file.to_csv(
             f"tax_microdata_{target_year}.csv.gz",
             index=False,
