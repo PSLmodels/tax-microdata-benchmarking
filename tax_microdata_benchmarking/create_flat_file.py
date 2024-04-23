@@ -835,7 +835,7 @@ population = system.parameters.calibration.gov.census.populations.total
 
 
 def create_all_files():
-    PRIORITY_YEARS = [2021, 2015, 2026, 2023]
+    PRIORITY_YEARS = [2021, 2023, 2026, 2015]
     REMAINING_YEARS = [
         year for year in range(2015, 2027) if year not in PRIORITY_YEARS
     ]
