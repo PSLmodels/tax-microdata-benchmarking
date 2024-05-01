@@ -750,6 +750,7 @@ def assert_no_duplicate_columns(df):
 
 def create_stacked_flat_file(
     target_year: int = 2024,
+    pt_w2_wages_scale: float = 0.318,
     use_puf: bool = True,
     add_tc_outputs: bool = True,
     reweight: bool = True,
@@ -774,9 +775,11 @@ def create_stacked_flat_file(
         print(
             f"Adding Tax-Calculator outputs to the flat file for {target_year}"
         )
-        print(
-            f"Adding pass-through W2 wages to the flat file for {target_year}"
+        msg = (
+            f"Adding pass-through W-2 wages to the flat file for {target_year}"
+            f" using scale = {pt_w2_wages_scale}"
         )
+        print(msg)
         qbi = np.maximum(
             0,
             stacked_file.e00900
@@ -784,9 +787,7 @@ def create_stacked_flat_file(
             + stacked_file.e02100
             + stacked_file.e27200,
         )
-        stacked_file["PT_binc_w2_wages"] = (
-            qbi * 0.318  # Solved in 2021 using adjust_qbi.py
-        )
+        stacked_file["PT_binc_w2_wages"] = qbi * pt_w2_wages_scale
         input_data = tc.Records(data=stacked_file, start_year=target_year)
         policy = tc.Policy()
         simulation = tc.Calculator(records=input_data, policy=policy)
