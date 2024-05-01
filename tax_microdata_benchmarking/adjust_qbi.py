@@ -14,14 +14,16 @@ def add_pt_w2_wages(df, verbose: bool = True):
     Returns:
         tuple containing:
           pd.DataFrame: the 2021 DataFrame with pass-through W-2 wages added
-          pt_w2_wages_scale: rounded to four decimal digits
+          pt_w2_wages_scale: rounded to five decimal digits
     """
-    QBID_TOTAL = 205.8  # from 2021 SOI tabulations (in $billions)
+    if verbose:
+        print("Finding scale to use in imputing pass-through W-2 wages")
+    QBID_TOTAL = 205.8  # from IRS SOI P4801 tabulations of 2021 data (in $B)
     qbi = np.maximum(0, df.e00900 + df.e26270 + df.e02100 + df.e27200)
 
-    # Solve for scale to match the QBID_TARGET
+    # solve for the scale value that generates the QBID_TOTAL target
 
-    def deduction_loss(scale):
+    def deduction_deviation(scale):
         input_data = df.copy()
         input_data["PT_binc_w2_wages"] = qbi * scale
         input_data = tc.Records(
@@ -40,9 +42,9 @@ def add_pt_w2_wages(df, verbose: bool = True):
             print(f"scale: {scale:8.6f}, dev: {dev:6.2f}, tot: {qbided:.2f}")
         return dev
 
-    scale = bisect(deduction_loss, 0.1, 0.5, rtol=0.001)
-    rounded_scale = round(scale, 4)
-    print(f"Final (rounded) scale: {rounded_scale:.4f}")
+    scale = bisect(deduction_deviation, 0.1, 0.5, rtol=0.001)
+    rounded_scale = round(scale, 5)
+    print(f"Final (rounded) scale: {rounded_scale}")
     df["PT_binc_w2_wages"] = qbi * rounded_scale
     return (df, rounded_scale)
 
