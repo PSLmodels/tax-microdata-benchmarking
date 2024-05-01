@@ -2,9 +2,6 @@
 **/*.pyc
 **/*.csv.gz
 **/*.egg-info
-# Tensorboard
 tax_microdata_benchmarking/calibration
-
 *.ipynb
-tmp/
-tax_microdata_benchmarking/examination/taxcalculator/pe23-23*
+**/_build/
