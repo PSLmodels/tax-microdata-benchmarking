@@ -33,6 +33,7 @@ jobs:
         run: make test-lite
         env:
           POLICYENGINE_GITHUB_MICRODATA_AUTH_TOKEN: ${{ secrets.POLICYENGINE_GITHUB_MICRODATA_AUTH_TOKEN}}
+          PSL_TAX_MICRODATA_RELEASE_AUTH_TOKEN: ${{ secrets.PSL_TAX_MICRODATA_RELEASE_AUTH_TOKEN}}
   test_reweight:
     name: Full tests
     runs-on: ubuntu-latest
@@ -48,3 +49,4 @@ jobs:
         run: make test
         env:
           POLICYENGINE_GITHUB_MICRODATA_AUTH_TOKEN: ${{ secrets.POLICYENGINE_GITHUB_MICRODATA_AUTH_TOKEN}}
+          PSL_TAX_MICRODATA_RELEASE_AUTH_TOKEN: ${{ secrets.PSL_TAX_MICRODATA_RELEASE_AUTH_TOKEN}}
