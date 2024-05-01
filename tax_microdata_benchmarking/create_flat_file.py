@@ -785,7 +785,7 @@ def create_stacked_flat_file(
             + stacked_file.e27200,
         )
         stacked_file["PT_binc_w2_wages"] = (
-            qbi * 0.314  # Solved in 2021 using adjust_qbi.py
+            qbi * 0.318  # Solved in 2021 using adjust_qbi.py
         )
         input_data = tc.Records(data=stacked_file, start_year=target_year)
         policy = tc.Policy()
