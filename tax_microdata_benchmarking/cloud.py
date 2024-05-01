@@ -43,15 +43,17 @@ def download_gh_release_asset(
     asset_name: str = "puf_2015.csv.gz",
 ) -> pd.DataFrame:
     """
-    Download the IRS Public Use File (PUF) from a private GitHub repo
+    Download a GitHub release asset (a gzipped CSV) from a private GitHub repo
 
     Args:
-        repo (str): The GitHub repo to download the PUF from
+        repo (str): The GitHub repo to download the asset from
         release_name (str): The name of the release to download
 
     Returns:
-        pd.DataFrame: The PUF as a DataFrame
+        pd.DataFrame: The release as a DataFrame
     """
+
+    assert asset_name.endswith(".csv.gz"), "Asset must be a gzipped CSV"
 
     # Get the release ID
     releases = gh_api_call(
