@@ -22,7 +22,7 @@ def create_weights_file():
 
     # get FIRST_YEAR weights from VARFILE
     vdf = pd.read_csv(VARFILE)
-    weights = vdf.s006
+    weights = vdf.s006 * 100  # scale up weights by 100 for Tax-Calculator
 
     # construct dictionary of weights by year
     wdict = {f"WT{FIRST_YEAR}": weights}
