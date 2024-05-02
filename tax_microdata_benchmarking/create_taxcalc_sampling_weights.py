@@ -35,7 +35,7 @@ def create_weights_file():
 
     # write weights to CSV-formatted file
     wdf = pd.DataFrame.from_dict(wdict)
-    wdf.to_csv(WGTFILE, index=False, float_format="%.2f", compression="gzip")
+    wdf.to_csv(WGTFILE, index=False, float_format="%.0f", compression="gzip")
 
 
 if __name__ == "__main__":
