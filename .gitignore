@@ -1,5 +1,6 @@
 **/*.h5
 **/*.pyc
+**/*.csv.zip
 **/*.csv.gz
 !tax_microdata_benchmarking/tmd_weights.csv.gz
 **/*.egg-info

@@ -2,11 +2,11 @@
 # Execute several Tax-Calculator runs using the execute.sh script.
 # USAGE:
 #   ./runs.sh  DATAFILE(without_trailing_.csv) YEAR(tailing_two_digits)
-#   DATAFILES: puf|pe23|xb23|xb26|xc23|xc26
+#   DATAFILES: puf|pe23|xb23|xb26|tmd
 #              (where puf is from the taxdata repository)
 #              (where pe23 is the Phase 1 work product)
 #              (where xb23 and xb26 are Phase 2 work products)
-#              (where xc23 and xc26 are Phase 3 work products)
+#              (where tmd is from a Phase 3 work product)
 
 D="DATAFILE(without_trailing_.csv)"
 Y="YEAR(tailing_two_digits)"
@@ -46,26 +46,12 @@ if [[ "$1" == "xb26" ]]; then
     fi
     OK=1
 fi
-if [[ "$1" == "xc23" ]]; then
-    unzip -oq xc23.csv.zip
-    if [[ "$2" != "23" ]]; then
-        echo "ERROR: YEAR not equal to 23" >&2
-        echo "USAGE: ./runs.sh xc23 23" >&2
-        exit 1
-    fi
-    OK=1
-fi
-if [[ "$1" == "xc26" ]]; then
-    unzip -oq xc26.csv.zip
-    if [[ "$2" != "26" ]]; then
-        echo "ERROR: YEAR not equal to 26" >&2
-        echo "USAGE: ./runs.sh xc26 26" >&2
-        exit 1
-    fi
+if [[ "$1" == "tmd" ]]; then
+    unzip -oq tmd.csv.zip
     OK=1
 fi
 if [[ "$OK" -ne 1 ]]; then
-    echo "ERROR: DATAFILE is neither 'puf' nor 'pe23'" >&2
+    echo "ERROR: illegal DATAFILE" >&2
     echo "USAGE: ./runs.sh $D $Y" >&2
     exit 1
 fi
