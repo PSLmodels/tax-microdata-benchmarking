@@ -2,13 +2,14 @@
 Construct tmd.csv.gz, a Tax-Calculator-style input variable file for 2021.
 """
 
+import pandas as pd
+import taxcalc as tc
 from tax_microdata_benchmarking.create_flat_file import (
     create_stacked_flat_file,
 )
 from tax_microdata_benchmarking.adjust_qbi import (
     add_pt_w2_wages,
 )
-import taxcalc as tc
 
 
 TAXYEAR = 2021
@@ -54,6 +55,13 @@ def create_variable_file():
         "tmd.csv.gz",
         index=False,
         float_format="%.0f",
+        compression="gzip",
+    )
+    # write exact TAXYEAR weights to CSV-formatted file
+    wdf = pd.DataFrame.from_dict({"exact_weight": vdf.s006})
+    wdf.to_csv(
+        f"tmd_exact_{TAXYEAR}_weights.csv.gz",
+        index=False,
         compression="gzip",
     )
 
