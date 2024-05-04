@@ -2,7 +2,6 @@
 Construct tmd.csv.gz, a Tax-Calculator-style input variable file for 2021.
 """
 
-import pandas as pd
 import taxcalc as tc
 from tax_microdata_benchmarking.create_flat_file import (
     create_stacked_flat_file,
@@ -32,7 +31,7 @@ def create_variable_file():
         print(f"WARNING: FINAL vs INITIAL scale diff = {abs_diff:.6f}")
         print(f"  INITIAL pt_w2_wages_scale = {INITIAL_PT_W2_WAGES_SCALE:.6f}")
         print(f"    FINAL pt_w2_wages_scale = {pt_w2_wages_scale:.6f}")
-    # streamline variables dataframe
+    # streamline dataframe so that it includes only input variables
     rec = tc.Records(
         data=vdf,
         start_year=TAXYEAR,
@@ -41,27 +40,17 @@ def create_variable_file():
         adjust_ratios=None,
     )
     vdf.drop(columns=rec.IGNORED_VARS, inplace=True)
-    vdf.e00200p = vdf.e00200p.to_numpy().round()
-    vdf.e00200s = vdf.e00200s.to_numpy().round()
-    vdf.e00200 = vdf.e00200p + vdf.e00200s
-    vdf.e00900p = vdf.e00900p.to_numpy().round()
-    vdf.e00900s = vdf.e00900s.to_numpy().round()
-    vdf.e00900 = vdf.e00900p + vdf.e00900s
-    vdf.e02100p = vdf.e02100p.to_numpy().round()
-    vdf.e02100s = vdf.e02100s.to_numpy().round()
-    vdf.e02100 = vdf.e02100p + vdf.e02100s
+    # round all float variables to nearest integer except for weights
+    weights = vdf.s006.copy()
+    vdf = vdf.astype(int)
+    vdf.s006 = weights
+    for var in ["e00200", "e00900", "e02100"]:
+        vdf[var] = vdf[f"{var}p"] + vdf[f"{var}s"]
     # write streamlined variables dataframe to CSV-formatted file
     vdf.to_csv(
         "tmd.csv.gz",
         index=False,
-        float_format="%.0f",
-        compression="gzip",
-    )
-    # write exact TAXYEAR weights to CSV-formatted file
-    wdf = pd.DataFrame.from_dict({"exact_weight": vdf.s006})
-    wdf.to_csv(
-        f"tmd_exact_{TAXYEAR}_weights.csv.gz",
-        index=False,
+        float_format="%.2f",
         compression="gzip",
     )
 

@@ -1,6 +1,10 @@
-# Source: CBO Jan 2024 publication "The Demographic Outlook: 2024 to 2054"
+# Sources:
+# CBO Jan 2024 publication "The Demographic Outlook: 2024 to 2054"
 # URL: https://www.cbo.gov/publication/59697
-# Spreadsheet: Data Underlying Figures, Figure 2, Total Population (millions)
+# (a) Data Underlying Figures, Figure 2 spreadsheet tab,
+#     Total Population (millions) [for years from 2021 through 2054]
+# (b) Demographic Projections, Population and growth spreadsheet tab,
+#     Total Social Security area population (millions) [for years after 2054]
 2021: 334.181
 2022: 335.458
 2023: 338.442
@@ -15,3 +19,43 @@
 2032: 360.285
 2033: 361.832
 2034: 363.330
+2035: 364.774
+2036: 366.164
+2037: 367.499
+2038: 368.777
+2039: 369.998
+2040: 371.161
+2041: 372.266
+2042: 373.315
+2043: 374.308
+2044: 375.250
+2045: 376.144
+2046: 376.993
+2047: 377.801
+2048: 378.573
+2049: 379.313
+2050: 380.026
+2051: 380.718
+2052: 381.394
+2053: 382.062
+2054: 382.726
+2055: 383.393
+2056: 384.067
+2057: 384.752
+2058: 385.451
+2059: 386.167
+2060: 386.898
+2061: 387.644
+2062: 388.404
+2063: 389.175
+2064: 389.955
+2065: 390.739
+2066: 391.523
+2067: 392.302
+2068: 393.073
+2069: 393.831
+2070: 394.572
+2071: 395.291
+2072: 395.984
+2073: 396.650
+2074: 397.286
