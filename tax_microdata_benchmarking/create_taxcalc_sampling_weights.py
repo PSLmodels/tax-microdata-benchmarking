@@ -9,7 +9,7 @@ import pandas as pd
 
 FIRST_YEAR = 2021
 LAST_YEAR = 2034
-EXWFILE = "tmd_exact_2021_weights.csv.gz"
+VARFILE = "tmd.csv.gz"
 POPFILE = "cbo_population_forecast.yaml"
 WGTFILE = "tmd_weights.csv.gz"
 
@@ -22,12 +22,11 @@ def create_weights_file():
     with open(POPFILE, "r", encoding="utf-8") as pfile:
         pop = yaml.safe_load(pfile.read())
 
-    # get exact FIRST_YEAR weights from EXWFILE
-    edf = pd.read_csv(EXWFILE)
-    weights = edf.exact_weight
-    weights *= 100  # scale up weights by 100 for Tax-Calculator
+    # get FIRST_YEAR weights from VARFILE
+    vdf = pd.read_csv(VARFILE)
+    weights = vdf.s006 * 100  # scale up weights by 100 for Tax-Calculator
 
-    # construct dictionary of weights by year
+    # construct dictionary of scaled-up weights by year
     wdict = {f"WT{FIRST_YEAR}": weights}
     cum_pop_growth = 1.0
     for year in range(FIRST_YEAR + 1, LAST_YEAR + 1):
@@ -36,7 +35,7 @@ def create_weights_file():
         wght = weights.copy() * cum_pop_growth
         wdict[f"WT{year}"] = wght
 
-    # write rounded integer weights to CSV-formatted file
+    # write rounded integer scaled-up weights to CSV-formatted file
     wdf = pd.DataFrame.from_dict(wdict)
     wdf.to_csv(WGTFILE, index=False, float_format="%.0f", compression="gzip")
 
