@@ -1,15 +1,14 @@
 """
-Construct tmd_growfactors.csv, a Tax-Calculator-style GrowFactors file for
-the years 2021+ from the puf_growfactors.csv file, which is a copy of the
-most recent growfactors.csv file in the Tax-Calculator repository.
+Construct growfactors.csv, a Tax-Calculator-style GrowFactors file that
+extends through LAST_YEAR from the puf_growfactors.csv file, which is a
+copy of the most recent growfactors.csv file in the Tax-Calculator repository.
 """
 
 import pandas as pd
 
-FIRST_YEAR = 2021
 LAST_YEAR = 2034
 PGFFILE = "puf_growfactors.csv"
-TGFFILE = "tmd_growfactors.csv"
+TGFFILE = "growfactors.csv"
 
 
 def create_factors_file():
@@ -20,14 +19,6 @@ def create_factors_file():
     gfdf = pd.read_csv(PGFFILE)
     first_puf_year = gfdf.YEAR.iat[0]
     last_puf_year = gfdf.YEAR.iat[-1]
-
-    # remove rows before FIRST_YEAR
-    indexes = [yr - first_puf_year for yr in range(first_puf_year, FIRST_YEAR)]
-    gfdf.drop(index=indexes, inplace=True)
-
-    # set all FIRST_YEAR values to one
-    gfdf.iloc[0, :] = 1.0
-    gfdf.YEAR.iat[0] = FIRST_YEAR
 
     # add rows thru LAST_YEAR by copying values for last year in PUF file
     if LAST_YEAR > last_puf_year:
