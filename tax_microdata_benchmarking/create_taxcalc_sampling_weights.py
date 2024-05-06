@@ -8,7 +8,7 @@ import yaml
 import pandas as pd
 
 FIRST_YEAR = 2021
-LAST_YEAR = 2034
+LAST_YEAR = 2074
 VARFILE = "tmd.csv.gz"
 POPFILE = "cbo_population_forecast.yaml"
 WGTFILE = "tmd_weights.csv.gz"
