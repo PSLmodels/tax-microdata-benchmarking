@@ -201,14 +201,15 @@ def test_2023_tax_expenditures():
 
 def test_create_taxcalc_files():
     from tax_microdata_benchmarking.create_taxcalc_input_variables import (
-        create_variable_file
+        create_variable_file,
     )
     from tax_microdata_benchmarking.create_taxcalc_sampling_weights import (
-        create_weights_file
+        create_weights_file,
     )
     from tax_microdata_benchmarking.create_taxcalc_growth_factors import (
-        create_factors_file
+        create_factors_file,
     )
+
     create_variable_file()
     create_weights_file()
     create_factors_file()
