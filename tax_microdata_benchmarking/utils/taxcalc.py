@@ -55,6 +55,6 @@ def get_tax_expenditure_results(
             reform_results.combined * reform_results.s006
         ).sum() / 1e9
         revenue_effect = tax_revenue_baseline - tax_revenue_reform
-        te_results[reform_name] = round(revenue_effect, 1)
+        te_results[reform_name] = round(-revenue_effect, 1)
 
     return te_results

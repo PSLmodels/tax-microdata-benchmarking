@@ -9,7 +9,7 @@ import time
 
 outputs = STORAGE_FOLDER / "output"
 
-generation_functions = (
+generation_functions = [
     (lambda: create_puf_ecps_flat_file(2021), "puf_ecps_2021.csv.gz"),
     (lambda: create_puf(2021), "puf_2021.csv.gz"),
     (
@@ -17,7 +17,7 @@ generation_functions = (
         "ecps_2021.csv.gz",
     ),
     (lambda: load_taxdata_puf(2023), "taxdata_puf_2023.csv.gz"),
-)
+]
 
 
 def main():
