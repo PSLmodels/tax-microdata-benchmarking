@@ -200,6 +200,9 @@ def test_2023_tax_expenditures():
 
 
 def test_create_taxcalc_files():
+    if test_mode != "full":
+        return
+
     from tax_microdata_benchmarking.create_taxcalc_input_variables import (
         create_variable_file,
     )
@@ -210,8 +213,11 @@ def test_create_taxcalc_files():
         create_factors_file,
     )
 
+    popfile = os.path.join(
+        '..', 'tax_microdata_benchmarking', 'cbo_population_forecast.yaml'
+    )
     create_variable_file()
-    create_weights_file()
+    create_weights_file(popfile)
     create_factors_file()
 
 
