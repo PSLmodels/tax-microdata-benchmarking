@@ -1,3 +1,7 @@
+"""
+This module adds basic sanity tests for each TC-input flat file, checking that the totals of each variable are within the ballpark of the Tax-Data 2023 PUF's totals.
+"""
+
 import os
 import pytest
 import yaml
@@ -6,6 +10,7 @@ import pytest
 import pandas as pd
 import subprocess
 import warnings
+from tax_microdata_benchmarking.storage import STORAGE_FOLDER
 
 warnings.filterwarnings("ignore")
 
@@ -16,8 +21,8 @@ with open(FOLDER / "tc_variable_totals.yaml") as f:
     tc_variable_totals = yaml.safe_load(f)
 
 with open(
-    FOLDER.parent
-    / "tax_microdata_benchmarking"
+    STORAGE_FOLDER
+    / "input"
     / "taxcalc_variable_metadata.yaml"
 ) as f:
     taxcalc_variable_metadata = yaml.safe_load(f)
@@ -51,38 +56,34 @@ EXEMPTED_VARIABLES += [
 ]
 
 
-def pytest_namespace():
-    return {"flat_file": None}
-
-
-@pytest.mark.dependency()
-def test_2021_flat_file_builds():
-    from tax_microdata_benchmarking.create_flat_file import (
-        create_stacked_flat_file,
-    )
-
-    flat_file = create_stacked_flat_file(2021, reweight=test_mode == "full")
-
-    pytest.flat_file_2021 = flat_file
-
-
 variables_to_test = [
     variable
     for variable in tc_variable_totals.keys()
     if variable not in EXEMPTED_VARIABLES
 ]
 
+dataset_names_to_test = (
+    # "puf_2021",
+    "puf_ecps_2021",
+    # "ecps_2021",
+    "taxdata_puf_2023",
+)
 
-@pytest.mark.dependency(depends=["test_2021_flat_file_builds"])
-@pytest.mark.parametrize("variable", variables_to_test)
-def test_2021_tc_variable_totals(variable):
+datasets_to_test = [
+    pd.read_csv(STORAGE_FOLDER / "output" / f"{dataset}.csv.gz")
+    for dataset in dataset_names_to_test
+]
+
+
+@pytest.mark.parametrize("variable", variables_to_test, ids=lambda x: x)
+@pytest.mark.parametrize("flat_file", datasets_to_test, ids=dataset_names_to_test)
+def test_variable_totals(variable, flat_file):
     meta = taxcalc_variable_metadata["read"][variable]
     name = meta.get("desc")
-    flat_file = pytest.flat_file_2021
     weight = flat_file.s006
     total = (flat_file[variable] * weight).sum()
     if tc_variable_totals[variable] == 0:
-        # If the taxdata file has a zero total, we'll assume the PE file is still correct.
+        # If the taxdata file has a zero total, we'll assume the tested file is correct in the absence of better data.
         return
     # 20% and more than 10bn off taxdata is a failure.
     assert (
