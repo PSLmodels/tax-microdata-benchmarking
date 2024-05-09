@@ -17,14 +17,14 @@ warnings.filterwarnings("ignore")
 test_mode = os.environ.get("TEST_MODE", "lite")
 
 FOLDER = Path(__file__).parent
+
 with open(FOLDER / "tc_variable_totals.yaml") as f:
     tc_variable_totals = yaml.safe_load(f)
 
-with open(
-    STORAGE_FOLDER
-    / "input"
-    / "taxcalc_variable_metadata.yaml"
-) as f:
+with open(FOLDER / "tax_expenditure_targets.yaml") as f:
+    tax_expenditure_targets = yaml.safe_load(f)
+
+with open(STORAGE_FOLDER / "input" / "taxcalc_variable_metadata.yaml") as f:
     taxcalc_variable_metadata = yaml.safe_load(f)
 
 EXEMPTED_VARIABLES = [
@@ -76,7 +76,9 @@ datasets_to_test = [
 
 
 @pytest.mark.parametrize("variable", variables_to_test, ids=lambda x: x)
-@pytest.mark.parametrize("flat_file", datasets_to_test, ids=dataset_names_to_test)
+@pytest.mark.parametrize(
+    "flat_file", datasets_to_test, ids=dataset_names_to_test
+)
 def test_variable_totals(variable, flat_file):
     meta = taxcalc_variable_metadata["read"][variable]
     name = meta.get("desc")
@@ -92,131 +94,38 @@ def test_variable_totals(variable, flat_file):
     ), f"{variable} ({name}) differs to tax-data by {total / tc_variable_totals[variable] - 1:.1%} ({total/1e9:.1f}bn vs {tc_variable_totals[variable]/1e9:.1f}bn)"
 
 
-FOLDER = Path(__file__).parent
+tax_expenditure_reforms = [
+    "cg_tax_preference",
+    "ctc",
+    "eitc",
+    "niit",
+    "qbid",
+    "salt",
+    "social_security_partial_taxability",
+]
 
-test_mode = os.environ.get("TEST_MODE", "lite")
+from tax_microdata_benchmarking.utils.taxcalc import (
+    get_tax_expenditure_results,
+)
 
-RUN_TE_TESTS = False
+tax_expenditure_estimates = {}
 
-
-@pytest.mark.skipif(not RUN_TE_TESTS, reason="TE tests are disabled.")
-@pytest.mark.dependency(depends=["test_2021_flat_file_builds"])
-def test_2023_tax_expenditures():
-    flat_file_2021 = pytest.flat_file_2021
-
-    from tax_microdata_benchmarking.create_flat_file import (
-        create_stacked_flat_file,
-        get_population_growth,
+for dataset, name in zip(datasets_to_test, dataset_names_to_test):
+    print(f"Running tax expenditure estimates for {dataset}")
+    tax_expenditure_estimates[name] = get_tax_expenditure_results(
+        dataset, 2021
     )
 
-    flat_file_2023 = create_stacked_flat_file(
-        2023, reweight=test_mode == "full"
-    )
 
-    flat_file_2023.s006 = flat_file_2021.s006 * get_population_growth(
-        2023, 2021
-    )
-
-    tc_folder = (
-        FOLDER.parent
-        / "tax_microdata_benchmarking"
-        / "examination"
-        / "taxcalculator"
-    )
-
-    flat_file_2023.to_csv(tc_folder / "pe23.csv.zip")
-
-    # cd into taxcalculator and run bash ./runs.sh pe23 23. That produces a file called pe23-23.res.actual. Print it out.
-
-    subprocess.run(["./runs.sh", "pe23", "23"], cwd=tc_folder.resolve())
-
-    with open(tc_folder / "pe23-23.res-actual") as f:
-        data = f.read().splitlines()
-
-    import warnings
-
-    warnings.filterwarnings("ignore")
-    import pandas as pd
-
-    df = pd.DataFrame(
-        columns=["Returns", "ExpInc", "IncTax", "PayTax", "LSTax", "AllTax"]
-    )
-    for line in data[2::3]:
-        line = line.split()[1:]
-        df = df.append(
-            pd.DataFrame(
-                [line],
-                columns=[
-                    "Returns",
-                    "ExpInc",
-                    "IncTax",
-                    "PayTax",
-                    "LSTax",
-                    "AllTax",
-                ],
-            )
-        )
-
-    df.index = [
-        "Baseline",
-        "CGQD",
-        "CLP",
-        "CTC",
-        "EITC",
-        "NIIT",
-        "QBID",
-        "SALT",
-        "SSBEN",
-    ]
-    df = df.astype(float)
-
-    taxdata_exp_results = [
-        3976.5,
-        274.5,
-        0.0,
-        125.6,
-        68.7,
-        -67.5,
-        59.5,
-        13.9,
-        76.6,
-    ]
-
-    for i in range(len(taxdata_exp_results)):
-        name = df.index[i]
-        if name in ("QBID", "SALT"):
-            continue  # QBID: PE far closer to truth. SALT: known issue.
-        rel_error = (
-            abs(df["AllTax"][i] - taxdata_exp_results[i])
-            / taxdata_exp_results[i]
-        )
-        if taxdata_exp_results[i] == 0:
-            rel_error = 0
-        assert (
-            rel_error < 0.25
-        ), f"Tax Expenditure for {name} is ${df['AllTax'][i]}bn compared to Tax-Data's ${taxdata_exp_results[i]}bn (relative error {rel_error:.1%})"
-
-
-# Adding explicit tests for unemployment compensation and medical expenses.
-
-
-@pytest.mark.dependency(depends=["test_2021_flat_file_builds"])
-@pytest.mark.skip
-def test_2021_unemployment_compensation():
-    flat_file_2021 = pytest.flat_file_2021
-
-    total = (flat_file_2021["e02300"] * flat_file_2021.s006).sum()
+@pytest.mark.parametrize("flat_file", dataset_names_to_test, ids=lambda x: x)
+@pytest.mark.parametrize("reform", tax_expenditure_reforms, ids=lambda x: x)
+def test_tax_expenditure_estimates(
+    flat_file: pd.DataFrame,
+    reform: str,
+):
+    target = tax_expenditure_targets[reform]
+    estimate = tax_expenditure_estimates[flat_file][reform]
     assert (
-        abs(total / 1e9 / 33 - 1) < 0.2  # WHERE DOES 33 COME FROM ????
-    ), f"Unemployment compensation total is ${total/1e9:.1f}bn, expected $33bn"
-
-
-@pytest.mark.dependency(depends=["test_2021_flat_file_builds"])
-@pytest.mark.skip
-def test_2021_medical_expenses():
-    flat_file_2021 = pytest.flat_file_2021
-
-    total = (flat_file_2021["e17500"] * flat_file_2021.s006).sum()
-    assert (
-        abs(total / 1e9 / 215 - 1) < 0.2  # WHERE DOES 215 COME FROM ????
-    ), f"Medical expense total is ${total/1e9:.1f}bn, expected $215bn"
+        abs(estimate / target - 1) < 0
+        or abs(estimate - target) < 0
+    ), f"{reform} differs to tax-data by {estimate / target - 1:.1%} ({estimate:.1f}bn vs {target:.1f}bn)"
