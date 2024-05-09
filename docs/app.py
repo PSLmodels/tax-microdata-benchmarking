@@ -1,8 +1,7 @@
 import streamlit as st
 
 # Wide layout
-
-st.set_page_config(layout="wide")
+# st.set_page_config(layout="wide")
 
 import taxcalc as tc
 import pandas as pd
@@ -10,11 +9,12 @@ from tqdm import tqdm
 from microdf import MicroDataFrame
 from tax_microdata_benchmarking.storage import STORAGE_FOLDER
 import yaml
+import plotly.express as px
 
-st.title("Tax microdata benchmarking")
+st.title("Microdata comparison dashboard")
 
 st.markdown(
-    f"This app compares multiple microdatasets (after running through Tax-Calculator)."
+    f"This app compares multiple microsimulation model input datasets (after running through Tax-Calculator)."
 )
 
 
@@ -26,7 +26,7 @@ storage_files = list((STORAGE_FOLDER / "output").glob("*.csv*"))
 datasets = st.multiselect(
     "Select datasets to compare",
     [file.name for file in storage_files],
-    default=["puf_2015.csv.gz"],
+    default=[file.name for file in storage_files[:2]],
 )
 
 
@@ -68,12 +68,7 @@ def load_dataset(
     Returns:
         MicroDataFrame: The dataset.
     """
-    df = pd.read_csv(STORAGE_FOLDER / dataset)
-
-    # Run through Tax-Calculator
-
-    if run_tax_calculator:
-        df = run_through_tc(df)
+    df = pd.read_csv(STORAGE_FOLDER / "output" / dataset)
 
     # Drop non-numeric columns
 
@@ -84,7 +79,7 @@ def load_dataset(
     return MicroDataFrame(df, weights="s006")
 
 
-with open(STORAGE_FOLDER.parent / "taxcalc_variable_metadata.yaml") as f:
+with open(STORAGE_FOLDER / "input" / "taxcalc_variable_metadata.yaml") as f:
     taxcalc_variable_metadata = yaml.safe_load(f)
 
 
@@ -113,10 +108,12 @@ def add_variable_descriptions(
             descriptions.append(
                 taxcalc_variable_metadata["read"][variable]["desc"]
             )
-        else:
+        elif variable in taxcalc_variable_metadata.get("calc", {}):
             descriptions.append(
                 taxcalc_variable_metadata["calc"][variable]["desc"]
             )
+        else:
+            descriptions.append("No description found")
 
     df["Description"] = descriptions
 
@@ -148,11 +145,25 @@ for dataset_combo, names_combo in zip(
     # Absolute difference
     totals_df[f"{dataset1_name} - {dataset2_name}"] = (
         (dataset1.sum() - dataset2.sum()) / 1e9
-    ).apply(lambda x: round(x * 10) / 10)
+    ).fillna(0).apply(lambda x: round(x * 10) / 10)
     # Relative difference
     totals_df[f"{dataset1_name} - {dataset2_name} (%)"] = (
         (dataset1.sum() - dataset2.sum()) / dataset1.sum() * 100
     )
 
 totals_df = add_variable_descriptions(totals_df)
-st.write(totals_df)
+st.dataframe(totals_df)
+
+st.write("Variable distributions by dataset")
+
+variable = st.selectbox(
+    "Select a variable to compare distributions", totals_df.index
+)
+
+dataset = st.selectbox("Select a dataset", datasets)
+
+fig = px.histogram(
+    dfs[datasets.index(dataset)], x=variable, nbins=50, title=f"{variable} distribution in {dataset}"
+)
+
+st.plotly_chart(fig)
