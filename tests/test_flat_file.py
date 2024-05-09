@@ -214,7 +214,7 @@ def test_create_taxcalc_files():
     )
 
     popfile = os.path.join(
-        '..', 'tax_microdata_benchmarking', 'cbo_population_forecast.yaml'
+        "..", "tax_microdata_benchmarking", "cbo_population_forecast.yaml"
     )
     create_variable_file()
     create_weights_file(popfile)
