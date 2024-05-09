@@ -214,10 +214,11 @@ def test_create_taxcalc_files():
     )
 
     popfile = os.join(
-        FOLDER.parent,
+        Path(__file__).parent,
         "tax_microdata_benchmarking",
         "cbo_population_forecast.yaml",
     )
+    assert os.is_file(popfile)
     create_variable_file()
     create_weights_file(popfile)
     create_factors_file()
