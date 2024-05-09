@@ -21,7 +21,9 @@ def create_puf_ecps_flat_file(
         source_dataset="puf_2022", target_year=target_year
     )
     nonfilers_file = cps_based_flat_file[cps_based_flat_file.is_tax_filer == 0]
-    stacked_file = pd.concat([puf_based_flat_file, nonfilers_file]).reset_index(drop=True)
+    stacked_file = pd.concat(
+        [puf_based_flat_file, nonfilers_file]
+    ).reset_index(drop=True)
 
     qbi = np.maximum(
         0,

@@ -2,11 +2,10 @@
 **/*.pyc
 **/*.csv.zip
 **/*.csv.gz
-!tax_microdata_benchmarking/tmd_exact_2021_weights.csv.gz
-!tax_microdata_benchmarking/tmd_weights.csv.gz
 **/*.egg-info
 tax_microdata_benchmarking/calibration
 *.ipynb
 **/_build/
 **/*.csv
 **/*tfevents*
+!tax_microdata_benchmarking/utils/uprating/*.csv*

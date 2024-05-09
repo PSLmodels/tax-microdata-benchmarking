@@ -47,7 +47,11 @@ def fmt(x):
     return f"{x/1e9:.1f}bn"
 
 
-def reweight(flat_file: pd.DataFrame, time_period: int = 2021, weight_deviation_penalty: float = 0):
+def reweight(
+    flat_file: pd.DataFrame,
+    time_period: int = 2021,
+    weight_deviation_penalty: float = 0,
+):
     targets = pd.read_csv(STORAGE_FOLDER / "input" / "agi_targets.csv")
 
     if time_period not in targets.year.unique():
@@ -110,11 +114,19 @@ def reweight(flat_file: pd.DataFrame, time_period: int = 2021, weight_deviation_
         / f"{time_period}_{datetime.now().isoformat()}"
     )
 
-    for i in list(range(1_000)): # Set to 10k for production, and use TQDM for the progress bar
+    for i in list(
+        range(1_000)
+    ):  # Set to 10k for production, and use TQDM for the progress bar
         optimizer.zero_grad()
         outputs = (weights * output_matrix_tensor.T).sum(axis=1)
-        weight_deviation = (weights - original_weights).abs().sum() / original_weights.sum() * weight_deviation_penalty
-        loss_value = ((outputs / target_array - 1) ** 2).sum() + weight_deviation
+        weight_deviation = (
+            (weights - original_weights).abs().sum()
+            / original_weights.sum()
+            * weight_deviation_penalty
+        )
+        loss_value = (
+            (outputs / target_array - 1) ** 2
+        ).sum() + weight_deviation
         loss_value.backward()
         optimizer.step()
         if i % 100 == 0:
