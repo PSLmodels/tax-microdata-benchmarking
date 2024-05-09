@@ -196,7 +196,25 @@ def test_2023_tax_expenditures():
         ), f"Tax Expenditure for {name} is ${df['AllTax'][i]}bn compared to Tax-Data's ${taxdata_exp_results[i]}bn (relative error {rel_error:.1%})"
 
 
-# Adding explicit tests for unemployment compensation and medical expenses.
+# Add test of use of the three create_taxcalc_*.py scripts:
+
+
+def test_create_taxcalc_files():
+    from tax_microdata_benchmarking.create_taxcalc_input_variables import (
+        create_variable_file
+    )
+    from tax_microdata_benchmarking.create_taxcalc_sampling_weights import (
+        create_weights_file
+    )
+    from tax_microdata_benchmarking.create_taxcalc_growth_factors import (
+        create_factors_file
+    )
+    create_variable_file()
+    create_weights_file()
+    create_factors_file()
+
+
+# Adding explicit tests for unemployment compensation and medical expenses:
 
 
 @pytest.mark.dependency(depends=["test_2021_flat_file_builds"])
