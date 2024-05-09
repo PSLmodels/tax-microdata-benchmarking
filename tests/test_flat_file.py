@@ -126,6 +126,5 @@ def test_tax_expenditure_estimates(
     target = tax_expenditure_targets[reform]
     estimate = tax_expenditure_estimates[flat_file][reform]
     assert (
-        abs(estimate / target - 1) < 0
-        or abs(estimate - target) < 0
+        abs(estimate / target - 1) < 0 or abs(estimate - target) < 0
     ), f"{reform} differs to tax-data by {estimate / target - 1:.1%} ({estimate:.1f}bn vs {target:.1f}bn)"
