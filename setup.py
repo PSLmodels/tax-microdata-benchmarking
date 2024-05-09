@@ -9,7 +9,7 @@ setup(
         "taxcalc>=3.5.0",
         "paramtools==0.18.1",
         "pytest",
-        "black",
+        "black>=24.4.2",
     ],
     extras_require={"reweight": ["torch", "tensorboard"]},
 )

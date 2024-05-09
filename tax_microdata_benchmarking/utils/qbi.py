@@ -4,76 +4,49 @@ from scipy.optimize import minimize, bisect
 import taxcalc as tc
 
 
-def add_pt_w2_wages(df, time_period: int, verbose: bool = True):
+def add_pt_w2_wages(df, verbose: bool = True):
     """
-    Add pass-through W2 wages to the flat file.
+    Add 2021 pass-through W-2 wages to the flat file.
 
     Args:
-        df (pd.DataFrame): The DataFrame to add W2 wages to.
+        df (pd.DataFrame): the 2021 DataFrame to which adding W-2 wages
 
     Returns:
-        pd.DataFrame: The DataFrame with W2 wages added.
+        tuple containing:
+          pd.DataFrame: the 2021 DataFrame with pass-through W-2 wages added
+          pt_w2_wages_scale: rounded to five decimal digits
     """
-
-    # Note: just calculate the share in 2021 and use for all years.
-
-    qbid_tax_expenditures = {  # From JCT TE reports 2018- and 2023-
-        2015: 0,
-        2016: 0,
-        2017: 0,
-        2018: 33.2,
-        2019: 48.6,
-        2020: 56.3,
-        2021: 59.0,
-        2022: 61.9,
-        2023: 55.7,
-        2024: 57.6,
-        2025: 60.9,
-        2026: 24.9,
-        2027: 0,
-    }
-
-    QBID_TOTAL_21 = 205.8  # From SOI 2021
-
-    target = (
-        QBID_TOTAL_21
-        * qbid_tax_expenditures[time_period]
-        / qbid_tax_expenditures[2021]
-    )
-
+    if verbose:
+        print("Finding scale to use in imputing pass-through W-2 wages")
+    QBID_TOTAL = 205.8  # from IRS SOI P4801 tabulations of 2021 data (in $B)
     qbi = np.maximum(0, df.e00900 + df.e26270 + df.e02100 + df.e27200)
 
-    if target == 0:
-        df["PT_binc_w2_wages"] = qbi * 0
+    # solve for the scale value that generates the QBID_TOTAL target
 
-        return df
-
-    # Solve for scale to match the tax expenditure
-
-    def expenditure_loss(scale):
+    def deduction_deviation(scale):
         input_data = df.copy()
         input_data["PT_binc_w2_wages"] = qbi * scale
-        input_data = tc.Records(data=input_data, start_year=time_period)
-        policy = tc.Policy()
-        simulation = tc.Calculator(records=input_data, policy=policy)
-        simulation.calc_all()
-        taxcalc_qbided_sum = (
-            simulation.dataframe(["qbided"]).qbided * df.s006
-        ).sum() / 1e9
-        deviation = taxcalc_qbided_sum - target
+        input_data = tc.Records(
+            data=input_data,
+            start_year=2021,
+            gfactors=None,
+            weights=None,
+            adjust_ratios=None,
+            exact_calculations=True,
+        )
+        sim = tc.Calculator(records=input_data, policy=tc.Policy())
+        sim.calc_all()
+        qbided = (sim.array("qbided") * df.s006).sum() / 1e9
+        dev = qbided - QBID_TOTAL
         if verbose:
-            print(
-                f"scale: {scale}, deviation: {deviation}, total: {taxcalc_qbided_sum}"
-            )
-        return deviation
+            print(f"scale: {scale:8.6f}, dev: {dev:6.2f}, tot: {qbided:.2f}")
+        return dev
 
-    scale = bisect(expenditure_loss, 0, 2, rtol=0.01)
-
-    print(f"Final scale: {scale:.1%}")
-
-    df["PT_binc_w2_wages"] = qbi * scale
-
-    return df
+    scale = bisect(deduction_deviation, 0.1, 0.5, rtol=0.001)
+    rounded_scale = round(scale, 5)
+    print(f"Final (rounded) scale: {rounded_scale}")
+    df["PT_binc_w2_wages"] = qbi * rounded_scale
+    return (df, rounded_scale)
 
 
 if __name__ == "__main__":
@@ -82,5 +55,4 @@ if __name__ == "__main__":
     )
 
     df = create_stacked_flat_file(2021)
-
-    df = add_pt_w2_wages(df, 2021)
+    (df, scale) = add_pt_w2_wages(df)

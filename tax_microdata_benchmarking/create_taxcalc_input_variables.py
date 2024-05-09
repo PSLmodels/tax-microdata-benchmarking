@@ -1,0 +1,59 @@
+"""
+Construct tmd.csv.gz, a Tax-Calculator-style input variable file for 2021.
+"""
+
+import taxcalc as tc
+from tax_microdata_benchmarking.create_flat_file import (
+    create_stacked_flat_file,
+)
+from tax_microdata_benchmarking.adjust_qbi import (
+    add_pt_w2_wages,
+)
+
+
+TAXYEAR = 2021
+INITIAL_PT_W2_WAGES_SCALE = 0.31738
+
+
+def create_variable_file():
+    """
+    Create Tax-Calculator-style input variable file for TAXYEAR.
+    """
+    # construct dataframe containing input and output variables
+    vdf = create_stacked_flat_file(
+        target_year=TAXYEAR,
+        pt_w2_wages_scale=INITIAL_PT_W2_WAGES_SCALE,
+    )
+    vdf.FLPDYR = TAXYEAR
+    (vdf, pt_w2_wages_scale) = add_pt_w2_wages(vdf)
+    abs_diff = abs(pt_w2_wages_scale - INITIAL_PT_W2_WAGES_SCALE)
+    if abs_diff > 1e-6:
+        print(f"WARNING: FINAL vs INITIAL scale diff = {abs_diff:.6f}")
+        print(f"  INITIAL pt_w2_wages_scale = {INITIAL_PT_W2_WAGES_SCALE:.6f}")
+        print(f"    FINAL pt_w2_wages_scale = {pt_w2_wages_scale:.6f}")
+    # streamline dataframe so that it includes only input variables
+    rec = tc.Records(
+        data=vdf,
+        start_year=TAXYEAR,
+        gfactors=None,
+        weights=None,
+        adjust_ratios=None,
+    )
+    vdf.drop(columns=rec.IGNORED_VARS, inplace=True)
+    # round all float variables to nearest integer except for weights
+    weights = vdf.s006.copy()
+    vdf = vdf.astype(int)
+    vdf.s006 = weights
+    for var in ["e00200", "e00900", "e02100"]:
+        vdf[var] = vdf[f"{var}p"] + vdf[f"{var}s"]
+    # write streamlined variables dataframe to CSV-formatted file
+    vdf.to_csv(
+        "tmd.csv.gz",
+        index=False,
+        float_format="%.2f",
+        compression="gzip",
+    )
+
+
+if __name__ == "__main__":
+    create_variable_file()
