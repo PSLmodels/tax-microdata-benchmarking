@@ -1,7 +1,7 @@
 Phase 3 Data Examination Results
 ================================
 
-**PRELIMINARY RESULTS AS OF 2024-05-03**
+**PRELIMINARY RESULTS AS OF 2024-05-10**
 
 **FINAL RESULTS EXPECTED IN JULY 2024**
 
@@ -29,7 +29,7 @@ following Phase 3 estimates is Tax-Calculator 3.6.? version.
 | CY23 Amount | CY26 Amount | Estimate Source |
 | ---:   | ---:   | :---   |
 | 1580.0 | 1829.9 | CBO    |
-| 1618.1 | 1875.5 | Tax-Calculator + phase 3 dataset |
+| 1617.6 | 1874.8 | Tax-Calculator + phase 3 dataset |
 | 1489.3 | 1711.0 | Tax-Calculator + taxdata dataset |
 
 <br>
@@ -39,7 +39,7 @@ following Phase 3 estimates is Tax-Calculator 3.6.? version.
 | CY23 Amount | CY26 Amount | Estimate Source |
 | ---:   | ---:   | :---   |
 | 2512.3 | 2849.4 | CBO    |
-| 2317.1 | 2934.4 | Tax-Calculator + phase 3 dataset |
+| 2302.6 | 2915.6 | Tax-Calculator + phase 3 dataset |
 | 2247.8 | 2742.1 | Tax-Calculator + taxdata dataset |
 
 <br>
@@ -50,7 +50,7 @@ following Phase 3 estimates is Tax-Calculator 3.6.? version.
 | ---:   | ---:   | :---   |
 | 122.1  | 57.6   | JCT    |
 | 108.6  | 55.7   | TSY    |
-| 124.6  | 44.7   | Tax-Calculator + phase 3 dataset |
+| 124.5  | 44.7   | Tax-Calculator + phase 3 dataset |
 | 126.2  | 43.1   | Tax-Calculator + taxdata dataset |
 
 <br>
@@ -61,7 +61,7 @@ following Phase 3 estimates is Tax-Calculator 3.6.? version.
 | ---:   | ---:   | :---   |
 | 71.9   | 78.0   | JCT    |
 | 63.6   | 71.2   | TSY    |
-| 70.0   | 78.7   | Tax-Calculator + phase 3 dataset |
+| 69.9   | 78.5   | Tax-Calculator + phase 3 dataset |
 | 73.5   | 82.0   | Tax-Calculator + taxdata dataset |
 
 <br>
@@ -72,7 +72,7 @@ following Phase 3 estimates is Tax-Calculator 3.6.? version.
 | ---:   | ---:   | :---   |
 | 45.9   |  56.4  | JCT    |
 | 31.4   |  38.4  | TSY    |
-| 81.9   | 109.8  | Tax-Calculator + phase 3 dataset |
+| 81.4   | 109.3  | Tax-Calculator + phase 3 dataset |
 | 62.7   |  89.5  | Tax-Calculator + taxdata dataset |
 
 <br>
@@ -83,7 +83,7 @@ following Phase 3 estimates is Tax-Calculator 3.6.? version.
 | ---:   | ---:   | :---   |
 | -56.5  | -53.8  | JCT    |
 |  ----  |  ----  | TSY    |
-| -68.1  | -66.4  | Tax-Calculator + phase 3 dataset |
+| -66.8  | -65.1  | Tax-Calculator + phase 3 dataset |
 | -55.8  | -52.1  | Tax-Calculator + taxdata dataset |
 
 <br>
@@ -94,7 +94,7 @@ following Phase 3 estimates is Tax-Calculator 3.6.? version.
 | ---:   | ---:   | :---   |
 | 259.3  | 239.8  | JCT    |
 | 153.9  | 182.4  | TSY    |
-| 273.0  | 271.8  | Tax-Calculator + phase 3 dataset |
+| 267.3  | 268.6  | Tax-Calculator + phase 3 dataset |
 | 217.7  | 223.6  | Tax-Calculator + taxdata dataset |
 
 <br>
@@ -105,7 +105,7 @@ following Phase 3 estimates is Tax-Calculator 3.6.? version.
 | ---:   | ---:   | :---   |
 | 56.2   |  0.0   | JCT    |
 | 50.4   |  0.0   | TSY    |
-| 63.1   |  0.0   | Tax-Calculator + phase 3 dataset |
+| 63.0   |  0.0   | Tax-Calculator + phase 3 dataset |
 | 19.3   |  0.0   | Tax-Calculator + taxdata dataset |
 
 <br>
@@ -116,5 +116,5 @@ following Phase 3 estimates is Tax-Calculator 3.6.? version.
 | ---:   | ---:   | :---   |
 |  21.2  | 151.3  | JCT    |
 |  26.5  | 149.0  | TSY    |
-|  15.8  | 195.6  | Tax-Calculator + phase 3 dataset |
+|  17.1  | 198.5  | Tax-Calculator + phase 3 dataset |
 |  29.4  | 185.5  | Tax-Calculator + taxdata dataset |
