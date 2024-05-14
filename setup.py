@@ -11,5 +11,7 @@ setup(
         "black>=24.4.2",
         "torch",
         "tensorboard",
+        "jupyter-book",
+        "furo",
     ],
 )

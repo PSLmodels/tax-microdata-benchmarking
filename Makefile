@@ -1,11 +1,5 @@
-install-lite:
-	pip install -e .
-
 install:
-	pip install -e .[reweight]
-
-test-lite:
-	TEST_MODE=lite pytest . -v
+	pip install -e .
 
 test:
 	TEST_MODE=full pytest . -v
@@ -17,3 +11,6 @@ flat-file:
 	python tax_microdata_benchmarking/create_all_datasets.py
 
 all: format test
+
+docs:
+	jb build docs
