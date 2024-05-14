@@ -115,8 +115,8 @@ def reweight(
     )
 
     for i in list(
-        range(1_000)
-    ):  # Set to 10k for production, and use TQDM for the progress bar
+        range(10_000)
+    ):
         optimizer.zero_grad()
         outputs = (weights * output_matrix_tensor.T).sum(axis=1)
         weight_deviation = (
