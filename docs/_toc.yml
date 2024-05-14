@@ -1,6 +1,0 @@
-format: jb-book
-root: intro
-parts:
-  - caption: Contributing
-    chapters:
-    - file: contributing/intro
