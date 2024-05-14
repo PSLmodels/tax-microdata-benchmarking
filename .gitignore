@@ -4,9 +4,10 @@
 **/*.csv.gz
 !tax_microdata_benchmarking/tmd_weights.csv.gz
 **/*.egg-info
-# Tensorboard
 tax_microdata_benchmarking/calibration
-
 *.ipynb
-tmp/
-tax_microdata_benchmarking/examination/taxcalculator/pe23-23*
+**/_build/
+**/*.csv
+**/*tfevents*
+!tax_microdata_benchmarking/utils/uprating/*.csv*
+!tax_microdata_benchmarking/storage/input/agi_targets.csv
