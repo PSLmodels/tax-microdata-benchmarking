@@ -7,6 +7,7 @@ import yaml
 with open(STORAGE_FOLDER / "input" / "taxcalc_variable_metadata.yaml") as f:
     taxcalc_variable_metadata = yaml.safe_load(f)
 
+
 def get_tc_variable_description(variable: str) -> str:
     """
     Get the description of a Tax-Calculator variable.
@@ -21,7 +22,8 @@ def get_tc_variable_description(variable: str) -> str:
         return taxcalc_variable_metadata["read"][variable]["desc"]
     elif variable in taxcalc_variable_metadata.get("calc", {}):
         return taxcalc_variable_metadata["calc"][variable]["desc"]
-    
+
+
 def get_tc_is_input(variable: str) -> bool:
     """
     Get the type (whether input or not) of a Tax-Calculator variable.
