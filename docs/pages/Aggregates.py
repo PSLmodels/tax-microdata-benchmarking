@@ -54,10 +54,13 @@ def get_aggregate_df(
             total = 0
             for irs_variable in irs_names:
                 if not nonzero:
-                    total += (
+                    amount = (
                         IRS_TOTALS[irs_variable]["Taxable returns"]["Amount"]
                         * 1e3
                     )
+                    if "loss" in irs_variable:
+                        amount = -amount
+                    total += amount
                 else:
                     total = max(
                         total,
@@ -79,7 +82,6 @@ def get_aggregate_df(
                         "puf_pe_21": [
                             get_value(puf_pe_21, variable) / divisor
                         ],
-                        "pe_21": [get_value(pe_21, variable) / divisor],
                         "td_23": [get_value(td_23, variable) / divisor],
                         "irs_21": [
                             total / divisor if total is not None else None
@@ -91,20 +93,34 @@ def get_aggregate_df(
 
     aggregates_df = aggregates_df.set_index("variable")
 
-    COLUMNS_TO_ROUND = ["puf_pe_21", "pe_21", "td_23", "irs_21"]
+    COLUMNS_TO_ROUND = ["puf_pe_21", "td_23", "irs_21"]
 
     for column in COLUMNS_TO_ROUND:
         aggregates_df[column] = aggregates_df[column].apply(
             lambda x: round(x, 1) if x is not None else None
         )
 
-    aggregates_df["pufpe / irs (%)"] = (
+    aggregates_df["pufpe / irs (%)"] = ((
         aggregates_df["puf_pe_21"] / aggregates_df["irs_21"].fillna(0) - 1
-    ).fillna(0).replace(np.inf, 0) * 100
+    ).fillna(0).replace(np.inf, 0) * 100).round(1)
 
-    aggregates_df["pufpe / irs (%)"] = aggregates_df["pufpe / irs (%)"].round(
-        1
+    aggregates_df["td / irs (%)"] = ((
+        aggregates_df["td_23"] / aggregates_df["irs_21"].fillna(0) - 1
+    ).fillna(0).replace(np.inf, 0) * 100).round(1)
+
+    aggregates_df["closest to IRS"] = np.select([
+        aggregates_df.irs_21.isna(),
+        aggregates_df["pufpe / irs (%)"].abs() < aggregates_df["td / irs (%)"].abs(),
+        aggregates_df["pufpe / irs (%)"].abs() > aggregates_df["td / irs (%)"].abs(),
+        True,
+    ], [
+        "Unknown",
+        "puf_pe_21",
+        "td_23",
+        "Neither",
+        ]
     )
+
 
     return aggregates_df
 
