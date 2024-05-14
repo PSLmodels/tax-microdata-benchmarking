@@ -12,5 +12,5 @@ flat-file:
 
 all: format test
 
-docs:
+documentation:
 	jb build docs
