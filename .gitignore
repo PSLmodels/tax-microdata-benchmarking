@@ -10,3 +10,4 @@ tax_microdata_benchmarking/calibration
 **/*.csv
 **/*tfevents*
 !tax_microdata_benchmarking/utils/uprating/*.csv*
+!tax_microdata_benchmarking/storage/input/agi_targets.csv
