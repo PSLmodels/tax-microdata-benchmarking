@@ -14,10 +14,18 @@ def create_puf_ecps_flat_file(
     target_year: int = 2021,
     reweight: bool = True,
     pt_w2_wages_scale: float = 0.314,
+    from_scratch: bool = False,
 ):
     cps_based_flat_file = create_flat_file(
         source_dataset="enhanced_cps_2022", target_year=target_year
     )
+    if from_scratch:
+        from policyengine_us.data import PUF_2022
+
+        PUF_2022().generate(
+            puf_file_path=None,  # Replace with filepaths to create from scratch.
+            puf_demographics_path=None,
+        )
     puf_based_flat_file = create_flat_file(
         source_dataset="puf_2022", target_year=target_year
     )
