@@ -3,6 +3,7 @@ This module provides utilities for working with Tax-Calculator.
 """
 
 import taxcalc as tc
+import numpy as np
 import pandas as pd
 from tax_microdata_benchmarking.storage import STORAGE_FOLDER
 import yaml
@@ -60,14 +61,19 @@ def add_taxcalc_outputs(
     Returns:
         pd.DataFrame: The Tax-Calculator output.
     """
-    input_data = tc.Records(data=flat_file, start_year=time_period)
+    input_data = tc.Records(
+        data=flat_file,
+        start_year=time_period,
+        weights=None,
+        gfactors=None,
+    )
     policy = tc.Policy()
-    if reform is not None:
+    if reform:
         policy.implement_reform(reform)
     simulation = tc.Calculator(records=input_data, policy=policy)
     simulation.calc_all()
     output = simulation.dataframe(None, all_vars=True)
-    output.s006 = flat_file.s006  # Tax-Calculator seems to change the weights.
+    assert np.allclose(output.s006, flat_file.s006)
     return output
 
 
