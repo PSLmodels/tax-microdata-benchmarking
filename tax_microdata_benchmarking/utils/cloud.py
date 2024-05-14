@@ -53,8 +53,6 @@ def download_gh_release_asset(
         pd.DataFrame: The release as a DataFrame
     """
 
-    assert asset_name.endswith(".csv.gz"), "Asset must be a gzipped CSV"
-
     # Get the release ID
     releases = gh_api_call(
         f"/repos/{repo}/releases/tags/{release_name}"
@@ -91,4 +89,7 @@ def download_gh_release_asset(
     )
     asset.raise_for_status()
 
-    return pd.read_csv(BytesIO(asset.content), compression="gzip")
+    return pd.read_csv(
+        BytesIO(asset.content),
+        compression="gzip" if asset_name.endswith(".gz") else None,
+    )
