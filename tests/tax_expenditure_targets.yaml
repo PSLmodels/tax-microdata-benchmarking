@@ -1,0 +1,14 @@
+cg_tax_preference: 
+  2023: 259.3 # CBO
+ctc: 
+  2023: 122.2 # CBO
+eitc: 
+  2023: 71.9 # CBO
+niit:
+  2023: -56.5 # CBO
+qbid: 
+  2023: 56.2 # CBO
+salt: 
+  2023: 21.2 # CBO
+social_security_partial_taxability:
+  2023: 45.9 # CBO

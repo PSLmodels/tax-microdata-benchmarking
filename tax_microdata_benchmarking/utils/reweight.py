@@ -1,3 +1,7 @@
+"""
+This module provides utilities for reweighting a flat file to match AGI targets.
+"""
+
 import torch
 from torch.optim import Adam
 import numpy as np
@@ -5,8 +9,7 @@ import warnings
 import pandas as pd
 import numpy as np
 from pathlib import Path
-
-FOLDER = Path(__file__).parent
+from tax_microdata_benchmarking.storage import STORAGE_FOLDER
 
 warnings.filterwarnings("ignore")
 
@@ -48,8 +51,12 @@ def fmt(x):
     return f"{x/1e9:.1f}bn"
 
 
-def reweight(flat_file: pd.DataFrame, time_period: int = 2021):
-    targets = pd.read_csv(FOLDER / "agi_targets.csv")
+def reweight(
+    flat_file: pd.DataFrame,
+    time_period: int = 2021,
+    weight_deviation_penalty: float = 0,
+):
+    targets = pd.read_csv(STORAGE_FOLDER / "input" / "agi_targets.csv")
 
     if time_period not in targets.year.unique():
         raise ValueError(f"Year {time_period} not in targets.")
@@ -88,6 +95,7 @@ def reweight(flat_file: pd.DataFrame, time_period: int = 2021):
     weights = torch.tensor(
         flat_file.s006.values, dtype=torch.float32, requires_grad=True
     )
+    original_weights = weights.clone()
     output_matrix, target_array = build_loss_matrix(flat_file)
     output_matrix_tensor = torch.tensor(
         output_matrix.values, dtype=torch.float32
@@ -104,15 +112,23 @@ def reweight(flat_file: pd.DataFrame, time_period: int = 2021):
     from datetime import datetime
 
     writer = SummaryWriter(
-        log_dir=FOLDER
-        / "calibration"
+        log_dir=STORAGE_FOLDER
+        / "output"
+        / "reweighting"
         / f"{time_period}_{datetime.now().isoformat()}"
     )
 
-    for i in tqdm(range(10_000)):
+    for i in list(range(10_000)):
         optimizer.zero_grad()
         outputs = (weights * output_matrix_tensor.T).sum(axis=1)
-        loss_value = ((outputs / target_array - 1) ** 2).sum()
+        weight_deviation = (
+            (weights - original_weights).abs().sum()
+            / original_weights.sum()
+            * weight_deviation_penalty
+        )
+        loss_value = (
+            (outputs / target_array - 1) ** 2
+        ).sum() + weight_deviation
         loss_value.backward()
         optimizer.step()
         if i % 100 == 0:

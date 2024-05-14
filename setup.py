@@ -9,6 +9,9 @@ setup(
         "taxcalc>=3.6.0",
         "pytest",
         "black>=24.4.2",
+        "torch",
+        "tensorboard",
+        "jupyter-book",
+        "furo",
     ],
-    extras_require={"reweight": ["torch", "tensorboard"]},
 )
