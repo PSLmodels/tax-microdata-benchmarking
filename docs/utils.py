@@ -27,8 +27,9 @@ def read_csv_cached(file_path: str) -> pd.DataFrame:
     return pd.read_csv(file_path)
 
 
-puf_pe_21 = read_csv_cached(output / "puf_ecps_2021.csv.gz")
-pe_21 = read_csv_cached(output / "ecps_2021.csv.gz")
+# puf_pe_21 = read_csv_cached(output / "puf_ecps_2021.csv.gz")
+puf_pe_21 = read_csv_cached(output / "ecps_2021.csv.gz")
+pe_21 = puf_pe_21
 td_23 = read_csv_cached(output / "taxdata_puf_2023.csv.gz")
 
 
