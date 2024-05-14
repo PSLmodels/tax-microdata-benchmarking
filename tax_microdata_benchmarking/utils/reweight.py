@@ -1,3 +1,7 @@
+"""
+This module provides utilities for reweighting a flat file to match AGI targets.
+"""
+
 import torch
 from torch.optim import Adam
 import numpy as np

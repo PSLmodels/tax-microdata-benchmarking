@@ -1,3 +1,7 @@
+"""
+This module provides utilities for working with Tax-Calculator.
+"""
+
 import taxcalc as tc
 import pandas as pd
 from tax_microdata_benchmarking.storage import STORAGE_FOLDER

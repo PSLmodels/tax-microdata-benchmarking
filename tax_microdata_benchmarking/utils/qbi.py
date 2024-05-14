@@ -1,3 +1,7 @@
+"""
+This script is used to add pass-through W-2 wages to the 2021 flat file.
+"""
+
 import numpy as np
 import pandas as pd
 from scipy.optimize import minimize, bisect

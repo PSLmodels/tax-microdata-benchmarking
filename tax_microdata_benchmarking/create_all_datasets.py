@@ -1,3 +1,7 @@
+"""
+This module enables generation of all datasets involved in the repo.
+"""
+
 from tax_microdata_benchmarking.datasets import (
     create_ecps,
     create_puf,
