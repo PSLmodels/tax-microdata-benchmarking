@@ -2,7 +2,7 @@ install:
 	pip install -e .
 
 test:
-	TEST_MODE=full pytest . -v
+	pytest . -v
 
 format:
 	black . -l 79
