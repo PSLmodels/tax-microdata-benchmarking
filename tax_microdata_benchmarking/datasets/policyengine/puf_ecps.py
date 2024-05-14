@@ -29,9 +29,9 @@ def create_puf_ecps_flat_file(
     puf_based_flat_file = create_flat_file(
         source_dataset="puf_2022", target_year=target_year
     )
-    puf_based_flat_file["data_source"] = "PUF"
+    puf_based_flat_file["data_source"] = 1
     nonfilers_file = cps_based_flat_file[cps_based_flat_file.is_tax_filer == 0]
-    nonfilers_file["data_source"] = "CPS"
+    nonfilers_file["data_source"] = 0
     stacked_file = pd.concat(
         [puf_based_flat_file, nonfilers_file]
     ).reset_index(drop=True)
