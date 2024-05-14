@@ -4,7 +4,7 @@ Construct tmd.csv, a Tax-Calculator-style input variable file for 2021.
 
 
 def create_variable_file(
-    initial_pt_w2_wages_scale=0.31934,
+        initial_pt_w2_wages_scale=0.32051,
     write_file=True,
 ):
     """
@@ -17,6 +17,7 @@ def create_variable_file(
     from tax_microdata_benchmarking.utils.qbi import (
         add_pt_w2_wages,
     )
+    from tax_microdata_benchmarking.storage import STORAGE_FOLDER
 
     taxyear = 2021
     # construct dataframe containing input and output variables
@@ -52,7 +53,8 @@ def create_variable_file(
         vdf[var] = vdf[f"{var}p"] + vdf[f"{var}s"]
     # write streamlined variables dataframe to CSV-formatted file
     if write_file:
-        vdf.to_csv("tmd.csv", index=False, float_format="%.2f")
+        tmd_csv_fname = STORAGE_FOLDER / "output" / "tmd.csv.gz"
+        vdf.to_csv(tmd_csv_fname, index=False, float_format="%.2f")
 
 
 if __name__ == "__main__":
