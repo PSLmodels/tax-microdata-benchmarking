@@ -2,7 +2,7 @@
 This module enables generation of the Tax-Calculator-format PUF-ECPS.
 """
 
-from .flat_file import create_flat_file
+from .flat_file import create_flat_file, get_population_growth
 from policyengine_us.data import EnhancedCPS_2022
 import pandas as pd
 import numpy as np
@@ -39,8 +39,21 @@ def create_puf_ecps_flat_file(
     if reweight:
         from tax_microdata_benchmarking.utils.reweight import (
             reweight,
-        )  # Only import if needed- PyTorch can be kept as an optional dependency this way.
+        )
 
         stacked_file["s006_original"] = stacked_file.s006
-        stacked_file = reweight(stacked_file, time_period=target_year)
+
+        if target_year > 2021:
+            path_to_21 = STORAGE_FOLDER / "output" / "puf_ecps_2021.csv.gz"
+            if path_to_21.exists():
+                stacked_file_21 = pd.read_csv(path_to_21)
+            else:
+                stacked_file_21 = create_puf_ecps_flat_file(
+                    2021, reweight=True
+                )
+            weights_21 = stacked_file_21.s006
+            population_growth = get_population_growth(target_year, 2021)
+            stacked_file["s006"] = weights_21 * population_growth
+        else:
+            stacked_file = reweight(stacked_file, time_period=target_year)
     return stacked_file
