@@ -14,12 +14,12 @@ POPFILE = "cbo_population_forecast.yaml"
 WGTFILE = "tmd_weights.csv.gz"
 
 
-def create_weights_file():
+def create_weights_file(pop_file=POPFILE):
     """
     Create Tax-Calculator-style weights file for FIRST_YEAR through LAST_YEAR.
     """
     # get population forecast
-    with open(POPFILE, "r", encoding="utf-8") as pfile:
+    with open(pop_file, "r", encoding="utf-8") as pfile:
         pop = yaml.safe_load(pfile.read())
 
     # get FIRST_YEAR weights from VARFILE
