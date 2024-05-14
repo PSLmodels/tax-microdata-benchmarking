@@ -4,7 +4,7 @@ Construct tmd.csv, a Tax-Calculator-style input variable file for 2021.
 
 
 def create_variable_file(
-    initial_pt_w2_wages_scale=0.32051,
+    initial_pt_w2_wages_scale=0.31934,
     write_file=True,
 ):
     """
@@ -20,6 +20,7 @@ def create_variable_file(
 
     taxyear = 2021
     # construct dataframe containing input and output variables
+    print(f"Creating {taxyear} PUF-ECPS file using initial pt_w2_wages_scale")
     vdf = create_puf_ecps_flat_file(
         target_year=taxyear,
         pt_w2_wages_scale=initial_pt_w2_wages_scale,
