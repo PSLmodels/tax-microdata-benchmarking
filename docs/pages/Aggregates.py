@@ -100,27 +100,36 @@ def get_aggregate_df(
             lambda x: round(x, 1) if x is not None else None
         )
 
-    aggregates_df["pufpe / irs (%)"] = ((
-        aggregates_df["puf_pe_21"] / aggregates_df["irs_21"].fillna(0) - 1
-    ).fillna(0).replace(np.inf, 0) * 100).round(1)
+    aggregates_df["pufpe / irs (%)"] = (
+        (aggregates_df["puf_pe_21"] / aggregates_df["irs_21"].fillna(0) - 1)
+        .fillna(0)
+        .replace(np.inf, 0)
+        * 100
+    ).round(1)
 
-    aggregates_df["td / irs (%)"] = ((
-        aggregates_df["td_23"] / aggregates_df["irs_21"].fillna(0) - 1
-    ).fillna(0).replace(np.inf, 0) * 100).round(1)
+    aggregates_df["td / irs (%)"] = (
+        (aggregates_df["td_23"] / aggregates_df["irs_21"].fillna(0) - 1)
+        .fillna(0)
+        .replace(np.inf, 0)
+        * 100
+    ).round(1)
 
-    aggregates_df["closest to IRS"] = np.select([
-        aggregates_df.irs_21.isna(),
-        aggregates_df["pufpe / irs (%)"].abs() < aggregates_df["td / irs (%)"].abs(),
-        aggregates_df["pufpe / irs (%)"].abs() > aggregates_df["td / irs (%)"].abs(),
-        True,
-    ], [
-        "Unknown",
-        "puf_pe_21",
-        "td_23",
-        "Neither",
-        ]
+    aggregates_df["closest to IRS"] = np.select(
+        [
+            aggregates_df.irs_21.isna(),
+            aggregates_df["pufpe / irs (%)"].abs()
+            < aggregates_df["td / irs (%)"].abs(),
+            aggregates_df["pufpe / irs (%)"].abs()
+            > aggregates_df["td / irs (%)"].abs(),
+            True,
+        ],
+        [
+            "Unknown",
+            "puf_pe_21",
+            "td_23",
+            "Neither",
+        ],
     )
-
 
     return aggregates_df
 
@@ -137,7 +146,7 @@ only_inputs = st.checkbox(
     "Only show input variables", value=False, key="only_inputs_agg"
 )
 only_irs = st.checkbox(
-    "Only show IRS variables", value=False, key="only_irs_agg"
+    "Only show IRS variables", value=True, key="only_irs_agg"
 )
 
 if only_inputs:
@@ -161,7 +170,7 @@ only_inputs_nonzero = st.checkbox(
 )
 
 only_irs_nonzero = st.checkbox(
-    "Only show IRS variables", value=False, key="only_irs_agg_nonzero"
+    "Only show IRS variables", value=True, key="only_irs_agg_nonzero"
 )
 
 if only_inputs_nonzero:
