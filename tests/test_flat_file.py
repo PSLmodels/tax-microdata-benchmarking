@@ -133,7 +133,7 @@ def test_tax_expenditure_estimates(
 
 
 def test_create_taxcalc_tmd_file():
-    from tax_microdata_benchmarking.utils.create_taxcalc_input_variables import (
+    from tax_microdata_benchmarking.create_taxcalc_input_variables import (
         create_variable_file,
     )
 
