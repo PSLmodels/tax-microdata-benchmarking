@@ -13,6 +13,7 @@ from tax_microdata_benchmarking.storage import STORAGE_FOLDER
 def create_puf_ecps_flat_file(
     target_year: int = 2021,
     reweight: bool = True,
+    pt_w2_wages_scale: float = 0.314,
 ):
     cps_based_flat_file = create_flat_file(
         source_dataset="enhanced_cps_2022", target_year=target_year
@@ -33,7 +34,7 @@ def create_puf_ecps_flat_file(
         + stacked_file.e27200,
     )
     stacked_file["PT_binc_w2_wages"] = (
-        qbi * 0.314  # Solved in 2021 using adjust_qbi.py
+        qbi * pt_w2_wages_scale  # Solved in 2021 using adjust_qbi.py
     )
     stacked_file = add_taxcalc_outputs(stacked_file, target_year)
     if reweight:

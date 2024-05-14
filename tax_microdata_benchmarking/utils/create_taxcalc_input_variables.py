@@ -11,16 +11,16 @@ def create_variable_file(
     Create Tax-Calculator-style input variable file for 2021.
     """
     import taxcalc as tc
-    from tax_microdata_benchmarking.create_flat_file import (
-        create_stacked_flat_file,
+    from tax_microdata_benchmarking.datasets.policyengine.puf_ecps import (
+        create_puf_ecps_flat_file,
     )
-    from tax_microdata_benchmarking.adjust_qbi import (
+    from tax_microdata_benchmarking.utils.qbi import (
         add_pt_w2_wages,
     )
 
     taxyear = 2021
     # construct dataframe containing input and output variables
-    vdf = create_stacked_flat_file(
+    vdf = create_puf_ecps_flat_file(
         target_year=taxyear,
         pt_w2_wages_scale=initial_pt_w2_wages_scale,
     )

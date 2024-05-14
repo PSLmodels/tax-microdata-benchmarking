@@ -130,3 +130,11 @@ def test_tax_expenditure_estimates(
         abs(estimate / target - 1) < 0.7
         or abs(estimate - target) < 1  # Setting wide margin for now.
     ), f"{reform} differs to official estimates by {estimate / target - 1:.1%} ({estimate:.1f}bn vs {target:.1f}bn)"
+
+
+def test_create_taxcalc_tmd_file():
+    from tax_microdata_benchmarking.utils.create_taxcalc_input_variables import (
+        create_variable_file,
+    )
+
+    create_variable_file(write_file=False)
