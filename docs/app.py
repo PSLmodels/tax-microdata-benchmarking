@@ -144,8 +144,10 @@ for dataset_combo, names_combo in zip(
 
     # Absolute difference
     totals_df[f"{dataset1_name} - {dataset2_name}"] = (
-        (dataset1.sum() - dataset2.sum()) / 1e9
-    ).fillna(0).apply(lambda x: round(x * 10) / 10)
+        ((dataset1.sum() - dataset2.sum()) / 1e9)
+        .fillna(0)
+        .apply(lambda x: round(x * 10) / 10)
+    )
     # Relative difference
     totals_df[f"{dataset1_name} - {dataset2_name} (%)"] = (
         (dataset1.sum() - dataset2.sum()) / dataset1.sum() * 100
@@ -163,7 +165,10 @@ variable = st.selectbox(
 dataset = st.selectbox("Select a dataset", datasets)
 
 fig = px.histogram(
-    dfs[datasets.index(dataset)], x=variable, nbins=50, title=f"{variable} distribution in {dataset}"
+    dfs[datasets.index(dataset)],
+    x=variable,
+    nbins=50,
+    title=f"{variable} distribution in {dataset}",
 )
 
 st.plotly_chart(fig)

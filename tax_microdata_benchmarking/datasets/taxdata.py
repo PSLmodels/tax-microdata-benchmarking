@@ -22,7 +22,9 @@ def load_taxdata_puf(time_period: int = 2023):
     tc_path = STORAGE_FOLDER / "input" / "tc23.csv"
     if not tc_path.exists():
         td = download_gh_release_asset(
-            "nikhilwoodruff/tax-microdata-benchmarking-releases", "taxdata-puf-2023", "tc23.csv",
+            "nikhilwoodruff/tax-microdata-benchmarking-releases",
+            "taxdata-puf-2023",
+            "tc23.csv",
         )
         td.to_csv(tc_path, index=False)
     else:
