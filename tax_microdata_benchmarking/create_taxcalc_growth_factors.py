@@ -5,10 +5,11 @@ copy of the most recent growfactors.csv file in the Tax-Calculator repository.
 """
 
 import pandas as pd
+from tax_microdata_benchmarking.storage import STORAGE_FOLDER
 
 LAST_YEAR = 2074
-PGFFILE = "puf_growfactors.csv"
-TGFFILE = "growfactors.csv"
+PGFFILE = STORAGE_FOLDER / "input" / "puf_growfactors.csv"
+TGFFILE = STORAGE_FOLDER / "output" / "growfactors.csv"
 
 
 def create_factors_file():

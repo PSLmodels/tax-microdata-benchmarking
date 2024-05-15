@@ -6,12 +6,13 @@ create_taxcalc_input_variable.py script.
 
 import yaml
 import pandas as pd
+from tax_microdata_benchmarking.storage import STORAGE_FOLDER
 
 FIRST_YEAR = 2021
 LAST_YEAR = 2074
-VARFILE = "tmd.csv.gz"
-POPFILE = "cbo_population_forecast.yaml"
-WGTFILE = "tmd_weights.csv.gz"
+VARFILE = STORAGE_FOLDER / "output" / "tmd.csv.gz"
+POPFILE = STORAGE_FOLDER / "input" / "cbo_population_forecast.yaml"
+WGTFILE = STORAGE_FOLDER / "output" / "tmd_weights.csv.gz"
 
 
 def create_weights_file(pop_file=POPFILE):

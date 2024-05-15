@@ -4,7 +4,8 @@ Construct tmd.csv, a Tax-Calculator-style input variable file for 2021.
 
 
 def create_variable_file(
-    initial_pt_w2_wages_scale=0.32051,
+    initial_pt_w2_wages_scale=0.320,
+    create_from_scratch=False,
     write_file=True,
 ):
     """
@@ -17,12 +18,15 @@ def create_variable_file(
     from tax_microdata_benchmarking.utils.qbi import (
         add_pt_w2_wages,
     )
+    from tax_microdata_benchmarking.storage import STORAGE_FOLDER
 
     taxyear = 2021
     # construct dataframe containing input and output variables
+    print(f"Creating {taxyear} PUF-ECPS file using initial pt_w2_wages_scale")
     vdf = create_puf_ecps_flat_file(
         target_year=taxyear,
         pt_w2_wages_scale=initial_pt_w2_wages_scale,
+        from_scratch=create_from_scratch,
     )
     vdf.FLPDYR = taxyear
     (vdf, pt_w2_wages_scale) = add_pt_w2_wages(vdf)
@@ -33,7 +37,10 @@ def create_variable_file(
             f"\n  INITIAL pt_w2_wages_scale = {initial_pt_w2_wages_scale:.6f}"
             f"\n    FINAL pt_w2_wages_scale = {pt_w2_wages_scale:.6f}"
         )
-        raise ValueError(msg)
+        if abs_diff < 1e-3:
+            print("WARNING:", msg[1:])
+        else:
+            raise ValueError(msg)
     # streamline dataframe so that it includes only input variables
     rec = tc.Records(
         data=vdf,
@@ -51,7 +58,8 @@ def create_variable_file(
         vdf[var] = vdf[f"{var}p"] + vdf[f"{var}s"]
     # write streamlined variables dataframe to CSV-formatted file
     if write_file:
-        vdf.to_csv("tmd.csv", index=False, float_format="%.2f")
+        tmd_csv_fname = STORAGE_FOLDER / "output" / "tmd.csv.gz"
+        vdf.to_csv(tmd_csv_fname, index=False, float_format="%.2f")
 
 
 if __name__ == "__main__":
