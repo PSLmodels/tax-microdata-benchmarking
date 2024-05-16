@@ -6,12 +6,15 @@ general-purpose validated microdata file for use in
 [Tax-Calculator](https://github.com/PSLmodels/Tax-Calculator).  The
 development will proceed in several phases.
 
-To install, clone the repository and run `pip install -e .` from the
-root directory.  To check that the installation was successful, run
-`make test` or `pytest .` from the root directory. This needs the
-POLICYENGINE_GITHUB_MICRODATA_AUTH_TOKEN environment variable to be
-set; contact [Nikhil Woodruff](mailto:nikhil@policyengine.org) for the
-token if you have access to the 2015 IRS PUF.
+## Usage instructions
+
+To generate the microdata files:
+
+1. Run `export POLICYENGINE_GITHUB_MICRODATA_AUTH_TOKEN=***`
+2. Run `export PSL_TAX_MICRODATA_RELEASE_AUTH_TOKEN=***`
+3. Run `make`
+
+The two environment tokens can be obtained from [Nikhil Woodruff](mailto:nikhil@policyengine.org).
 
 To assess, review the data examination results that compare federal
 agency tax estimates with those generated using the microdata file

@@ -10,7 +10,7 @@ format:
 flat-file:
 	python tax_microdata_benchmarking/create_all_datasets.py
 
-all: format test
+data: install flat-file test
 
 documentation:
 	jb build docs
