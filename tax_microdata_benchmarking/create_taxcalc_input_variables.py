@@ -4,7 +4,7 @@ Construct tmd.csv, a Tax-Calculator-style input variable file for 2021.
 
 
 def create_variable_file(
-    initial_pt_w2_wages_scale=0.320,
+    initial_pt_w2_wages_scale=0.32051,
     create_from_scratch=False,
     write_file=True,
 ):
@@ -37,10 +37,11 @@ def create_variable_file(
             f"\n  INITIAL pt_w2_wages_scale = {initial_pt_w2_wages_scale:.6f}"
             f"\n    FINAL pt_w2_wages_scale = {pt_w2_wages_scale:.6f}"
         )
-        if abs_diff < 1e-3:
-            print("WARNING:", msg[1:])
-        else:
-            raise ValueError(msg)
+        raise ValueError(msg)
+        # if abs_diff < 1e-3:
+        #    print("WARNING:", msg[1:])
+        # else:
+        #    raise ValueError(msg)
     # streamline dataframe so that it includes only input variables
     rec = tc.Records(
         data=vdf,
