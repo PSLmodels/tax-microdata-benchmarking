@@ -2,9 +2,12 @@
 Construct tmd.csv, a Tax-Calculator-style input variable file for 2021.
 """
 
+INITIAL_W2_WAGES_SCALE = 0.32051
+INCLUDE_ORIGINAL_WEIGHTS = True
+
 
 def create_variable_file(
-    initial_pt_w2_wages_scale=0.32051,
+    initial_pt_w2_wages_scale=INITIAL_W2_WAGES_SCALE,
     create_from_scratch=False,
     write_file=True,
 ):
@@ -50,11 +53,14 @@ def create_variable_file(
         weights=None,
         adjust_ratios=None,
     )
+    weights = vdf.s006.copy()
+    original_weights = vdf.s006_original.copy()
     vdf.drop(columns=rec.IGNORED_VARS, inplace=True)
     # round all float variables to nearest integer except for weights
-    weights = vdf.s006.copy()
     vdf = vdf.astype(int)
     vdf.s006 = weights
+    if INCLUDE_ORIGINAL_WEIGHTS:
+        vdf["s006_original"] = original_weights
     for var in ["e00200", "e00900", "e02100"]:
         vdf[var] = vdf[f"{var}p"] + vdf[f"{var}s"]
     # write streamlined variables dataframe to CSV-formatted file
