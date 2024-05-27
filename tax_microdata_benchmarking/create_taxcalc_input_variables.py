@@ -22,20 +22,23 @@ def create_variable_file(write_file=True):
     from tax_microdata_benchmarking.storage import STORAGE_FOLDER
 
     # construct dataframe containing input and output variables
-    print(f"Creating {taxyear} PUF-ECPS file using initial pt_w2_wages_scale")
+    print(f"Creating {TAXYEAR} PUF-ECPS file assuming:")
+    print(f"  DO_REWEIGHTING = {DO_REWEIGHTING}")
+    print(f"  INITIAL_W2_WAGES_SCALE = {INITIAL_W2_WAGES_SCALE:.5f}")
+    print(f"  INCLUDE_ORIGINAL_WEIGHTS = {INCLUDE_ORIGINAL_WEIGHTS}")
     vdf = create_puf_ecps_flat_file(
         target_year=TAXYEAR,
         reweight=DO_REWEIGHTING,
         pt_w2_wages_scale=INITIAL_W2_WAGES_SCALE,
         from_scratch=False,
     )
-    vdf.FLPDYR = taxyear
+    vdf.FLPDYR = TAXYEAR
     (vdf, pt_w2_wages_scale) = add_pt_w2_wages(vdf)
-    abs_diff = abs(pt_w2_wages_scale - initial_pt_w2_wages_scale)
+    abs_diff = abs(pt_w2_wages_scale - INITIAL_W2_WAGES_SCALE)
     if abs_diff > 1e-6:
         msg = (
             f"\nFINAL vs INITIAL scale diff = {abs_diff:.6f}"
-            f"\n  INITIAL pt_w2_wages_scale = {initial_pt_w2_wages_scale:.6f}"
+            f"\n  INITIAL pt_w2_wages_scale = {INITIAL_W2_WAGES_SCALE:.6f}"
             f"\n    FINAL pt_w2_wages_scale = {pt_w2_wages_scale:.6f}"
         )
         raise ValueError(msg)
@@ -46,7 +49,7 @@ def create_variable_file(write_file=True):
     # streamline dataframe so that it includes only input variables
     rec = tc.Records(
         data=vdf,
-        start_year=taxyear,
+        start_year=TAXYEAR,
         gfactors=None,
         weights=None,
         adjust_ratios=None,
