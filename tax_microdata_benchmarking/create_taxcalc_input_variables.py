@@ -2,17 +2,15 @@
 Construct tmd.csv, a Tax-Calculator-style input variable file for 2021.
 """
 
+TAXYEAR = 2021
+DO_REWEIGHTING = True
 INITIAL_W2_WAGES_SCALE = 0.32051
 INCLUDE_ORIGINAL_WEIGHTS = True
 
 
-def create_variable_file(
-    initial_pt_w2_wages_scale=INITIAL_W2_WAGES_SCALE,
-    create_from_scratch=False,
-    write_file=True,
-):
+def create_variable_file(write_file=True):
     """
-    Create Tax-Calculator-style input variable file for 2021.
+    Create Tax-Calculator-style input variable file for TAXYEAR.
     """
     import taxcalc as tc
     from tax_microdata_benchmarking.datasets.policyengine.puf_ecps import (
@@ -23,13 +21,13 @@ def create_variable_file(
     )
     from tax_microdata_benchmarking.storage import STORAGE_FOLDER
 
-    taxyear = 2021
     # construct dataframe containing input and output variables
     print(f"Creating {taxyear} PUF-ECPS file using initial pt_w2_wages_scale")
     vdf = create_puf_ecps_flat_file(
-        target_year=taxyear,
-        pt_w2_wages_scale=initial_pt_w2_wages_scale,
-        from_scratch=create_from_scratch,
+        target_year=TAXYEAR,
+        reweight=DO_REWEIGHTING,
+        pt_w2_wages_scale=INITIAL_W2_WAGES_SCALE,
+        from_scratch=False,
     )
     vdf.FLPDYR = taxyear
     (vdf, pt_w2_wages_scale) = add_pt_w2_wages(vdf)
