@@ -46,9 +46,7 @@ def create_puf_ecps_flat_file(
     stacked_file["PT_binc_w2_wages"] = (
         qbi * pt_w2_wages_scale  # Solved in 2021 using adjust_qbi.py
     )
-
     stacked_file = add_taxcalc_outputs(stacked_file, target_year)
-
     if reweight:
         from tax_microdata_benchmarking.utils.reweight import (
             reweight,
