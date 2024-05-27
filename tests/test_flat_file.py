@@ -132,7 +132,6 @@ def test_tax_expenditure_estimates(
     ), f"{reform} differs to official estimates by {estimate / target - 1:.1%} ({estimate:.1f}bn vs {target:.1f}bn)"
 
 
-@pytest.mark.create_tmd_file
 def test_create_taxcalc_tmd_file():
     from tax_microdata_benchmarking.create_taxcalc_input_variables import (
         create_variable_file,

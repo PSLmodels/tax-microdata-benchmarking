@@ -55,7 +55,10 @@ def create_variable_file(write_file=True):
         adjust_ratios=None,
     )
     weights = vdf.s006.copy()
-    original_weights = vdf.s006_original.copy()
+    if DO_REWEIGHTING and write_file:
+        original_weights = vdf.s006_original.copy()
+    else:
+        original_weights = vdf.s006.copy()
     vdf.drop(columns=rec.IGNORED_VARS, inplace=True)
     # round all float variables to nearest integer except for weights
     vdf = vdf.astype(int)
