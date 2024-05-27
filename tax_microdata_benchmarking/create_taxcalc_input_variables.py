@@ -2,17 +2,15 @@
 Construct tmd.csv, a Tax-Calculator-style input variable file for 2021.
 """
 
+TAXYEAR = 2021
+DO_REWEIGHTING = True
 INITIAL_W2_WAGES_SCALE = 0.32051
 INCLUDE_ORIGINAL_WEIGHTS = True
 
 
-def create_variable_file(
-    initial_pt_w2_wages_scale=INITIAL_W2_WAGES_SCALE,
-    create_from_scratch=False,
-    write_file=True,
-):
+def create_variable_file(write_file=True):
     """
-    Create Tax-Calculator-style input variable file for 2021.
+    Create Tax-Calculator-style input variable file for TAXYEAR.
     """
     import taxcalc as tc
     from tax_microdata_benchmarking.datasets.policyengine.puf_ecps import (
@@ -23,21 +21,24 @@ def create_variable_file(
     )
     from tax_microdata_benchmarking.storage import STORAGE_FOLDER
 
-    taxyear = 2021
     # construct dataframe containing input and output variables
-    print(f"Creating {taxyear} PUF-ECPS file using initial pt_w2_wages_scale")
+    print(f"Creating {TAXYEAR} PUF-ECPS file assuming:")
+    print(f"  DO_REWEIGHTING = {DO_REWEIGHTING}")
+    print(f"  INITIAL_W2_WAGES_SCALE = {INITIAL_W2_WAGES_SCALE:.5f}")
+    print(f"  INCLUDE_ORIGINAL_WEIGHTS = {INCLUDE_ORIGINAL_WEIGHTS}")
     vdf = create_puf_ecps_flat_file(
-        target_year=taxyear,
-        pt_w2_wages_scale=initial_pt_w2_wages_scale,
-        from_scratch=create_from_scratch,
+        target_year=TAXYEAR,
+        reweight=DO_REWEIGHTING,
+        pt_w2_wages_scale=INITIAL_W2_WAGES_SCALE,
+        from_scratch=False,
     )
-    vdf.FLPDYR = taxyear
+    vdf.FLPDYR = TAXYEAR
     (vdf, pt_w2_wages_scale) = add_pt_w2_wages(vdf)
-    abs_diff = abs(pt_w2_wages_scale - initial_pt_w2_wages_scale)
+    abs_diff = abs(pt_w2_wages_scale - INITIAL_W2_WAGES_SCALE)
     if abs_diff > 1e-6:
         msg = (
             f"\nFINAL vs INITIAL scale diff = {abs_diff:.6f}"
-            f"\n  INITIAL pt_w2_wages_scale = {initial_pt_w2_wages_scale:.6f}"
+            f"\n  INITIAL pt_w2_wages_scale = {INITIAL_W2_WAGES_SCALE:.6f}"
             f"\n    FINAL pt_w2_wages_scale = {pt_w2_wages_scale:.6f}"
         )
         raise ValueError(msg)
@@ -48,13 +49,16 @@ def create_variable_file(
     # streamline dataframe so that it includes only input variables
     rec = tc.Records(
         data=vdf,
-        start_year=taxyear,
+        start_year=TAXYEAR,
         gfactors=None,
         weights=None,
         adjust_ratios=None,
     )
     weights = vdf.s006.copy()
-    original_weights = vdf.s006_original.copy()
+    if DO_REWEIGHTING and write_file:
+        original_weights = vdf.s006_original.copy()
+    else:
+        original_weights = vdf.s006.copy()
     vdf.drop(columns=rec.IGNORED_VARS, inplace=True)
     # round all float variables to nearest integer except for weights
     vdf = vdf.astype(int)
