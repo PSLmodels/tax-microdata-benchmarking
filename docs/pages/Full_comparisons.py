@@ -39,6 +39,29 @@ INCOME_RANGES = [
 
 VARIABLE_MAP = {
     "agi": "c00100",
+    "wages": "e00200",
+    # "unempcomp": "e02300", We should not compare UI in 2021- drastically unrepresentative of the steady state
+    "ti": "c04800",
+    "taxtot": "c05800",
+    "taxbc": "taxbc",
+    "socsectot": "e02400",
+    "socsectaxable": "c02500",
+    "sd": "standard",
+    "qualdiv": "e00650",
+    "qbid": "qbided",
+    "pensions_taxable": "e01700",
+    "pensions": "e01500",
+    "orddiv": "e00600",
+    "iradist": "e01400",
+    "id_salt": "e18400",
+    # "id_retax": "e18500",
+    "id_medical_uncapped": "c17000",
+    "id_intpaid": "c19200",
+    "id_contributions": "c19700",
+    "exemptint": "e00400",
+    "amt": "c09600",
+    "busnetprofinc": "e00900",
+    "itemded": "c04470",
 }
 
 
@@ -87,9 +110,11 @@ def get_dataset_aggregate(
     if dataset_variable_name is None:
         return None
 
-    weight = dataset.s006
+    weight = subset.s006
 
     if "nret_" in variable:
+        if shortened_variable_name is None:
+            return round(weight.sum() / 1e3, 1)
         return round(
             ((subset[dataset_variable_name] > 0) * weight).sum() / 1e3, 1
         )
@@ -138,8 +163,8 @@ def compute_comparison_df():
     comparison_df = pd.DataFrame()
 
     for taxable in [True, False]:
-        for income_range in [1, 2, 4, 5]:
-            for variable in agi_targets.vname.sample(10):
+        for income_range in tqdm(agi_targets.incsort.unique()):
+            for variable in agi_targets.vname.unique():
                 soi_aggregate = agi_targets[
                     (
                         agi_targets.datatype
@@ -194,12 +219,10 @@ def compute_comparison_df():
                         ]
                     )
 
-    comparison_df = comparison_df.drop_duplicates(
-        ["taxable", "variable", "dataset"]
-    )
-
     comparison_df = comparison_df.pivot(
-        index=["taxable", "variable"], columns="dataset", values="aggregate"
+        index=["taxable", "variable", "income_range"],
+        columns="dataset",
+        values="aggregate",
     ).reset_index()
 
     comparison_df["PUF-PE 21 - SOI"] = (
@@ -226,4 +249,39 @@ def compute_comparison_df():
 
 
 comparison_df = compute_comparison_df()
-st.dataframe(comparison_df)
+comparison_df.to_csv("comparisons.csv.gz", index=False)
+st.dataframe(comparison_df.dropna())
+
+# ST metrics for: number of metrics with relative absolute error > 0.01, > 0.1, > 0.1
+
+_col1, _col2 = st.columns(2)
+with _col1:
+    st.metric(
+        "Number of SOI statistics accounted for",
+        comparison_df[~comparison_df["PUF-PE 21"].isna()].shape[0],
+    )
+
+with _col2:
+    st.metric(
+        "Number of SOI statistics not accounted for",
+        comparison_df[comparison_df["PUF-PE 21"].isna()].shape[0],
+    )
+
+col1, col2, col3 = st.columns(3)
+with col1:
+    st.metric(
+        "Number of metrics with absolute error < 1bn",
+        comparison_df[comparison_df["PUF-PE 21 - SOI"].abs() < 1].shape[0],
+    )
+
+with col2:
+    st.metric(
+        "Number of metrics with absolute error < 50bn",
+        comparison_df[comparison_df["PUF-PE 21 - SOI"].abs() < 50].shape[0],
+    )
+
+with col3:
+    st.metric(
+        "Number of metrics with absolute error > 50bn",
+        comparison_df[comparison_df["PUF-PE 21 - SOI"].abs() > 50].shape[0],
+    )
