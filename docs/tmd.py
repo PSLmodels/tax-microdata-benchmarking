@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 
+
 def clean_agi_bounds(
     agi_targets: pd.DataFrame,
 ) -> pd.DataFrame:
@@ -50,10 +51,15 @@ def clean_agi_bounds(
         "$60,000 under $75,000": (60_000, 75_000),
     }
 
-    agi_targets["agi_lower"] = agi_targets["incrange"].map(lambda x: agi_bound_map[x][0])
-    agi_targets["agi_upper"] = agi_targets["incrange"].map(lambda x: agi_bound_map[x][1])
+    agi_targets["agi_lower"] = agi_targets["incrange"].map(
+        lambda x: agi_bound_map[x][0]
+    )
+    agi_targets["agi_upper"] = agi_targets["incrange"].map(
+        lambda x: agi_bound_map[x][1]
+    )
 
     return agi_targets
+
 
 def clean_filing_status(
     agi_targets: pd.DataFrame,
@@ -86,6 +92,7 @@ def clean_filing_status(
 
     return agi_targets
 
+
 def clean_agi_targets_file(agi_targets):
     agi_targets["is_total"] = "nret" in agi_targets.vname
 
@@ -93,5 +100,3 @@ def clean_agi_targets_file(agi_targets):
     agi_targets = clean_filing_status(agi_targets)
 
     agi
-
-    

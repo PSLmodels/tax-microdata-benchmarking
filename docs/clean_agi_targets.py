@@ -3,10 +3,13 @@ import numpy as np
 
 # Add Don's SOI target scrape
 
-tmd = pd.read_csv("../tax_microdata_benchmarking/storage/input/agi_targets.csv")
+tmd = pd.read_csv(
+    "../tax_microdata_benchmarking/storage/input/agi_targets.csv"
+)
 
 import pandas as pd
 import numpy as np
+
 
 def clean_agi_bounds(
     agi_targets: pd.DataFrame,
@@ -57,10 +60,15 @@ def clean_agi_bounds(
         "$60,000 under $75,000": (60_000, 75_000),
     }
 
-    agi_targets["agi_lower"] = agi_targets["incrange"].map(lambda x: agi_bound_map[x][0])
-    agi_targets["agi_upper"] = agi_targets["incrange"].map(lambda x: agi_bound_map[x][1])
+    agi_targets["agi_lower"] = agi_targets["incrange"].map(
+        lambda x: agi_bound_map[x][0]
+    )
+    agi_targets["agi_upper"] = agi_targets["incrange"].map(
+        lambda x: agi_bound_map[x][1]
+    )
 
     return agi_targets
+
 
 def clean_filing_status(
     agi_targets: pd.DataFrame,
@@ -93,22 +101,16 @@ def clean_filing_status(
 
     return agi_targets
 
+
 def clean_vname(vname):
-    REMOVED = [
-        "nret",
-        "single",
-        "mfs",
-        "mfjss",
-        "hoh",
-        "_"
-    ]
+    REMOVED = ["nret", "single", "mfs", "mfjss", "hoh", "_"]
 
     for r in REMOVED:
         vname = vname.replace(r, "")
 
     if vname == "" or vname == "all":
         return "count"
-    
+
     VARIABLE_RENAMES = {
         "agi": "adjusted gross income",
         "all": "all",
@@ -167,6 +169,7 @@ def clean_vname(vname):
 
     return vname
 
+
 def clean_agi_targets_file(agi_targets):
     agi_targets["Count"] = agi_targets.vname.apply(lambda x: "nret" in x)
     agi_targets["Taxable only"] = agi_targets.datatype == "taxable"
@@ -175,23 +178,27 @@ def clean_agi_targets_file(agi_targets):
     agi_targets = clean_agi_bounds(agi_targets)
     agi_targets = clean_filing_status(agi_targets)
 
-    agi_targets["SOI table"] = agi_targets.table.map({
-        "tab11": "Table 1.1",
-        "tab12": "Table 1.2",
-        "tab14": "Table 1.4",
-        "tab21": "Table 2.1",
-    })
+    agi_targets["SOI table"] = agi_targets.table.map(
+        {
+            "tab11": "Table 1.1",
+            "tab12": "Table 1.2",
+            "tab14": "Table 1.4",
+            "tab21": "Table 2.1",
+        }
+    )
 
     agi_targets.vname = agi_targets.vname.apply(clean_vname)
 
-    agi_targets = agi_targets.rename(columns={
-        "agi_lower": "AGI lower bound",
-        "agi_upper": "AGI upper bound",
-        "filing_status": "Filing status",
-        "ptarget": "Value",
-        "year": "Year",
-        "vname": "Variable"
-    })
+    agi_targets = agi_targets.rename(
+        columns={
+            "agi_lower": "AGI lower bound",
+            "agi_upper": "AGI upper bound",
+            "filing_status": "Filing status",
+            "ptarget": "Value",
+            "year": "Year",
+            "vname": "Variable",
+        }
+    )
 
     columns = [
         "Year",
@@ -205,9 +212,12 @@ def clean_agi_targets_file(agi_targets):
         "Value",
     ]
 
-    agi_targets.Variable = agi_targets.Variable.apply(lambda x: x.replace(" ", "_").replace("-", "_").lower())
+    agi_targets.Variable = agi_targets.Variable.apply(
+        lambda x: x.replace(" ", "_").replace("-", "_").lower()
+    )
 
     return agi_targets[columns]
+
 
 tms = clean_agi_targets_file(tmd)
 
