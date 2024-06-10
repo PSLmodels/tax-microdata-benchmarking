@@ -118,9 +118,9 @@ def clean_vname(vname):
         "itemded": "itemized deductions",
         "count": "count",
         "sd": "standard deduction",
-        "taxac": "federal tax after credits",
-        "taxtot": "unknown",
-        "ti": "total income",
+        "taxac": "income tax after credits",
+        "taxtot": "total income tax",
+        "ti": "taxable income",
         "amt": "alternative minimum tax",
         "busprofnetinc": "business net profits",
         "busprofnetloss": "business net losses",
@@ -131,7 +131,7 @@ def clean_vname(vname):
         "estateloss": "estate losses",
         "exemptint": "exempt interest",
         "iradist": "IRA distributions",
-        "nexemptions": "unknown",
+        "nexemptions": "count of exemptions",
         "orddiv": "ordinary dividends",
         "partnerscorpinc": "partnership and S corp income",
         "partnerscorploss": "partnership and S corp losses",
@@ -142,26 +142,26 @@ def clean_vname(vname):
         "rentroyloss": "rent and royalty net losses",
         "socsectaxable": "taxable Social Security",
         "socsectot": "total Social Security",
-        "taxbc": "federal tax before credits",
+        "taxbc": "income tax before credits",
         "taxint": "taxable interest income",
         "unempcomp": "unemployment compensation",
         "wages": "employment income",
-        "partnerloss": "partnership net losses",
-        "partnerpinc": "partnership net income",
+        "partnerloss": "partnership and S corp losses",
+        "partnerpinc": "partnership and S corp income",
         "qbid": "qualified business income deduction",
         "scorpinc": "S-corporation net income",
         "scorploss": "S-corporation net losses",
-        "partnerinc": "partnership net income",
+        "partnerinc": "partnership and S corp income",
         "idcontributions": "charitable contributions deductions",
-        "idgst": "unknown",
+        "idgst": "itemized general sales tax deduction",
         "idintpaid": "interest paid deductions",
         "idmedicalcapped": "medical expense deductions (capped)",
         "idmedicaluncapped": "medical expense deductions (uncapped)",
         "idmortgage": "mortgage interest deductions",
-        "idpit": "unknown",
-        "idretax": "unknown",
+        "idpit": "itemized state income tax deductions",
+        "idretax": "itemized real estate tax deductions", # real estate tax
         "idsalt": "state and local tax deductions",
-        "idtaxpaid": "unknown",
+        "idtaxpaid": "itemized taxes paid deductions", # federal tax payments
     }
 
     if vname in VARIABLE_RENAMES:
@@ -189,6 +189,8 @@ def clean_agi_targets_file(agi_targets):
 
     agi_targets.vname = agi_targets.vname.apply(clean_vname)
 
+    agi_targets.ptarget[agi_targets.vname == "count of exemptions"] /= 1e3
+
     agi_targets = agi_targets.rename(
         columns={
             "agi_lower": "AGI lower bound",
@@ -213,7 +215,7 @@ def clean_agi_targets_file(agi_targets):
     ]
 
     agi_targets.Variable = agi_targets.Variable.apply(
-        lambda x: x.replace(" ", "_").replace("-", "_").lower()
+        lambda x: x.replace(" ", "_").replace("-", "_").replace("(", "").replace(")", "").lower()
     )
 
     return agi_targets[columns]
