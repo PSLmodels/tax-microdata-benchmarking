@@ -159,9 +159,9 @@ def clean_vname(vname):
         "idmedicaluncapped": "medical expense deductions (uncapped)",
         "idmortgage": "mortgage interest deductions",
         "idpit": "itemized state income tax deductions",
-        "idretax": "itemized real estate tax deductions", # real estate tax
+        "idretax": "itemized real estate tax deductions",  # real estate tax
         "idsalt": "state and local tax deductions",
-        "idtaxpaid": "itemized taxes paid deductions", # federal tax payments
+        "idtaxpaid": "itemized taxes paid deductions",  # federal tax payments
     }
 
     if vname in VARIABLE_RENAMES:
@@ -215,7 +215,11 @@ def clean_agi_targets_file(agi_targets):
     ]
 
     agi_targets.Variable = agi_targets.Variable.apply(
-        lambda x: x.replace(" ", "_").replace("-", "_").replace("(", "").replace(")", "").lower()
+        lambda x: x.replace(" ", "_")
+        .replace("-", "_")
+        .replace("(", "")
+        .replace(")", "")
+        .lower()
     )
 
     return agi_targets[columns]
