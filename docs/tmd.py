@@ -98,5 +98,3 @@ def clean_agi_targets_file(agi_targets):
 
     agi_targets = clean_agi_bounds(agi_targets)
     agi_targets = clean_filing_status(agi_targets)
-
-    agi
