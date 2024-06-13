@@ -1,7 +1,6 @@
 """
 Construct tmd_growfactors.csv, a Tax-Calculator-style GrowFactors file that
-extends through LAST_YEAR from the puf_growfactors.csv file, which is a
-copy of the most recent growfactors.csv file in the Tax-Calculator repository.
+covers the years from FIRST_YEAR through LAST_YEAR.
 """
 
 import pandas as pd
