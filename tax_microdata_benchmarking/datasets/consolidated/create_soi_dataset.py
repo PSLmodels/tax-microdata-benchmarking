@@ -1,26 +1,26 @@
 import pandas as pd
 import numpy as np
+import warnings
+warnings.filterwarnings("ignore")
 
-# Add Don's SOI target scrape
-
-tmd = pd.read_csv(
-    "../tax_microdata_benchmarking/storage/input/agi_targets.csv"
+soi = pd.read_csv(
+    "./agi_targets.csv"
 )
 
 
 def clean_agi_bounds(
-    agi_targets: pd.DataFrame,
+    soi: pd.DataFrame,
 ) -> pd.DataFrame:
     """Adds cleaned AGI bounds to Don's scraped SOI statistics file.
 
     Args:
-        agi_targets (pd.DataFrame): DataFrame with AGI targets.
+        soi (pd.DataFrame): DataFrame with AGI targets.
 
     Returns:
         pd.DataFrame: DataFrame with cleaned AGI bounds.
     """
 
-    agi_targets = agi_targets.copy()
+    soi = soi.copy()
 
     agi_bound_map = {
         "All returns": (-np.inf, np.inf),
@@ -57,29 +57,29 @@ def clean_agi_bounds(
         "$60,000 under $75,000": (60_000, 75_000),
     }
 
-    agi_targets["agi_lower"] = agi_targets["incrange"].map(
+    soi["agi_lower"] = soi["incrange"].map(
         lambda x: agi_bound_map[x][0]
     )
-    agi_targets["agi_upper"] = agi_targets["incrange"].map(
+    soi["agi_upper"] = soi["incrange"].map(
         lambda x: agi_bound_map[x][1]
     )
 
-    return agi_targets
+    return soi
 
 
 def clean_filing_status(
-    agi_targets: pd.DataFrame,
+    soi: pd.DataFrame,
 ) -> pd.DataFrame:
     """Adds cleaned filing status values to Don's scraped SOI statistics file.
 
     Args:
-        agi_targets (pd.DataFrame): DataFrame with AGI targets.
+        soi (pd.DataFrame): DataFrame with AGI targets.
 
     Returns:
         pd.DataFrame: DataFrame with cleaned filing status values.
     """
-    agi_targets = agi_targets.copy()
-    agi_targets["is_total"] = "nret" in agi_targets.vname
+    soi = soi.copy()
+    soi["is_total"] = "nret" in soi.vname
     # if none of single, mfs, mfjss, hoh in vname, then mars_subset = False
 
     def get_filing_status(name):
@@ -94,9 +94,9 @@ def clean_filing_status(
         else:
             return "All"
 
-    agi_targets["filing_status"] = agi_targets.vname.apply(get_filing_status)
+    soi["filing_status"] = soi.vname.apply(get_filing_status)
 
-    return agi_targets
+    return soi
 
 
 def clean_vname(vname):
@@ -167,15 +167,15 @@ def clean_vname(vname):
     return vname
 
 
-def clean_agi_targets_file(agi_targets):
-    agi_targets["Count"] = agi_targets.vname.apply(lambda x: "nret" in x)
-    agi_targets["Taxable only"] = agi_targets.datatype == "taxable"
-    agi_targets.ptarget[~agi_targets.Count] *= 1e3
+def clean_soi_file(soi):
+    soi["Count"] = soi.vname.apply(lambda x: "nret" in x)
+    soi["Taxable only"] = soi.datatype == "taxable"
+    soi.ptarget[~soi.Count] *= 1e3
 
-    agi_targets = clean_agi_bounds(agi_targets)
-    agi_targets = clean_filing_status(agi_targets)
+    soi = clean_agi_bounds(soi)
+    soi = clean_filing_status(soi)
 
-    agi_targets["SOI table"] = agi_targets.table.map(
+    soi["SOI table"] = soi.table.map(
         {
             "tab11": "Table 1.1",
             "tab12": "Table 1.2",
@@ -184,11 +184,11 @@ def clean_agi_targets_file(agi_targets):
         }
     )
 
-    agi_targets.vname = agi_targets.vname.apply(clean_vname)
+    soi.vname = soi.vname.apply(clean_vname)
 
-    agi_targets.ptarget[agi_targets.vname == "count of exemptions"] /= 1e3
+    soi.ptarget[soi.vname == "count of exemptions"] /= 1e3
 
-    agi_targets = agi_targets.rename(
+    soi = soi.rename(
         columns={
             "agi_lower": "AGI lower bound",
             "agi_upper": "AGI upper bound",
@@ -215,7 +215,7 @@ def clean_agi_targets_file(agi_targets):
         "Value",
     ]
 
-    agi_targets.Variable = agi_targets.Variable.apply(
+    soi.Variable = soi.Variable.apply(
         lambda x: x.replace(" ", "_")
         .replace("-", "_")
         .replace("(", "")
@@ -223,9 +223,9 @@ def clean_agi_targets_file(agi_targets):
         .lower()
     )
 
-    return agi_targets[columns]
+    return soi[columns]
 
 
-tms = clean_agi_targets_file(tmd)
+soi = clean_soi_file(soi)
 
-tms.to_csv("soi.csv", index=False)
+soi.to_csv("soi.csv", index=False)
