@@ -4,7 +4,10 @@ import yaml
 from survey_enhance import Imputation
 from microdf import MicroDataFrame
 
-def impute_missing_demographics(puf: pd.DataFrame, demographics: pd.DataFrame) -> pd.DataFrame:
+
+def impute_missing_demographics(
+    puf: pd.DataFrame, demographics: pd.DataFrame
+) -> pd.DataFrame:
     puf_with_demographics = (
         puf[puf.RECID.isin(demographics.RECID)]
         .merge(demographics, on="RECID")
@@ -94,8 +97,10 @@ def decode_age_dependent(age_range: int) -> int:
     upper = AGERANGE_DEPENDENT_DECODE[age_range + 1]
     return np.random.randint(lower, upper)
 
+
 from policyengine_core.data import Dataset
 from tqdm import tqdm
+
 
 def preprocess_puf(puf: pd.DataFrame) -> pd.DataFrame:
     # Add variable renames
@@ -164,7 +169,7 @@ def preprocess_puf(puf: pd.DataFrame) -> pd.DataFrame:
     # Ignore cmbtp (estimate of AMT income not in AGI)
     # Ignore k1bx14s and k1bx14p (partner self-employment income included in partnership and S-corp income)
 
-    DEFAULT_W2_WAGE_RATE = 0.314 # Solved for JCT Tax Expenditures in 2021
+    DEFAULT_W2_WAGE_RATE = 0.314  # Solved for JCT Tax Expenditures in 2021
     qbi = puf.E00900 + puf.E26270 + puf.E02100 + puf.E27200
     puf["w2_wages_from_qualified_business"] = qbi * DEFAULT_W2_WAGE_RATE
 
@@ -231,11 +236,10 @@ class PUF(Dataset):
     time_period = None
     data_format = Dataset.ARRAYS
 
-    def generate(
-        self, puf: pd.DataFrame, demographics: pd.DataFrame
-    ):
+    def generate(self, puf: pd.DataFrame, demographics: pd.DataFrame):
         print("Importing PolicyEngine US variable metadata...")
         from policyengine_us.system import system
+
         print("Loading and pre-processing PUF...")
         puf = preprocess_puf(puf)
         print("Imputing missing demographics...")
@@ -270,7 +274,11 @@ class PUF(Dataset):
 
         i = 0
         self.earn_splits = []
-        for _, row in tqdm(puf.iterrows(), total=len(puf), desc="Constructing hierarchical PUF"):
+        for _, row in tqdm(
+            puf.iterrows(),
+            total=len(puf),
+            desc="Constructing hierarchical PUF",
+        ):
             i += 1
             tax_unit_id = row["household_id"]
             self.add_tax_unit(row, tax_unit_id)
@@ -309,7 +317,7 @@ class PUF(Dataset):
         for key in FINANCIAL_SUBSET:
             if self.variable_to_entity[key] == "tax_unit":
                 self.holder[key].append(row[key])
-        
+
         earnings_split = row["EARNSPLIT"]
         if earnings_split > 0:
             SPLIT_DECODES = {
@@ -322,8 +330,8 @@ class PUF(Dataset):
             upper = SPLIT_DECODES[earnings_split + 1]
             self.earn_splits.append(1 - np.random.uniform(lower, upper))
         else:
-            self.earn_splits.append(1.)
-        
+            self.earn_splits.append(1.0)
+
         self.holder["filing_status"].append(row["filing_status"])
 
     def add_filer(self, row, tax_unit_id):
@@ -336,10 +344,7 @@ class PUF(Dataset):
         self.holder["is_tax_unit_spouse"].append(False)
         self.holder["is_tax_unit_dependent"].append(False)
 
-        self.holder["age"].append(
-            decode_age_filer(row["AGERANGE"])
-        )
-
+        self.holder["age"].append(decode_age_filer(row["AGERANGE"]))
 
         self.holder["household_weight"].append(row["household_weight"])
         self.holder["is_male"].append(row["GENDER"] == 1)
@@ -401,12 +406,14 @@ class PUF_2015(PUF):
     time_period = 2015
     file_path = "./pe_puf_2015.h5"
 
+
 def create_pe_puf_2015():
     puf = pd.read_csv("puf_2015.csv")
     demographics = pd.read_csv("demographics_2015.csv")
 
     pe_puf = PUF_2015()
     pe_puf.generate(puf, demographics)
+
 
 if __name__ == "__main__":
     create_pe_puf_2015()
