@@ -1,11 +1,10 @@
 import pandas as pd
 import numpy as np
 import warnings
+
 warnings.filterwarnings("ignore")
 
-soi = pd.read_csv(
-    "./agi_targets.csv"
-)
+soi = pd.read_csv("./agi_targets.csv")
 
 
 def clean_agi_bounds(
@@ -57,12 +56,8 @@ def clean_agi_bounds(
         "$60,000 under $75,000": (60_000, 75_000),
     }
 
-    soi["agi_lower"] = soi["incrange"].map(
-        lambda x: agi_bound_map[x][0]
-    )
-    soi["agi_upper"] = soi["incrange"].map(
-        lambda x: agi_bound_map[x][1]
-    )
+    soi["agi_lower"] = soi["incrange"].map(lambda x: agi_bound_map[x][0])
+    soi["agi_upper"] = soi["incrange"].map(lambda x: agi_bound_map[x][1])
 
     return soi
 
@@ -110,7 +105,6 @@ def clean_vname(vname):
 
     VARIABLE_RENAMES = {
         "agi": "adjusted gross income",
-        "all": "all",
         "exemption": "exemptions",
         "itemded": "itemized deductions",
         "count": "count",

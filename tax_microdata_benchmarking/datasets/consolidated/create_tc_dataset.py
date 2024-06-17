@@ -4,19 +4,25 @@ import pandas as pd
 import numpy as np
 import yaml
 
+
 def create_tc_dataset(pe_dataset: Type, year: int = 2015) -> pd.DataFrame:
     print("Importing PolicyEngine US variable metadata...")
     from policyengine_us import Microsimulation
+
     pe_sim = Microsimulation(dataset=pe_dataset)
     df = pd.DataFrame()
 
-    pe = lambda variable: np.array(pe_sim.calculate(variable, map_to="tax_unit"))
+    pe = lambda variable: np.array(
+        pe_sim.calculate(variable, map_to="tax_unit")
+    )
 
     print("Creating Tax-Calculator-compatible dataset...")
 
     df["E03500"] = pe("alimony_expense")
     df["E00800"] = pe("alimony_income")
-    df["G20500"] = pe("casualty_loss") # Amend with taxdata treatment from e20500
+    df["G20500"] = pe(
+        "casualty_loss"
+    )  # Amend with taxdata treatment from e20500
     df["E32800"] = pe("cdcc_relevant_expenses")
     df["E19800"] = pe("charitable_cash_donations")
     df["E20100"] = pe("charitable_non_cash_donations")
@@ -32,7 +38,9 @@ def create_tc_dataset(pe_dataset: Type, year: int = 2015) -> pd.DataFrame:
     df["P23250"] = pe("long_term_capital_gains")
     df["E24518"] = pe("long_term_capital_gains_on_collectibles")
     df["E17500"] = pe("medical_expense")
-    df["E00600"] = pe("non_qualified_dividend_income") + pe("qualified_dividend_income")
+    df["E00600"] = pe("non_qualified_dividend_income") + pe(
+        "qualified_dividend_income"
+    )
     df["E00650"] = pe("qualified_dividend_income")
     df["E26270"] = pe("partnership_s_corp_income")
     df["E03230"] = pe("qualified_tuition_expenses")
@@ -49,42 +57,59 @@ def create_tc_dataset(pe_dataset: Type, year: int = 2015) -> pd.DataFrame:
     df["E02300"] = pe("taxable_unemployment_compensation")
     df["E01400"] = pe("taxable_ira_distributions")
     df["E00400"] = pe("tax_exempt_interest_income")
-    df["E01500"] = pe("tax_exempt_pension_income") + pe("taxable_pension_income")
+    df["E01500"] = pe("tax_exempt_pension_income") + pe(
+        "taxable_pension_income"
+    )
     df["E01700"] = pe("taxable_pension_income")
     df["E03150"] = pe("traditional_ira_contributions")
     df["E24515"] = pe("unrecaptured_section_1250_gain")
     df["E27200"] = pe("farm_rent_income")
-    df["MARS"] = pd.Series(pe("filing_status")).map({
-        "SINGLE": 1,
-        "JOINT": 2,
-        "SEPARATE": 3,
-        "HEAD_OF_HOUSEHOLD": 4,
-    }).values
+    df["MARS"] = (
+        pd.Series(pe("filing_status"))
+        .map(
+            {
+                "SINGLE": 1,
+                "JOINT": 2,
+                "SEPARATE": 3,
+                "HEAD_OF_HOUSEHOLD": 4,
+            }
+        )
+        .values
+    )
     df["RECID"] = pe("household_id")
     df["S006"] = pe("tax_unit_weight")
-    df["a_lineno"] = 0 # TD-specific (CPS matched person ID)
-    df["agi_bin"] = 0 # TD-specific (AGI bin)
-    df["h_seq"] = 0 # TD-specific (CPS matched household ID)
-    df["ffpos"] = 0 # TD-specific (CPS matched family ID)
-    df["fips"] = 0 # No FIPS data
-    df["DSI"] = 0 # Claimed as dependent on another return, assume not
+    df["a_lineno"] = 0  # TD-specific (CPS matched person ID)
+    df["agi_bin"] = 0  # TD-specific (AGI bin)
+    df["h_seq"] = 0  # TD-specific (CPS matched household ID)
+    df["ffpos"] = 0  # TD-specific (CPS matched family ID)
+    df["fips"] = 0  # No FIPS data
+    df["DSI"] = 0  # Claimed as dependent on another return, assume not
     df["EIC"] = pe_sim.calculate("eitc_eligible", map_to="tax_unit").values
     df["FLPDYR"] = year
-    df["MIDR"] = 0 # Separately filing spouse itemizes, assume not
-    df["PT_SSTB_income"] = 0 # Business income is from specified service trade or business, assume not
-    df["tanf_ben"] = 0 # TANF benefits, assume none
-    df["vet_ben"] = 0 # Veteran's benefits, assume none
-    df["wic_ben"] = 0 # WIC benefits, assume none
-    df["snap_ben"] = 0 # SNAP benefits, assume none
-    df["housing_ben"] = 0 # Housing benefits, assume none
-    df["ssi_ben"] = 0 # SSI benefits, assume none
-    df["mcare_ben"] = 0 # Medicare benefits, assume none
-    df["mcaid_ben"] = 0 # Medicaid benefits, assume none
-    df["other_ben"] = 0 # Other benefits, assume none
-    df["PT_binc_w2_wages"] = 0 #!!! Redo with new imputation
+    df["MIDR"] = 0  # Separately filing spouse itemizes, assume not
+    df["PT_SSTB_income"] = (
+        0  # Business income is from specified service trade or business, assume not
+    )
+    df["tanf_ben"] = 0  # TANF benefits, assume none
+    df["vet_ben"] = 0  # Veteran's benefits, assume none
+    df["wic_ben"] = 0  # WIC benefits, assume none
+    df["snap_ben"] = 0  # SNAP benefits, assume none
+    df["housing_ben"] = 0  # Housing benefits, assume none
+    df["ssi_ben"] = 0  # SSI benefits, assume none
+    df["mcare_ben"] = 0  # Medicare benefits, assume none
+    df["mcaid_ben"] = 0  # Medicaid benefits, assume none
+    df["other_ben"] = 0  # Other benefits, assume none
+    df["PT_binc_w2_wages"] = 0  #!!! Redo with new imputation
     df["PT_ubia_property"] = 0
-    df["data_source"] = "PUF" if "puf" in pe_dataset.__name__.lower() else "CPS"
-    df["e02000"] = pe("rental_income") + pe("partnership_s_corp_income") + pe("estate_income") + pe("farm_rent_income")
+    df["data_source"] = (
+        "PUF" if "puf" in pe_dataset.__name__.lower() else "CPS"
+    )
+    df["e02000"] = (
+        pe("rental_income")
+        + pe("partnership_s_corp_income")
+        + pe("estate_income")
+        + pe("farm_rent_income")
+    )
     df["e20400"] = pe("misc_deduction")
 
     df["e07300"] = pe("foreign_tax_credit")
@@ -105,11 +130,13 @@ def create_tc_dataset(pe_dataset: Type, year: int = 2015) -> pd.DataFrame:
     df["e09800"] = pe("unreported_payroll_tax")
     df["f2441"] = pe("count_cdcc_eligible")
     df["cmbtp"] = 0
-    df["e87530"] = df["E03230"] # Assume same definition for tuition expenses (for now).
+    df["e87530"] = df[
+        "E03230"
+    ]  # Assume same definition for tuition expenses (for now).
     df["f6251"] = 0
     df["k1bx14p"] = 0
     df["k1bx14s"] = 0
-    
+
     # Filer and spouse pairs
 
     map_to_tax_unit = lambda arr: pe_sim.map_result(arr, "person", "tax_unit")
@@ -150,12 +177,16 @@ def create_tc_dataset(pe_dataset: Type, year: int = 2015) -> pd.DataFrame:
     df["nu06"] = map_to_tax_unit((age < 6) * dependent)
     df["n1820"] = map_to_tax_unit(((age >= 18) & (age < 21)) * dependent)
     df["n21"] = map_to_tax_unit((age >= 21) * dependent)
-    df["n24"] = map_to_tax_unit((age < 17) * dependent) # Following TaxData code.
+    df["n24"] = map_to_tax_unit(
+        (age < 17) * dependent
+    )  # Following TaxData code.
     df["elderly_dependents"] = map_to_tax_unit((age >= 65) * dependent)
 
     # Correct case of variable names for Tax-Calculator
 
-    tc_variable_metadata = yaml.safe_load(open("./taxcalc_variable_metadata.yaml", "r"))
+    tc_variable_metadata = yaml.safe_load(
+        open("./taxcalc_variable_metadata.yaml", "r")
+    )
 
     renames = {}
     for variable in df.columns:
@@ -168,6 +199,8 @@ def create_tc_dataset(pe_dataset: Type, year: int = 2015) -> pd.DataFrame:
 
     return df
 
+
 if __name__ == "__main__":
     from create_pe_puf import PUF_2015
+
     create_tc_dataset(PUF_2015).to_csv("tc_puf_2015.csv", index=False)
