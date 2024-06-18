@@ -49,6 +49,8 @@ def add_taxcalc_outputs(
     flat_file: pd.DataFrame,
     time_period: int,
     reform: dict = None,
+    weights=None,
+    growfactors=None,
 ) -> pd.DataFrame:
     """
     Run a flat file through Tax-Calculator.
@@ -61,10 +63,6 @@ def add_taxcalc_outputs(
     Returns:
         pd.DataFrame: The Tax-Calculator output.
     """
-    growfactors = tc.GrowFactors(
-        str(STORAGE_FOLDER / "output" / "tmd_growfactors.csv")
-    )
-    weights = pd.DataFrame({"WT": flat_file.s006})
     input_data = tc.Records(
         data=flat_file,
         start_year=time_period,
@@ -96,7 +94,14 @@ def get_tax_expenditure_results(
     flat_file: pd.DataFrame,
     time_period: int,
 ) -> dict:
-    baseline = add_taxcalc_outputs(flat_file, time_period)
+
+    growfactors = tc.GrowFactors(
+        str(STORAGE_FOLDER / "output" / "tmd_growfactors.csv")
+    )
+    weights = str(STORAGE_FOLDER / "output" / "tmd_weights.csv.gz")
+    baseline = add_taxcalc_outputs(
+        flat_file, time_period, weights=weights, growfactors=growfactors
+    )
 
     tax_revenue_baseline = (baseline.combined * baseline.s006).sum() / 1e9
 
