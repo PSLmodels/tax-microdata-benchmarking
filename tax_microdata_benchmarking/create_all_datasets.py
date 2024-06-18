@@ -2,7 +2,7 @@
 This module enables generation of all datasets involved in the repo.
 """
 
-from tax_microdata_benchmarking.datasets.tmd import create_tmd_2021
+from tax_microdata_benchmarking.datasets import *
 from tax_microdata_benchmarking.create_taxcalc_growth_factors import (
     create_factors_file,
 )
@@ -15,7 +15,10 @@ import time
 outputs = STORAGE_FOLDER / "output"
 
 generation_functions = [
+    (create_tc_puf_2015, "tc_puf_2015.csv"),
+    (create_tc_puf_2021, "tc_puf_2021.csv"),
     (create_tmd_2021, "tmd_2021.csv"),
+    (create_uprated_puf_2021, "puf_2021.csv"),
 ]
 
 

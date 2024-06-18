@@ -33,3 +33,5 @@ jobs:
         run: make flat-file
       - name: Run tests
         run: make test
+      - name: Test documentation builds
+        run: make documentation
