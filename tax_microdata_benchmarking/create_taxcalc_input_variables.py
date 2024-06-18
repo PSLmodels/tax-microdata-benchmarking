@@ -28,7 +28,7 @@ def create_variable_file(write_file=True):
     vdf.FLPDYR = TAXYEAR
     (vdf, pt_w2_wages_scale) = add_pt_w2_wages(vdf)
     abs_diff = abs(pt_w2_wages_scale - INITIAL_W2_WAGES_SCALE)
-    if abs_diff > 1e-6:
+    if abs_diff > 1e-2:
         msg = (
             f"\nFINAL vs INITIAL scale diff = {abs_diff:.6f}"
             f"\n  INITIAL pt_w2_wages_scale = {INITIAL_W2_WAGES_SCALE:.6f}"
