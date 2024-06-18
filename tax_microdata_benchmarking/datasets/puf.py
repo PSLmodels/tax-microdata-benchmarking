@@ -257,15 +257,17 @@ class PUF(Dataset):
         print("Importing PolicyEngine US variable metadata...")
         from policyengine_us.system import system
 
+        from tax_microdata_benchmarking.datasets.uprate_puf import uprate_puf
+        if self.time_period > 2015:
+            print("Uprating PUF...")
+            puf = uprate_puf(puf, 2015, self.time_period)
+
         print("Loading and pre-processing PUF...")
         original_recid = puf.RECID.values.copy()
         puf = preprocess_puf(puf)
         print("Imputing missing demographics...")
         puf = impute_missing_demographics(puf, demographics)
 
-        from tax_microdata_benchmarking.datasets.uprate_puf import uprate_puf
-
-        puf = uprate_puf(puf, 2015, self.time_period)
         # Sort in original PUF order
         puf = puf.set_index("RECID").loc[original_recid].reset_index()
         puf = puf.fillna(0)
@@ -457,5 +459,5 @@ def create_pe_puf_2021():
 
 
 if __name__ == "__main__":
-    create_pe_puf_2015()
+    # create_pe_puf_2015()
     create_pe_puf_2021()

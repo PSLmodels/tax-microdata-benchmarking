@@ -78,8 +78,8 @@ datasets_to_test = [
 def test_variable_totals(variable, flat_file):
     meta = taxcalc_variable_metadata["read"][variable]
     name = meta.get("desc")
-    weight = flat_file.s006
-    total = (flat_file[variable] * weight).sum()
+    weight = flat_file.s006_original
+    total = (flat_file[variable] * weight * (flat_file.data_source == 1)).sum()
     if tc_variable_totals[variable] == 0:
         # If the taxdata file has a zero total, we'll assume the tested file is correct in the absence of better data.
         return
