@@ -7,6 +7,7 @@ from tax_microdata_benchmarking.storage import STORAGE_FOLDER
 
 DEFAULT_W2_WAGE_RATE = 0.19824  # Solved for JCT Tax Expenditures in 2021
 
+
 def impute_missing_demographics(
     puf: pd.DataFrame, demographics: pd.DataFrame
 ) -> pd.DataFrame:
