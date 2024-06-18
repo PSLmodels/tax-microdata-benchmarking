@@ -13,10 +13,10 @@ import pandas as pd
 
 
 def create_tmd_2021():
-    if not CPS_2021.exists:
+    if not CPS_2021().exists:
         # Don't recreate if already exists.
         create_cps_2021()
-    if not PUF_2021.exists:
+    if not PUF_2021().exists:
         # Don't recreate if already exists.
         create_pe_puf_2021()
     tc_puf_21 = create_tc_dataset(PUF_2021)
