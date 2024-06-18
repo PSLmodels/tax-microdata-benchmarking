@@ -170,7 +170,7 @@ def preprocess_puf(puf: pd.DataFrame) -> pd.DataFrame:
     # Ignore cmbtp (estimate of AMT income not in AGI)
     # Ignore k1bx14s and k1bx14p (partner self-employment income included in partnership and S-corp income)
 
-    DEFAULT_W2_WAGE_RATE = 0.108  # Solved for JCT Tax Expenditures in 2021
+    DEFAULT_W2_WAGE_RATE = 0.184  # Solved for JCT Tax Expenditures in 2021
     qbi = puf.E00900 + puf.E26270 + puf.E02100 + puf.E27200
     puf["w2_wages_from_qualified_business"] = qbi * DEFAULT_W2_WAGE_RATE
 
@@ -258,6 +258,7 @@ class PUF(Dataset):
         from policyengine_us.system import system
 
         from tax_microdata_benchmarking.datasets.uprate_puf import uprate_puf
+
         if self.time_period > 2015:
             print("Uprating PUF...")
             puf = uprate_puf(puf, 2015, self.time_period)
@@ -444,7 +445,9 @@ class PUF_2021(PUF):
 
 def create_pe_puf_2015():
     puf = pd.read_csv(STORAGE_FOLDER / "input" / "puf_2015.csv")
-    demographics = pd.read_csv(STORAGE_FOLDER / "input" / "demographics_2015.csv")
+    demographics = pd.read_csv(
+        STORAGE_FOLDER / "input" / "demographics_2015.csv"
+    )
 
     pe_puf = PUF_2015()
     pe_puf.generate(puf, demographics)
@@ -452,7 +455,9 @@ def create_pe_puf_2015():
 
 def create_pe_puf_2021():
     puf = pd.read_csv(STORAGE_FOLDER / "input" / "puf_2015.csv")
-    demographics = pd.read_csv(STORAGE_FOLDER / "input" / "demographics_2015.csv")
+    demographics = pd.read_csv(
+        STORAGE_FOLDER / "input" / "demographics_2015.csv"
+    )
 
     pe_puf = PUF_2021()
     pe_puf.generate(puf, demographics)

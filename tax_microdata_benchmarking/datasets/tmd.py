@@ -47,6 +47,4 @@ def create_tmd_2021():
 
 if __name__ == "__main__":
     tmd = create_tmd_2021()
-    tmd.to_csv(
-        STORAGE_FOLDER / "output" / "tmd_2021.csv", index=False
-    )
+    tmd.to_csv(STORAGE_FOLDER / "output" / "tmd_2021.csv", index=False)

@@ -1,6 +1,7 @@
 from tax_microdata_benchmarking.utils.cloud import download_gh_release_asset
 from tax_microdata_benchmarking.storage import STORAGE_FOLDER
 
+
 def download_prerequisites():
     puf_2015 = download_gh_release_asset(
         repo="nikhilwoodruff/tax-microdata-benchmarking/releases",
@@ -19,6 +20,7 @@ def download_prerequisites():
     demographics_2015.to_csv(
         STORAGE_FOLDER / "input" / "demographics_2015.csv", index=False
     )
+
 
 if __name__ == "__main__":
     download_prerequisites()
