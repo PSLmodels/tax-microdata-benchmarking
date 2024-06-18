@@ -18,9 +18,6 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
-    env:
-      POLICYENGINE_GITHUB_MICRODATA_AUTH_TOKEN: ${{ secrets.POLICYENGINE_GITHUB_MICRODATA_AUTH_TOKEN}}
-      PSL_TAX_MICRODATA_RELEASE_AUTH_TOKEN: ${{ secrets.PSL_TAX_MICRODATA_RELEASE_AUTH_TOKEN}}
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python
@@ -29,6 +26,9 @@ jobs:
           python-version: 3.9
       - name: Install dependencies
         run: make install
+        env:
+          POLICYENGINE_GITHUB_MICRODATA_AUTH_TOKEN: ${{ secrets.POLICYENGINE_GITHUB_MICRODATA_AUTH_TOKEN}}
+          PSL_TAX_MICRODATA_RELEASE_AUTH_TOKEN: ${{ secrets.PSL_TAX_MICRODATA_RELEASE_AUTH_TOKEN}}
       - name: Generate datasets
         run: make flat-file
       - name: Run tests
