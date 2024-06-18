@@ -10,3 +10,5 @@ tax_microdata_benchmarking/calibration
 **/*.csv
 !tax_microdata_benchmarking/utils/uprating/*.csv*
 !tax_microdata_benchmarking/storage/input/*.csv
+**demographics_2015.csv
+**puf_2015.csv

@@ -1,10 +1,11 @@
 import pandas as pd
 import numpy as np
 import warnings
+from tax_microdata_benchmarking.storage import STORAGE_FOLDER
 
 warnings.filterwarnings("ignore")
 
-soi = pd.read_csv("./agi_targets.csv")
+soi = pd.read_csv(STORAGE_FOLDER / "input" / "agi_targets.csv")
 
 
 def clean_agi_bounds(
@@ -206,6 +207,7 @@ def clean_soi_file(soi):
         "AGI upper bound",
         "Count",
         "Taxable only",
+        "Full population",
         "Value",
     ]
 
@@ -215,6 +217,15 @@ def clean_soi_file(soi):
         .replace("(", "")
         .replace(")", "")
         .lower()
+    )
+
+    # Add aggregate (all filers, all filing statuses, all AGI bins) label
+
+    soi["Full population"] = (
+        (soi["Filing status"] == "All")
+        & (soi["AGI lower bound"] == -np.inf)
+        & (soi["AGI upper bound"] == np.inf)
+        & ~soi["Taxable only"]
     )
 
     return soi[columns]
