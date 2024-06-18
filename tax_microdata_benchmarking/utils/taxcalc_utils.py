@@ -61,11 +61,15 @@ def add_taxcalc_outputs(
     Returns:
         pd.DataFrame: The Tax-Calculator output.
     """
+    growfactors = tc.GrowFactors(
+        str(STORAGE_FOLDER / "output" / "tmd_growfactors.csv")
+    )
+    weights = pd.DataFrame({"WT": flat_file.s006})
     input_data = tc.Records(
         data=flat_file,
         start_year=time_period,
-        weights=None,
-        gfactors=None,
+        weights=weights,
+        gfactors=growfactors,
     )
     policy = tc.Policy()
     if reform:
@@ -78,13 +82,13 @@ def add_taxcalc_outputs(
 
 
 te_reforms = {
-    "cg_tax_preference": {"CG_nodiff": {"2015": True}},
-    "ctc": {"CTC_c": {"2015": 0}, "ODC_c": {"2015": 0}, "ACTC_c": {"2015": 0}},
-    "eitc": {"EITC_c": {"2015": [0, 0, 0, 0]}},
-    "niit": {"NIIT_rt": {"2015": 0}},
-    "qbid": {"PT_qbid_rt": {"2015": 0}},
-    "salt": {"ID_AllTaxes_hc": {"2015": 1}},
-    "social_security_partial_taxability": {"SS_all_in_agi": {"2015": True}},
+    "cg_tax_preference": {"CG_nodiff": {"2023": True}},
+    "ctc": {"CTC_c": {"2023": 0}, "ODC_c": {"2023": 0}, "ACTC_c": {"2023": 0}},
+    "eitc": {"EITC_c": {"2023": [0, 0, 0, 0]}},
+    "niit": {"NIIT_rt": {"2023": 0}},
+    "qbid": {"PT_qbid_rt": {"2023": 0}},
+    "salt": {"ID_AllTaxes_hc": {"2023": 1}},
+    "social_security_partial_taxability": {"SS_all_in_agi": {"2023": True}},
 }
 
 

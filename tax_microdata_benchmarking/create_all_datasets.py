@@ -3,6 +3,10 @@ This module enables generation of all datasets involved in the repo.
 """
 
 from tax_microdata_benchmarking.datasets.tmd import create_tmd_2021
+from tax_microdata_benchmarking.datasets.puf import (
+    create_pe_puf_2015,
+    create_pe_puf_2021,
+)
 from tax_microdata_benchmarking.storage import STORAGE_FOLDER
 import time
 

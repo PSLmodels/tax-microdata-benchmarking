@@ -170,7 +170,7 @@ def preprocess_puf(puf: pd.DataFrame) -> pd.DataFrame:
     # Ignore cmbtp (estimate of AMT income not in AGI)
     # Ignore k1bx14s and k1bx14p (partner self-employment income included in partnership and S-corp income)
 
-    DEFAULT_W2_WAGE_RATE = 0.184  # Solved for JCT Tax Expenditures in 2021
+    DEFAULT_W2_WAGE_RATE = 0.183690  # Solved for JCT Tax Expenditures in 2021
     qbi = puf.E00900 + puf.E26270 + puf.E02100 + puf.E27200
     puf["w2_wages_from_qualified_business"] = qbi * DEFAULT_W2_WAGE_RATE
 
@@ -308,13 +308,16 @@ class PUF(Dataset):
             desc="Constructing hierarchical PUF",
         ):
             i += 1
+            exemptions = row["exemptions_count"]
             tax_unit_id = row["household_id"]
             self.add_tax_unit(row, tax_unit_id)
             self.add_filer(row, tax_unit_id)
+            exemptions -= 1
             if row["filing_status"] == "JOINT":
                 self.add_spouse(row, tax_unit_id)
+                exemptions -= 1
 
-            count_dependents = np.minimum(row["exemptions_count"] - 1, 3)
+            count_dependents = np.minimum(exemptions, 3)
 
             for j in range(count_dependents):
                 self.add_dependent(row, tax_unit_id, j)
