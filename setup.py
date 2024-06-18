@@ -6,7 +6,7 @@ setup(
     packages=find_packages(),
     install_requires=[
         "policyengine_us>=0.770",
-        "taxcalc>=3.6.0",
+        "taxcalc>=4.0.0",
         "pytest",
         "black>=24.4.2",
         "torch",
