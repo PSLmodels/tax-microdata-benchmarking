@@ -166,3 +166,8 @@ def uprate_puf(puf, from_year, to_year):
     print(f"Uprated PUF from {from_year} to {to_year}")
 
     return puf
+
+
+def create_uprated_puf_2021():
+    puf = pd.read_csv(STORAGE_FOLDER / "input" / "puf_2015.csv")
+    return uprate_puf(puf, 2015, 2021)

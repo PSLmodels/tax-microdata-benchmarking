@@ -36,3 +36,12 @@ jobs:
         run: make flat-file
       - name: Run tests
         run: make test
+      - name: Build documentation
+        run: make documentation
+      - name: Deploy documentation
+        uses: JamesIves/github-pages-deploy-action@releases/v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: gh-pages
+          folder: docs/book/_build/html
+      
