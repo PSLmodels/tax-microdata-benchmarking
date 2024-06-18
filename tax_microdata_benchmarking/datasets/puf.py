@@ -232,6 +232,20 @@ FINANCIAL_SUBSET = [
     "tax_exempt_pension_income",
     "traditional_ira_contributions",
     "unrecaptured_section_1250_gain",
+    "foreign_tax_credit",
+    "amt_foreign_tax_credit",
+    "miscellaneous_income",
+    "salt_refund_income",
+    "investment_income_elected_form_4952",
+    "general_business_credit",
+    "prior_year_minimum_tax_credit",
+    "excess_withheld_payroll_tax",
+    "american_opportunity_credit",
+    "energy_efficient_home_improvement_credit",
+    "other_credits",
+    "savers_credit",
+    "recapture_of_investment_credit",
+    "unreported_payroll_tax",
 ]
 
 

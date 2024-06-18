@@ -4,13 +4,14 @@ taxcalc.Records
 
 from tax_microdata_benchmarking.datasets.puf import PUF_2021, create_pe_puf_2021
 from tax_microdata_benchmarking.datasets.cps import CPS_2021, create_cps_2021
-from tax_microdata_benchmarking.datasets.taxcalc import create_tc_dataset, add_taxcalc_outputs
+from tax_microdata_benchmarking.datasets.taxcalc_dataset import create_tc_dataset
+from tax_microdata_benchmarking.utils.taxcalc_utils import add_taxcalc_outputs
 from tax_microdata_benchmarking.utils.reweight import reweight
 import pandas as pd
 
 def create_tmd_2021():
     # create_cps_2021()
-    # create_pe_puf_2021()
+    create_pe_puf_2021()
     tc_puf_21 = create_tc_dataset(PUF_2021)
     tc_cps_21 = create_tc_dataset(CPS_2021)
 
@@ -22,10 +23,13 @@ def create_tmd_2021():
 
     combined = pd.concat([tc_puf_21, tc_cps_21], ignore_index=True)
 
-    # Add Tax-Calculator outputs
+    print("Combined PUF and CPS nonfilers.")
 
+    # Add Tax-Calculator outputs
+    print("Adding Tax-Calculator outputs...")
     combined = add_taxcalc_outputs(combined, 2021)
     combined["s006_original"] = combined.s006.values
+    print("Reweighting...")
     combined = reweight(combined, 2021, weight_deviation_penalty=0)
 
     return combined

@@ -105,7 +105,7 @@ tax_expenditure_reforms = [
     "social_security_partial_taxability",
 ]
 
-from tax_microdata_benchmarking.utils.taxcalc import (
+from tax_microdata_benchmarking.utils.taxcalc_utils import (
     get_tax_expenditure_results,
 )
 
