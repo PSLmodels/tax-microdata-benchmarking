@@ -29,13 +29,19 @@ jobs:
           python-version: 3.9
       - name: Install dependencies
         run: make install
+        env:
+          POLICYENGINE_GITHUB_MICRODATA_AUTH_TOKEN: ${{ secrets.POLICYENGINE_GITHUB_MICRODATA_AUTH_TOKEN}}
+          PSL_TAX_MICRODATA_RELEASE_AUTH_TOKEN: ${{ secrets.PSL_TAX_MICRODATA_RELEASE_AUTH_TOKEN}}
       - name: Generate datasets
         run: make flat-file
-        env:
-          POLICYENGINE_GITHUB_MICRODATA_AUTH_TOKEN: ${{ secrets.POLICYENGINE_GITHUB_MICRODATA_AUTH_TOKEN}}
-          PSL_TAX_MICRODATA_RELEASE_AUTH_TOKEN: ${{ secrets.PSL_TAX_MICRODATA_RELEASE_AUTH_TOKEN}}
       - name: Run tests
         run: make test
-        env:
-          POLICYENGINE_GITHUB_MICRODATA_AUTH_TOKEN: ${{ secrets.POLICYENGINE_GITHUB_MICRODATA_AUTH_TOKEN}}
-          PSL_TAX_MICRODATA_RELEASE_AUTH_TOKEN: ${{ secrets.PSL_TAX_MICRODATA_RELEASE_AUTH_TOKEN}}
+      - name: Build documentation
+        run: make documentation
+      - name: Deploy documentation
+        uses: JamesIves/github-pages-deploy-action@releases/v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: gh-pages
+          folder: docs/book/_build/html
+      

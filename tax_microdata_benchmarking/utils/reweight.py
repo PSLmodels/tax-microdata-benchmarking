@@ -118,7 +118,7 @@ def reweight(
         / f"{time_period}_{datetime.now().isoformat()}"
     )
 
-    for i in list(range(10_000)):
+    for i in tqdm(range(1_000), desc="Optimising weights"):
         optimizer.zero_grad()
         outputs = (weights * output_matrix_tensor.T).sum(axis=1)
         weight_deviation = (
@@ -157,6 +157,8 @@ def reweight(
                 (outputs / target_array - 1).abs().mean(),
                 i,
             )
+
+    print("Finished optimisation")
 
     flat_file["s006"] = weights.detach().numpy()
     return flat_file
