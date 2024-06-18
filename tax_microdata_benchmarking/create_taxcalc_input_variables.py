@@ -4,7 +4,7 @@ Construct tmd.csv, a Tax-Calculator-style input variable file for 2021.
 
 
 def create_variable_file(
-    initial_pt_w2_wages_scale=0.108,
+    initial_pt_w2_wages_scale=0.184,
     create_from_scratch=False,
     write_file=True,
 ):

@@ -47,6 +47,11 @@ EXEMPTED_VARIABLES = [
     "e17500",  # Unknown but deprioritized for now.
     "e18500",  # Unknown but deprioritized for now.
     "e02100",  # Farm income, unsure who's closer.
+    "e02300",  # UI exploded in 2021
+    "e02400",  # SS benefits, TD is out
+    "e18400",
+    "e19200",
+    "e20100",
 ]
 
 # Exempt any variable split between filer and spouse for now.
