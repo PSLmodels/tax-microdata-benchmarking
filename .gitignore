@@ -4,7 +4,6 @@
 **/*.csv.gz
 **/*.egg-info
 tax_microdata_benchmarking/calibration
-*.ipynb
 **/_build/
 **/*tfevents*
 **/*.csv
