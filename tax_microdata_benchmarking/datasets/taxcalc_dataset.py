@@ -16,6 +16,7 @@ def create_tc_dataset(pe_dataset: Type, year: int = 2015) -> pd.DataFrame:
 
     is_non_dep = ~pe_sim.calculate("is_tax_unit_dependent").values
     tax_unit = pe_sim.populations["tax_unit"]
+
     def pe(variable):
         if system.variables[variable].entity.key == "person":
             # Sum over non-dependents
@@ -187,6 +188,8 @@ def create_tc_dataset(pe_dataset: Type, year: int = 2015) -> pd.DataFrame:
     )  # Following TaxData code.
     df["elderly_dependents"] = map_to_tax_unit((age >= 65) * dependent)
 
+    df["PT_binc_w2_wages"] = pe("w2_wages_from_qualified_business")
+
     # Correct case of variable names for Tax-Calculator
 
     tc_variable_metadata = yaml.safe_load(
@@ -205,10 +208,13 @@ def create_tc_dataset(pe_dataset: Type, year: int = 2015) -> pd.DataFrame:
     return df
 
 
-
 if __name__ == "__main__":
     from tax_microdata_benchmarking.datasets.puf import PUF_2015, PUF_2021
     from tax_microdata_benchmarking.storage import STORAGE_FOLDER
 
-    create_tc_dataset(PUF_2015).to_csv(STORAGE_FOLDER / "output" / "tc_puf_2015.csv", index=False)
-    create_tc_dataset(PUF_2021).to_csv(STORAGE_FOLDER / "output" / "tc_puf_2021.csv", index=False)
+    create_tc_dataset(PUF_2015).to_csv(
+        STORAGE_FOLDER / "output" / "tc_puf_2015.csv.gz", index=False
+    )
+    create_tc_dataset(PUF_2021).to_csv(
+        STORAGE_FOLDER / "output" / "tc_puf_2021.csv.gz", index=False
+    )

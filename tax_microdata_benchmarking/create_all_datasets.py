@@ -2,21 +2,14 @@
 This module enables generation of all datasets involved in the repo.
 """
 
-from tax_microdata_benchmarking.datasets import (
-    create_ecps,
-    create_puf,
-    create_puf_ecps_flat_file,
-    load_taxdata_puf,
-)
+from tax_microdata_benchmarking.datasets.tmd import create_tmd_2021
 from tax_microdata_benchmarking.storage import STORAGE_FOLDER
 import time
 
 outputs = STORAGE_FOLDER / "output"
 
 generation_functions = [
-    (lambda: create_puf_ecps_flat_file(2021), "puf_ecps_2021.csv.gz"),
-    (lambda: create_puf_ecps_flat_file(2023), "puf_ecps_2023.csv.gz"),
-    (lambda: load_taxdata_puf(2021), "taxdata_puf_2023.csv.gz"),
+    (create_tmd_2021, "tmd_2021.csv"),
 ]
 
 

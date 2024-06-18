@@ -170,7 +170,7 @@ def preprocess_puf(puf: pd.DataFrame) -> pd.DataFrame:
     # Ignore cmbtp (estimate of AMT income not in AGI)
     # Ignore k1bx14s and k1bx14p (partner self-employment income included in partnership and S-corp income)
 
-    DEFAULT_W2_WAGE_RATE = 0.314  # Solved for JCT Tax Expenditures in 2021
+    DEFAULT_W2_WAGE_RATE = 0.108  # Solved for JCT Tax Expenditures in 2021
     qbi = puf.E00900 + puf.E26270 + puf.E02100 + puf.E27200
     puf["w2_wages_from_qualified_business"] = qbi * DEFAULT_W2_WAGE_RATE
 
@@ -263,7 +263,7 @@ class PUF(Dataset):
         print("Imputing missing demographics...")
         puf = impute_missing_demographics(puf, demographics)
 
-        from uprate_puf import uprate_puf
+        from tax_microdata_benchmarking.datasets.uprate_puf import uprate_puf
 
         puf = uprate_puf(puf, 2015, self.time_period)
         # Sort in original PUF order

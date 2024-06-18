@@ -63,15 +63,10 @@ variables_to_test = [
     if variable not in EXEMPTED_VARIABLES
 ]
 
-dataset_names_to_test = (
-    # "puf_2021",
-    "puf_ecps_2023",
-    # "ecps_2023",
-    # "taxdata_puf_2023",
-)
+dataset_names_to_test = ["tmd_2021"]
 
 datasets_to_test = [
-    pd.read_csv(STORAGE_FOLDER / "output" / f"{dataset}.csv.gz")
+    pd.read_csv(STORAGE_FOLDER / "output" / f"{dataset}.csv")
     for dataset in dataset_names_to_test
 ]
 
