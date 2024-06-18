@@ -75,7 +75,8 @@ def add_taxcalc_outputs(
     simulation = tc.Calculator(records=input_data, policy=policy)
     simulation.calc_all()
     output = simulation.dataframe(None, all_vars=True)
-    assert np.allclose(output.s006, flat_file.s006)
+    if weights is None and growfactors is None:
+        assert np.allclose(output.s006, flat_file.s006)
     return output
 
 
@@ -94,13 +95,8 @@ def get_tax_expenditure_results(
     flat_file: pd.DataFrame,
     time_period: int,
 ) -> dict:
-
-    growfactors = tc.GrowFactors(
-        str(STORAGE_FOLDER / "output" / "tmd_growfactors.csv")
-    )
-    weights = str(STORAGE_FOLDER / "output" / "tmd_weights.csv.gz")
     baseline = add_taxcalc_outputs(
-        flat_file, time_period, weights=weights, growfactors=growfactors
+        flat_file, time_period, weights=None, growfactors=None
     )
 
     tax_revenue_baseline = (baseline.combined * baseline.s006).sum() / 1e9
