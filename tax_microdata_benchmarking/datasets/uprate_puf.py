@@ -1,7 +1,8 @@
 import pandas as pd
 import numpy as np
+from tax_microdata_benchmarking.storage import STORAGE_FOLDER
 
-USE_VARIABLE_SPECIFIC_POPULATION_GROWTH_DIVISORS = True
+USE_VARIABLE_SPECIFIC_POPULATION_GROWTH_DIVISORS = False
 
 SOI_TO_PUF_STRAIGHT_RENAMES = {
     "employment_income": "E00200",
@@ -84,7 +85,7 @@ REMAINING_VARIABLES = [
     "E09800",
 ]
 
-soi = pd.read_csv("soi.csv")
+soi = pd.read_csv(STORAGE_FOLDER / "input" / "soi.csv")
 
 
 def get_soi_aggregate(variable, year, is_count):

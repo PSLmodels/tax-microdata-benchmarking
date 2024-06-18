@@ -3,18 +3,26 @@ from typing import Type
 import pandas as pd
 import numpy as np
 import yaml
+from tax_microdata_benchmarking.storage import STORAGE_FOLDER
+import taxcalc
 
 
 def create_tc_dataset(pe_dataset: Type, year: int = 2015) -> pd.DataFrame:
-    print("Importing PolicyEngine US variable metadata...")
     from policyengine_us import Microsimulation
+    from policyengine_us.system import system
 
     pe_sim = Microsimulation(dataset=pe_dataset)
     df = pd.DataFrame()
 
-    pe = lambda variable: np.array(
-        pe_sim.calculate(variable, map_to="tax_unit")
-    )
+    is_non_dep = ~pe_sim.calculate("is_tax_unit_dependent").values
+    tax_unit = pe_sim.populations["tax_unit"]
+    def pe(variable):
+        if system.variables[variable].entity.key == "person":
+            # Sum over non-dependents
+            values = pe_sim.calculate(variable).values
+            return np.array(tax_unit.sum(values * is_non_dep))
+        else:
+            return np.array(pe_sim.calculate(variable, map_to="tax_unit"))
 
     print("Creating Tax-Calculator-compatible dataset...")
 
@@ -72,6 +80,7 @@ def create_tc_dataset(pe_dataset: Type, year: int = 2015) -> pd.DataFrame:
                 "JOINT": 2,
                 "SEPARATE": 3,
                 "HEAD_OF_HOUSEHOLD": 4,
+                "SURVIVING_SPOUSE": 5,
             }
         )
         .values
@@ -101,9 +110,7 @@ def create_tc_dataset(pe_dataset: Type, year: int = 2015) -> pd.DataFrame:
     df["other_ben"] = 0  # Other benefits, assume none
     df["PT_binc_w2_wages"] = 0  #!!! Redo with new imputation
     df["PT_ubia_property"] = 0
-    df["data_source"] = (
-        "PUF" if "puf" in pe_dataset.__name__.lower() else "CPS"
-    )
+    df["data_source"] = 1 if "puf" in pe_dataset.__name__.lower() else 0
     df["e02000"] = (
         pe("rental_income")
         + pe("partnership_s_corp_income")
@@ -185,7 +192,7 @@ def create_tc_dataset(pe_dataset: Type, year: int = 2015) -> pd.DataFrame:
     # Correct case of variable names for Tax-Calculator
 
     tc_variable_metadata = yaml.safe_load(
-        open("./taxcalc_variable_metadata.yaml", "r")
+        open(STORAGE_FOLDER / "input" / "taxcalc_variable_metadata.yaml", "r")
     )
 
     renames = {}
@@ -200,7 +207,42 @@ def create_tc_dataset(pe_dataset: Type, year: int = 2015) -> pd.DataFrame:
     return df
 
 
-if __name__ == "__main__":
-    from create_pe_puf import PUF_2015
+def add_taxcalc_outputs(
+    flat_file: pd.DataFrame,
+    time_period: int,
+    reform: dict = None,
+) -> pd.DataFrame:
+    """
+    Run a flat file through Tax-Calculator.
 
-    create_tc_dataset(PUF_2015).to_csv("tc_puf_2015.csv", index=False)
+    Args:
+        flat_file (pd.DataFrame): The flat file to run through Tax-Calculator.
+        time_period (int): The year to run the simulation for.
+        reform (dict, optional): The reform to apply. Defaults to None.
+
+    Returns:
+        pd.DataFrame: The Tax-Calculator output.
+    """
+    input_data = taxcalc.Records(
+        data=flat_file,
+        start_year=time_period,
+        weights=None,
+        gfactors=None,
+    )
+    policy = taxcalc.Policy()
+    if reform:
+        policy.implement_reform(reform)
+    simulation = taxcalc.Calculator(records=input_data, policy=policy)
+    simulation.calc_all()
+    output = simulation.dataframe(None, all_vars=True)
+    assert np.allclose(output.s006, flat_file.s006)
+    return output
+
+
+
+if __name__ == "__main__":
+    from tax_microdata_benchmarking.datasets.puf import PUF_2015, PUF_2021
+    from tax_microdata_benchmarking.storage import STORAGE_FOLDER
+
+    create_tc_dataset(PUF_2015).to_csv(STORAGE_FOLDER / "output" / "tc_puf_2015.csv", index=False)
+    create_tc_dataset(PUF_2021).to_csv(STORAGE_FOLDER / "output" / "tc_puf_2021.csv", index=False)
