@@ -24,8 +24,6 @@ def create_tc_dataset(pe_dataset: Type, year: int = 2015) -> pd.DataFrame:
         else:
             return np.array(pe_sim.calculate(variable, map_to="tax_unit"))
 
-    print("Creating Tax-Calculator-compatible dataset...")
-
     df["E03500"] = pe("alimony_expense")
     df["E00800"] = pe("alimony_income")
     df["G20500"] = pe(
@@ -58,7 +56,7 @@ def create_tc_dataset(pe_dataset: Type, year: int = 2015) -> pd.DataFrame:
     df["E03300"] = pe("self_employed_pension_contribution_ald")
     df["P22250"] = pe("short_term_capital_gains")
     df["E02400"] = pe("social_security")
-    df["E18400"] = pe("state_income_tax_reported")
+    df["E18400"] = pe("state_and_local_sales_or_income_tax")
     df["E03210"] = pe("student_loan_interest")
     df["E00300"] = pe("taxable_interest_income")
     df["E01700"] = pe("taxable_pension_income")
@@ -205,38 +203,6 @@ def create_tc_dataset(pe_dataset: Type, year: int = 2015) -> pd.DataFrame:
     df = df.rename(columns=renames)
 
     return df
-
-
-def add_taxcalc_outputs(
-    flat_file: pd.DataFrame,
-    time_period: int,
-    reform: dict = None,
-) -> pd.DataFrame:
-    """
-    Run a flat file through Tax-Calculator.
-
-    Args:
-        flat_file (pd.DataFrame): The flat file to run through Tax-Calculator.
-        time_period (int): The year to run the simulation for.
-        reform (dict, optional): The reform to apply. Defaults to None.
-
-    Returns:
-        pd.DataFrame: The Tax-Calculator output.
-    """
-    input_data = taxcalc.Records(
-        data=flat_file,
-        start_year=time_period,
-        weights=None,
-        gfactors=None,
-    )
-    policy = taxcalc.Policy()
-    if reform:
-        policy.implement_reform(reform)
-    simulation = taxcalc.Calculator(records=input_data, policy=policy)
-    simulation.calc_all()
-    output = simulation.dataframe(None, all_vars=True)
-    assert np.allclose(output.s006, flat_file.s006)
-    return output
 
 
 

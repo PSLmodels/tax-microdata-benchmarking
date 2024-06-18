@@ -3,7 +3,7 @@ Any code relating to the taxdata dataset will go here if needed.
 """
 
 from tax_microdata_benchmarking.storage import STORAGE_FOLDER
-from tax_microdata_benchmarking.utils.taxcalc import add_taxcalc_outputs
+from tax_microdata_benchmarking.utils.taxcalc_utils import add_taxcalc_outputs
 from tax_microdata_benchmarking.utils.cloud import download_gh_release_asset
 
 
