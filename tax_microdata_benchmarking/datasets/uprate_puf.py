@@ -157,4 +157,10 @@ def uprate_puf(puf, from_year, to_year):
         growth = get_growth("adjusted_gross_income", from_year, to_year)
         puf[variable] *= growth
 
+    # Uprate the weights
+
+    returns_start = get_soi_aggregate("count", from_year, True)
+    returns_end = get_soi_aggregate("count", to_year, True)
+    puf.S006 *= returns_end / returns_start
+
     return puf

@@ -781,6 +781,7 @@ class CPS_2021(CPS):
     file_path = STORAGE_FOLDER / "output" / "cps_2021.h5"
     time_period = 2021
 
+
 def create_cps_2021():
     CPS_2021().generate()
 

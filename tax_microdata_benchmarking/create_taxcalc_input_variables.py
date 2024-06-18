@@ -4,7 +4,7 @@ Construct tmd.csv, a Tax-Calculator-style input variable file for 2021.
 
 
 def create_variable_file(
-    initial_pt_w2_wages_scale=0.320,
+    initial_pt_w2_wages_scale=0.108,
     create_from_scratch=False,
     write_file=True,
 ):
@@ -12,9 +12,7 @@ def create_variable_file(
     Create Tax-Calculator-style input variable file for 2021.
     """
     import taxcalc as tc
-    from tax_microdata_benchmarking.datasets.policyengine.puf_ecps import (
-        create_puf_ecps_flat_file,
-    )
+    from tax_microdata_benchmarking.datasets.tmd import create_tmd_2021
     from tax_microdata_benchmarking.utils.qbi import (
         add_pt_w2_wages,
     )
@@ -23,11 +21,7 @@ def create_variable_file(
     taxyear = 2021
     # construct dataframe containing input and output variables
     print(f"Creating {taxyear} PUF-ECPS file using initial pt_w2_wages_scale")
-    vdf = create_puf_ecps_flat_file(
-        target_year=taxyear,
-        pt_w2_wages_scale=initial_pt_w2_wages_scale,
-        from_scratch=create_from_scratch,
-    )
+    vdf = create_tmd_2021()
     vdf.FLPDYR = taxyear
     (vdf, pt_w2_wages_scale) = add_pt_w2_wages(vdf)
     abs_diff = abs(pt_w2_wages_scale - initial_pt_w2_wages_scale)
