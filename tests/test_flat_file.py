@@ -68,10 +68,10 @@ variables_to_test = [
     if variable not in EXEMPTED_VARIABLES
 ]
 
-dataset_names_to_test = ["tmd_2021"]
+dataset_names_to_test = ["tmd"]
 
 datasets_to_test = [
-    pd.read_csv(STORAGE_FOLDER / "output" / f"{dataset}.csv")
+    pd.read_csv(STORAGE_FOLDER / "output" / f"{dataset}.csv.gz")
     for dataset in dataset_names_to_test
 ]
 
