@@ -5,6 +5,7 @@ from survey_enhance import Imputation
 from microdf import MicroDataFrame
 from tax_microdata_benchmarking.storage import STORAGE_FOLDER
 
+DEFAULT_W2_WAGE_RATE = 0.19824  # Solved for JCT Tax Expenditures in 2021
 
 def impute_missing_demographics(
     puf: pd.DataFrame, demographics: pd.DataFrame
@@ -169,8 +170,6 @@ def preprocess_puf(puf: pd.DataFrame) -> pd.DataFrame:
     # Ignore f2441 (AMT form attached)
     # Ignore cmbtp (estimate of AMT income not in AGI)
     # Ignore k1bx14s and k1bx14p (partner self-employment income included in partnership and S-corp income)
-
-    DEFAULT_W2_WAGE_RATE = 0.183690  # Solved for JCT Tax Expenditures in 2021
     qbi = puf.E00900 + puf.E26270 + puf.E02100 + puf.E27200
     puf["w2_wages_from_qualified_business"] = qbi * DEFAULT_W2_WAGE_RATE
 
