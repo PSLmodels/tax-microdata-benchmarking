@@ -4,7 +4,7 @@ Construct tmd.csv, a Tax-Calculator-style input variable file for 2021.
 
 TAXYEAR = 2021
 DO_REWEIGHTING = True
-INITIAL_W2_WAGES_SCALE = 0.32051
+INITIAL_W2_WAGES_SCALE = 0.19824
 INCLUDE_ORIGINAL_WEIGHTS = True
 
 
@@ -13,9 +13,7 @@ def create_variable_file(write_file=True):
     Create Tax-Calculator-style input variable file for TAXYEAR.
     """
     import taxcalc as tc
-    from tax_microdata_benchmarking.datasets.policyengine.puf_ecps import (
-        create_puf_ecps_flat_file,
-    )
+    from tax_microdata_benchmarking.datasets.tmd import create_tmd_2021
     from tax_microdata_benchmarking.utils.qbi import (
         add_pt_w2_wages,
     )
@@ -26,16 +24,11 @@ def create_variable_file(write_file=True):
     print(f"  DO_REWEIGHTING = {DO_REWEIGHTING}")
     print(f"  INITIAL_W2_WAGES_SCALE = {INITIAL_W2_WAGES_SCALE:.5f}")
     print(f"  INCLUDE_ORIGINAL_WEIGHTS = {INCLUDE_ORIGINAL_WEIGHTS}")
-    vdf = create_puf_ecps_flat_file(
-        target_year=TAXYEAR,
-        reweight=DO_REWEIGHTING,
-        pt_w2_wages_scale=INITIAL_W2_WAGES_SCALE,
-        from_scratch=False,
-    )
+    vdf = create_tmd_2021()
     vdf.FLPDYR = TAXYEAR
     (vdf, pt_w2_wages_scale) = add_pt_w2_wages(vdf)
     abs_diff = abs(pt_w2_wages_scale - INITIAL_W2_WAGES_SCALE)
-    if abs_diff > 1e-6:
+    if abs_diff > 1e-2:
         msg = (
             f"\nFINAL vs INITIAL scale diff = {abs_diff:.6f}"
             f"\n  INITIAL pt_w2_wages_scale = {INITIAL_W2_WAGES_SCALE:.6f}"

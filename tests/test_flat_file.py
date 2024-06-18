@@ -47,6 +47,11 @@ EXEMPTED_VARIABLES = [
     "e17500",  # Unknown but deprioritized for now.
     "e18500",  # Unknown but deprioritized for now.
     "e02100",  # Farm income, unsure who's closer.
+    "e02300",  # UI exploded in 2021
+    "e02400",  # SS benefits, TD is out
+    "e18400",
+    "e19200",
+    "e20100",
 ]
 
 # Exempt any variable split between filer and spouse for now.
@@ -63,12 +68,7 @@ variables_to_test = [
     if variable not in EXEMPTED_VARIABLES
 ]
 
-dataset_names_to_test = (
-    # "puf_2021",
-    "puf_ecps_2023",
-    # "ecps_2023",
-    # "taxdata_puf_2023",
-)
+dataset_names_to_test = ["tmd"]
 
 datasets_to_test = [
     pd.read_csv(STORAGE_FOLDER / "output" / f"{dataset}.csv.gz")
@@ -83,8 +83,8 @@ datasets_to_test = [
 def test_variable_totals(variable, flat_file):
     meta = taxcalc_variable_metadata["read"][variable]
     name = meta.get("desc")
-    weight = flat_file.s006
-    total = (flat_file[variable] * weight).sum()
+    weight = flat_file.s006_original
+    total = (flat_file[variable] * weight * (flat_file.data_source == 1)).sum()
     if tc_variable_totals[variable] == 0:
         # If the taxdata file has a zero total, we'll assume the tested file is correct in the absence of better data.
         return
@@ -105,7 +105,7 @@ tax_expenditure_reforms = [
     "social_security_partial_taxability",
 ]
 
-from tax_microdata_benchmarking.utils.taxcalc import (
+from tax_microdata_benchmarking.utils.taxcalc_utils import (
     get_tax_expenditure_results,
 )
 

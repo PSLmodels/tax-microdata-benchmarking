@@ -49,6 +49,8 @@ def add_taxcalc_outputs(
     flat_file: pd.DataFrame,
     time_period: int,
     reform: dict = None,
+    weights=None,
+    growfactors=None,
 ) -> pd.DataFrame:
     """
     Run a flat file through Tax-Calculator.
@@ -64,8 +66,8 @@ def add_taxcalc_outputs(
     input_data = tc.Records(
         data=flat_file,
         start_year=time_period,
-        weights=None,
-        gfactors=None,
+        weights=weights,
+        gfactors=growfactors,
     )
     policy = tc.Policy()
     if reform:
@@ -73,18 +75,19 @@ def add_taxcalc_outputs(
     simulation = tc.Calculator(records=input_data, policy=policy)
     simulation.calc_all()
     output = simulation.dataframe(None, all_vars=True)
-    assert np.allclose(output.s006, flat_file.s006)
+    if weights is None and growfactors is None:
+        assert np.allclose(output.s006, flat_file.s006)
     return output
 
 
 te_reforms = {
-    "cg_tax_preference": {"CG_nodiff": {"2015": True}},
-    "ctc": {"CTC_c": {"2015": 0}, "ODC_c": {"2015": 0}, "ACTC_c": {"2015": 0}},
-    "eitc": {"EITC_c": {"2015": [0, 0, 0, 0]}},
-    "niit": {"NIIT_rt": {"2015": 0}},
-    "qbid": {"PT_qbid_rt": {"2015": 0}},
-    "salt": {"ID_AllTaxes_hc": {"2015": 1}},
-    "social_security_partial_taxability": {"SS_all_in_agi": {"2015": True}},
+    "cg_tax_preference": {"CG_nodiff": {"2023": True}},
+    "ctc": {"CTC_c": {"2023": 0}, "ODC_c": {"2023": 0}, "ACTC_c": {"2023": 0}},
+    "eitc": {"EITC_c": {"2023": [0, 0, 0, 0]}},
+    "niit": {"NIIT_rt": {"2023": 0}},
+    "qbid": {"PT_qbid_rt": {"2023": 0}},
+    "salt": {"ID_AllTaxes_hc": {"2023": 1}},
+    "social_security_partial_taxability": {"SS_all_in_agi": {"2023": True}},
 }
 
 
@@ -92,7 +95,9 @@ def get_tax_expenditure_results(
     flat_file: pd.DataFrame,
     time_period: int,
 ) -> dict:
-    baseline = add_taxcalc_outputs(flat_file, time_period)
+    baseline = add_taxcalc_outputs(
+        flat_file, time_period, weights=None, growfactors=None
+    )
 
     tax_revenue_baseline = (baseline.combined * baseline.s006).sum() / 1e9
 
