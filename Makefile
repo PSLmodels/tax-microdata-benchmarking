@@ -1,14 +1,12 @@
-install: prerequisite-data-files
+install:
 	pip install -e .
+	python tax_microdata_benchmarking/download_prerequisites.py
 
 test:
 	pytest . -v
 
 format:
 	black . -l 79
-
-prerequisite-data-files:
-	python tax_microdata_benchmarking/download_prerequisites.py
 
 flat-file:
 	python tax_microdata_benchmarking/create_all_datasets.py
