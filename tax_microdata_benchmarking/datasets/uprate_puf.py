@@ -163,4 +163,6 @@ def uprate_puf(puf, from_year, to_year):
     returns_end = get_soi_aggregate("count", to_year, True)
     puf.S006 *= returns_end / returns_start
 
+    print(f"Uprated PUF from {from_year} to {to_year}")
+
     return puf
