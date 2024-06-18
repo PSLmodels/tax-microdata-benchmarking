@@ -92,7 +92,7 @@ def create_tc_dataset(pe_dataset: Type, year: int = 2015) -> pd.DataFrame:
     df["ffpos"] = 0  # TD-specific (CPS matched family ID)
     df["fips"] = 0  # No FIPS data
     df["DSI"] = 0  # Claimed as dependent on another return, assume not
-    df["EIC"] = pe_sim.calculate("eitc_eligible", map_to="tax_unit").values
+    df["EIC"] = np.minimum(pe("eitc_child_count"), 3)
     df["FLPDYR"] = year
     df["MIDR"] = 0  # Separately filing spouse itemizes, assume not
     df["PT_SSTB_income"] = (
