@@ -15,6 +15,8 @@ import time
 outputs = STORAGE_FOLDER / "output"
 
 generation_functions = [
+    (create_pe_puf_2015, None),
+    (create_pe_puf_2021, None),
     (create_tc_puf_2015, "tc_puf_2015.csv"),
     (create_tc_puf_2021, "tc_puf_2021.csv"),
     (create_tmd_2021, "tmd_2021.csv"),
@@ -27,7 +29,8 @@ def main():
         print(f"Generating {filename}...")
         start_time = time.time()
         data = generation_function()
-        data.to_csv(outputs / filename, index=False)
+        if filename is not None:
+            data.to_csv(outputs / filename, index=False)
         duration = time.time() - start_time
         print(f"   ...completed {filename} in {duration:.2f} seconds")
 
