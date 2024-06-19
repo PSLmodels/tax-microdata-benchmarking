@@ -4,6 +4,9 @@ import yaml
 from survey_enhance import Imputation
 from microdf import MicroDataFrame
 from tax_microdata_benchmarking.storage import STORAGE_FOLDER
+from tax_microdata_benchmarking.utils.pension_contributions import (
+    impute_pension_contributions_to_puf,
+)
 
 DEFAULT_W2_WAGE_RATE = 0.19824  # Solved for JCT Tax Expenditures in 2021
 
@@ -246,6 +249,7 @@ FINANCIAL_SUBSET = [
     "savers_credit",
     "recapture_of_investment_credit",
     "unreported_payroll_tax",
+    "pre_tax_contributions",
 ]
 
 
@@ -268,6 +272,10 @@ class PUF(Dataset):
         puf = preprocess_puf(puf)
         print("Imputing missing demographics...")
         puf = impute_missing_demographics(puf, demographics)
+        print("Imputing pension contributions...")
+        puf["pre_tax_contributions"] = impute_pension_contributions_to_puf(
+            puf[["employment_income"]]
+        )
 
         # Sort in original PUF order
         puf = puf.set_index("RECID").loc[original_recid].reset_index()
@@ -467,5 +475,5 @@ def create_pe_puf_2021():
 
 
 if __name__ == "__main__":
-    # create_pe_puf_2015()
+    create_pe_puf_2015()
     create_pe_puf_2021()
