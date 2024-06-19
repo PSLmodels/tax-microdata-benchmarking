@@ -18,3 +18,6 @@ data: install flat-file test
 
 documentation:
 	jb build docs/book
+
+reweighting-visualisation:
+	tensorboard --logdir=tax_microdata_benchmarking/storage/output/reweighting

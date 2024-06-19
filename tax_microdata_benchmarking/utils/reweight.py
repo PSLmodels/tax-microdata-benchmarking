@@ -118,7 +118,7 @@ def reweight(
         / f"{time_period}_{datetime.now().isoformat()}"
     )
 
-    for i in tqdm(range(1_000), desc="Optimising weights"):
+    for i in tqdm(range(10_000), desc="Optimising weights"):
         optimizer.zero_grad()
         outputs = (weights * output_matrix_tensor.T).sum(axis=1)
         weight_deviation = (
