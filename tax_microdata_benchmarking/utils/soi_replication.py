@@ -2,6 +2,9 @@ import pandas as pd
 import numpy as np
 from tqdm import tqdm
 from tax_microdata_benchmarking.storage import STORAGE_FOLDER
+import warnings
+
+warnings.filterwarnings("ignore")
 
 soi = pd.read_csv(STORAGE_FOLDER / "input" / "soi.csv")
 
@@ -16,7 +19,7 @@ def pe_to_soi(pe_dataset, year):
         pe_sim.calculate(variable, map_to="tax_unit")
     )
 
-    df["agi"] = pe("adjusted_gross_income")
+    df["adjusted_gross_income"] = pe("adjusted_gross_income")
     df["exemption"] = pe("exemptions")
     df["itemded"] = pe("itemized_taxable_income_deductions")
     df["income_tax_after_credits"] = pe("income_tax")
@@ -82,7 +85,7 @@ def pe_to_soi(pe_dataset, year):
 def puf_to_soi(puf, year):
     df = pd.DataFrame()
 
-    df["agi"] = puf.E00100
+    df["adjusted_gross_income"] = puf.E00100
     df["total_income_tax"] = puf.E06500
     df["employment_income"] = puf.E00200
     df["capital_gains_distributions"] = puf.E01100
@@ -148,7 +151,7 @@ def tc_to_soi(puf, year):
 
     puf.columns = puf.columns.str.upper()
 
-    df["agi"] = puf.C00100
+    df["adjusted_gross_income"] = puf.C00100
     df["total_income_tax"] = puf.C05800
     df["employment_income"] = puf.E00200
     df["capital_gains_distributions"] = puf.E01100
@@ -215,12 +218,12 @@ def compare_soi_replication_to_soi(df, year):
         if row.Variable not in df.columns:
             continue
 
-        subset = df[df.agi >= row["AGI lower bound"]][
-            df.agi < row["AGI upper bound"]
+        subset = df[df.adjusted_gross_income >= row["AGI lower bound"]][
+            df.adjusted_gross_income < row["AGI upper bound"]
         ]
 
         if row["Variable"] == "count":
-            variable = "agi"
+            variable = "adjusted_gross_income"
         else:
             variable = row["Variable"]
 
