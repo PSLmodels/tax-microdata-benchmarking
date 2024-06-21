@@ -4,7 +4,7 @@ Construct tmd.csv, a Tax-Calculator-style input variable file for 2021.
 
 TAXYEAR = 2021
 DO_REWEIGHTING = True
-INITIAL_W2_WAGES_SCALE = 0.19824
+INITIAL_W2_WAGES_SCALE = 0.19980
 INCLUDE_ORIGINAL_WEIGHTS = True
 
 
@@ -28,17 +28,13 @@ def create_variable_file(write_file=True):
     vdf.FLPDYR = TAXYEAR
     (vdf, pt_w2_wages_scale) = add_pt_w2_wages(vdf)
     abs_diff = abs(pt_w2_wages_scale - INITIAL_W2_WAGES_SCALE)
-    if abs_diff > 1e-2:
+    if abs_diff > 1e-6:
         msg = (
             f"\nFINAL vs INITIAL scale diff = {abs_diff:.6f}"
             f"\n  INITIAL pt_w2_wages_scale = {INITIAL_W2_WAGES_SCALE:.6f}"
             f"\n    FINAL pt_w2_wages_scale = {pt_w2_wages_scale:.6f}"
         )
         raise ValueError(msg)
-        # if abs_diff < 1e-3:
-        #    print("WARNING:", msg[1:])
-        # else:
-        #    raise ValueError(msg)
     # streamline dataframe so that it includes only input variables
     rec = tc.Records(
         data=vdf,
