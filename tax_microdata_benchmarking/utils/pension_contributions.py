@@ -7,6 +7,7 @@ from tax_microdata_benchmarking.imputation_assumptions import (
     PREDICT_RNG_SEED,
 )
 
+
 def impute_pension_contributions_to_puf(puf_df):
 
     cps = Microsimulation(dataset=CPS_2021)
@@ -15,7 +16,7 @@ def impute_pension_contributions_to_puf(puf_df):
     )
 
     pension_contributions = Imputation()
-    pension_contributions.random_generator=np.random.default_rng(
+    pension_contributions.random_generator = np.random.default_rng(
         PREDICT_RNG_SEED,
     )
     pension_contributions.train(
