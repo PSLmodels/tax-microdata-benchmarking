@@ -20,7 +20,7 @@ def create_variable_file(write_file=True):
     from tax_microdata_benchmarking.storage import STORAGE_FOLDER
 
     # construct dataframe containing input and output variables
-    print(f"Creating {TAXYEAR} PUF-ECPS file assuming:")
+    print(f"Creating {TAXYEAR} PUF+CPS file assuming:")
     print(f"  DO_REWEIGHTING = {DO_REWEIGHTING}")
     print(f"  INITIAL_W2_WAGES_SCALE = {INITIAL_W2_WAGES_SCALE:.5f}")
     print(f"  INCLUDE_ORIGINAL_WEIGHTS = {INCLUDE_ORIGINAL_WEIGHTS}")
@@ -28,13 +28,14 @@ def create_variable_file(write_file=True):
     vdf.FLPDYR = TAXYEAR
     (vdf, pt_w2_wages_scale) = add_pt_w2_wages(vdf)
     abs_diff = abs(pt_w2_wages_scale - INITIAL_W2_WAGES_SCALE)
+    msg = (
+        f"  FINAL vs INITIAL scale diff = {abs_diff:.6f}\n"
+        f"    INITIAL pt_w2_wages_scale = {INITIAL_W2_WAGES_SCALE:.6f}\n"
+        f"      FINAL pt_w2_wages_scale = {pt_w2_wages_scale:.6f}"
+    )
+    print(msg)
     if abs_diff > 1e-6:
-        msg = (
-            f"\nFINAL vs INITIAL scale diff = {abs_diff:.6f}"
-            f"\n  INITIAL pt_w2_wages_scale = {INITIAL_W2_WAGES_SCALE:.6f}"
-            f"\n    FINAL pt_w2_wages_scale = {pt_w2_wages_scale:.6f}"
-        )
-        raise ValueError(msg)
+        raise ValueError("INITIAL and FINAL scale values are inconsistent")
     # streamline dataframe so that it includes only input variables
     rec = tc.Records(
         data=vdf,
@@ -59,8 +60,8 @@ def create_variable_file(write_file=True):
     # write streamlined variables dataframe to CSV-formatted file
     if write_file:
         tmd_csv_fname = STORAGE_FOLDER / "output" / "tmd.csv.gz"
+        print(f"Writing PUF+CPS file named {tmd_csv_fname}")
         vdf.to_csv(tmd_csv_fname, index=False, float_format="%.2f")
-
 
 if __name__ == "__main__":
     create_variable_file()
