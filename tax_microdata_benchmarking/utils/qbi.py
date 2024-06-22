@@ -21,7 +21,7 @@ def add_pt_w2_wages(df, verbose: bool = True):
           pt_w2_wages_scale: rounded to five decimal digits
     """
     if verbose:
-        print("Finding scale to use in imputing pass-through W-2 wages")
+        print("Finding scale to use in imputing pass-through W-2 wages...")
     QBID_TOTAL = 205.8  # from IRS SOI P4801 tabulations of 2021 data (in $B)
     qbi = np.maximum(0, df.e00900 + df.e26270 + df.e02100 + df.e27200)
 
