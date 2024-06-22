@@ -719,8 +719,6 @@ def add_previous_year_income(self, cps: h5py.File) -> None:
         )
         return
 
-    from survey_enhance.impute import Imputation
-
     cps_current_year_data = self.raw_cps(require=True).load()
     cps_previous_year_data = self.previous_year_raw_cps(require=True).load()
     cps_previous_year = cps_previous_year_data.person.set_index(
