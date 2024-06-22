@@ -714,9 +714,11 @@ def add_household_variables(cps: h5py.File, household: DataFrame) -> None:
 
 def add_previous_year_income(self, cps: h5py.File) -> None:
     if self.previous_year_raw_cps is None:
-        print(
-            "No previous year data available for this dataset, skipping previous year income imputation."
+        msg = (
+            "No previous year data available for this dataset, "
+            "skipping previous year income imputation."
         )
+        print(msg)
         return
 
     cps_current_year_data = self.raw_cps(require=True).load()
