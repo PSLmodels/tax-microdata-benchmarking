@@ -2,9 +2,14 @@
 Construct tmd.csv, a Tax-Calculator-style input variable file for 2021.
 """
 
+from tax_microdata_benchmarking.imputation_assumptions import (
+    W2_WAGES_SCALE,
+)
+
+
 TAXYEAR = 2021
 DO_REWEIGHTING = True
-INITIAL_W2_WAGES_SCALE = 0.19980
+INITIAL_W2_WAGES_SCALE = W2_WAGES_SCALE
 INCLUDE_ORIGINAL_WEIGHTS = True
 
 
