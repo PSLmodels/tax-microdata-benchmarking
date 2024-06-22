@@ -7,8 +7,9 @@ from tax_microdata_benchmarking.storage import STORAGE_FOLDER
 from tax_microdata_benchmarking.utils.pension_contributions import (
     impute_pension_contributions_to_puf,
 )
-
-DEFAULT_W2_WAGE_RATE = 0.19824  # Solved for JCT Tax Expenditures in 2021
+from tax_microdata_benchmarking.imputation_assumptions import (
+    W2_WAGES_SCALE,
+)
 
 
 def impute_missing_demographics(
@@ -175,7 +176,7 @@ def preprocess_puf(puf: pd.DataFrame) -> pd.DataFrame:
     # Ignore cmbtp (estimate of AMT income not in AGI)
     # Ignore k1bx14s and k1bx14p (partner self-employment income included in partnership and S-corp income)
     qbi = puf.E00900 + puf.E26270 + puf.E02100 + puf.E27200
-    puf["w2_wages_from_qualified_business"] = qbi * DEFAULT_W2_WAGE_RATE
+    puf["w2_wages_from_qualified_business"] = qbi * W2_WAGE_SCALE
 
     puf["filing_status"] = puf.MARS.map(
         {
