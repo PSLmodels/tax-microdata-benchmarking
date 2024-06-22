@@ -40,7 +40,7 @@ def impute_missing_demographics(
     ]
 
     demographics_from_puf = Imputation()
-    demographics_from_puf.random_generator=np.random.default_rng(
+    demographics_from_puf.random_generator = np.random.default_rng(
         PREDICT_RNG_SEED,
     )
 
