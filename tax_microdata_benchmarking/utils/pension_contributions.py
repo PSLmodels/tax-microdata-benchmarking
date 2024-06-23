@@ -1,7 +1,7 @@
 import numpy as np
-from survey_enhance import Imputation
 from policyengine_us import Microsimulation
 from tax_microdata_benchmarking.datasets.cps import CPS_2021
+from tax_microdata_benchmarking.utils.imputation import Imputation
 from tax_microdata_benchmarking.imputation_assumptions import (
     TRAIN_RNG_SEED,
     PREDICT_RNG_SEED,
