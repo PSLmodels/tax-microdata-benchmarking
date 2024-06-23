@@ -65,7 +65,7 @@ def create_variable_file(write_file=True):
     # write streamlined variables dataframe to CSV-formatted file
     if write_file:
         tmd_csv_fname = STORAGE_FOLDER / "output" / "tmd.csv.gz"
-        print(f"Writing PUF+CPS file [{tmd_csv_fname}]...")
+        print(f"Writing PUF+CPS file... [{tmd_csv_fname}]")
         vdf.to_csv(tmd_csv_fname, index=False, float_format="%.2f")
 
 
