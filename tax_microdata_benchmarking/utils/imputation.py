@@ -29,11 +29,12 @@ class Imputation:
     """The names of the input variables."""
     Y_columns: List[str]
     """The names of the output variables."""
-    random_generator: np.random.Generator = None
-    """The random generator used to sample from the distribution of the imputation."""
-
     X_category_mappings: List[Dict[str, int]] = None
     """The mapping from category names to integers for each input variable."""
+    rf_rng_seed: int = None
+    """The random number generator seed used by RandomForestRegressor."""
+    beta_rng_seed: int = None
+    """Random number generator seed used to generate Beta variates."""
 
     def encode_categories(self, X: pd.DataFrame) -> pd.DataFrame:
         if self.X_category_mappings is None:
@@ -68,7 +69,8 @@ class Imputation:
         sample_weight: pd.Series = None,
     ):
         """
-        Train a random forest model to predict the output variables from the input variables.
+        Train a random forest model to predict the output variables
+        from the input variables.
 
         Args:
             X (pd.DataFrame): The dataset containing the input variables.
@@ -101,6 +103,8 @@ class Imputation:
                 X_ = to_array(pd.concat([X, Y[Y_columns]], axis=1))
             y_ = to_array(Y[Y.columns[i]])
             model = ManyToOneImputation()
+            model.rf_rng_seed = self.rf_rng_seed
+            model.beta_rng_seed = self.beta_rng_seed
             model.encode_categories = self.encode_categories
             model.train(
                 X_, y_, num_trees=num_trees, sample_weight=sample_weight
@@ -126,11 +130,7 @@ class Imputation:
 
         if isinstance(X, list):
             X = pd.DataFrame(X, columns=self.X_columns)
-
         X = pd.DataFrame(X, columns=self.X_columns)
-
-        if self.random_generator is None:
-            self.random_generator = np.random.default_rng()
         X = to_array(self.encode_categories(X))
         Y = np.zeros((X.shape[0], len(self.models)))
         if verbose:
@@ -144,7 +144,7 @@ class Imputation:
                 quantile = mean_quantile
             X_ = np.concatenate([X, Y[:, :i]], axis=1)
             model.encode_categories = self.encode_categories
-            Y[:, i] = model.predict(X_, quantile, self.random_generator)
+            Y[:, i] = model.predict(X_, quantile)
         return pd.DataFrame(Y, columns=self.Y_columns)
 
     def save(self, path: str):
@@ -159,7 +159,6 @@ class Imputation:
 
         path = Path(path)
         path.parent.mkdir(parents=True, exist_ok=True)
-
         with open(path, "wb") as f:
             # Store the models only in a dictionary.
             data = dict(
@@ -229,9 +228,12 @@ class ManyToOneImputation:
 
     model: RandomForestRegressor
     """The random forest model."""
-
     is_integer_coded: bool = False
     """Whether the output variable is integer coded."""
+    rf_rng_seed: int = None
+    """Random number generator seed used by RandomForestRegressor."""
+    beta_rng_seed: int = None
+    """Random number generator seed used to generate Beta variates."""
 
     def train(
         self,
@@ -253,7 +255,10 @@ class ManyToOneImputation:
         X = to_array(X)
         y = to_array(y)
         self.model = RandomForestRegressor(
-            n_estimators=num_trees, bootstrap=True, max_samples=0.01
+            n_estimators=num_trees,
+            bootstrap=True,
+            max_samples=0.01,
+            random_state=self.rf_rng_seed,
         )
         try:
             self.is_integer_coded = (
@@ -267,7 +272,6 @@ class ManyToOneImputation:
         self,
         X: pd.DataFrame,
         mean_quantile: float = 0.5,
-        random_generator: np.random.Generator = None,
     ) -> pd.DataFrame:
         """
         Predict the output variable for the input dataset.
@@ -275,7 +279,6 @@ class ManyToOneImputation:
         Args:
             X (pd.DataFrame): dataset to predict on.
             mean_quantile (float): mean quantile under the Beta distribution.
-            random_generator (np.random.Generator): random generator.
 
         Returns:
             pd.Series: The predicted distribution of values for each input row.
@@ -292,8 +295,7 @@ class ManyToOneImputation:
         if mean_quantile is None:
             mean_quantile = 0.5
         a = mean_quantile / (1 - mean_quantile)
-        if random_generator is None:
-            random_generator = np.random.default_rng()
+        random_generator = np.random.default_rng(seed=self.beta_rng_seed)
         input_quantiles = random_generator.beta(
             a, 1, size=tree_predictions.shape[0]
         )
@@ -359,9 +361,11 @@ class ManyToOneImputation:
             mean_quantile = (min_quantile + max_quantile) / 2
             loss_value, pred_agg = loss(mean_quantile)
             if verbose:
-                print(
-                    f"Iteration {i}: {mean_quantile:.4f} (loss: {loss_value:.4f})"
+                msg = (
+                    f"Iteration {i}: {mean_quantile:.4f} "
+                    f"(loss: {loss_value:.4f})"
                 )
+                print(msg)
             if loss_value < best_loss:
                 best_loss = loss_value
             if pred_agg < target:
