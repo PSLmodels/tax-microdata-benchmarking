@@ -270,15 +270,14 @@ class PUF(Dataset):
         from tax_microdata_benchmarking.datasets.uprate_puf import uprate_puf
 
         if self.time_period > 2015:
-            print("Uprating PUF...")
             puf = uprate_puf(puf, 2015, self.time_period)
 
-        print("Loading and pre-processing PUF...")
+        print("Pre-processing PUF...")
         original_recid = puf.RECID.values.copy()
         puf = preprocess_puf(puf)
-        print("Imputing missing demographics...")
+        print("Imputing missing PUF demographics...")
         puf = impute_missing_demographics(puf, demographics)
-        print("Imputing pension contributions...")
+        print("Imputing PUF pension contributions...")
         puf["pre_tax_contributions"] = impute_pension_contributions_to_puf(
             puf[["employment_income"]]
         )
