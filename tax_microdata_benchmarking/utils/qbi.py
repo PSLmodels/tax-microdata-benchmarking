@@ -43,7 +43,7 @@ def add_pt_w2_wages(df, verbose: bool = True):
         qbided = (sim.array("qbided") * df.s006).sum() / 1e9
         dev = qbided - QBID_TOTAL
         if verbose:
-            print(f"scale: {scale:8.6f}, dev: {dev:6.2f}, tot: {qbided:.2f}")
+            print(f"scale: {scale:8.6f}, dev: {dev:7.3f}, tot: {qbided:.3f}")
         return dev
 
     scale = bisect(deduction_deviation, 0.1, 0.5, rtol=0.0001)
