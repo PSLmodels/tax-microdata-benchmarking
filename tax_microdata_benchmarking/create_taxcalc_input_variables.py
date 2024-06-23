@@ -2,14 +2,23 @@
 Construct tmd.csv, a Tax-Calculator-style input variable file for 2021.
 """
 
+import taxcalc as tc
+from tax_microdata_benchmarking.datasets.tmd import create_tmd_2021
+from tax_microdata_benchmarking.utils.qbi import (
+    add_pt_w2_wages,
+)
 from tax_microdata_benchmarking.imputation_assumptions import (
+    IMPUTATION_RF_RNG_SEED,
+    IMPUTATION_BETA_RNG_SEED,
     W2_WAGES_SCALE,
 )
+from tax_microdata_benchmarking.storage import STORAGE_FOLDER
 
 
 TAXYEAR = 2021
-DO_REWEIGHTING = True
+TRACING = True
 INITIAL_W2_WAGES_SCALE = W2_WAGES_SCALE
+DO_REWEIGHTING = True
 INCLUDE_ORIGINAL_WEIGHTS = True
 
 
@@ -17,22 +26,27 @@ def create_variable_file(write_file=True):
     """
     Create Tax-Calculator-style input variable file for TAXYEAR.
     """
-    import taxcalc as tc
-    from tax_microdata_benchmarking.datasets.tmd import create_tmd_2021
-    from tax_microdata_benchmarking.utils.qbi import (
-        add_pt_w2_wages,
-    )
-    from tax_microdata_benchmarking.storage import STORAGE_FOLDER
-
     # construct dataframe containing input and output variables
     print(f"Creating {TAXYEAR} PUF+CPS file assuming:")
-    print(f"  DO_REWEIGHTING = {DO_REWEIGHTING}")
+    print(f"  IMPUTATION_RF_RNG_SEED = {IMPUTATION_RF_RNG_SEED}")
+    print(f"  IMPUTATION_BETA_RNG_SEED = {IMPUTATION_BETA_RNG_SEED}")
     print(f"  INITIAL_W2_WAGES_SCALE = {INITIAL_W2_WAGES_SCALE:.5f}")
+    print(f"  DO_REWEIGHTING = {DO_REWEIGHTING}")
     print(f"  INCLUDE_ORIGINAL_WEIGHTS = {INCLUDE_ORIGINAL_WEIGHTS}")
     vdf = create_tmd_2021()
     vdf.FLPDYR = TAXYEAR
+    if TRACING:
+        vlist = ["s006", "e00900", "e26270"]
+        tdf = vdf[vlist].copy()
+        print("TRACING AT A:")
+        print(tdf.describe())
     (vdf, pt_w2_wages_scale) = add_pt_w2_wages(vdf)
     abs_diff = abs(pt_w2_wages_scale - INITIAL_W2_WAGES_SCALE)
+    if TRACING:
+        vlist = ["s006", "e00900", "e26270"]
+        tdf = vdf[vlist].copy()
+        print("TRACING AT B:")
+        print(tdf.describe())
     msg = (
         f"  FINAL vs INITIAL scale diff = {abs_diff:.6f}\n"
         f"    INITIAL pt_w2_wages_scale = {INITIAL_W2_WAGES_SCALE:.6f}\n"

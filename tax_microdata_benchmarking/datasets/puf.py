@@ -8,8 +8,8 @@ from tax_microdata_benchmarking.utils.pension_contributions import (
 )
 from tax_microdata_benchmarking.utils.imputation import Imputation
 from tax_microdata_benchmarking.imputation_assumptions import (
-    TRAIN_RNG_SEED,
-    PREDICT_RNG_SEED,
+    IMPUTATION_RF_RNG_SEED,
+    IMPUTATION_BETA_RNG_SEED,
     W2_WAGES_SCALE,
 )
 
@@ -40,9 +40,8 @@ def impute_missing_demographics(
     ]
 
     demographics_from_puf = Imputation()
-    demographics_from_puf.random_generator = np.random.default_rng(
-        PREDICT_RNG_SEED,
-    )
+    demographics_from_puf.rf_rng_seed = IMPUTATION_RF_RNG_SEED
+    demographics_from_puf.beta_rng_seed = IMPUTATION_BETA_RNG_SEED
 
     demographics_from_puf.train(
         X=puf_with_demographics[NON_DEMOGRAPHIC_VARIABLES],
