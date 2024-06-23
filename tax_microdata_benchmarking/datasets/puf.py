@@ -1,12 +1,12 @@
 import pandas as pd
 import numpy as np
 import yaml
-from survey_enhance import Imputation
 from microdf import MicroDataFrame
 from tax_microdata_benchmarking.storage import STORAGE_FOLDER
 from tax_microdata_benchmarking.utils.pension_contributions import (
     impute_pension_contributions_to_puf,
 )
+from tax_microdata_benchmarking.utils.imputation import Imputation
 from tax_microdata_benchmarking.imputation_assumptions import (
     TRAIN_RNG_SEED,
     PREDICT_RNG_SEED,
