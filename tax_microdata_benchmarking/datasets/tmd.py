@@ -13,12 +13,11 @@ import pandas as pd
 
 
 def create_tmd_2021():
-    if not CPS_2021().exists:
-        # Don't recreate if already exists.
-        create_cps_2021()
-    if not PUF_2021().exists:
-        # Don't recreate if already exists.
-        create_pe_puf_2021()
+    # always create CPS_2021 and PUF_2021
+    # (because imputation assumptions may have changed)
+    create_cps_2021()
+    create_pe_puf_2021()
+
     tc_puf_21 = create_tc_dataset(PUF_2021)
     tc_cps_21 = create_tc_dataset(CPS_2021)
 
