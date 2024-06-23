@@ -16,7 +16,6 @@ from tax_microdata_benchmarking.storage import STORAGE_FOLDER
 
 
 TAXYEAR = 2021
-TRACING = True
 INITIAL_W2_WAGES_SCALE = W2_WAGES_SCALE
 DO_REWEIGHTING = True
 INCLUDE_ORIGINAL_WEIGHTS = True
@@ -35,18 +34,8 @@ def create_variable_file(write_file=True):
     print(f"  INCLUDE_ORIGINAL_WEIGHTS = {INCLUDE_ORIGINAL_WEIGHTS}")
     vdf = create_tmd_2021()
     vdf.FLPDYR = TAXYEAR
-    if TRACING:
-        vlist = ["s006", "e00900", "e26270"]
-        tdf = vdf[vlist].copy()
-        print("TRACING AT A:")
-        print(tdf.describe())
     (vdf, pt_w2_wages_scale) = add_pt_w2_wages(vdf)
     abs_diff = abs(pt_w2_wages_scale - INITIAL_W2_WAGES_SCALE)
-    if TRACING:
-        vlist = ["s006", "e00900", "e26270"]
-        tdf = vdf[vlist].copy()
-        print("TRACING AT B:")
-        print(tdf.describe())
     msg = (
         f"  FINAL vs INITIAL scale diff = {abs_diff:.6f}\n"
         f"    INITIAL pt_w2_wages_scale = {INITIAL_W2_WAGES_SCALE:.6f}\n"
