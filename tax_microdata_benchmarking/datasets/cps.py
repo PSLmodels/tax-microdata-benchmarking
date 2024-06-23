@@ -1,6 +1,5 @@
 from io import BytesIO
 from zipfile import ZipFile
-from policyengine_core.data import Dataset
 import pandas as pd
 import requests
 from tqdm import tqdm
