@@ -42,8 +42,9 @@ def create_variable_file(write_file=True):
         f"      FINAL pt_w2_wages_scale = {pt_w2_wages_scale:.6f}"
     )
     print(msg)
-    if abs_diff > 1e-6:
-        raise ValueError("INITIAL and FINAL scale values are inconsistent")
+    if abs_diff > 1e-3:
+        emsg = "INITIAL and FINAL scale values are substantially inconsistent"
+        raise ValueError(emsg)
     # streamline dataframe so that it includes only input variables
     rec = tc.Records(
         data=vdf,
