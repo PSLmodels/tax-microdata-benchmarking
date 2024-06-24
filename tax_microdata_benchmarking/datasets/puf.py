@@ -183,9 +183,11 @@ def preprocess_puf(puf: pd.DataFrame) -> pd.DataFrame:
     qbi = np.maximum(0, puf.E00900 + puf.E26270 + puf.E02100 + puf.E27200)
     puf["w2_wages_from_qualified_business"] = qbi * W2_WAGES_SCALE
 
+    # Remove aggregate records
+    puf = puf[puf.MARS != 0]
+
     puf["filing_status"] = puf.MARS.map(
         {
-            0: "SINGLE",  # Assume the aggregate record is single
             1: "SINGLE",
             2: "JOINT",
             3: "SEPARATE",
