@@ -4,7 +4,7 @@ This script is used to add pass-through W-2 wages to the 2021 flat file.
 
 import numpy as np
 import pandas as pd
-from scipy.optimize import minimize, bisect
+from scipy.optimize import bisect
 import taxcalc as tc
 
 
@@ -21,7 +21,7 @@ def add_pt_w2_wages(df, verbose: bool = True):
           pt_w2_wages_scale: rounded to five decimal digits
     """
     if verbose:
-        print("Finding scale to use in imputing pass-through W-2 wages")
+        print("Finding scale to use in imputing pass-through W-2 wages...")
     QBID_TOTAL = 205.8  # from IRS SOI P4801 tabulations of 2021 data (in $B)
     qbi = np.maximum(0, df.e00900 + df.e26270 + df.e02100 + df.e27200)
 
@@ -43,10 +43,10 @@ def add_pt_w2_wages(df, verbose: bool = True):
         qbided = (sim.array("qbided") * df.s006).sum() / 1e9
         dev = qbided - QBID_TOTAL
         if verbose:
-            print(f"scale: {scale:8.6f}, dev: {dev:6.2f}, tot: {qbided:.2f}")
+            print(f"scale: {scale:8.6f}, dev: {dev:7.3f}, tot: {qbided:.3f}")
         return dev
 
-    scale = bisect(deduction_deviation, 0.1, 0.5, rtol=0.001)
+    scale = bisect(deduction_deviation, 0.1, 0.5, rtol=0.0001)
     rounded_scale = round(scale, 5)
     print(f"Final (rounded) scale: {rounded_scale}")
     df["PT_binc_w2_wages"] = qbi * rounded_scale

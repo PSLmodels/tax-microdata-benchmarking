@@ -1,6 +1,5 @@
 from io import BytesIO
 from zipfile import ZipFile
-from policyengine_core.data import Dataset
 import pandas as pd
 import requests
 from tqdm import tqdm
@@ -714,12 +713,9 @@ def add_household_variables(cps: h5py.File, household: DataFrame) -> None:
 
 def add_previous_year_income(self, cps: h5py.File) -> None:
     if self.previous_year_raw_cps is None:
-        print(
-            "No previous year data available for this dataset, skipping previous year income imputation."
-        )
+        msg = "Skipping CPS previous year income imputation given lack of data"
+        print(f"{msg}...")
         return
-
-    from survey_enhance.impute import Imputation
 
     cps_current_year_data = self.raw_cps(require=True).load()
     cps_previous_year_data = self.previous_year_raw_cps(require=True).load()
