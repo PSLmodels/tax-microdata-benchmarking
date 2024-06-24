@@ -13,6 +13,6 @@ setup(
         "tensorboard",
         "jupyter-book",
         "furo",
-        "survey_enhance",
+        "scikit-learn",
     ],
 )

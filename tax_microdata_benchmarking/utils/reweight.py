@@ -60,6 +60,7 @@ def reweight(
 
     if time_period not in targets.year.unique():
         raise ValueError(f"Year {time_period} not in targets.")
+    print(f"...reweighting for year {time_period}")
 
     def build_loss_matrix(df):
         loss_matrix = pd.DataFrame()
@@ -158,7 +159,7 @@ def reweight(
                 i,
             )
 
-    print("Finished optimisation")
+    print("...reweighting finished")
 
     flat_file["s006"] = weights.detach().numpy()
     return flat_file

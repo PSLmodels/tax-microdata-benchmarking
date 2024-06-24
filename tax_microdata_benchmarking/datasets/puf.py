@@ -1,14 +1,17 @@
 import pandas as pd
 import numpy as np
 import yaml
-from survey_enhance import Imputation
 from microdf import MicroDataFrame
 from tax_microdata_benchmarking.storage import STORAGE_FOLDER
 from tax_microdata_benchmarking.utils.pension_contributions import (
     impute_pension_contributions_to_puf,
 )
-
-DEFAULT_W2_WAGE_RATE = 0.19824  # Solved for JCT Tax Expenditures in 2021
+from tax_microdata_benchmarking.utils.imputation import Imputation
+from tax_microdata_benchmarking.imputation_assumptions import (
+    IMPUTATION_RF_RNG_SEED,
+    IMPUTATION_BETA_RNG_SEED,
+    W2_WAGES_SCALE,
+)
 
 
 def impute_missing_demographics(
@@ -37,6 +40,9 @@ def impute_missing_demographics(
     ]
 
     demographics_from_puf = Imputation()
+    demographics_from_puf.rf_rng_seed = IMPUTATION_RF_RNG_SEED
+    demographics_from_puf.beta_rng_seed = IMPUTATION_BETA_RNG_SEED
+
     demographics_from_puf.train(
         X=puf_with_demographics[NON_DEMOGRAPHIC_VARIABLES],
         Y=puf_with_demographics[DEMOGRAPHIC_VARIABLES],
@@ -46,7 +52,7 @@ def impute_missing_demographics(
         ~puf.RECID.isin(puf_with_demographics.RECID)
     ].reset_index()
     predicted_demographics = demographics_from_puf.predict(
-        puf_without_demographics
+        X=puf_without_demographics,
     )
     puf_with_imputed_demographics = pd.concat(
         [puf_without_demographics, predicted_demographics], axis=1
@@ -174,8 +180,8 @@ def preprocess_puf(puf: pd.DataFrame) -> pd.DataFrame:
     # Ignore f2441 (AMT form attached)
     # Ignore cmbtp (estimate of AMT income not in AGI)
     # Ignore k1bx14s and k1bx14p (partner self-employment income included in partnership and S-corp income)
-    qbi = puf.E00900 + puf.E26270 + puf.E02100 + puf.E27200
-    puf["w2_wages_from_qualified_business"] = qbi * DEFAULT_W2_WAGE_RATE
+    qbi = np.maximum(0, puf.E00900 + puf.E26270 + puf.E02100 + puf.E27200)
+    puf["w2_wages_from_qualified_business"] = qbi * W2_WAGES_SCALE
 
     puf["filing_status"] = puf.MARS.map(
         {
@@ -264,15 +270,14 @@ class PUF(Dataset):
         from tax_microdata_benchmarking.datasets.uprate_puf import uprate_puf
 
         if self.time_period > 2015:
-            print("Uprating PUF...")
             puf = uprate_puf(puf, 2015, self.time_period)
 
-        print("Loading and pre-processing PUF...")
+        print("Pre-processing PUF...")
         original_recid = puf.RECID.values.copy()
         puf = preprocess_puf(puf)
-        print("Imputing missing demographics...")
+        print("Imputing missing PUF demographics...")
         puf = impute_missing_demographics(puf, demographics)
-        print("Imputing pension contributions...")
+        print("Imputing PUF pension contributions...")
         puf["pre_tax_contributions"] = impute_pension_contributions_to_puf(
             puf[["employment_income"]]
         )

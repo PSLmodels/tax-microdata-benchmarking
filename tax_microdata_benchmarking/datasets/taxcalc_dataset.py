@@ -14,6 +14,8 @@ def create_tc_dataset(pe_dataset: Type, year: int = 2015) -> pd.DataFrame:
     pe_sim = Microsimulation(dataset=pe_dataset)
     df = pd.DataFrame()
 
+    print(f"Creating tc dataset for year {year}...")
+
     is_non_dep = ~pe_sim.calculate("is_tax_unit_dependent").values
     tax_unit = pe_sim.populations["tax_unit"]
 
