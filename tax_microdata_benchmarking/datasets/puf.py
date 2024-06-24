@@ -275,7 +275,7 @@ class PUF(Dataset):
             puf = uprate_puf(puf, 2015, self.time_period)
 
         print("Pre-processing PUF...")
-        original_recid = puf.RECID.values.copy()
+        original_recid = puf[puf.MARS != 0].RECID.values.copy()
         puf = preprocess_puf(puf)
         print("Imputing missing PUF demographics...")
         puf = impute_missing_demographics(puf, demographics)
