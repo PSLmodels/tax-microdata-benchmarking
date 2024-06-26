@@ -35,7 +35,7 @@ def is_tax_filer(
 
     # (a)(1)(C)
 
-    unearned_income_threshold = 500 + aged_blind_standard_deduction
+    unearned_income_threshold = 500 + aged_blind_standard_deduction[filing_status] * aged_blind_count
     unearned_income = irs_gross_income - earned_income
     unearned_income_over_threshold = (
         unearned_income > unearned_income_threshold
@@ -51,3 +51,9 @@ def is_tax_filer(
     # (a)(1)(D) is just definitions
 
     return required_to_file or not_required_but_likely_filer
+
+from policyengine_us.system import system
+
+parameters = system.parameters.gov.irs
+
+aged_blind_standard_deduction = parameters.deductions.standard.aged_or_blind.amount
