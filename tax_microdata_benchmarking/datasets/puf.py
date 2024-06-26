@@ -446,14 +446,14 @@ class PUF(Dataset):
 
 
 class PUF_2015(PUF):
-    label = "PUF (2015)"
+    label = "PUF 2015"
     name = "puf_2015"
     time_period = 2015
     file_path = STORAGE_FOLDER / "output" / "pe_puf_2015.h5"
 
 
 class PUF_2021(PUF):
-    label = "PUF (2021)"
+    label = "PUF 2021"
     name = "puf_2021"
     time_period = 2021
     file_path = STORAGE_FOLDER / "output" / "pe_puf_2021.h5"
