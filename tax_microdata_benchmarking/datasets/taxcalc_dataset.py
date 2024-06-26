@@ -109,7 +109,7 @@ def create_tc_dataset(pe_dataset: Type, year: int) -> pd.DataFrame:
     df["mcare_ben"] = 0  # Medicare benefits, assume none
     df["mcaid_ben"] = 0  # Medicaid benefits, assume none
     df["other_ben"] = 0  # Other benefits, assume none
-    df["PT_binc_w2_wages"] = 0  #!!! Redo with new imputation
+    df["PT_binc_w2_wages"] = 0
     df["PT_ubia_property"] = 0
     df["data_source"] = 1 if "puf" in pe_dataset.__name__.lower() else 0
     df["e02000"] = (
@@ -190,10 +190,7 @@ def create_tc_dataset(pe_dataset: Type, year: int) -> pd.DataFrame:
     )  # Following TaxData code.
     df["elderly_dependents"] = map_to_tax_unit((age >= 65) * dependent)
 
-    df["PT_binc_w2_wages"] = pe("w2_wages_from_qualified_business")
-
     # Correct case of variable names for Tax-Calculator
-
     tc_variable_metadata = yaml.safe_load(
         open(STORAGE_FOLDER / "input" / "taxcalc_variable_metadata.yaml", "r")
     )
