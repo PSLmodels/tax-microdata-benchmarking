@@ -19,8 +19,8 @@ def create_tmd_2021():
     create_cps_2021()
     create_pe_puf_2021()
 
-    tc_puf_21 = create_tc_dataset(PUF_2021)
-    tc_cps_21 = create_tc_dataset(CPS_2021)
+    tc_puf_21 = create_tc_dataset(PUF_2021, 2015)
+    tc_cps_21 = create_tc_dataset(CPS_2021, 2015)
 
     print("Combining PUF and CPS nonfilers...")
 
