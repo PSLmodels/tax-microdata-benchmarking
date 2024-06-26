@@ -7,14 +7,14 @@ from tax_microdata_benchmarking.storage import STORAGE_FOLDER
 import taxcalc
 
 
-def create_tc_dataset(pe_dataset: Type, year: int = 2015) -> pd.DataFrame:
+def create_tc_dataset(pe_dataset: Type, year: int) -> pd.DataFrame:
     from policyengine_us import Microsimulation
     from policyengine_us.system import system
 
     pe_sim = Microsimulation(dataset=pe_dataset)
     df = pd.DataFrame()
 
-    print(f"Creating tc dataset from {pe_dataset.label} for year {year}...")
+    print(f"Creating tc dataset from '{pe_dataset.label}' for year {year}...")
 
     is_non_dep = ~pe_sim.calculate("is_tax_unit_dependent").values
     tax_unit = pe_sim.populations["tax_unit"]
@@ -109,7 +109,7 @@ def create_tc_dataset(pe_dataset: Type, year: int = 2015) -> pd.DataFrame:
     df["mcare_ben"] = 0  # Medicare benefits, assume none
     df["mcaid_ben"] = 0  # Medicaid benefits, assume none
     df["other_ben"] = 0  # Other benefits, assume none
-    df["PT_binc_w2_wages"] = 0  #!!! Redo with new imputation
+    df["PT_binc_w2_wages"] = 0
     df["PT_ubia_property"] = 0
     df["data_source"] = 1 if "puf" in pe_dataset.__name__.lower() else 0
     df["e02000"] = (
@@ -190,10 +190,7 @@ def create_tc_dataset(pe_dataset: Type, year: int = 2015) -> pd.DataFrame:
     )  # Following TaxData code.
     df["elderly_dependents"] = map_to_tax_unit((age >= 65) * dependent)
 
-    df["PT_binc_w2_wages"] = pe("w2_wages_from_qualified_business")
-
     # Correct case of variable names for Tax-Calculator
-
     tc_variable_metadata = yaml.safe_load(
         open(STORAGE_FOLDER / "input" / "taxcalc_variable_metadata.yaml", "r")
     )
