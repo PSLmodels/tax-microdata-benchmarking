@@ -7,7 +7,7 @@ from tax_microdata_benchmarking.storage import STORAGE_FOLDER
 import taxcalc
 
 
-def create_tc_dataset(pe_dataset: Type, year: int = 2015) -> pd.DataFrame:
+def create_tc_dataset(pe_dataset: Type, year: int) -> pd.DataFrame:
     from policyengine_us import Microsimulation
     from policyengine_us.system import system
 
