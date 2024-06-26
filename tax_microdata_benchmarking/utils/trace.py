@@ -27,8 +27,8 @@ def trace1(loc: str, vdf: pd.DataFrame) -> None:
     wcps = (wght * ~filer).sum() * 1e-6
     wght_min = wght.min()
     wght_max = wght.max()
-    print(f">{loc} weights tot,puf,cps (#M)= {wtot:.3f} {wpuf:.3f} {wcps:.3f}")
-    print(f">{loc} weights tot_min,tot_max (#)= {wght_min:.1f} {wght_max:.1f}")
+    print(f">{loc} weights all,puf,cps (#M)= {wtot:.3f} {wpuf:.3f} {wcps:.3f}")
+    print(f">{loc} weights all_min,all_max (#)= {wght_min:.1f} {wght_max:.1f}")
     # PT_binc_w2_wages tabulations
     w2wages = vdf.PT_binc_w2_wages
     wages_min = w2wages.min()
