@@ -79,8 +79,7 @@ def reweight(
             "count",
         ]
         aggregate_level_targeted_variables = [
-            "qualified_business_income_deduction",
-            "employment_income",
+            # "qualified_business_income_deduction",
         ]
         soi_subset = soi_subset[
             soi_subset.Variable.isin(agi_level_targeted_variables)
