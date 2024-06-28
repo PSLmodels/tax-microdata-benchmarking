@@ -52,17 +52,36 @@ comparisons["Original weight error"] = comparisons_original_weights["Error"]
 comparisons["Improved under reweighting"] = (
     comparisons["Absolute error"] < comparisons["Original weight error"].abs()
 )
-filing_status_all = comparisons["Filing status"] == "All"
-filers_only = comparisons["Taxable only"] == False
-non_full_range = (comparisons["AGI lower bound"] != -np.inf) | (
-    comparisons["AGI upper bound"] != np.inf
-)
-right_variable = comparisons.Variable.isin(
-    ["adjusted_gross_income", "count", "qualified_business_income_deduction"]
-)
-comparisons["Targeted"] = (
-    filing_status_all & filers_only & non_full_range & right_variable
-)
+soi_subset = comparisons
+time_period = 2021
+
+soi_subset = soi_subset[soi_subset["Filing status"] == "All"]
+soi_subset = soi_subset[soi_subset["Taxable only"] == False]
+agi_level_targeted_variables = [
+    # "adjusted_gross_income",
+    # "count",
+]
+aggregate_level_targeted_variables = [
+    "adjusted_gross_income",
+    "count",
+]
+soi_subset = soi_subset[
+    soi_subset.Variable.isin(agi_level_targeted_variables)
+    & (
+        (soi_subset["AGI lower bound"] != -np.inf)
+        | (soi_subset["AGI upper bound"] != np.inf)
+    )
+    | (
+        soi_subset.Variable.isin(aggregate_level_targeted_variables)
+        & (soi_subset["AGI lower bound"] == -np.inf)
+        & (soi_subset["AGI upper bound"] == np.inf)
+    )
+]
+
+comparisons["Targeted"] = False
+comparisons["Targeted"][soi_subset.index] = True
+
+soi_subset["Targeted"] = True
 
 st.title("SOI replication results")
 
