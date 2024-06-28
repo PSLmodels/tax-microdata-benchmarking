@@ -152,7 +152,7 @@ def tc_to_soi(puf, year):
     puf.columns = puf.columns.str.upper()
 
     df["adjusted_gross_income"] = puf.C00100
-    df["total_income_tax"] = puf.C05800
+    df["total_income_tax"] = puf.C09200 - puf.REFUND
     df["employment_income"] = puf.E00200
     df["capital_gains_distributions"] = puf.E01100
     df["capital_gains_gross"] = puf["C01000"] * (puf["C01000"] > 0)

@@ -255,6 +255,7 @@ FINANCIAL_SUBSET = [
     "recapture_of_investment_credit",
     "unreported_payroll_tax",
     "pre_tax_contributions",
+    "w2_wages_from_qualified_business",
 ]
 
 
