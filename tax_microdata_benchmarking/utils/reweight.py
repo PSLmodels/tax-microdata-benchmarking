@@ -132,7 +132,7 @@ def reweight(
 
     for i in tqdm(range(10_000), desc="Optimising weights"):
         optimizer.zero_grad()
-        outputs = (weights * output_matrix_tensor.T).sum(axis=1)
+        outputs = (torch.relu(weights) * output_matrix_tensor.T).sum(axis=1)
         weight_deviation = (
             (weights - original_weights).abs().sum()
             / original_weights.sum()
