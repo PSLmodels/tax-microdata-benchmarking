@@ -81,7 +81,6 @@ def reweight(
         soi_subset = soi_subset[
             soi_subset.Variable.isin(["adjusted_gross_income", "count"])
         ]
-        print(soi_subset.size)
         for i, row in soi_subset.iterrows():
             mask = (
                 (agi.values >= row["AGI lower bound"])
