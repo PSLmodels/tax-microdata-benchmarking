@@ -65,45 +65,76 @@ def reweight(
 
     def build_loss_matrix(df):
         loss_matrix = pd.DataFrame()
-        agi = df.c00100
-        # taxable = df.c09200 - df.refund > 0
-        filer = df.data_source == 1
+        df = tc_to_soi(df, time_period)
+        agi = df["adjusted_gross_income"].values
+        filer = df["is_tax_filer"].values
+        taxable = df["is_taxable"].values
         targets_array = []
         soi_subset = targets
-        soi_subset = soi_subset[soi_subset["SOI table"] == "Table 1.1"]
         soi_subset = soi_subset[soi_subset.Year == time_period]
-        soi_subset = soi_subset[soi_subset["Filing status"] == "All"]
         soi_subset = soi_subset[soi_subset["Taxable only"] == False]
-        soi_subset = soi_subset[
-            (soi_subset["AGI lower bound"] != -np.inf)
-            | (soi_subset["AGI upper bound"] != np.inf)
+        soi_subset = soi_subset[soi_subset["Filing status"] == "All"]
+        agi_level_targeted_variables = [
+            "adjusted_gross_income",
+            "count",
+        ]
+        aggregate_level_targeted_variables = [
+            "qualified_business_income_deduction",
+            "employment_income",
         ]
         soi_subset = soi_subset[
-            soi_subset.Variable.isin(["adjusted_gross_income", "count"])
-        ]
-        for i, row in soi_subset.iterrows():
-            mask = (
-                (agi.values >= row["AGI lower bound"])
-                * (agi.values < row["AGI upper bound"])
-                * filer.values
+            soi_subset.Variable.isin(agi_level_targeted_variables)
+            & (
+                (soi_subset["AGI lower bound"] != -np.inf)
+                | (soi_subset["AGI upper bound"] != np.inf)
             )
-            if not row["Count"]:
-                loss_matrix[
-                    f"Total AGI {fmt(row['AGI lower bound'])}-{fmt(row['AGI upper bound'])}"
-                ] = (mask * agi)
-                targets_array.append(row["Value"])
+            | (
+                soi_subset.Variable.isin(aggregate_level_targeted_variables)
+                & (soi_subset["AGI lower bound"] == -np.inf)
+                & (soi_subset["AGI upper bound"] == np.inf)
+            )
+        ]
+        for _, row in soi_subset.iterrows():
+            mask = (
+                (agi >= row["AGI lower bound"])
+                * (agi < row["AGI upper bound"])
+                * filer
+            ) > 0
+            if row["Taxable only"]:
+                mask *= taxable > 0
+
+            values = df[row["Variable"]].values
+
+            agi_range_label = (
+                f"{fmt(row['AGI lower bound'])}-{fmt(row['AGI upper bound'])}"
+            )
+            taxable_label = "taxable" if row["Taxable only"] else ""
+
+            if row["Count"] and not row["Variable"] == "count":
+                label = f"Total {taxable_label} returns with {row['Variable'].replace('_', ' ')} and with AGI {agi_range_label}"
+            elif row["Variable"] == "count":
+                label = (
+                    f"Total {taxable_label} returns with AGI {agi_range_label}"
+                )
             else:
-                loss_matrix[
-                    f"Total returns {fmt(row['AGI lower bound'])}-{fmt(row['AGI upper bound'])}"
-                ] = mask.astype(np.float32)
+                label = f"Total {row['Variable'].replace('_', ' ')} from {taxable_label} returns with AGI {agi_range_label}"
+
+            if label not in loss_matrix.columns:
+                loss_matrix[label] = mask * values
                 targets_array.append(row["Value"])
+
         return loss_matrix, np.array(targets_array)
 
-    weights = torch.tensor(
-        flat_file.s006.values, dtype=torch.float32, requires_grad=True
+    weights = torch.tensor(flat_file.s006.values, dtype=torch.float32)
+    weight_multiplier = torch.tensor(
+        np.ones_like(flat_file.s006.values),
+        dtype=torch.float32,
+        requires_grad=True,
     )
     original_weights = weights.clone()
     output_matrix, target_array = build_loss_matrix(flat_file)
+
+    print(f"Targeting {len(target_array)} SOI statistics")
     # print out non-numeric columns
     for col in output_matrix.columns:
         try:
@@ -117,7 +148,7 @@ def reweight(
 
     outputs = (weights * output_matrix_tensor.T).sum(axis=1)
 
-    optimizer = Adam([weights], lr=1e0)
+    optimizer = Adam([weight_multiplier], lr=1e-1)
 
     from torch.utils.tensorboard import SummaryWriter
     from tqdm import tqdm
@@ -130,11 +161,21 @@ def reweight(
         / f"{time_period}_{datetime.now().isoformat()}"
     )
 
+    WEIGHT_MULTIPLIER_MAX = 10
+    WEIGHT_MULTIPLIER_MIN = 0.01
+    weight_multiplier_range = WEIGHT_MULTIPLIER_MAX - WEIGHT_MULTIPLIER_MIN
+
     for i in tqdm(range(10_000), desc="Optimising weights"):
         optimizer.zero_grad()
-        outputs = (torch.relu(weights) * output_matrix_tensor.T).sum(axis=1)
+        new_weights = (
+            weights
+            * torch.sigmoid(weight_multiplier)
+            * weight_multiplier_range
+            + WEIGHT_MULTIPLIER_MIN
+        )
+        outputs = (new_weights * output_matrix_tensor.T).sum(axis=1)
         weight_deviation = (
-            (weights - original_weights).abs().sum()
+            (new_weights - original_weights).abs().sum()
             / original_weights.sum()
             * weight_deviation_penalty
         )
@@ -143,6 +184,8 @@ def reweight(
         ).sum() + weight_deviation
         loss_value.backward()
         optimizer.step()
+        if loss_value < 1e-3:
+            break
         if i % 100 == 0:
             writer.add_scalar("Summary/Loss", loss_value, i)
             for j in range(len(target_array)):
@@ -156,7 +199,7 @@ def reweight(
                 )
                 writer.add_scalar(f"Target/{metric_name}", target_array[j], i)
                 writer.add_scalar(
-                    f"Relative error/{metric_name}", rel_error, i
+                    f"Absolute relative error/{metric_name}", abs(rel_error), i
                 )
 
             writer.add_scalar(
@@ -172,5 +215,5 @@ def reweight(
 
     print("...reweighting finished")
 
-    flat_file["s006"] = torch.relu(weights).detach().numpy()
+    flat_file["s006"] = new_weights.detach().numpy()
     return flat_file

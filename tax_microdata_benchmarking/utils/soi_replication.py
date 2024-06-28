@@ -75,6 +75,7 @@ def pe_to_soi(pe_dataset, year):
     df["medical_expense_deductions_uncapped"] = pe("medical_expense_deduction")
     df["state_and_local_tax_deductions"] = pe("salt_deduction")
     df["is_tax_filer"] = True
+    df["count"] = 1
 
     df["filing_status"] = pe("filing_status")
     df["weight"] = pe("household_weight")
@@ -120,6 +121,7 @@ def puf_to_soi(puf, year):
     df["business_net_losses"] = -puf.E00900 * (puf.E00900 < 0)
     df["taxable_income"] = puf.E04800
     df["is_tax_filer"] = True
+    df["count"] = 1
     df["filing_status"] = puf.MARS.map(
         {
             0: "SINGLE",  # Assume the aggregate record is single
@@ -188,7 +190,8 @@ def tc_to_soi(puf, year):
     df["qualified_business_income_deduction"] = puf.QBIDED
     df["taxable_income"] = puf.C04800
     df["is_tax_filer"] = puf.DATA_SOURCE == 1
-    df["taxable"] = puf.C09200 - puf.REFUND > 0
+    df["is_taxable"] = puf.C09200 - puf.REFUND > 0
+    df["count"] = 1
     df["filing_status"] = puf.MARS.map(
         {
             0: "SINGLE",  # Assume the aggregate record is single
@@ -226,10 +229,7 @@ def compare_soi_replication_to_soi(df, year):
             df.adjusted_gross_income < row["AGI upper bound"]
         ]
 
-        if row["Variable"] == "count":
-            variable = "adjusted_gross_income"
-        else:
-            variable = row["Variable"]
+        variable = row["Variable"]
 
         fs = row["Filing status"]
         if fs == "Single":
@@ -255,7 +255,7 @@ def compare_soi_replication_to_soi(df, year):
         filing_statuses.append(row["Filing status"])
         agi_lower_bounds.append(row["AGI lower bound"])
         agi_upper_bounds.append(row["AGI upper bound"])
-        counts.append(row["Count"])
+        counts.append(row["Count"] or (row["Variable"] == "count"))
         taxables.append(row["Taxable only"])
         full_pops.append(row["Full population"])
         values.append(value)
