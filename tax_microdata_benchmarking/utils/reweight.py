@@ -10,6 +10,7 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 from tax_microdata_benchmarking.storage import STORAGE_FOLDER
+from tax_microdata_benchmarking.utils.soi_replication import tc_to_soi
 
 warnings.filterwarnings("ignore")
 
@@ -104,13 +105,18 @@ def reweight(
     )
     original_weights = weights.clone()
     output_matrix, target_array = build_loss_matrix(flat_file)
+    # print out non-numeric columns
+    for col in output_matrix.columns:
+        try:
+            torch.tensor(output_matrix[col].values, dtype=torch.float32)
+        except ValueError:
+            print(f"Column {col} is not numeric")
     output_matrix_tensor = torch.tensor(
         output_matrix.values, dtype=torch.float32
     )
     target_array = torch.tensor(target_array, dtype=torch.float32)
 
     outputs = (weights * output_matrix_tensor.T).sum(axis=1)
-    outputs, target_array
 
     optimizer = Adam([weights], lr=1e0)
 
@@ -167,5 +173,5 @@ def reweight(
 
     print("...reweighting finished")
 
-    flat_file["s006"] = weights.detach().numpy()
+    flat_file["s006"] = torch.relu(weights).detach().numpy()
     return flat_file

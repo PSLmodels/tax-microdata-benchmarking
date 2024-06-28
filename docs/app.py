@@ -10,8 +10,10 @@ OUTPUTS = STORAGE_FOLDER / "output"
 
 
 @st.cache_resource
-def generate_comparsions():
+def generate_comparsions(use_original_weights: bool = False):
     tmd_2021 = pd.read_csv(OUTPUTS / "tmd_2021.csv")
+    if use_original_weights:
+        tmd_2021.s006 = tmd_2021.s006_original
     soi_from_tmd_2021 = compare_soi_replication_to_soi(
         tc_to_soi(tmd_2021, 2021), 2021
     )
@@ -44,6 +46,23 @@ def soi_statistic_passes_quality_test(df):
 # 2021 datasets
 
 comparisons = generate_comparsions()
+comparisons_original_weights = generate_comparsions(use_original_weights=True)
+comparisons["Original weight value"] = comparisons_original_weights["Value"]
+comparisons["Original weight error"] = comparisons_original_weights["Error"]
+comparisons["Improved under reweighting"] = (
+    comparisons["Absolute error"] < comparisons["Original weight error"].abs()
+)
+filing_status_all = comparisons["Filing status"] == "All"
+filers_only = comparisons["Taxable only"] == False
+non_full_range = (comparisons["AGI lower bound"] != -np.inf) | (
+    comparisons["AGI upper bound"] != np.inf
+)
+right_variable = comparisons.Variable.isin(
+    ["adjusted_gross_income", "count", "qualified_business_income_deduction"]
+)
+comparisons["Targeted"] = (
+    filing_status_all & filers_only & non_full_range & right_variable
+)
 
 st.title("SOI replication results")
 
@@ -64,3 +83,5 @@ histogram = px.histogram(
 )
 
 st.plotly_chart(histogram)
+
+st.subheader("Targets included in reweighting")
