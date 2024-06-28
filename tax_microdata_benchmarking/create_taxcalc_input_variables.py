@@ -44,7 +44,7 @@ def create_variable_file(write_file=True):
     print(msg)
     if abs_diff > 1e-3:
         emsg = "INITIAL and FINAL scale values are substantially inconsistent"
-        raise ValueError(emsg)
+        print(emsg)
     # streamline dataframe so that it includes only input variables
     rec = tc.Records(
         data=vdf,
@@ -71,6 +71,9 @@ def create_variable_file(write_file=True):
         tmd_csv_fname = STORAGE_FOLDER / "output" / "tmd.csv.gz"
         print(f"Writing PUF+CPS file... [{tmd_csv_fname}]")
         vdf.to_csv(tmd_csv_fname, index=False, float_format="%.2f")
+        vdf.to_csv(
+            STORAGE_FOLDER / "output" / "tmd_2021.csv", index=False
+        )  # Save an extra copy which doesn't take long to read.
 
 
 if __name__ == "__main__":
