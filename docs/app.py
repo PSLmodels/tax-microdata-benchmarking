@@ -58,12 +58,11 @@ time_period = 2021
 soi_subset = soi_subset[soi_subset["Filing status"] == "All"]
 soi_subset = soi_subset[soi_subset["Taxable only"] == False]
 agi_level_targeted_variables = [
-    # "adjusted_gross_income",
-    # "count",
-]
-aggregate_level_targeted_variables = [
     "adjusted_gross_income",
     "count",
+]
+aggregate_level_targeted_variables = [
+    # "qualified_business_income_deduction",
 ]
 soi_subset = soi_subset[
     soi_subset.Variable.isin(agi_level_targeted_variables)
