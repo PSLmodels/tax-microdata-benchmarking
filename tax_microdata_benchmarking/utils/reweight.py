@@ -56,41 +56,47 @@ def reweight(
     time_period: int = 2021,
     weight_deviation_penalty: float = 0,
 ):
-    targets = pd.read_csv(STORAGE_FOLDER / "input" / "agi_targets.csv")
+    targets = pd.read_csv(STORAGE_FOLDER / "input" / "soi.csv")
 
-    if time_period not in targets.year.unique():
+    if time_period not in targets.Year.unique():
         raise ValueError(f"Year {time_period} not in targets.")
     print(f"...reweighting for year {time_period}")
 
     def build_loss_matrix(df):
         loss_matrix = pd.DataFrame()
         agi = df.c00100
-        taxable = df.c09200 - df.refund > 0
+        # taxable = df.c09200 - df.refund > 0
+        filer = df.data_source == 1
         targets_array = []
-        for i in range(len(INCOME_RANGES) - 1):
+        soi_subset = targets
+        soi_subset = soi_subset[soi_subset["SOI table"] == "Table 1.1"]
+        soi_subset = soi_subset[soi_subset.Year == time_period]
+        soi_subset = soi_subset[soi_subset["Filing status"] == "All"]
+        soi_subset = soi_subset[soi_subset["Taxable only"] == False]
+        soi_subset = soi_subset[
+            (soi_subset["AGI lower bound"] != -np.inf)
+            | (soi_subset["AGI upper bound"] != np.inf)
+        ]
+        soi_subset = soi_subset[
+            soi_subset.Variable.isin(["adjusted_gross_income", "count"])
+        ]
+        print(soi_subset.size)
+        for i, row in soi_subset.iterrows():
             mask = (
-                (agi.values >= INCOME_RANGES[i])
-                * (agi.values < INCOME_RANGES[i + 1])
-                * taxable
+                (agi.values >= row["AGI lower bound"])
+                * (agi.values < row["AGI upper bound"])
+                * filer.values
             )
-            loss_matrix[
-                f"Total AGI {fmt(INCOME_RANGES[i])}-{fmt(INCOME_RANGES[i + 1])}"
-            ] = (mask * agi)
-            agi_target = targets[targets.table == "tab11"][
-                targets.year == time_period
-            ][targets.vname.isin(["agi"])][targets.datatype == "taxable"][
-                targets.incsort - 2 == i
-            ].ptarget
-            targets_array.append(agi_target.iloc[0] * 1e3)
-            nret_target = targets[targets.table == "tab11"][
-                targets.year == time_period
-            ][targets.vname.isin(["nret_all"])][targets.datatype == "taxable"][
-                targets.incsort - 2 == i
-            ].ptarget
-            loss_matrix[
-                f"Returns {fmt(INCOME_RANGES[i])}-{fmt(INCOME_RANGES[i + 1])}"
-            ] = mask.astype(np.float32)
-            targets_array.append(nret_target.iloc[0])
+            if not row["Count"]:
+                loss_matrix[
+                    f"Total AGI {fmt(row['AGI lower bound'])}-{fmt(row['AGI upper bound'])}"
+                ] = (mask * agi)
+                targets_array.append(row["Value"])
+            else:
+                loss_matrix[
+                    f"Total returns {fmt(row['AGI lower bound'])}-{fmt(row['AGI upper bound'])}"
+                ] = mask.astype(np.float32)
+                targets_array.append(row["Value"])
         return loss_matrix, np.array(targets_array)
 
     weights = torch.tensor(
