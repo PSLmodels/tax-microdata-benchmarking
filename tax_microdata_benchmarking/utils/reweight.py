@@ -72,14 +72,17 @@ def reweight(
         targets_array = []
         soi_subset = targets
         soi_subset = soi_subset[soi_subset.Year == time_period]
-        soi_subset = soi_subset[soi_subset["Taxable only"] == False]
-        soi_subset = soi_subset[soi_subset["Filing status"] == "All"]
         agi_level_targeted_variables = [
             "adjusted_gross_income",
             "count",
+            "employment_income",
+            # *[variable for variable in soi_subset.Variable.unique() if variable in df.columns] # Uncomment this to target ALL variables and distributions
         ]
         aggregate_level_targeted_variables = [
-            "qualified_business_income_deduction",
+            variable
+            for variable in soi_subset.Variable.unique()
+            if variable not in agi_level_targeted_variables
+            and variable in df.columns
         ]
         soi_subset = soi_subset[
             soi_subset.Variable.isin(agi_level_targeted_variables)
@@ -99,6 +102,19 @@ def reweight(
                 * (agi < row["AGI upper bound"])
                 * filer
             ) > 0
+
+            if row["Filing status"] == "Single":
+                mask *= df["filing_status"].values == "SINGLE"
+            elif (
+                row["Filing status"]
+                == "Married Filing Jointly/Surviving Spouse"
+            ):
+                mask *= df["filing_status"].values == "JOINT"
+            elif row["Filing status"] == "Head of Household":
+                mask *= df["filing_status"].values == "HEAD_OF_HOUSEHOLD"
+            elif row["Filing status"] == "Married Filing Separately":
+                mask *= df["filing_status"].values == "SEPARATE"
+
             if row["Taxable only"]:
                 mask *= taxable > 0
 
@@ -113,15 +129,16 @@ def reweight(
             taxable_label = (
                 "taxable" if row["Taxable only"] else "all" + " returns"
             )
+            filing_status_label = row["Filing status"]
 
             variable_label = row["Variable"].replace("_", " ")
 
             if row["Count"] and not row["Variable"] == "count":
-                label = f"{variable_label}/count/AGI in {agi_range_label}/{taxable_label}"
+                label = f"{variable_label}/count/AGI in {agi_range_label}/{taxable_label}/{filing_status_label}"
             elif row["Variable"] == "count":
-                label = f"{variable_label}/count/AGI in {agi_range_label}/{taxable_label}"
+                label = f"{variable_label}/count/AGI in {agi_range_label}/{taxable_label}/{filing_status_label}"
             else:
-                label = f"{variable_label}/total/AGI in {agi_range_label}/{taxable_label}"
+                label = f"{variable_label}/total/AGI in {agi_range_label}/{taxable_label}/{filing_status_label}"
 
             if label not in loss_matrix.columns:
                 loss_matrix[label] = mask * values
@@ -150,9 +167,17 @@ def reweight(
     )
     target_array = torch.tensor(target_array, dtype=torch.float32)
 
-    outputs = (weights * output_matrix_tensor.T).sum(axis=1)
+    outputs = weights * output_matrix_tensor.T
 
-    optimizer = Adam([weight_multiplier], lr=1e-3)
+    # First, check for NaN columns and print out the labels
+
+    for i in range(len(target_array)):
+        if torch.isnan(outputs[i]).any():
+            print(f"Column {output_matrix.columns[i]} has NaN values")
+        if target_array[i] == 0:
+            pass  # print(f"Column {output_matrix.columns[i]} has target 0")
+
+    optimizer = Adam([weight_multiplier], lr=1e-1)
 
     from torch.utils.tensorboard import SummaryWriter
     from tqdm import tqdm
@@ -184,7 +209,7 @@ def reweight(
             * weight_deviation_penalty
         )
         loss_value = (
-            (outputs / target_array - 1) ** 2
+            ((outputs + 1) / (target_array + 1) - 1) ** 2
         ).sum() + weight_deviation
         loss_value.backward()
         optimizer.step()
@@ -206,12 +231,12 @@ def reweight(
 
             writer.add_scalar(
                 "Summary/Max relative error",
-                (outputs / target_array - 1).abs().max(),
+                ((outputs + 1) / (target_array + 1) - 1).abs().max(),
                 i,
             )
             writer.add_scalar(
                 "Summary/Mean relative error",
-                (outputs / target_array - 1).abs().mean(),
+                ((outputs + 1) / (target_array + 1) - 1).abs().mean(),
                 i,
             )
 
