@@ -228,6 +228,20 @@ def clean_soi_file(soi):
         & ~soi["Taxable only"]
     )
 
+    # De-duplicate along
+    unique_columns = [
+        "Year",
+        "Variable",
+        "Filing status",
+        "AGI lower bound",
+        "AGI upper bound",
+        "Count",
+        "Taxable only",
+        "Value",
+    ]
+
+    soi = soi.groupby(unique_columns).first().reset_index()
+
     return soi[columns]
 
 

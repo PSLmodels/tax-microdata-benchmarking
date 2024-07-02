@@ -138,3 +138,10 @@ def test_create_taxcalc_tmd_file():
     )
 
     create_variable_file(write_file=False)
+
+
+@pytest.mark.parametrize(
+    "flat_file", datasets_to_test, ids=dataset_names_to_test
+)
+def test_no_negative_weights(flat_file):
+    assert flat_file.s006.min() >= 0, "Negative weights found."
