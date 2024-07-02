@@ -79,7 +79,7 @@ def reweight(
             "count",
         ]
         aggregate_level_targeted_variables = [
-            # "qualified_business_income_deduction",
+            "qualified_business_income_deduction",
         ]
         soi_subset = soi_subset[
             soi_subset.Variable.isin(agi_level_targeted_variables)
@@ -104,19 +104,24 @@ def reweight(
 
             values = df[row["Variable"]].values
 
+            if row["Count"]:
+                values = (values > 0).astype(float)
+
             agi_range_label = (
                 f"{fmt(row['AGI lower bound'])}-{fmt(row['AGI upper bound'])}"
             )
-            taxable_label = "taxable" if row["Taxable only"] else ""
+            taxable_label = (
+                "taxable" if row["Taxable only"] else "all" + " returns"
+            )
+
+            variable_label = row["Variable"].replace("_", " ")
 
             if row["Count"] and not row["Variable"] == "count":
-                label = f"Total {taxable_label} returns with {row['Variable'].replace('_', ' ')} and with AGI {agi_range_label}"
+                label = f"{variable_label}/count/AGI in {agi_range_label}/{taxable_label}"
             elif row["Variable"] == "count":
-                label = (
-                    f"Total {taxable_label} returns with AGI {agi_range_label}"
-                )
+                label = f"{variable_label}/count/AGI in {agi_range_label}/{taxable_label}"
             else:
-                label = f"Total {row['Variable'].replace('_', ' ')} from {taxable_label} returns with AGI {agi_range_label}"
+                label = f"{variable_label}/total/AGI in {agi_range_label}/{taxable_label}"
 
             if label not in loss_matrix.columns:
                 loss_matrix[label] = mask * values
@@ -147,7 +152,7 @@ def reweight(
 
     outputs = (weights * output_matrix_tensor.T).sum(axis=1)
 
-    optimizer = Adam([weight_multiplier], lr=1e-1)
+    optimizer = Adam([weight_multiplier], lr=1e-3)
 
     from torch.utils.tensorboard import SummaryWriter
     from tqdm import tqdm
@@ -162,15 +167,15 @@ def reweight(
 
     WEIGHT_MULTIPLIER_MAX = 10
     WEIGHT_MULTIPLIER_MIN = 0.01
-    weight_multiplier_range = WEIGHT_MULTIPLIER_MAX - WEIGHT_MULTIPLIER_MIN
 
-    for i in tqdm(range(10_000), desc="Optimising weights"):
+    for i in tqdm(range(2_000), desc="Optimising weights"):
         optimizer.zero_grad()
-        new_weights = (
-            weights
-            * torch.sigmoid(weight_multiplier)
-            * weight_multiplier_range
-            + WEIGHT_MULTIPLIER_MIN
+        new_weights = weights * (
+            torch.clamp(
+                weight_multiplier,
+                min=WEIGHT_MULTIPLIER_MIN,
+                max=WEIGHT_MULTIPLIER_MAX,
+            )
         )
         outputs = (new_weights * output_matrix_tensor.T).sum(axis=1)
         weight_deviation = (
@@ -183,8 +188,6 @@ def reweight(
         ).sum() + weight_deviation
         loss_value.backward()
         optimizer.step()
-        if loss_value < 1e-3:
-            break
         if i % 100 == 0:
             writer.add_scalar("Summary/Loss", loss_value, i)
             for j in range(len(target_array)):
