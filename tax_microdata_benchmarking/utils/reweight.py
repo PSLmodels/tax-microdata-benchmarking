@@ -190,8 +190,8 @@ def reweight(
         / f"{time_period}_{datetime.now().isoformat()}"
     )
 
-    WEIGHT_MULTIPLIER_MAX = 10
-    WEIGHT_MULTIPLIER_MIN = 0.01
+    WEIGHT_MULTIPLIER_MAX = 5
+    WEIGHT_MULTIPLIER_MIN = 0.5
 
     for i in tqdm(range(2_000), desc="Optimising weights"):
         optimizer.zero_grad()
