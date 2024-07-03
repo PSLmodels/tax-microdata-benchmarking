@@ -34,25 +34,6 @@ def create_variable_file(write_file=True):
     print(f"  INCLUDE_ORIGINAL_WEIGHTS = {INCLUDE_ORIGINAL_WEIGHTS}")
     vdf = create_tmd_2021()
     vdf.FLPDYR = TAXYEAR
-    (vdf, pt_w2_wages_scale) = add_pt_w2_wages(vdf)
-    abs_diff = abs(pt_w2_wages_scale - INITIAL_W2_WAGES_SCALE)
-    msg = (
-        f"  FINAL vs INITIAL scale diff = {abs_diff:.6f}\n"
-        f"    INITIAL pt_w2_wages_scale = {INITIAL_W2_WAGES_SCALE:.6f}\n"
-        f"      FINAL pt_w2_wages_scale = {pt_w2_wages_scale:.6f}"
-    )
-    print(msg)
-    if abs_diff > 1e-3:
-        emsg = "INITIAL and FINAL scale values are substantially inconsistent"
-        print(emsg)
-    # streamline dataframe so that it includes only input variables
-    rec = tc.Records(
-        data=vdf,
-        start_year=TAXYEAR,
-        gfactors=None,
-        weights=None,
-        adjust_ratios=None,
-    )
     weights = vdf.s006.copy()
     if DO_REWEIGHTING and write_file:
         original_weights = vdf.s006_original.copy()

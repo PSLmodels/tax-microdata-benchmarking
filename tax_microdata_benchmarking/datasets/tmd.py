@@ -44,7 +44,7 @@ def create_tmd_2021():
     trace1("B", combined)
 
     print("Reweighting...")
-    combined = reweight(combined, 2021, weight_deviation_penalty=0)
+    combined = reweight(combined, 2021)
 
     trace1("C", combined)
 
