@@ -37,22 +37,14 @@ def create_tmd_2021():
     trace1("A", combined)
 
     # Add Tax-Calculator outputs
-    print("Adding Tax-Calculator outputs...")
-    combined = add_taxcalc_outputs(combined, 2021)
+    print("Adding Tax-Calculator outputs for 2021...")
+    combined = add_taxcalc_outputs(combined, 2021, 2021)
     combined["s006_original"] = combined.s006.values
 
     trace1("B", combined)
 
-    print("Reweighting...")
+    print("Reweighting for 2021...")
     combined = reweight(combined, 2021)
-
-    print(
-        "Total QBI deduction: ", (combined.qbided * combined.s006).sum() / 1e9
-    )
-    print(
-        "Total QBI deduction before reweighting: ",
-        (combined.qbided * combined.s006_original).sum() / 1e9,
-    )
 
     trace1("C", combined)
 
