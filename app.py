@@ -10,10 +10,8 @@ OUTPUTS = STORAGE_FOLDER / "output"
 
 
 @st.cache_resource
-def generate_comparsions(use_original_weights: bool = False):
+def generate_comparsions():
     tmd_2021 = pd.read_csv(OUTPUTS / "tmd_2021.csv")
-    if use_original_weights:
-        tmd_2021.s006 = tmd_2021.s006_original
     soi_from_tmd_2021 = compare_soi_replication_to_soi(
         tc_to_soi(tmd_2021, 2021), 2021
     )
@@ -46,41 +44,6 @@ def soi_statistic_passes_quality_test(df):
 # 2021 datasets
 
 comparisons = generate_comparsions()
-comparisons_original_weights = generate_comparsions(use_original_weights=True)
-comparisons["Original weight value"] = comparisons_original_weights["Value"]
-comparisons["Original weight error"] = comparisons_original_weights["Error"]
-comparisons["Improved under reweighting"] = (
-    comparisons["Absolute error"] < comparisons["Original weight error"].abs()
-)
-soi_subset = comparisons
-time_period = 2021
-
-soi_subset = soi_subset[soi_subset["Filing status"] == "All"]
-soi_subset = soi_subset[soi_subset["Taxable only"] == False]
-agi_level_targeted_variables = [
-    "adjusted_gross_income",
-    "count",
-]
-aggregate_level_targeted_variables = [
-    # "qualified_business_income_deduction",
-]
-soi_subset = soi_subset[
-    soi_subset.Variable.isin(agi_level_targeted_variables)
-    & (
-        (soi_subset["AGI lower bound"] != -np.inf)
-        | (soi_subset["AGI upper bound"] != np.inf)
-    )
-    | (
-        soi_subset.Variable.isin(aggregate_level_targeted_variables)
-        & (soi_subset["AGI lower bound"] == -np.inf)
-        & (soi_subset["AGI upper bound"] == np.inf)
-    )
-]
-
-comparisons["Targeted"] = False
-comparisons["Targeted"][soi_subset.index] = True
-
-soi_subset["Targeted"] = True
 
 st.title("SOI replication results")
 
@@ -101,5 +64,3 @@ histogram = px.histogram(
 )
 
 st.plotly_chart(histogram)
-
-st.subheader("Targets included in reweighting")

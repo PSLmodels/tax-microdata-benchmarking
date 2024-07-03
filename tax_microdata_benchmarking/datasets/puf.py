@@ -10,6 +10,7 @@ from tax_microdata_benchmarking.utils.imputation import Imputation
 from tax_microdata_benchmarking.imputation_assumptions import (
     IMPUTATION_RF_RNG_SEED,
     IMPUTATION_BETA_RNG_SEED,
+    W2_WAGES_SCALE,
 )
 
 
@@ -179,10 +180,14 @@ def preprocess_puf(puf: pd.DataFrame) -> pd.DataFrame:
     # Ignore f2441 (AMT form attached)
     # Ignore cmbtp (estimate of AMT income not in AGI)
     # Ignore k1bx14s and k1bx14p (partner self-employment income included in partnership and S-corp income)
+    qbi = np.maximum(0, puf.E00900 + puf.E26270 + puf.E02100 + puf.E27200)
+    puf["w2_wages_from_qualified_business"] = qbi * W2_WAGES_SCALE
+
+    # Remove aggregate records
+    puf = puf[puf.MARS != 0]
 
     puf["filing_status"] = puf.MARS.map(
         {
-            0: "SINGLE",  # Assume the aggregate record is single
             1: "SINGLE",
             2: "JOINT",
             3: "SEPARATE",
@@ -253,6 +258,7 @@ FINANCIAL_SUBSET = [
     "recapture_of_investment_credit",
     "unreported_payroll_tax",
     "pre_tax_contributions",
+    "w2_wages_from_qualified_business",
 ]
 
 
@@ -268,6 +274,8 @@ class PUF(Dataset):
 
         if self.time_period > 2015:
             puf = uprate_puf(puf, 2015, self.time_period)
+
+        puf = puf[puf.MARS != 0]
 
         print("Pre-processing PUF...")
         original_recid = puf.RECID.values.copy()

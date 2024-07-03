@@ -34,31 +34,12 @@ def create_variable_file(write_file=True):
     print(f"  INCLUDE_ORIGINAL_WEIGHTS = {INCLUDE_ORIGINAL_WEIGHTS}")
     vdf = create_tmd_2021()
     vdf.FLPDYR = TAXYEAR
-    (vdf, pt_w2_wages_scale) = add_pt_w2_wages(vdf)
-    abs_diff = abs(pt_w2_wages_scale - INITIAL_W2_WAGES_SCALE)
-    msg = (
-        f"  FINAL vs INITIAL scale diff = {abs_diff:.6f}\n"
-        f"    INITIAL pt_w2_wages_scale = {INITIAL_W2_WAGES_SCALE:.6f}\n"
-        f"      FINAL pt_w2_wages_scale = {pt_w2_wages_scale:.6f}"
-    )
-    print(msg)
-    if abs_diff > 1e-3:
-        emsg = "INITIAL and FINAL scale values are substantially inconsistent"
-        raise ValueError(emsg)
-    # streamline dataframe so that it includes only input variables
-    rec = tc.Records(
-        data=vdf,
-        start_year=TAXYEAR,
-        gfactors=None,
-        weights=None,
-        adjust_ratios=None,
-    )
     weights = vdf.s006.copy()
     if DO_REWEIGHTING and write_file:
         original_weights = vdf.s006_original.copy()
     else:
         original_weights = vdf.s006.copy()
-    vdf.drop(columns=rec.IGNORED_VARS, inplace=True)
+    # vdf.drop(columns=rec.IGNORED_VARS, inplace=True)
     # round all float variables to nearest integer except for weights
     vdf = vdf.astype(int)
     vdf.s006 = weights
@@ -71,6 +52,9 @@ def create_variable_file(write_file=True):
         tmd_csv_fname = STORAGE_FOLDER / "output" / "tmd.csv.gz"
         print(f"Writing PUF+CPS file... [{tmd_csv_fname}]")
         vdf.to_csv(tmd_csv_fname, index=False, float_format="%.2f")
+        vdf.to_csv(
+            STORAGE_FOLDER / "output" / "tmd_2021.csv", index=False
+        )  # Save an extra copy which doesn't take long to read.
 
 
 if __name__ == "__main__":

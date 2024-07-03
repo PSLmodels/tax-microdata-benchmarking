@@ -10,6 +10,7 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 from tax_microdata_benchmarking.storage import STORAGE_FOLDER
+from tax_microdata_benchmarking.utils.soi_replication import tc_to_soi
 
 warnings.filterwarnings("ignore")
 
@@ -54,59 +55,130 @@ def fmt(x):
 def reweight(
     flat_file: pd.DataFrame,
     time_period: int = 2021,
-    weight_deviation_penalty: float = 0,
+    weight_multiplier_min: float = 0.1,
+    weight_multiplier_max: float = 10,
 ):
-    targets = pd.read_csv(STORAGE_FOLDER / "input" / "agi_targets.csv")
+    targets = pd.read_csv(STORAGE_FOLDER / "input" / "soi.csv")
 
-    if time_period not in targets.year.unique():
+    if time_period not in targets.Year.unique():
         raise ValueError(f"Year {time_period} not in targets.")
     print(f"...reweighting for year {time_period}")
 
     def build_loss_matrix(df):
         loss_matrix = pd.DataFrame()
-        agi = df.c00100
-        taxable = df.c09200 - df.refund > 0
+        df = tc_to_soi(df, time_period)
+        agi = df["adjusted_gross_income"].values
+        filer = df["is_tax_filer"].values
+        taxable = df["is_taxable"].values
         targets_array = []
-        for i in range(len(INCOME_RANGES) - 1):
-            mask = (
-                (agi.values >= INCOME_RANGES[i])
-                * (agi.values < INCOME_RANGES[i + 1])
-                * taxable
+        soi_subset = targets
+        soi_subset = soi_subset[soi_subset.Year == time_period]
+        agi_level_targeted_variables = [
+            "adjusted_gross_income",
+            "count",
+            "employment_income",
+            # *[variable for variable in soi_subset.Variable.unique() if variable in df.columns] # Uncomment this to target ALL variables and distributions
+        ]
+        aggregate_level_targeted_variables = [
+            variable
+            for variable in soi_subset.Variable.unique()
+            if variable not in agi_level_targeted_variables
+            and variable in df.columns
+        ]
+        soi_subset = soi_subset[
+            soi_subset.Variable.isin(agi_level_targeted_variables)
+            & (
+                (soi_subset["AGI lower bound"] != -np.inf)
+                | (soi_subset["AGI upper bound"] != np.inf)
             )
-            loss_matrix[
-                f"Total AGI {fmt(INCOME_RANGES[i])}-{fmt(INCOME_RANGES[i + 1])}"
-            ] = (mask * agi)
-            agi_target = targets[targets.table == "tab11"][
-                targets.year == time_period
-            ][targets.vname.isin(["agi"])][targets.datatype == "taxable"][
-                targets.incsort - 2 == i
-            ].ptarget
-            targets_array.append(agi_target.iloc[0] * 1e3)
-            nret_target = targets[targets.table == "tab11"][
-                targets.year == time_period
-            ][targets.vname.isin(["nret_all"])][targets.datatype == "taxable"][
-                targets.incsort - 2 == i
-            ].ptarget
-            loss_matrix[
-                f"Returns {fmt(INCOME_RANGES[i])}-{fmt(INCOME_RANGES[i + 1])}"
-            ] = mask.astype(np.float32)
-            targets_array.append(nret_target.iloc[0])
+            | (
+                soi_subset.Variable.isin(aggregate_level_targeted_variables)
+                & (soi_subset["AGI lower bound"] == -np.inf)
+                & (soi_subset["AGI upper bound"] == np.inf)
+            )
+        ]
+        for _, row in soi_subset.iterrows():
+            mask = (
+                (agi >= row["AGI lower bound"])
+                * (agi < row["AGI upper bound"])
+                * filer
+            ) > 0
+
+            if row["Filing status"] == "Single":
+                mask *= df["filing_status"].values == "SINGLE"
+            elif (
+                row["Filing status"]
+                == "Married Filing Jointly/Surviving Spouse"
+            ):
+                mask *= df["filing_status"].values == "JOINT"
+            elif row["Filing status"] == "Head of Household":
+                mask *= df["filing_status"].values == "HEAD_OF_HOUSEHOLD"
+            elif row["Filing status"] == "Married Filing Separately":
+                mask *= df["filing_status"].values == "SEPARATE"
+
+            if row["Taxable only"]:
+                mask *= taxable > 0
+
+            values = df[row["Variable"]].values
+
+            if row["Count"]:
+                values = (values > 0).astype(float)
+
+            agi_range_label = (
+                f"{fmt(row['AGI lower bound'])}-{fmt(row['AGI upper bound'])}"
+            )
+            taxable_label = (
+                "taxable" if row["Taxable only"] else "all" + " returns"
+            )
+            filing_status_label = row["Filing status"]
+
+            variable_label = row["Variable"].replace("_", " ")
+
+            if row["Count"] and not row["Variable"] == "count":
+                label = f"{variable_label}/count/AGI in {agi_range_label}/{taxable_label}/{filing_status_label}"
+            elif row["Variable"] == "count":
+                label = f"{variable_label}/count/AGI in {agi_range_label}/{taxable_label}/{filing_status_label}"
+            else:
+                label = f"{variable_label}/total/AGI in {agi_range_label}/{taxable_label}/{filing_status_label}"
+
+            if label not in loss_matrix.columns:
+                loss_matrix[label] = mask * values
+                targets_array.append(row["Value"])
+
         return loss_matrix, np.array(targets_array)
 
-    weights = torch.tensor(
-        flat_file.s006.values, dtype=torch.float32, requires_grad=True
+    weights = torch.tensor(flat_file.s006.values, dtype=torch.float32)
+    weight_multiplier = torch.tensor(
+        np.ones_like(flat_file.s006.values),
+        dtype=torch.float32,
+        requires_grad=True,
     )
     original_weights = weights.clone()
     output_matrix, target_array = build_loss_matrix(flat_file)
+
+    print(f"Targeting {len(target_array)} SOI statistics")
+    # print out non-numeric columns
+    for col in output_matrix.columns:
+        try:
+            torch.tensor(output_matrix[col].values, dtype=torch.float32)
+        except ValueError:
+            print(f"Column {col} is not numeric")
     output_matrix_tensor = torch.tensor(
         output_matrix.values, dtype=torch.float32
     )
     target_array = torch.tensor(target_array, dtype=torch.float32)
 
-    outputs = (weights * output_matrix_tensor.T).sum(axis=1)
-    outputs, target_array
+    outputs = weights * output_matrix_tensor.T
 
-    optimizer = Adam([weights], lr=1e0)
+    # First, check for NaN columns and print out the labels
+
+    for i in range(len(target_array)):
+        if torch.isnan(outputs[i]).any():
+            print(f"Column {output_matrix.columns[i]} has NaN values")
+        if target_array[i] == 0:
+            pass  # print(f"Column {output_matrix.columns[i]} has target 0")
+
+    optimizer = Adam([weight_multiplier], lr=1e-1)
 
     from torch.utils.tensorboard import SummaryWriter
     from tqdm import tqdm
@@ -119,16 +191,21 @@ def reweight(
         / f"{time_period}_{datetime.now().isoformat()}"
     )
 
-    for i in tqdm(range(10_000), desc="Optimising weights"):
+    for i in tqdm(range(2_000), desc="Optimising weights"):
         optimizer.zero_grad()
-        outputs = (weights * output_matrix_tensor.T).sum(axis=1)
-        weight_deviation = (
-            (weights - original_weights).abs().sum()
-            / original_weights.sum()
-            * weight_deviation_penalty
+        new_weights = weights * (
+            torch.clamp(
+                weight_multiplier,
+                min=weight_multiplier_min,
+                max=weight_multiplier_max,
+            )
         )
+        outputs = (new_weights * output_matrix_tensor.T).sum(axis=1)
+        weight_deviation = (
+            new_weights - original_weights
+        ).abs().sum() / original_weights.sum()
         loss_value = (
-            (outputs / target_array - 1) ** 2
+            ((outputs + 1) / (target_array + 1) - 1) ** 2
         ).sum() + weight_deviation
         loss_value.backward()
         optimizer.step()
@@ -145,21 +222,21 @@ def reweight(
                 )
                 writer.add_scalar(f"Target/{metric_name}", target_array[j], i)
                 writer.add_scalar(
-                    f"Relative error/{metric_name}", rel_error, i
+                    f"Absolute relative error/{metric_name}", abs(rel_error), i
                 )
 
             writer.add_scalar(
                 "Summary/Max relative error",
-                (outputs / target_array - 1).abs().max(),
+                ((outputs + 1) / (target_array + 1) - 1).abs().max(),
                 i,
             )
             writer.add_scalar(
                 "Summary/Mean relative error",
-                (outputs / target_array - 1).abs().mean(),
+                ((outputs + 1) / (target_array + 1) - 1).abs().mean(),
                 i,
             )
 
     print("...reweighting finished")
 
-    flat_file["s006"] = weights.detach().numpy()
+    flat_file["s006"] = new_weights.detach().numpy()
     return flat_file
