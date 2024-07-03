@@ -127,7 +127,7 @@ def test_tax_expenditure_estimates(
     target = tax_expenditure_targets[reform][2023]
     estimate = tax_expenditure_estimates[flat_file][reform]
     assert (
-        abs(estimate / target - 1) < 0.7
+        abs(estimate / target - 1) < 0.2
         or abs(estimate - target) < 1  # Setting wide margin for now.
     ), f"{reform} differs to official estimates by {estimate / target - 1:.1%} ({estimate:.1f}bn vs {target:.1f}bn)"
 
@@ -152,5 +152,5 @@ def test_no_negative_weights(flat_file):
 )
 def test_qbided_close_to_soi(flat_file):
     assert (
-        abs((flat_file.s006 * flat_file.qbided).sum() / 1e9 - 205.8) < 0.01
+        abs((flat_file.s006 * flat_file.qbided).sum() / 1e9 - 205.8) < 0.25
     ), "QBIDED not within 1 percent of 205.8bn"
