@@ -55,7 +55,8 @@ def fmt(x):
 def reweight(
     flat_file: pd.DataFrame,
     time_period: int = 2021,
-    weight_deviation_penalty: float = 0,
+    weight_multiplier_min: float = 0.1,
+    weight_multiplier_max: float = 10,
 ):
     targets = pd.read_csv(STORAGE_FOLDER / "input" / "soi.csv")
 
@@ -190,24 +191,19 @@ def reweight(
         / f"{time_period}_{datetime.now().isoformat()}"
     )
 
-    WEIGHT_MULTIPLIER_MAX = 5
-    WEIGHT_MULTIPLIER_MIN = 0.5
-
     for i in tqdm(range(2_000), desc="Optimising weights"):
         optimizer.zero_grad()
         new_weights = weights * (
             torch.clamp(
                 weight_multiplier,
-                min=WEIGHT_MULTIPLIER_MIN,
-                max=WEIGHT_MULTIPLIER_MAX,
+                min=weight_multiplier_min,
+                max=weight_multiplier_max,
             )
         )
         outputs = (new_weights * output_matrix_tensor.T).sum(axis=1)
         weight_deviation = (
-            (new_weights - original_weights).abs().sum()
-            / original_weights.sum()
-            * weight_deviation_penalty
-        )
+            new_weights - original_weights
+        ).abs().sum() / original_weights.sum()
         loss_value = (
             ((outputs + 1) / (target_array + 1) - 1) ** 2
         ).sum() + weight_deviation
