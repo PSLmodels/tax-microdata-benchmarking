@@ -1,3 +1,4 @@
+import pandas as pd
 from tax_microdata_benchmarking.datasets.puf import (
     PUF_2021,
     create_pe_puf_2021,
@@ -10,7 +11,7 @@ from tax_microdata_benchmarking.utils.trace import trace1
 from tax_microdata_benchmarking.utils.taxcalc_utils import add_taxcalc_outputs
 from tax_microdata_benchmarking.utils.reweight import reweight
 from tax_microdata_benchmarking.storage import STORAGE_FOLDER
-import pandas as pd
+from policyengine_us import Microsimulation
 
 
 def create_tmd_2021():
@@ -21,6 +22,12 @@ def create_tmd_2021():
 
     tc_puf_21 = create_tc_dataset(PUF_2021, 2021)
     tc_cps_21 = create_tc_dataset(CPS_2021, 2021)
+
+    # identify CPS nonfilers using 2022 filing rules
+    # (because 2021 had large COVID-related anomalies)
+    sim = Microsimulation(dataset=CPS_2021)
+    nonfiler = ~(sim.calculate("tax_unit_is_filer", period=2022).values > 0)
+    tc_cps_21 = tc_cps_21[nonfiler]
 
     print("Combining PUF and CPS nonfilers...")
     combined = pd.concat([tc_puf_21, tc_cps_21], ignore_index=True)
