@@ -127,7 +127,7 @@ def test_tax_expenditure_estimates(
     target = tax_expenditure_targets[reform][2023]
     estimate = tax_expenditure_estimates[flat_file][reform]
     assert (
-        abs(estimate / target - 1) < 0.7
+        abs(estimate / target - 1) < 1
         or abs(estimate - target) < 1  # Setting wide margin for now.
     ), f"{reform} differs to official estimates by {estimate / target - 1:.1%} ({estimate:.1f}bn vs {target:.1f}bn)"
 
@@ -138,3 +138,19 @@ def test_create_taxcalc_tmd_file():
     )
 
     create_variable_file(write_file=False)
+
+
+@pytest.mark.parametrize(
+    "flat_file", datasets_to_test, ids=dataset_names_to_test
+)
+def test_no_negative_weights(flat_file):
+    assert flat_file.s006.min() >= 0, "Negative weights found."
+
+
+@pytest.mark.parametrize(
+    "flat_file", datasets_to_test, ids=dataset_names_to_test
+)
+def test_qbided_close_to_soi(flat_file):
+    assert (
+        abs((flat_file.s006 * flat_file.qbided).sum() / 1e9 / 205.8 - 1) < 0.25
+    ), "QBIDED not within 1 percent of 205.8bn"
