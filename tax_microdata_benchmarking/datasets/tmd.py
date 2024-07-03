@@ -23,27 +23,17 @@ def create_tmd_2021():
     tc_cps_21 = create_tc_dataset(CPS_2021, 2021)
 
     print("Combining PUF and CPS nonfilers...")
-
-    # Add nonfiler flag to tc_cps_21 with 2022 filing rules
-    # (2021 had large changes)
-    from policyengine_us import Microsimulation
-
-    sim = Microsimulation(dataset=CPS_2021)
-    nonfiler = ~(sim.calculate("tax_unit_is_filer", period=2022).values > 0)
-    tc_cps_21 = tc_cps_21[nonfiler]
-
     combined = pd.concat([tc_puf_21, tc_cps_21], ignore_index=True)
 
     trace1("A", combined)
 
-    # Add Tax-Calculator outputs
     print("Adding Tax-Calculator outputs for 2021...")
     combined = add_taxcalc_outputs(combined, 2021, 2021)
     combined["s006_original"] = combined.s006.values
 
     trace1("B", combined)
 
-    print("Reweighting for 2021...")
+    print("Reweighting...")
     combined = reweight(combined, 2021)
 
     trace1("C", combined)
