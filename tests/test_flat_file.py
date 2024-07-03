@@ -145,3 +145,12 @@ def test_create_taxcalc_tmd_file():
 )
 def test_no_negative_weights(flat_file):
     assert flat_file.s006.min() >= 0, "Negative weights found."
+
+
+@pytest.mark.parametrize(
+    "flat_file", datasets_to_test, ids=dataset_names_to_test
+)
+def test_qbided_close_to_soi(flat_file):
+    assert (
+        abs((flat_file.s006 * flat_file.qbided).sum() / 1e9 - 205.8) < 0.01
+    ), "QBIDED not within 1 percent of 205.8bn"
