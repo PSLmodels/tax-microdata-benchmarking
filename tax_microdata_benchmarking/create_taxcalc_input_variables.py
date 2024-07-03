@@ -34,7 +34,6 @@ def create_variable_file(write_file=True):
     print(f"  INCLUDE_ORIGINAL_WEIGHTS = {INCLUDE_ORIGINAL_WEIGHTS}")
     vdf = create_tmd_2021()
     vdf.FLPDYR = TAXYEAR
-    """
     (vdf, pt_w2_wages_scale) = add_pt_w2_wages(vdf)
     abs_diff = abs(pt_w2_wages_scale - INITIAL_W2_WAGES_SCALE)
     msg = (
@@ -46,7 +45,6 @@ def create_variable_file(write_file=True):
     if abs_diff > 1e-3:
         emsg = "INITIAL and FINAL scale values are substantially inconsistent"
         print(emsg)
-    """
     # streamline dataframe so that it includes only input variables
     rec = tc.Records(
         data=vdf,
