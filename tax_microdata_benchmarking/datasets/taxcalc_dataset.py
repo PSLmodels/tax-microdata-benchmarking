@@ -109,7 +109,7 @@ def create_tc_dataset(pe_dataset: Type, year: int) -> pd.DataFrame:
     df["mcare_ben"] = 0  # Medicare benefits, assume none
     df["mcaid_ben"] = 0  # Medicaid benefits, assume none
     df["other_ben"] = 0  # Other benefits, assume none
-    df["PT_binc_w2_wages"] = 0
+    df["PT_binc_w2_wages"] = pe("w2_wages_from_qualified_business")
     df["PT_ubia_property"] = 0
     df["data_source"] = 1 if "puf" in pe_dataset.__name__.lower() else 0
     df["e02000"] = (

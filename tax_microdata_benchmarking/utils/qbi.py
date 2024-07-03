@@ -46,7 +46,7 @@ def add_pt_w2_wages(df, verbose: bool = True):
             print(f"scale: {scale:8.6f}, dev: {dev:7.3f}, tot: {qbided:.3f}")
         return dev
 
-    scale = bisect(deduction_deviation, 0.1, 0.9, rtol=0.0001)
+    scale = bisect(deduction_deviation, 0.0, 1.0, rtol=0.0001)
     rounded_scale = round(scale, 5)
     print(f"Final (rounded) scale: {rounded_scale}")
     df["PT_binc_w2_wages"] = qbi * rounded_scale
