@@ -1,5 +1,7 @@
 """
-This module adds basic sanity tests for each TC-input flat file, checking that the totals of each variable are within the ballpark of the Tax-Data 2023 PUF's totals.
+This module adds basic sanity tests for each TC-input flat file,
+checking that the totals of each variable are within the ballpark
+of the Tax-Data 2023 PUF's totals.
 """
 
 import os
@@ -26,6 +28,10 @@ with open(FOLDER / "tax_expenditure_targets.yaml") as f:
 
 with open(STORAGE_FOLDER / "input" / "taxcalc_variable_metadata.yaml") as f:
     taxcalc_variable_metadata = yaml.safe_load(f)
+
+tmd_weights_path = STORAGE_FOLDER / "output" / "tmd_weights.csv.gz"
+
+tmd_growfactors_path = STORAGE_FOLDER / "output" / "tmd_growfactors.csv"
 
 EXEMPTED_VARIABLES = [
     "DSI",  # Issue here but deprioritized.
@@ -114,10 +120,15 @@ tax_expenditure_estimates = {}
 for dataset, name in zip(datasets_to_test, dataset_names_to_test):
     print(f"Running tax expenditure estimates for {dataset}")
     tax_expenditure_estimates[name] = get_tax_expenditure_results(
-        dataset, 2023
+        dataset,
+        2021,  # dataset year
+        2023,  # simulation year for tax expenditure estimates
+        tmd_weights_path,
+        tmd_growfactors_path,
     )
 
 
+@pytest.mark.taxexp
 @pytest.mark.parametrize("flat_file", dataset_names_to_test, ids=lambda x: x)
 @pytest.mark.parametrize("reform", tax_expenditure_reforms, ids=lambda x: x)
 def test_tax_expenditure_estimates(
@@ -126,10 +137,13 @@ def test_tax_expenditure_estimates(
 ):
     target = tax_expenditure_targets[reform][2023]
     estimate = tax_expenditure_estimates[flat_file][reform]
-    assert (
-        abs(estimate / target - 1) < 1
-        or abs(estimate - target) < 1  # Setting wide margin for now.
-    ), f"{reform} differs to official estimates by {estimate / target - 1:.1%} ({estimate:.1f}bn vs {target:.1f}bn)"
+    tol = 0.4
+    if reform == "salt":
+        tol = 0.7
+    assert abs(estimate / target - 1) < tol or abs(estimate - target) < tol, (
+        f"{reform} differs from CBO estimate by "
+        f"{estimate / target - 1:.1%} ({estimate:.1f}bn vs {target:.1f}bn)"
+    )
 
 
 def test_create_taxcalc_tmd_file():
