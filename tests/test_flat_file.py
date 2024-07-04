@@ -74,10 +74,10 @@ variables_to_test = [
     if variable not in EXEMPTED_VARIABLES
 ]
 
-dataset_names_to_test = ["tmd"]
+dataset_names_to_test = ["tmd_2021"]
 
 datasets_to_test = [
-    pd.read_csv(STORAGE_FOLDER / "output" / f"{dataset}.csv.gz")
+    pd.read_csv(STORAGE_FOLDER / "output" / f"{dataset}.csv")
     for dataset in dataset_names_to_test
 ]
 
@@ -94,7 +94,7 @@ def test_variable_totals(variable, flat_file):
     if tc_variable_totals[variable] == 0:
         # If the taxdata file has a zero total, we'll assume the tested file is correct in the absence of better data.
         return
-    # 20% and more than 10bn off taxdata is a failure.
+    # 45% and more than $30bn off taxdata is a failure.
     assert (
         abs(total / tc_variable_totals[variable] - 1) < 0.45
         or abs(total / 1e9 - tc_variable_totals[variable] / 1e9) < 30
@@ -161,10 +161,11 @@ def test_no_negative_weights(flat_file):
     assert flat_file.s006.min() >= 0, "Negative weights found."
 
 
+@pytest.mark.qbid
 @pytest.mark.parametrize(
     "flat_file", datasets_to_test, ids=dataset_names_to_test
 )
 def test_qbided_close_to_soi(flat_file):
     assert (
         abs((flat_file.s006 * flat_file.qbided).sum() / 1e9 / 205.8 - 1) < 0.25
-    ), "QBIDED not within 1 percent of 205.8bn"
+    ), "QBIDED not within 25 percent of 205.8bn"
