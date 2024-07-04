@@ -74,10 +74,10 @@ variables_to_test = [
     if variable not in EXEMPTED_VARIABLES
 ]
 
-dataset_names_to_test = ["tmd"]
+dataset_names_to_test = ["tmd_2021"]
 
 datasets_to_test = [
-    pd.read_csv(STORAGE_FOLDER / "output" / f"{dataset}.csv.gz")
+    pd.read_csv(STORAGE_FOLDER / "output" / f"{dataset}.csv")
     for dataset in dataset_names_to_test
 ]
 
@@ -161,6 +161,7 @@ def test_no_negative_weights(flat_file):
     assert flat_file.s006.min() >= 0, "Negative weights found."
 
 
+@pytest.mark.qbid
 @pytest.mark.parametrize(
     "flat_file", datasets_to_test, ids=dataset_names_to_test
 )
