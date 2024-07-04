@@ -78,6 +78,7 @@ def add_taxcalc_outputs(
         start_year=input_data_year,
         gfactors=growf,
         weights=wghts,
+        adjust_ratios=None,
         exact_calculations=True,
     )
     policy = tc.Policy()
