@@ -2,11 +2,12 @@
 This module provides utilities for working with Tax-Calculator.
 """
 
-import taxcalc as tc
+import pathlib
+import yaml
 import numpy as np
 import pandas as pd
 from tax_microdata_benchmarking.storage import STORAGE_FOLDER
-import yaml
+import taxcalc as tc
 
 
 with open(STORAGE_FOLDER / "input" / "taxcalc_variable_metadata.yaml") as f:
@@ -47,7 +48,8 @@ def get_tc_is_input(variable: str) -> bool:
 
 def add_taxcalc_outputs(
     flat_file: pd.DataFrame,
-    time_period: int,
+    input_data_year: int,
+    simulation_year: int,
     reform: dict = None,
     weights=None,
     growfactors=None,
@@ -63,16 +65,26 @@ def add_taxcalc_outputs(
     Returns:
         pd.DataFrame: The Tax-Calculator output.
     """
+    if isinstance(weights, pathlib.PosixPath):
+        wghts = str(weights)
+    else:
+        wghts = weights
+    if isinstance(growfactors, pathlib.PosixPath):
+        growf = tc.GrowFactors(growfactors_filename=str(growfactors))
+    else:
+        growf = growfactors
     input_data = tc.Records(
         data=flat_file,
-        start_year=time_period,
-        weights=weights,
-        gfactors=growfactors,
+        start_year=input_data_year,
+        gfactors=growf,
+        weights=wghts,
+        exact_calculations=True,
     )
     policy = tc.Policy()
     if reform:
         policy.implement_reform(reform)
     simulation = tc.Calculator(records=input_data, policy=policy)
+    simulation.advance_to_year(simulation_year)
     simulation.calc_all()
     output = simulation.dataframe(None, all_vars=True)
     if weights is None and growfactors is None:
@@ -93,17 +105,31 @@ te_reforms = {
 
 def get_tax_expenditure_results(
     flat_file: pd.DataFrame,
-    time_period: int,
+    input_data_year: int,
+    simulation_year: int,
+    weights_file_name: str,
+    growfactors_file_name: str,
 ) -> dict:
     baseline = add_taxcalc_outputs(
-        flat_file, time_period, weights=None, growfactors=None
+        flat_file,
+        input_data_year,
+        simulation_year,
+        reform=None,
+        weights=weights_file_name,
+        growfactors=growfactors_file_name,
     )
-
     tax_revenue_baseline = (baseline.combined * baseline.s006).sum() / 1e9
 
     te_results = {}
     for reform_name, reform in te_reforms.items():
-        reform_results = add_taxcalc_outputs(flat_file, time_period, reform)
+        reform_results = add_taxcalc_outputs(
+            flat_file,
+            input_data_year,
+            simulation_year,
+            reform,
+            weights=weights_file_name,
+            growfactors=growfactors_file_name,
+        )
         tax_revenue_reform = (
             reform_results.combined * reform_results.s006
         ).sum() / 1e9
