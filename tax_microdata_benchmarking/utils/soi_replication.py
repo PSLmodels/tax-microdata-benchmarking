@@ -148,6 +148,8 @@ def tc_to_soi(puf, year):
         start_year=year,
         gfactors=None,
         weights=None,
+        adjust_ratios=None,
+        exact_calculations=True,
     )
     calculator = tc.Calculator(policy=policy, records=data)
     calculator.calc_all()
