@@ -39,7 +39,21 @@ def create_variable_file(write_file=True):
         original_weights = vdf.s006_original.copy()
     else:
         original_weights = vdf.s006.copy()
-    # vdf.drop(columns=rec.IGNORED_VARS, inplace=True)
+    if write_file:
+        # save a copy containing both input and output variables
+        fname = STORAGE_FOLDER / "output" / "tmd_2021.csv"
+        print(f"Writing PUF+CPS file... [{fname}]")
+        vdf.to_csv(fname, index=False)
+    # streamline dataframe so that it includes only input variables
+    rec = tc.Records(
+        data=vdf,
+        start_year=TAXYEAR,
+        gfactors=None,
+        weights=None,
+        adjust_ratios=None,
+        exact_calculations=True,
+    )
+    vdf.drop(columns=rec.IGNORED_VARS, inplace=True)
     # round all float variables to nearest integer except for weights
     vdf = vdf.astype(int)
     vdf.s006 = weights
@@ -47,14 +61,11 @@ def create_variable_file(write_file=True):
         vdf["s006_original"] = original_weights
     for var in ["e00200", "e00900", "e02100"]:
         vdf[var] = vdf[f"{var}p"] + vdf[f"{var}s"]
-    # write streamlined variables dataframe to CSV-formatted file
+    # write input-variables-only dataframe to CSV-formatted file
     if write_file:
-        tmd_csv_fname = STORAGE_FOLDER / "output" / "tmd.csv.gz"
-        print(f"Writing PUF+CPS file... [{tmd_csv_fname}]")
-        vdf.to_csv(tmd_csv_fname, index=False, float_format="%.2f")
-        vdf.to_csv(
-            STORAGE_FOLDER / "output" / "tmd_2021.csv", index=False
-        )  # Save an extra copy which doesn't take long to read.
+        fname = STORAGE_FOLDER / "output" / "tmd.csv.gz"
+        print(f"Writing PUF+CPS file... [{fname}]")
+        vdf.to_csv(fname, index=False, float_format="%.2f")
 
 
 if __name__ == "__main__":

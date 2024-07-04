@@ -94,7 +94,7 @@ def test_variable_totals(variable, flat_file):
     if tc_variable_totals[variable] == 0:
         # If the taxdata file has a zero total, we'll assume the tested file is correct in the absence of better data.
         return
-    # 20% and more than 10bn off taxdata is a failure.
+    # 45% and more than $30bn off taxdata is a failure.
     assert (
         abs(total / tc_variable_totals[variable] - 1) < 0.45
         or abs(total / 1e9 - tc_variable_totals[variable] / 1e9) < 30
@@ -167,4 +167,4 @@ def test_no_negative_weights(flat_file):
 def test_qbided_close_to_soi(flat_file):
     assert (
         abs((flat_file.s006 * flat_file.qbided).sum() / 1e9 / 205.8 - 1) < 0.25
-    ), "QBIDED not within 1 percent of 205.8bn"
+    ), "QBIDED not within 25 percent of 205.8bn"
