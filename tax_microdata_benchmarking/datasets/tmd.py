@@ -10,6 +10,7 @@ from tax_microdata_benchmarking.datasets.taxcalc_dataset import (
 from tax_microdata_benchmarking.utils.trace import trace1
 from tax_microdata_benchmarking.utils.taxcalc_utils import add_taxcalc_outputs
 from tax_microdata_benchmarking.utils.reweight import reweight
+from tax_microdata_benchmarking.utils.qbi import add_pt_w2_wages
 from tax_microdata_benchmarking.storage import STORAGE_FOLDER
 from policyengine_us import Microsimulation
 
@@ -44,6 +45,8 @@ def create_tmd_2021():
     combined = reweight(combined, 2021)
 
     trace1("C", combined)
+
+    combined, _ = add_pt_w2_wages(combined)
 
     return combined
 
