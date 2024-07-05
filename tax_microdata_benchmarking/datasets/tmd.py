@@ -46,7 +46,12 @@ def create_tmd_2021():
 
     trace1("C", combined)
 
-    combined, _ = add_pt_w2_wages(combined)
+    try:
+        combined, _ = add_pt_w2_wages(combined)
+    except:
+        print(
+            "Failed to add pass-through W-2 wages, falling back to the default flat imputation."
+        )
 
     return combined
 
