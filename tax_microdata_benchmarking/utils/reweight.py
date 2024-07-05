@@ -77,13 +77,44 @@ def reweight(
             "adjusted_gross_income",
             "count",
             "employment_income",
-            # *[variable for variable in soi_subset.Variable.unique() if variable in df.columns] # Uncomment this to target ALL variables and distributions
+        ]
+        aggregate_level_targeted_variables = [
+            "business_net_losses",
+            "business_net_profits",
+            "capital_gains_distributions",
+            "capital_gains_gross",
+            "capital_gains_losses",
+            "charitable_contributions_deduction",
+            "count_of_exemptions",
+            "estate_income",
+            "estate_losses",
+            "exempt_interest",
+            "exemptions",
+            "interest_paid_deductions",
+            "ira_distributions",
+            "itemized_real_estate_tax_deductions",
+            "itemized_state_income_tax_deductions",
+            "medical_expense_deductions_capped",
+            "medical_expense_deductions_uncapped",
+            "ordinary_dividends",
+            "partnership_and_s_corp_income",
+            "partnership_and_s_corp_losses",
+            "qualified_dividends",
+            "rent_and_royalty_net_income",
+            "rent_and_royalty_net_losses",
+            "standard_deduction",
+            "state_and_local_tax_deductions",
+            "taxable_interest_income",
+            "taxable_pension_income",
+            "taxable_social_security",
+            "total_pension_income",
+            "total_social_security",
+            "unemployment_compensation",
         ]
         aggregate_level_targeted_variables = [
             variable
-            for variable in soi_subset.Variable.unique()
-            if variable not in agi_level_targeted_variables
-            and variable in df.columns
+            for variable in aggregate_level_targeted_variables
+            if variable in df.columns
         ]
         soi_subset = soi_subset[
             soi_subset.Variable.isin(agi_level_targeted_variables)
