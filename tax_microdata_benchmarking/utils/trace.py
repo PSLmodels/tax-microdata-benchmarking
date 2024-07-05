@@ -27,19 +27,30 @@ def trace1(loc: str, vdf: pd.DataFrame) -> None:
     wcps = (wght * ~filer).sum() * 1e-6
     wght_min = wght.min()
     wght_max = wght.max()
-    print(f">{loc} weights all,puf,cps (#M)= {wtot:.3f} {wpuf:.3f} {wcps:.3f}")
+    wght_results = (
+        f">{loc} weights all,puf,cps (#M)= "
+        f"{wtot:.3f} {wpuf:.3f} [160.8] {wcps:.3f}"
+    )
+    print(wght_results)
     print(f">{loc} weights all_min,all_max (#)= {wght_min:.1f} {wght_max:.1f}")
+    # CTC tabulations
+    if "ctc_total" in vdf:
+        ctc = vdf.ctc_total * filer
+        ctc_wtot = (wght * ctc).sum() * 1e-9
+        print(f">{loc} weighted puf CTC ($B)= {ctc_wtot:.3f}")
+    else:
+        print(f">{loc} CTC not in DataFrame")
     # PT_binc_w2_wages tabulations
-    w2wages = vdf.PT_binc_w2_wages
+    w2wages = vdf.PT_binc_w2_wages * filer
     wages_min = w2wages.min()
     wages_max = w2wages.max()
     wages_wtot = (wght * w2wages).sum() * 1e-9
     print(f">{loc} W2_wages min,max ($)= {wages_min:.0f} {wages_max:.0f}")
-    print(f">{loc} total weighted W2_wages ($B)= {wages_wtot:.3f}")
+    print(f">{loc} weighted puf W2_wages ($B)= {wages_wtot:.3f}")
     # QBID tabulations
     if "qbided" in vdf:
-        qbid = vdf.qbided
+        qbid = vdf.qbided * filer
         qbid_wtot = (wght * qbid).sum() * 1e-9
-        print(f">{loc} total weighted QBID ($B)= {qbid_wtot:.3f}")
+        print(f">{loc} weighted puf QBID ($B)= {qbid_wtot:.3f} [205.8]")
     else:
         print(f">{loc} QBID not in DataFrame")
