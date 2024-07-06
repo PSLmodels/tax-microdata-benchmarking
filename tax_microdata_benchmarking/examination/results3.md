@@ -41,7 +41,7 @@ merge of PR 2764 on 2024-07-04).
 | ---:   | ---:   | :---   |
 | 2512.3 | 2849.4 | CBO    |
 | 2371.4 | 2999.4 | Tax-Calculator + phase 3 dataset |
-| 2247.8 | 2742.1 | Tax-Calculator + taxdata dataset |
+| 2247.9 | 2742.2 | Tax-Calculator + taxdata dataset |
 
 <br>
 
@@ -52,7 +52,7 @@ merge of PR 2764 on 2024-07-04).
 | 122.1  | 57.6   | JCT    |
 | 108.6  | 55.7   | TSY    |
 |  73.5  | 26.7   | Tax-Calculator + phase 3 dataset |
-| 126.2  | 43.1   | Tax-Calculator + taxdata dataset |
+| 126.3  | 43.1   | Tax-Calculator + taxdata dataset |
 
 <br>
 

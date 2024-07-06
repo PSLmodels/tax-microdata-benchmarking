@@ -63,6 +63,9 @@ echo CLP
 
 echo CTC
 ./execute.sh $1.csv 20$2 ctc
+if [[ -v QUIT ]]; then
+    exit 1
+fi
 
 echo EITC
 ./execute.sh $1.csv 20$2 eitc
