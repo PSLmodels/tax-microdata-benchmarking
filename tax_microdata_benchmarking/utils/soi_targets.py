@@ -242,6 +242,17 @@ def clean_soi_file(soi):
 
     soi = soi.groupby(unique_columns).first().reset_index()
 
+    soi[soi.Year == 2021][
+        soi.Variable == "partnership_and_s_corp_income"
+    ] += soi[soi.Year == 2021][soi.Variable == "s_corporation_net_income"]
+
+    soi[soi.Year == 2021][
+        soi.Variable == "partnership_and_s_corp_losses"
+    ] += soi[soi.Year == 2021][soi.Variable == "s_corporation_net_losses"]
+
+    soi = soi[soi.Variable != "s_corporation_net_income"]
+    soi = soi[soi.Variable != "s_corporation_net_losses"]
+
     return soi[columns]
 
 
