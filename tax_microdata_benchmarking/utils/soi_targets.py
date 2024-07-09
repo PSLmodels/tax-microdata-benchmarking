@@ -162,7 +162,9 @@ def clean_vname(vname):
 
 
 def clean_soi_file(soi):
-    soi.vname = soi.vname.replace("nret_partnerpinc", "nret_partnerinc") # Typo
+    soi.vname = soi.vname.replace(
+        "nret_partnerpinc", "nret_partnerinc"
+    )  # Typo
 
     soi["Count"] = soi.vname.apply(lambda x: "nret" in x)
     soi["Taxable only"] = soi.datatype == "taxable"
@@ -243,8 +245,16 @@ def clean_soi_file(soi):
 
     soi = soi.groupby(unique_columns).first().reset_index()
 
-    soi.Value[(soi.Year == 2021) & (soi.Variable == "partnership_and_s_corp_income")] += soi.Value[(soi.Year == 2021) & (soi.Variable == "s_corporation_net_income")].values
-    soi.Value[(soi.Year == 2021) & (soi.Variable == "partnership_and_s_corp_losses")] += soi.Value[(soi.Year == 2021) & (soi.Variable == "s_corporation_net_losses")].values
+    soi.Value[
+        (soi.Year == 2021) & (soi.Variable == "partnership_and_s_corp_income")
+    ] += soi.Value[
+        (soi.Year == 2021) & (soi.Variable == "s_corporation_net_income")
+    ].values
+    soi.Value[
+        (soi.Year == 2021) & (soi.Variable == "partnership_and_s_corp_losses")
+    ] += soi.Value[
+        (soi.Year == 2021) & (soi.Variable == "s_corporation_net_losses")
+    ].values
 
     return soi[columns]
 
