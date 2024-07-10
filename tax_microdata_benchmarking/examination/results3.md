@@ -30,7 +30,7 @@ merge of PR #2772 on 2024-07-10).
 | CY23 Amount | CY26 Amount | Estimate Source |
 | ---:   | ---:   | :---   |
 | 1580.0 | 1829.9 | CBO    |
-| 1523.3 | 1775.6 | Tax-Calculator + phase 3 dataset |
+| 1523.3 | 1766.8 | Tax-Calculator + phase 3 dataset |
 | 1489.3 | 1711.0 | Tax-Calculator + taxdata dataset |
 
 <br>
@@ -40,7 +40,7 @@ merge of PR #2772 on 2024-07-10).
 | CY23 Amount | CY26 Amount | Estimate Source |
 | ---:   | ---:   | :---   |
 | 2512.3 | 2849.4 | CBO    |
-| 2306.4 | 2894.5 | Tax-Calculator + phase 3 dataset |
+| 2306.4 | 2958.1 | Tax-Calculator + phase 3 dataset |
 | 2247.9 | 2742.2 | Tax-Calculator + taxdata dataset |
 
 <br>
@@ -84,7 +84,7 @@ merge of PR #2772 on 2024-07-10).
 | ---:   | ---:   | :---   |
 | -56.5  | -53.8  | JCT    |
 |  ----  |  ----  | TSY    |
-| -56.7  | -70.7  | Tax-Calculator + phase 3 dataset |
+| -56.7  | -54.2  | Tax-Calculator + phase 3 dataset |
 | -55.8  | -52.1  | Tax-Calculator + taxdata dataset |
 
 <br>
@@ -95,7 +95,7 @@ merge of PR #2772 on 2024-07-10).
 | ---:   | ---:   | :---   |
 | 259.3  | 239.8  | JCT    |
 | 153.9  | 182.4  | TSY    |
-| 223.2  | 221.8  | Tax-Calculator + phase 3 dataset |
+| 223.2  | 212.0  | Tax-Calculator + phase 3 dataset |
 | 217.7  | 223.6  | Tax-Calculator + taxdata dataset |
 
 <br>
@@ -117,5 +117,5 @@ merge of PR #2772 on 2024-07-10).
 | ---:   | ---:   | :---   |
 |  21.2  | 151.3  | JCT    |
 |  26.5  | 149.0  | TSY    |
-|  11.4  | 109.7  | Tax-Calculator + phase 3 dataset |
+|  11.4  | 108.9  | Tax-Calculator + phase 3 dataset |
 |  29.4  | 185.5  | Tax-Calculator + taxdata dataset |
