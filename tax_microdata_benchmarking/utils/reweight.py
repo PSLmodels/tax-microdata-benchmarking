@@ -200,7 +200,7 @@ def reweight(
     )
     target_array = torch.tensor(target_array, dtype=torch.float32)
 
-    outputs = weights * output_matrix_tensor.T
+    outputs = (weights * output_matrix_tensor.T).sum(axis=1)
     original_loss_value = (((outputs + 1) / (target_array + 1) - 1) ** 2).sum()
 
     # First, check for NaN columns and print out the labels
