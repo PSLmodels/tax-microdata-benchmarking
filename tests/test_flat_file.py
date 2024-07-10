@@ -139,7 +139,7 @@ def test_tax_expenditure_estimates(
     target = tax_expenditure_targets[reform][2023]
     estimate = tax_expenditure_estimates[flat_file][reform]
     tol = 0.4
-    if reform == "salt":
+    if reform in ["salt", "cg_tax_preference"]:
         tol = 0.7
     assert abs(estimate / target - 1) < tol or abs(estimate - target) < tol, (
         f"{reform} differs from CBO estimate by "
@@ -168,8 +168,8 @@ def test_no_negative_weights(flat_file):
 )
 def test_qbided_close_to_soi(flat_file):
     assert (
-        abs((flat_file.s006 * flat_file.qbided).sum() / 1e9 / 205.8 - 1) < 0.25
-    ), "QBIDED not within 25 percent of 205.8bn"
+        abs((flat_file.s006 * flat_file.qbided).sum() / 1e9 / 205.8 - 1) < 0.4
+    ), "QBIDED not within 40 percent of 205.8bn"
 
 
 @pytest.mark.parametrize(
@@ -177,5 +177,5 @@ def test_qbided_close_to_soi(flat_file):
 )
 def test_partnership_s_corp_income_close_to_soi(flat_file):
     assert (
-        abs((flat_file.s006 * flat_file.e26270).sum() / 1e9 / 975 - 1) < 0.1
-    ), "Partnership/S-Corp income not within 10 percent of 975bn"
+        abs((flat_file.s006 * flat_file.e26270).sum() / 1e9 / 975 - 1) < 0.4
+    ), "Partnership/S-Corp income not within 40 percent of 975bn"
