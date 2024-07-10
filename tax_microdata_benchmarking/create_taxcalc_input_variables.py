@@ -54,5 +54,6 @@ def create_variable_file(write_file=True):
         print(f"Writing PUF+CPS file... [{fname}]")
         vdf.to_csv(fname, index=False, float_format="%.2f")
 
+
 if __name__ == "__main__":
     create_variable_file()
