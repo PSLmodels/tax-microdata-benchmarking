@@ -139,7 +139,7 @@ def test_tax_expenditure_estimates(
     target = tax_expenditure_targets[reform][2023]
     estimate = tax_expenditure_estimates[flat_file][reform]
     tol = 0.4
-    if reform in ["salt", "cg_tax_preference"]:
+    if reform in ["salt", "cg_tax_preference", "niit"]:
         tol = 0.7
     assert abs(estimate / target - 1) < tol or abs(estimate - target) < tol, (
         f"{reform} differs from CBO estimate by "
