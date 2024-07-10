@@ -82,6 +82,7 @@ datasets_to_test = [
 ]
 
 
+@pytest.mark.vartotals
 @pytest.mark.parametrize("variable", variables_to_test, ids=lambda x: x)
 @pytest.mark.parametrize(
     "flat_file", datasets_to_test, ids=dataset_names_to_test
