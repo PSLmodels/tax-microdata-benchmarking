@@ -82,6 +82,7 @@ datasets_to_test = [
 ]
 
 
+@pytest.mark.vartotals
 @pytest.mark.parametrize("variable", variables_to_test, ids=lambda x: x)
 @pytest.mark.parametrize(
     "flat_file", datasets_to_test, ids=dataset_names_to_test
@@ -169,3 +170,12 @@ def test_qbided_close_to_soi(flat_file):
     assert (
         abs((flat_file.s006 * flat_file.qbided).sum() / 1e9 / 205.8 - 1) < 0.25
     ), "QBIDED not within 25 percent of 205.8bn"
+
+
+@pytest.mark.parametrize(
+    "flat_file", datasets_to_test, ids=dataset_names_to_test
+)
+def test_partnership_s_corp_income_close_to_soi(flat_file):
+    assert (
+        abs((flat_file.s006 * flat_file.e26270).sum() / 1e9 / 975 - 1) < 0.1
+    ), "Partnership/S-Corp income not within 10 percent of 975bn"
