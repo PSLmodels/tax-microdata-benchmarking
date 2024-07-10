@@ -13,6 +13,12 @@ import pandas as pd
 import subprocess
 import warnings
 from tax_microdata_benchmarking.storage import STORAGE_FOLDER
+from tax_microdata_benchmarking.create_taxcalc_input_variables import (
+    create_variable_file,
+)
+from tax_microdata_benchmarking.utils.taxcalc_utils import (
+    get_tax_expenditure_results,
+)
 
 warnings.filterwarnings("ignore")
 
@@ -103,18 +109,15 @@ def test_variable_totals(variable, flat_file):
 
 
 tax_expenditure_reforms = [
-    "cg_tax_preference",
     "ctc",
     "eitc",
+    "social_security_partial_taxability",
     "niit",
+    "cgqd_tax_preference",
     "qbid",
     "salt",
-    "social_security_partial_taxability",
 ]
 
-from tax_microdata_benchmarking.utils.taxcalc_utils import (
-    get_tax_expenditure_results,
-)
 
 tax_expenditure_estimates = {}
 
@@ -148,10 +151,6 @@ def test_tax_expenditure_estimates(
 
 
 def test_create_taxcalc_tmd_file():
-    from tax_microdata_benchmarking.create_taxcalc_input_variables import (
-        create_variable_file,
-    )
-
     create_variable_file(write_file=False)
 
 
