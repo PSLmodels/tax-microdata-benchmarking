@@ -57,6 +57,7 @@ def reweight(
     time_period: int = 2021,
     weight_multiplier_min: float = 0.1,
     weight_multiplier_max: float = 10,
+    weight_deviation_penalty: float = 0.2,  # value of 1 says "this is as important as everything else"
 ):
     targets = pd.read_csv(STORAGE_FOLDER / "input" / "soi.csv")
 
@@ -200,6 +201,7 @@ def reweight(
     target_array = torch.tensor(target_array, dtype=torch.float32)
 
     outputs = weights * output_matrix_tensor.T
+    original_loss_value = (((outputs + 1) / (target_array + 1) - 1) ** 2).sum()
 
     # First, check for NaN columns and print out the labels
 
@@ -233,8 +235,11 @@ def reweight(
         )
         outputs = (new_weights * output_matrix_tensor.T).sum(axis=1)
         weight_deviation = (
-            new_weights - original_weights
-        ).abs().sum() / original_weights.sum()
+            (new_weights - original_weights).abs().sum()
+            / original_weights.sum()
+            * weight_deviation_penalty
+            * original_loss_value
+        )
         loss_value = (
             ((outputs + 1) / (target_array + 1) - 1) ** 2
         ).sum() + weight_deviation
