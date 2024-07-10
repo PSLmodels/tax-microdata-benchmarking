@@ -94,13 +94,13 @@ def add_taxcalc_outputs(
 
 
 te_reforms = {
-    "cg_tax_preference": {"CG_nodiff": {"2023": True}},
     "ctc": {"CTC_c": {"2023": 0}, "ODC_c": {"2023": 0}, "ACTC_c": {"2023": 0}},
     "eitc": {"EITC_c": {"2023": [0, 0, 0, 0]}},
+    "social_security_partial_taxability": {"SS_all_in_agi": {"2023": True}},
     "niit": {"NIIT_rt": {"2023": 0}},
+    "cg_tax_preference": {"CG_nodiff": {"2023": True}},
     "qbid": {"PT_qbid_rt": {"2023": 0}},
     "salt": {"ID_AllTaxes_hc": {"2023": 1}},
-    "social_security_partial_taxability": {"SS_all_in_agi": {"2023": True}},
 }
 
 
@@ -119,7 +119,7 @@ def get_tax_expenditure_results(
         weights=weights_file_name,
         growfactors=growfactors_file_name,
     )
-    tax_revenue_baseline = (baseline.combined * baseline.s006).sum() / 1e9
+    tax_revenue_baseline = (baseline.iitax * baseline.s006).sum() / 1e9
 
     te_results = {}
     for reform_name, reform in te_reforms.items():
@@ -132,7 +132,7 @@ def get_tax_expenditure_results(
             growfactors=growfactors_file_name,
         )
         tax_revenue_reform = (
-            reform_results.combined * reform_results.s006
+            reform_results.iitax * reform_results.s006
         ).sum() / 1e9
         revenue_effect = tax_revenue_baseline - tax_revenue_reform
         te_results[reform_name] = round(-revenue_effect, 1)
@@ -140,6 +140,8 @@ def get_tax_expenditure_results(
     taxexp_path = STORAGE_FOLDER / "output" / "tax_expenditures"
     year = simulation_year
     with open(taxexp_path, "w") as tefile:
+        res = f"YEAR,KIND,ESTIMATE= {year} iitax {tax_revenue_baseline:.1f}\n"
+        tefile.write(res)
         for reform, estimate in te_results.items():
             res = f"YEAR,KIND,ESTIMATE= {year} {reform} {estimate}\n"
             tefile.write(res)
