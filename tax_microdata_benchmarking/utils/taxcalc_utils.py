@@ -137,4 +137,11 @@ def get_tax_expenditure_results(
         revenue_effect = tax_revenue_baseline - tax_revenue_reform
         te_results[reform_name] = round(-revenue_effect, 1)
 
+    taxexp_path = STORAGE_FOLDER / "output" / "tax_expenditures"
+    year = simulation_year
+    with open(taxexp_path, "w") as tefile:
+        for reform, estimate in te_results.items():
+            res = f"YEAR,KIND,ESTIMATE= {year} {reform} {estimate}\n"
+            tefile.write(res)
+
     return te_results
