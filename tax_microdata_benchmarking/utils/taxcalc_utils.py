@@ -98,7 +98,7 @@ te_reforms = {
     "eitc": {"EITC_c": {"2023": [0, 0, 0, 0]}},
     "social_security_partial_taxability": {"SS_all_in_agi": {"2023": True}},
     "niit": {"NIIT_rt": {"2023": 0}},
-    "cg_tax_preference": {"CG_nodiff": {"2023": True}},
+    "cgqd_tax_preference": {"CG_nodiff": {"2023": True}},
     "qbid": {"PT_qbid_rt": {"2023": 0}},
     "salt": {"ID_AllTaxes_hc": {"2023": 1}},
 }
