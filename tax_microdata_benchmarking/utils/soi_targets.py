@@ -139,11 +139,10 @@ def clean_vname(vname):
         "unempcomp": "unemployment compensation",
         "wages": "employment income",
         "partnerloss": "partnership and S corp losses",
-        "partnerpinc": "partnership and S corp income",
-        "qbid": "qualified business income deduction",
-        "scorpinc": "S-corporation net income",
-        "scorploss": "S-corporation net losses",
         "partnerinc": "partnership and S corp income",
+        "qbid": "qualified business income deduction",
+        "scorpinc": "S corporation net income",
+        "scorploss": "S corporation net losses",
         "idcontributions": "charitable contributions deductions",
         "idgst": "itemized general sales tax deduction",
         "idintpaid": "interest paid deductions",
@@ -163,6 +162,10 @@ def clean_vname(vname):
 
 
 def clean_soi_file(soi):
+    soi.vname = soi.vname.replace(
+        "nret_partnerpinc", "nret_partnerinc"
+    )  # Typo
+
     soi["Count"] = soi.vname.apply(lambda x: "nret" in x)
     soi["Taxable only"] = soi.datatype == "taxable"
     soi.ptarget[~soi.Count] *= 1e3
@@ -241,6 +244,17 @@ def clean_soi_file(soi):
     ]
 
     soi = soi.groupby(unique_columns).first().reset_index()
+
+    soi.Value[
+        (soi.Year == 2021) & (soi.Variable == "partnership_and_s_corp_income")
+    ] += soi.Value[
+        (soi.Year == 2021) & (soi.Variable == "s_corporation_net_income")
+    ].values
+    soi.Value[
+        (soi.Year == 2021) & (soi.Variable == "partnership_and_s_corp_losses")
+    ] += soi.Value[
+        (soi.Year == 2021) & (soi.Variable == "s_corporation_net_losses")
+    ].values
 
     return soi[columns]
 

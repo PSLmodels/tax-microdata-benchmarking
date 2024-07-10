@@ -33,6 +33,7 @@ def create_variable_file(write_file=True):
         print(f"Writing PUF+CPS file... [{fname}]")
         vdf.to_csv(fname, index=False)
     # streamline dataframe so that it includes only input variables
+    print("Removing output variables from PUF+CPS DataFrame...")
     rec = tc.Records(
         data=vdf,
         start_year=TAXYEAR,
