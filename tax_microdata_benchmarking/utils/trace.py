@@ -36,14 +36,18 @@ def trace1(loc: str, vdf: pd.DataFrame) -> None:
     # CTC tabulations
     if "ctc_total" in vdf:
         ctc = vdf.ctc_total * filer
-        ctc_wtot = (wght * ctc).sum() * 1e-9
+        ctc_amt = (wght * ctc).sum() * 1e-9
         ctc_num = (wght * (ctc > 0)).sum() * 1e-6
-        print(f">{loc} weighted puf CTC ($B)= {ctc_wtot:.3f} [124.6]")
+        print(f">{loc} weighted puf CTC ($B)= {ctc_amt:.3f} [124.6]")
         print(f">{loc} weighted puf CTC (#M)= {ctc_num:.3f} [36.5...47.4]")
     else:
         print(f">{loc} CTC not in DataFrame")
     # SALT tabulations
-    # TODO: add code here
+    salt = (vdf.e18400 + vdf.e18500) * filer
+    salt_amt = (wght * salt).sum() * 1e-9
+    salt_num = (wght * (salt > 0)).sum() * 1e-6
+    print(f">{loc} weighted puf SALT ($B)= {salt_amt:.3f} [?]")
+    print(f">{loc} weighted puf SALT (#M)= {salt_num:.3f} [14.3...27.1]")
     # PT_binc_w2_wages tabulations
     w2wages = vdf.PT_binc_w2_wages * filer
     wages_min = w2wages.min()
