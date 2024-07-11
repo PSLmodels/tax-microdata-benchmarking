@@ -2,6 +2,7 @@
 This module provides utilities for working with Tax-Calculator.
 """
 
+import os
 import pathlib
 import yaml
 import numpy as np
@@ -137,13 +138,14 @@ def get_tax_expenditure_results(
         revenue_effect = tax_revenue_baseline - tax_revenue_reform
         te_results[reform_name] = round(-revenue_effect, 1)
 
-    taxexp_path = STORAGE_FOLDER / "output" / "tax_expenditures"
-    year = simulation_year
-    with open(taxexp_path, "w") as tefile:
-        res = f"YEAR,KIND,ESTIMATE= {year} iitax {tax_revenue_baseline:.1f}\n"
-        tefile.write(res)
-        for reform, estimate in te_results.items():
-            res = f"YEAR,KIND,ESTIMATE= {year} {reform} {estimate}\n"
+    if "TAXEXP" in os.environ:
+        taxexp_path = STORAGE_FOLDER / "output" / "tax_expenditures"
+        year = simulation_year
+        with open(taxexp_path, "w") as tefile:
+            res = f"YR,KIND,EST= {year} iitax {tax_revenue_baseline:.1f}\n"
             tefile.write(res)
+            for reform, estimate in te_results.items():
+                res = f"YR,KIND,EST= {year} {reform} {estimate}\n"
+                tefile.write(res)
 
     return te_results
