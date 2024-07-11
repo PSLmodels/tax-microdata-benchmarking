@@ -300,9 +300,7 @@ class ManyToOneImputation:
             a, 1, size=tree_predictions.shape[0]
         )
         x = np.apply_along_axis(
-            lambda x: np.percentile(
-                x[1:], x[0], interpolation="nearest"
-            ),  # Privacy??
+            lambda x: np.percentile(x[1:], x[0], method="nearest"),
             1,
             np.concatenate(
                 [
