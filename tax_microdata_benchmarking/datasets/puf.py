@@ -1,17 +1,28 @@
-import pandas as pd
-import numpy as np
 import yaml
+from tqdm import tqdm
+import numpy as np
+import pandas as pd
 from microdf import MicroDataFrame
+from policyengine_us.system import system
+from policyengine_core.data import Dataset
 from tax_microdata_benchmarking.storage import STORAGE_FOLDER
 from tax_microdata_benchmarking.utils.pension_contributions import (
     impute_pension_contributions_to_puf,
 )
+from tax_microdata_benchmarking.datasets.uprate_puf import uprate_puf
 from tax_microdata_benchmarking.utils.imputation import Imputation
 from tax_microdata_benchmarking.imputation_assumptions import (
     IMPUTATION_RF_RNG_SEED,
     IMPUTATION_BETA_RNG_SEED,
     W2_WAGES_SCALE,
 )
+
+
+FILER_AGE_RNG = np.random.default_rng(seed=64963751)
+SPOUSE_GENDER_RNG = np.random.default_rng(seed=83746519)
+DEP_AGE_RNG = np.random.default_rng(seed=24354657)
+DEP_GENDER_RNG = np.random.default_rng(seed=74382916)
+EARN_SPLIT_RNG = np.random.default_rng(seed=18374659)
 
 
 def impute_missing_demographics(
@@ -89,7 +100,7 @@ def decode_age_filer(age_range: int) -> int:
     }
     lower = AGERANGE_FILER_DECODE[age_range]
     upper = AGERANGE_FILER_DECODE[age_range + 1]
-    return np.random.randint(lower, upper)
+    return FILER_AGE_RNG.integers(low=lower, high=upper, endpoint=False)
 
 
 def decode_age_dependent(age_range: int) -> int:
@@ -107,11 +118,7 @@ def decode_age_dependent(age_range: int) -> int:
     }
     lower = AGERANGE_DEPENDENT_DECODE[age_range]
     upper = AGERANGE_DEPENDENT_DECODE[age_range + 1]
-    return np.random.randint(lower, upper)
-
-
-from policyengine_core.data import Dataset
-from tqdm import tqdm
+    return DEP_AGE_RNG.integers(low=lower, high=upper, endpoint=False)
 
 
 def preprocess_puf(puf: pd.DataFrame) -> pd.DataFrame:
@@ -268,9 +275,6 @@ class PUF(Dataset):
 
     def generate(self, puf: pd.DataFrame, demographics: pd.DataFrame):
         print("Importing PolicyEngine US variable metadata...")
-        from policyengine_us.system import system
-
-        from tax_microdata_benchmarking.datasets.uprate_puf import uprate_puf
 
         if self.time_period > 2015:
             puf = uprate_puf(puf, 2015, self.time_period)
@@ -371,14 +375,15 @@ class PUF(Dataset):
         earnings_split = row["EARNSPLIT"]
         if earnings_split > 0:
             SPLIT_DECODES = {
-                1: 0,
+                1: 0.0,
                 2: 0.25,
                 3: 0.75,
-                4: 1,
+                4: 1.0,
             }
             lower = SPLIT_DECODES[earnings_split]
             upper = SPLIT_DECODES[earnings_split + 1]
-            self.earn_splits.append(1 - np.random.uniform(lower, upper))
+            frac = (upper - lower) * EARN_SPLIT_RNG.random() + lower
+            self.earn_splits.append(1.0 - frac)
         else:
             self.earn_splits.append(1.0)
 
@@ -418,7 +423,7 @@ class PUF(Dataset):
 
         # 96% of joint filers are opposite-gender
 
-        is_opposite_gender = np.random.uniform() < 0.96
+        is_opposite_gender = SPOUSE_GENDER_RNG.random() < 0.96
         opposite_gender_code = 0 if row["GENDER"] == 1 else 1
         same_gender_code = 1 - opposite_gender_code
         self.holder["is_male"].append(
@@ -447,7 +452,7 @@ class PUF(Dataset):
             if self.variable_to_entity[key] == "person":
                 self.holder[key].append(0)
 
-        self.holder["is_male"].append(np.random.choice([0, 1]))
+        self.holder["is_male"].append(DEP_GENDER_RNG.choice([0, 1]))
 
 
 class PUF_2015(PUF):
