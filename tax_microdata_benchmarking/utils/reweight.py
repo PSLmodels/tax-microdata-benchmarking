@@ -84,6 +84,7 @@ def reweight(
             "adjusted_gross_income",
             "count",
             "employment_income",
+            "state_and_local_tax_deductions",
         ]
         aggregate_level_targeted_variables = [
             "business_net_losses",
@@ -111,7 +112,6 @@ def reweight(
             "rent_and_royalty_net_income",
             "rent_and_royalty_net_losses",
             "standard_deduction",
-            "state_and_local_tax_deductions",
             "taxable_interest_income",
             "taxable_pension_income",
             "taxable_social_security",
