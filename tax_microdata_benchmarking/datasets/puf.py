@@ -23,6 +23,8 @@ SPOUSE_GENDER_RNG = np.random.default_rng(seed=83746519)
 DEP_AGE_RNG = np.random.default_rng(seed=24354657)
 DEP_GENDER_RNG = np.random.default_rng(seed=74382916)
 EARN_SPLIT_RNG = np.random.default_rng(seed=18374659)
+N24_UNCAP_RNG = np.random.default_rng(seed=34659781)
+DEP_XAGE_RNG = np.random.default_rng(seed=46357918)
 
 
 def impute_missing_demographics(
@@ -131,7 +133,6 @@ def preprocess_puf(puf: pd.DataFrame) -> pd.DataFrame:
     puf["cdcc_relevant_expenses"] = puf.E32800
     puf["charitable_cash_donations"] = puf.E19800
     puf["charitable_non_cash_donations"] = puf.E20100
-    puf["exemptions_count"] = puf.XTOT
     puf["domestic_production_ald"] = puf.E03240
     puf["early_withdrawal_penalty"] = puf.E03400
     puf["educator_expense"] = puf.E03220
@@ -203,6 +204,24 @@ def preprocess_puf(puf: pd.DataFrame) -> pd.DataFrame:
     )
     puf["household_id"] = puf.RECID
     puf["household_weight"] = puf.S006
+
+    # uncap XTOT using IRS statistics on uncapped N24 variable:
+    # 2015 PUF N24 variable is capped at three
+    # 2015 PUF XTOT variable is capped at five for JOINT filers; four otherwise
+    # Approach is to impute xtotuc by adding extra uncapped N24 dependents
+    print("##N24:", np.unique(np.array(puf.N24), return_counts=True))
+    n24vals = [3, 4, 5, 6, 7, 8]
+    n24cnts = [4843, 1239, 288, 65, 34, 13]
+    n24prbs = n24cnts / np.sum(n24cnts, dtype=float)
+    uncapped_n24 = N24_UNCAP_RNG.choice(n24vals, size=len(puf.N24), p=n24prbs)
+    n24uc = np.where(puf.N24 < 3, puf.N24, uncapped_n24)
+    print("##n24uc:", np.unique(np.array(n24uc), return_counts=True))
+    extra = n24uc - puf.N24
+    print("##extra:", np.unique(np.array(extra), return_counts=True))
+    print("##XTOT", np.unique(np.array(puf.XTOT), return_counts=True))
+    xtotuc = puf.XTOT + extra
+    print("##xtotuc", np.unique(np.array(xtotuc), return_counts=True))
+    puf["exemptions_count"] = xtotuc
 
     return puf
 
@@ -339,10 +358,9 @@ class PUF(Dataset):
                 self.add_spouse(row, tax_unit_id)
                 exemptions -= 1
 
-            count_dependents = np.minimum(exemptions, 3)
-
-            for j in range(count_dependents):
-                self.add_dependent(row, tax_unit_id, j)
+            max_known_age = 0
+            for j in range(exemptions):
+                self.add_dependent(row, tax_unit_id, j, max_known_age)
 
         groups_assumed_to_be_tax_unit_like = [
             "family",
@@ -434,7 +452,7 @@ class PUF(Dataset):
             if self.variable_to_entity[key] == "person":
                 self.holder[key].append(row[key] * (1 - self.earn_splits[-1]))
 
-    def add_dependent(self, row, tax_unit_id, dependent_id):
+    def add_dependent(self, row, tax_unit_id, dependent_id, max_known_age):
         person_id = int(tax_unit_id * 1e2 + 3 + dependent_id)
         self.holder["person_id"].append(person_id)
         self.holder["person_tax_unit_id"].append(tax_unit_id)
@@ -444,9 +462,15 @@ class PUF(Dataset):
         self.holder["is_tax_unit_spouse"].append(False)
         self.holder["is_tax_unit_dependent"].append(True)
 
-        self.holder["age"].append(
-            decode_age_dependent(row[f"AGEDP{dependent_id + 1}"])
-        )
+        if dependent_id < 3:
+            age = decode_age_dependent(row[f"AGEDP{dependent_id + 1}"])
+            max_known_age = max(age, max_known_age)
+        else:  # AGEDP? not available so impute age uniformly over [A,16] range
+            if max_known_age < 16:
+                age = DEP_XAGE_RNG.choice(range(max_known_age + 1, 16 + 1))
+            else:
+                age = 30
+        self.holder["age"].append(age)
 
         for key in FINANCIAL_SUBSET:
             if self.variable_to_entity[key] == "person":
