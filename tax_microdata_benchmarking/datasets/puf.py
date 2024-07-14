@@ -85,6 +85,17 @@ def impute_missing_demographics(
         ]
     )
 
+    # change AGEDP? values for tax units with zero N24 in an
+    # attempt to generate more CTC-eligible children;
+    # also change AGEDP?==4 values to 5 to offset some of the
+    # rise in EITC-eligible children caused by the CTC changes
+    n24_is_zero = puf_combined.N24 == 0
+    for var in ["AGEDP1", "AGEDP2", "AGEDP3"]:
+        puf_combined[var] = np.where(n24_is_zero, 3, puf_combined[var])
+        puf_combined[var] = np.where(
+            puf_combined[var] == 4, 5, puf_combined[var]
+        )
+
     return puf_combined
 
 
@@ -209,18 +220,13 @@ def preprocess_puf(puf: pd.DataFrame) -> pd.DataFrame:
     # 2015 PUF N24 variable is capped at three
     # 2015 PUF XTOT variable is capped at five for JOINT filers; four otherwise
     # Approach is to impute xtotuc by adding extra uncapped N24 dependents
-    print("##N24:", np.unique(np.array(puf.N24), return_counts=True))
     n24vals = [3, 4, 5, 6, 7, 8]
     n24cnts = [4843, 1239, 288, 65, 34, 13]
     n24prbs = n24cnts / np.sum(n24cnts, dtype=float)
     uncapped_n24 = N24_UNCAP_RNG.choice(n24vals, size=len(puf.N24), p=n24prbs)
     n24uc = np.where(puf.N24 < 3, puf.N24, uncapped_n24)
-    print("##n24uc:", np.unique(np.array(n24uc), return_counts=True))
     extra = n24uc - puf.N24
-    print("##extra:", np.unique(np.array(extra), return_counts=True))
-    print("##XTOT", np.unique(np.array(puf.XTOT), return_counts=True))
     xtotuc = puf.XTOT + extra
-    print("##xtotuc", np.unique(np.array(xtotuc), return_counts=True))
     puf["exemptions_count"] = xtotuc
 
     return puf
@@ -390,7 +396,7 @@ class PUF(Dataset):
             if self.variable_to_entity[key] == "tax_unit":
                 self.holder[key].append(row[key])
 
-        earnings_split = row["EARNSPLIT"]
+        earnings_split = round(row["EARNSPLIT"])
         if earnings_split > 0:
             SPLIT_DECODES = {
                 1: 0.0,
@@ -417,7 +423,7 @@ class PUF(Dataset):
         self.holder["is_tax_unit_spouse"].append(False)
         self.holder["is_tax_unit_dependent"].append(False)
 
-        self.holder["age"].append(decode_age_filer(row["AGERANGE"]))
+        self.holder["age"].append(decode_age_filer(round(row["AGERANGE"])))
 
         self.holder["household_weight"].append(row["household_weight"])
         self.holder["is_male"].append(row["GENDER"] == 1)
@@ -436,7 +442,7 @@ class PUF(Dataset):
         self.holder["is_tax_unit_dependent"].append(False)
 
         self.holder["age"].append(
-            decode_age_filer(row["AGERANGE"])
+            decode_age_filer(round(row["AGERANGE"]))
         )  # Assume same age as filer for now
 
         # 96% of joint filers are opposite-gender
@@ -463,7 +469,7 @@ class PUF(Dataset):
         self.holder["is_tax_unit_dependent"].append(True)
 
         if dependent_id < 3:
-            age = decode_age_dependent(row[f"AGEDP{dependent_id + 1}"])
+            age = decode_age_dependent(round(row[f"AGEDP{dependent_id + 1}"]))
             max_known_age = max(age, max_known_age)
         else:  # AGEDP? not available so impute age uniformly over [A,16] range
             if max_known_age < 16:
