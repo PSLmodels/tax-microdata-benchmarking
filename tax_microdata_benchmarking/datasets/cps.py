@@ -1,16 +1,20 @@
-from io import BytesIO
-from zipfile import ZipFile
-import pandas as pd
-import requests
-from tqdm import tqdm
-from policyengine_core.data import Dataset
-import h5py
-from pandas import DataFrame, Series
-import numpy as np
 import os
 import yaml
+from io import BytesIO
 from typing import Type
+from zipfile import ZipFile
+import requests
+import numpy as np
+import pandas as pd
+from pandas import DataFrame, Series
+from tqdm import tqdm
+import h5py
+from policyengine_core.data import Dataset
 from tax_microdata_benchmarking.storage import STORAGE_FOLDER
+
+
+AGED_RNG = np.random.default_rng(seed=374651932)
+
 
 TAX_UNIT_COLUMNS = [
     "ACTC_CRD",
@@ -393,12 +397,10 @@ def add_personal_variables(cps: h5py.File, person: DataFrame) -> None:
     # 00-79 = 0-79 years of age
     # 80 = 80-84 years of age
     # 85 = 85+ years of age
-    # We assign the 80 ages randomly between 80 and 84.
-    # to avoid unrealistically bunching at 80.
+    # We assign the 80 ages randomly between 80 and 84 to avoid bunching at 80
     cps["age"] = np.where(
         person.A_AGE == 80,
-        # NB: randint is inclusive of first argument, exclusive of second.
-        np.random.randint(80, 85, len(person)),
+        AGED_RNG.integers(low=80, high=85, endpoint=False, size=len(person)),
         person.A_AGE,
     )
     # A_SEX is 1 -> male, 2 -> female.
