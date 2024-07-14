@@ -8,6 +8,7 @@ from tax_microdata_benchmarking.imputation_assumptions import (
     IMPUTATION_RF_RNG_SEED,
     IMPUTATION_BETA_RNG_SEED,
     W2_WAGES_SCALE,
+    REWEIGHT_DEVIATION_PENALTY,
 )
 from tax_microdata_benchmarking.storage import STORAGE_FOLDER
 
@@ -24,6 +25,7 @@ def create_variable_file(write_file=True):
     print(f"  IMPUTATION_RF_RNG_SEED = {IMPUTATION_RF_RNG_SEED}")
     print(f"  IMPUTATION_BETA_RNG_SEED = {IMPUTATION_BETA_RNG_SEED}")
     print(f"  ASSUMED W2_WAGES_SCALE = {W2_WAGES_SCALE:.5f}")
+    print(f"  REWEIGHT_DEVIATION_PENALTY = {REWEIGHT_DEVIATION_PENALTY:.3f}")
     vdf = create_tmd_2021()
     vdf.FLPDYR = TAXYEAR
     weights = vdf.s006.copy()

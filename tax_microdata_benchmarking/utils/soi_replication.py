@@ -74,6 +74,10 @@ def pe_to_soi(pe_dataset, year):
     df["interest_paid_deductions"] = pe("interest_deduction")
     df["medical_expense_deductions_uncapped"] = pe("medical_expense_deduction")
     df["state_and_local_tax_deductions"] = pe("salt_deduction")
+    df["itemized_state_income_and_sales_tax_deductions"] = pe(
+        "state_and_local_sales_or_income_tax"
+    )
+    df["itemized_real_estate_tax_deductions"] = pe("real_estate_taxes")
     df["is_tax_filer"] = True
     df["count"] = 1
 
@@ -115,7 +119,9 @@ def puf_to_soi(puf, year):
     df["charitable_contributions_deduction"] = puf.E19700
     df["interest_paid_deductions"] = puf.E19200
     df["medical_expense_deductions_uncapped"] = puf.E17500
-    df["state_and_local_tax_deductions"] = puf.E18400
+    df["itemized_state_income_and_sales_tax_deductions"] = puf.E18400
+    df["itemized_real_estate_tax_deductions"] = puf.E18500
+    df["state_and_local_tax_deductions"] = puf.E18400 + puf.E18500
     df["income_tax_after_credits"] = puf.E08800
     df["business_net_profits"] = puf.E00900 * (puf.E00900 > 0)
     df["business_net_losses"] = -puf.E00900 * (puf.E00900 < 0)
@@ -185,7 +191,9 @@ def tc_to_soi(puf, year):
     df["charitable_contributions_deduction"] = puf.C19700
     df["interest_paid_deductions"] = puf.E19200
     df["medical_expense_deductions_uncapped"] = puf.E17500
-    df["state_and_local_tax_deductions"] = puf.E18400
+    df["itemized_state_income_and_sales_tax_deductions"] = puf.E18400
+    df["itemized_real_estate_tax_deductions"] = puf.E18500
+    df["state_and_local_tax_deductions"] = puf.E18400 + puf.E18500
     df["income_tax_after_credits"] = puf.IITAX
     df["business_net_profits"] = puf.E00900 * (puf.E00900 > 0)
     df["business_net_losses"] = -puf.E00900 * (puf.E00900 < 0)
