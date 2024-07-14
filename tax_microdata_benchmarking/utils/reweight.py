@@ -11,6 +11,11 @@ import numpy as np
 from pathlib import Path
 from tax_microdata_benchmarking.storage import STORAGE_FOLDER
 from tax_microdata_benchmarking.utils.soi_replication import tc_to_soi
+from tax_microdata_benchmarking.imputation_assumptions import (
+    REWEIGHT_MULTIPLIER_MIN,
+    REWEIGHT_MULTIPLIER_MAX,
+    REWEIGHT_DEVIATION_PENALTY,
+)
 
 warnings.filterwarnings("ignore")
 
@@ -55,8 +60,9 @@ def fmt(x):
 def reweight(
     flat_file: pd.DataFrame,
     time_period: int = 2021,
-    weight_multiplier_min: float = 0.1,
-    weight_multiplier_max: float = 10,
+    weight_multiplier_min: float = REWEIGHT_MULTIPLIER_MIN,
+    weight_multiplier_max: float = REWEIGHT_MULTIPLIER_MAX,
+    weight_deviation_penalty: float = REWEIGHT_DEVIATION_PENALTY,
 ):
     targets = pd.read_csv(STORAGE_FOLDER / "input" / "soi.csv")
 
@@ -77,6 +83,7 @@ def reweight(
             "adjusted_gross_income",
             "count",
             "employment_income",
+            "state_and_local_tax_deductions",
         ]
         aggregate_level_targeted_variables = [
             "business_net_losses",
@@ -93,17 +100,17 @@ def reweight(
             "interest_paid_deductions",
             "ira_distributions",
             "itemized_real_estate_tax_deductions",
-            "itemized_state_income_tax_deductions",
+            "itemized_state_income_and_sales_tax_deductions",
             "medical_expense_deductions_capped",
             "medical_expense_deductions_uncapped",
             "ordinary_dividends",
             "partnership_and_s_corp_income",
             "partnership_and_s_corp_losses",
             "qualified_dividends",
+            "qualified_business_income_deduction",
             "rent_and_royalty_net_income",
             "rent_and_royalty_net_losses",
             "standard_deduction",
-            "state_and_local_tax_deductions",
             "taxable_interest_income",
             "taxable_pension_income",
             "taxable_social_security",
@@ -199,7 +206,8 @@ def reweight(
     )
     target_array = torch.tensor(target_array, dtype=torch.float32)
 
-    outputs = weights * output_matrix_tensor.T
+    outputs = (weights * output_matrix_tensor.T).sum(axis=1)
+    original_loss_value = (((outputs + 1) / (target_array + 1) - 1) ** 2).sum()
 
     # First, check for NaN columns and print out the labels
 
@@ -233,8 +241,11 @@ def reweight(
         )
         outputs = (new_weights * output_matrix_tensor.T).sum(axis=1)
         weight_deviation = (
-            new_weights - original_weights
-        ).abs().sum() / original_weights.sum()
+            (new_weights - original_weights).abs().sum()
+            / original_weights.sum()
+            * weight_deviation_penalty
+            * original_loss_value
+        )
         loss_value = (
             ((outputs + 1) / (target_array + 1) - 1) ** 2
         ).sum() + weight_deviation

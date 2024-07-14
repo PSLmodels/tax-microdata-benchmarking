@@ -149,8 +149,8 @@ def clean_vname(vname):
         "idmedicalcapped": "medical expense deductions (capped)",
         "idmedicaluncapped": "medical expense deductions (uncapped)",
         "idmortgage": "mortgage interest deductions",
-        "idpit": "itemized state income tax deductions",
-        "idretax": "itemized real estate tax deductions",  # real estate tax
+        "id_pitgst": "itemized state income and sales tax deductions",
+        "id_retax": "itemized real estate tax deductions",
         "idsalt": "state and local tax deductions",
         "idtaxpaid": "itemized taxes paid deductions",  # federal tax payments
     }
