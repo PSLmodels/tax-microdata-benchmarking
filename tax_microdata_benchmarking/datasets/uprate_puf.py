@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from tax_microdata_benchmarking.storage import STORAGE_FOLDER
+from tax_microdata_benchmarking.imputation_assumptions import ITMDED_GROW_RATE
 
 USE_VARIABLE_SPECIFIC_POPULATION_GROWTH_DIVISORS = False
 
@@ -22,7 +23,7 @@ SOI_TO_PUF_STRAIGHT_RENAMES = {
     "total_social_security": "E02400",
     "taxable_social_security": "E02500",
     "medical_expense_deductions_uncapped": "E17500",
-    "state_and_local_tax_deductions": "E18400",
+    # "state_and_local_tax_deductions": "E18400",
     "itemized_state_income_tax_deductions": "E18400",
     "itemized_real_estate_tax_deductions": "E18500",
     "interest_paid_deductions": "E19200",
@@ -138,6 +139,17 @@ def uprate_puf(puf, from_year, to_year):
     puf = puf.copy()
     for variable in SOI_TO_PUF_STRAIGHT_RENAMES:
         growth = get_growth(variable, from_year, to_year)
+        if variable in [
+            "medical_expense_deductions_uncapped",
+            "itemized_state_income_tax_deductions",
+            "itemized_real_estate_tax_deductions",
+            "interest_paid_deductions",
+            "charitable_contributions_deductions",
+        ]:
+            # print("%% OLD_VAR_GROWTH:", variable, growth)
+            nyears = to_year - from_year
+            growth = (1.0 + ITMDED_GROW_RATE) ** nyears
+            # print("%% NEW_VAR_GROWTH:", variable, growth)
         puf[SOI_TO_PUF_STRAIGHT_RENAMES[variable]] *= growth
 
     # Positive and negative split variables
