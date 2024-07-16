@@ -136,6 +136,8 @@ def reweight(
             )
         ]
         for _, row in soi_subset.iterrows():
+            if row["Taxable only"]:
+                continue  # skip "taxable returns" statistics
             mask = (
                 (agi >= row["AGI lower bound"])
                 * (agi < row["AGI upper bound"])
