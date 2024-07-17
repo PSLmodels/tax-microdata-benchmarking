@@ -23,6 +23,11 @@ methods](./methods.md) document.  The model used to generate the
 following Phase 3 estimates is Tax-Calculator 4.1.0 version (after
 merge of PR #2772 on 2024-07-11).
 
+Note that Tax-Calculator assumes 100% participation in credits (like
+CTC and EITC), while the federal agencies assume less than 100%
+participation.  The implications of the differences in credit
+participation assumptions are discussed below the following tables.
+
 <br>
 
 **CY2023 and CY2026 Payroll Tax Liability** ($ billion)<br>
@@ -39,9 +44,9 @@ merge of PR #2772 on 2024-07-11).
 (federal individual income tax)
 | CY23 Amount | CY26 Amount | Estimate Source |
 | ---:   | ---:   | :---   |
-| 2512.3 | 2849.4 | CBO    |
-| 2215.0 | 2786.5 | Tax-Calculator + phase 3 dataset |
-| 2247.9 | 2742.2 | Tax-Calculator + taxdata dataset |
+| 2512.3 | 2849.4 | CBO (probably assumes less than 100% credit participation) |
+| 2215.0 | 2786.5 | Tax-Calculator + phase 3 dataset (100% participation) |
+| 2247.9 | 2742.2 | Tax-Calculator + taxdata dataset (100% participation) |
 
 <br>
 
@@ -49,10 +54,10 @@ merge of PR #2772 on 2024-07-11).
 (from the federal child tax credit)
 | CY23 Amount | CY26 Amount | Estimate Source |
 | ---:   | ---:   | :---   |
-| 122.1  | 57.6   | JCT    |
-| 108.6  | 55.7   | TSY    |
-| 132.2  | 48.6   | Tax-Calculator + phase 3 dataset |
-| 126.3  | 43.1   | Tax-Calculator + taxdata dataset |
+| 122.1  | 57.6   | JCT (assumes less than 100% participation) |
+| 108.6  | 55.7   | TSY (probably assumes less than 100% participation) |
+| 132.2  | 48.6   | Tax-Calculator + phase 3 dataset (100% participation) |
+| 126.3  | 43.1   | Tax-Calculator + taxdata dataset (100% participation) |
 
 <br>
 
@@ -60,10 +65,10 @@ merge of PR #2772 on 2024-07-11).
 (from the federal earned income credit)
 | CY23 Amount | CY26 Amount | Estimate Source |
 | ---:   | ---:   | :---   |
-| 71.9   | 78.0   | JCT    |
-| 63.6   | 71.2   | TSY    |
-| 78.6   | 88.0   | Tax-Calculator + phase 3 dataset |
-| 73.5   | 82.0   | Tax-Calculator + taxdata dataset |
+| 71.9   | 78.0   | JCT (assumes less than 100% participation) |
+| 63.6   | 71.2   | TSY (probably assumes less than 100% participation) |
+| 78.6   | 88.0   | Tax-Calculator + phase 3 dataset (100% participation) |
+| 73.5   | 82.0   | Tax-Calculator + taxdata dataset (100% participation) |
 
 <br>
 
@@ -119,3 +124,50 @@ merge of PR #2772 on 2024-07-11).
 |  26.5  | 149.0  | TSY    |
 |  20.4  | 160.5  | Tax-Calculator + phase 3 dataset |
 |  29.4  | 185.5  | Tax-Calculator + taxdata dataset |
+
+<br>
+
+** Implication of Differing Credit Participation Assumptions**
+
+Tax-Calculator assumes that everyone eligible for a credit claims it,
+while the JCT (and presumably TSY) assumes that some who are eligible
+for a credit do not claim it.  Here is what JCT says about its credit
+tax expenditure estimates: "Internal Revenue Service (IRS) statistics
+from recent tax returns are used to develop projections of the tax
+credits, deductions, and exclusions that will be claimed (or that will
+be denied in the case of negative tax expenditures) under the
+present-law baseline.  These IRS statistics show the actual usage of
+the various tax expenditure provisions.  In the case of some tax
+expenditures, such as the earned income credit, there is evidence that
+some taxpayers are not claiming all the benefits to which they are
+entitled, while others are filing claims that exceed their
+entitlements.  The tax expenditure calculations in this report are
+based on projections of actual claims under the various tax
+provisions, not the potential tax benefits to which taxpayers are
+entitled." (Quote is from page 18 of the JCX-59-23 publication.)
+
+The only IRS credit participation rates we have found are for the
+EITC, and they are a little bit below 80% and they seem to be tax-unit
+participation rates rather than credit amount (or dollar)
+participation rates.  (See this [IRS
+document](https://www.eitc.irs.gov/eitc-central/participation-rate-by-state/eitc-participation-rate-by-states).)
+
+Given the differing credit participation assumptions, it should be
+expected that the Tax-Calculator CTC and EITC tax expenditures are
+above the JCT estimates.  The following calculations, which
+arbitrarily assume a 90% dollar participation rate, illustrate how
+the differing 2023 estimates are not as far apart as they seem.
+
+
+**CY2023 CTC and EITC Tax Expenditures ** ($ billion)<br>
+| CY23 Amount | Estimate Source |
+| ---:   | :---   |
+| 122.1  | CTC JCT (assumes less than 100% participation) |
+| 132.2  | CTC Tax-Calculator + phase 3 dataset (100% participation) |
+| 119.0  | CTC Tax-Calculator + phase 3 dataset (90% participation) |
+|        |                                                          |
+| 71.9   } EITC JCT (assumes less than 100% participation) |
+| 78.6   | EITC Tax-Calculator + phase 3 dataset (100% participation) |
+| 70.7   | EITC Tax-Calculator + phase 3 dataset (90% participation) |
+
+<br>
