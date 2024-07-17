@@ -1,17 +1,28 @@
-import pandas as pd
-import numpy as np
 import yaml
+from tqdm import tqdm
+import numpy as np
+import pandas as pd
 from microdf import MicroDataFrame
+from policyengine_us.system import system
+from policyengine_core.data import Dataset
 from tax_microdata_benchmarking.storage import STORAGE_FOLDER
 from tax_microdata_benchmarking.utils.pension_contributions import (
     impute_pension_contributions_to_puf,
 )
+from tax_microdata_benchmarking.datasets.uprate_puf import uprate_puf
 from tax_microdata_benchmarking.utils.imputation import Imputation
 from tax_microdata_benchmarking.imputation_assumptions import (
     IMPUTATION_RF_RNG_SEED,
     IMPUTATION_BETA_RNG_SEED,
     W2_WAGES_SCALE,
 )
+
+
+FILER_AGE_RNG = np.random.default_rng(seed=64963751)
+SPOUSE_GENDER_RNG = np.random.default_rng(seed=83746519)
+DEP_AGE_RNG = np.random.default_rng(seed=24354657)
+DEP_GENDER_RNG = np.random.default_rng(seed=74382916)
+EARN_SPLIT_RNG = np.random.default_rng(seed=18374659)
 
 
 def impute_missing_demographics(
@@ -89,7 +100,7 @@ def decode_age_filer(age_range: int) -> int:
     }
     lower = AGERANGE_FILER_DECODE[age_range]
     upper = AGERANGE_FILER_DECODE[age_range + 1]
-    return np.random.randint(lower, upper)
+    return FILER_AGE_RNG.integers(low=lower, high=upper, endpoint=False)
 
 
 def decode_age_dependent(age_range: int) -> int:
@@ -107,11 +118,7 @@ def decode_age_dependent(age_range: int) -> int:
     }
     lower = AGERANGE_DEPENDENT_DECODE[age_range]
     upper = AGERANGE_DEPENDENT_DECODE[age_range + 1]
-    return np.random.randint(lower, upper)
-
-
-from policyengine_core.data import Dataset
-from tqdm import tqdm
+    return DEP_AGE_RNG.integers(low=lower, high=upper, endpoint=False)
 
 
 def preprocess_puf(puf: pd.DataFrame) -> pd.DataFrame:
@@ -124,7 +131,6 @@ def preprocess_puf(puf: pd.DataFrame) -> pd.DataFrame:
     puf["cdcc_relevant_expenses"] = puf.E32800
     puf["charitable_cash_donations"] = puf.E19800
     puf["charitable_non_cash_donations"] = puf.E20100
-    puf["exemptions_count"] = puf.XTOT
     puf["domestic_production_ald"] = puf.E03240
     puf["early_withdrawal_penalty"] = puf.E03400
     puf["educator_expense"] = puf.E03220
@@ -196,6 +202,7 @@ def preprocess_puf(puf: pd.DataFrame) -> pd.DataFrame:
     )
     puf["household_id"] = puf.RECID
     puf["household_weight"] = puf.S006
+    puf["exemptions_count"] = puf.XTOT
 
     return puf
 
@@ -268,12 +275,21 @@ class PUF(Dataset):
 
     def generate(self, puf: pd.DataFrame, demographics: pd.DataFrame):
         print("Importing PolicyEngine US variable metadata...")
-        from policyengine_us.system import system
 
-        from tax_microdata_benchmarking.datasets.uprate_puf import uprate_puf
+        itmded_dump = False
+        if itmded_dump:
+            IDVARS = ["E17500", "E18400", "E18500", "E19200", "E19800"]
+            wght = puf.S006 / 100.0
+            for var in IDVARS:
+                print(f"%%15:{var}= {(puf[var]*wght).sum()*1e-9:.3f}")
 
         if self.time_period > 2015:
             puf = uprate_puf(puf, 2015, self.time_period)
+
+        if itmded_dump:
+            wght = puf.S006 / 100.0
+            for var in IDVARS:
+                print(f"%%21:{var}= {(puf[var]*wght).sum()*1e-9:.3f}")
 
         puf = puf[puf.MARS != 0]
 
@@ -335,9 +351,7 @@ class PUF(Dataset):
                 self.add_spouse(row, tax_unit_id)
                 exemptions -= 1
 
-            count_dependents = np.minimum(exemptions, 3)
-
-            for j in range(count_dependents):
+            for j in range(min(3, exemptions)):
                 self.add_dependent(row, tax_unit_id, j)
 
         groups_assumed_to_be_tax_unit_like = [
@@ -368,17 +382,18 @@ class PUF(Dataset):
             if self.variable_to_entity[key] == "tax_unit":
                 self.holder[key].append(row[key])
 
-        earnings_split = row["EARNSPLIT"]
+        earnings_split = round(row["EARNSPLIT"])
         if earnings_split > 0:
             SPLIT_DECODES = {
-                1: 0,
+                1: 0.0,
                 2: 0.25,
                 3: 0.75,
-                4: 1,
+                4: 1.0,
             }
             lower = SPLIT_DECODES[earnings_split]
             upper = SPLIT_DECODES[earnings_split + 1]
-            self.earn_splits.append(1 - np.random.uniform(lower, upper))
+            frac = (upper - lower) * EARN_SPLIT_RNG.random() + lower
+            self.earn_splits.append(1.0 - frac)
         else:
             self.earn_splits.append(1.0)
 
@@ -394,7 +409,7 @@ class PUF(Dataset):
         self.holder["is_tax_unit_spouse"].append(False)
         self.holder["is_tax_unit_dependent"].append(False)
 
-        self.holder["age"].append(decode_age_filer(row["AGERANGE"]))
+        self.holder["age"].append(decode_age_filer(round(row["AGERANGE"])))
 
         self.holder["household_weight"].append(row["household_weight"])
         self.holder["is_male"].append(row["GENDER"] == 1)
@@ -413,12 +428,12 @@ class PUF(Dataset):
         self.holder["is_tax_unit_dependent"].append(False)
 
         self.holder["age"].append(
-            decode_age_filer(row["AGERANGE"])
+            decode_age_filer(round(row["AGERANGE"]))
         )  # Assume same age as filer for now
 
         # 96% of joint filers are opposite-gender
 
-        is_opposite_gender = np.random.uniform() < 0.96
+        is_opposite_gender = SPOUSE_GENDER_RNG.random() < 0.96
         opposite_gender_code = 0 if row["GENDER"] == 1 else 1
         same_gender_code = 1 - opposite_gender_code
         self.holder["is_male"].append(
@@ -439,15 +454,14 @@ class PUF(Dataset):
         self.holder["is_tax_unit_spouse"].append(False)
         self.holder["is_tax_unit_dependent"].append(True)
 
-        self.holder["age"].append(
-            decode_age_dependent(row[f"AGEDP{dependent_id + 1}"])
-        )
+        age = decode_age_dependent(round(row[f"AGEDP{dependent_id + 1}"]))
+        self.holder["age"].append(age)
 
         for key in FINANCIAL_SUBSET:
             if self.variable_to_entity[key] == "person":
                 self.holder[key].append(0)
 
-        self.holder["is_male"].append(np.random.choice([0, 1]))
+        self.holder["is_male"].append(DEP_GENDER_RNG.choice([0, 1]))
 
 
 class PUF_2015(PUF):
