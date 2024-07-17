@@ -127,7 +127,7 @@ participation assumptions are discussed below the following tables.
 
 <br>
 
-** Implication of Differing Credit Participation Assumptions**
+**Implication of Differing Credit Participation Assumptions**
 
 Tax-Calculator assumes that everyone eligible for a credit claims it,
 while the JCT (and presumably TSY) assumes that some who are eligible
@@ -158,15 +158,16 @@ above the JCT estimates.  The following calculations, which
 arbitrarily assume a 90% dollar participation rate, illustrate how
 the differing 2023 estimates are not as far apart as they seem.
 
+<br>
 
-**CY2023 CTC and EITC Tax Expenditures ** ($ billion)<br>
+**CY2023 CTC and EITC Tax Expenditures** ($ billion)<br>
 | CY23 Amount | Estimate Source |
-| ---:   | :---   |
+| ---:   | :---                 |
 | 122.1  | CTC JCT (assumes less than 100% participation) |
 | 132.2  | CTC Tax-Calculator + phase 3 dataset (100% participation) |
 | 119.0  | CTC Tax-Calculator + phase 3 dataset (90% participation) |
 |        |                                                          |
-| 71.9   } EITC JCT (assumes less than 100% participation) |
+| 71.9   | EITC JCT (assumes less than 100% participation) |
 | 78.6   | EITC Tax-Calculator + phase 3 dataset (100% participation) |
 | 70.7   | EITC Tax-Calculator + phase 3 dataset (90% participation) |
 
