@@ -97,7 +97,6 @@ def reweight(
             "partnership_and_s_corp_income",
             "partnership_and_s_corp_losses",
             "qualified_dividends",
-            "qualified_business_income_deduction",
             "rent_and_royalty_net_income",
             "rent_and_royalty_net_losses",
             "taxable_interest_income",

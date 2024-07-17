@@ -20,3 +20,9 @@ documentation:
 
 reweighting-visualisation:
 	tensorboard --logdir=tax_microdata_benchmarking/storage/output/reweighting
+
+tax_microdata_benchmarking/examination/taxcalculator/tmd.csv.zip:
+	python tax_microdata_benchmarking/examination/taxcalculator/move_tmd_from_outputs.py
+
+tax-expenditures-report: tax_microdata_benchmarking/examination/taxcalculator/tmd.csv.zip
+	cd tax_microdata_benchmarking/examination/taxcalculator && ./runs.sh tmd 23
