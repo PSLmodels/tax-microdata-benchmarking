@@ -75,7 +75,6 @@ def reweight(
         df = tc_to_soi(df, time_period)
         agi = df["adjusted_gross_income"].values
         filer = df["is_tax_filer"].values
-        taxable = df["is_taxable"].values
         targets_array = []
         soi_subset = targets
         soi_subset = soi_subset[soi_subset.Year == time_period]
@@ -83,7 +82,6 @@ def reweight(
             "adjusted_gross_income",
             "count",
             "employment_income",
-            # "state_and_local_tax_deductions",
         ]
         aggregate_level_targeted_variables = [
             "business_net_losses",
@@ -91,26 +89,16 @@ def reweight(
             "capital_gains_distributions",
             "capital_gains_gross",
             "capital_gains_losses",
-            # "charitable_contributions_deduction",
-            # "count_of_exemptions",
             "estate_income",
             "estate_losses",
             "exempt_interest",
-            # "exemptions",
-            # "interest_paid_deductions",
             "ira_distributions",
-            # "itemized_real_estate_tax_deductions",
-            # "itemized_state_income_and_sales_tax_deductions",
-            # "medical_expense_deductions_capped",
-            # "medical_expense_deductions_uncapped",
             "ordinary_dividends",
             "partnership_and_s_corp_income",
             "partnership_and_s_corp_losses",
             "qualified_dividends",
-            # "qualified_business_income_deduction",
             "rent_and_royalty_net_income",
             "rent_and_royalty_net_losses",
-            # "standard_deduction",
             "taxable_interest_income",
             "taxable_pension_income",
             "taxable_social_security",
@@ -136,6 +124,9 @@ def reweight(
             )
         ]
         for _, row in soi_subset.iterrows():
+            if row["Taxable only"]:
+                continue  # exclude "taxable returns" statistics
+
             mask = (
                 (agi >= row["AGI lower bound"])
                 * (agi < row["AGI upper bound"])
@@ -154,9 +145,6 @@ def reweight(
             elif row["Filing status"] == "Married Filing Separately":
                 mask *= df["filing_status"].values == "SEPARATE"
 
-            if row["Taxable only"]:
-                mask *= taxable > 0
-
             values = df[row["Variable"]].values
 
             if row["Count"]:
@@ -173,11 +161,20 @@ def reweight(
             variable_label = row["Variable"].replace("_", " ")
 
             if row["Count"] and not row["Variable"] == "count":
-                label = f"{variable_label}/count/AGI in {agi_range_label}/{taxable_label}/{filing_status_label}"
+                label = (
+                    f"{variable_label}/count/AGI in "
+                    f"{agi_range_label}/{taxable_label}/{filing_status_label}"
+                )
             elif row["Variable"] == "count":
-                label = f"{variable_label}/count/AGI in {agi_range_label}/{taxable_label}/{filing_status_label}"
+                label = (
+                    f"{variable_label}/count/AGI in "
+                    f"{agi_range_label}/{taxable_label}/{filing_status_label}"
+                )
             else:
-                label = f"{variable_label}/total/AGI in {agi_range_label}/{taxable_label}/{filing_status_label}"
+                label = (
+                    f"{variable_label}/total/AGI in "
+                    f"{agi_range_label}/{taxable_label}/{filing_status_label}"
+                )
 
             if label not in loss_matrix.columns:
                 loss_matrix[label] = mask * values
