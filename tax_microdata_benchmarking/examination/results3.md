@@ -1,7 +1,7 @@
 Phase 3 Data Examination Results
 ================================
 
-**PRELIMINARY RESULTS AS OF 2024-07-15 (after merge of PR 144)**
+**PRELIMINARY RESULTS AS OF 2024-07-16 (after merge of PR 148)**
 
 **FINAL RESULTS EXPECTED LATER IN JULY 2024**
 
@@ -30,7 +30,7 @@ merge of PR #2772 on 2024-07-11).
 | CY23 Amount | CY26 Amount | Estimate Source |
 | ---:   | ---:   | :---   |
 | 1580.0 | 1829.9 | CBO    |
-| 1519.9 | 1763.0 | Tax-Calculator + phase 3 dataset |
+| 1518.3 | 1761.0 | Tax-Calculator + phase 3 dataset |
 | 1489.3 | 1711.0 | Tax-Calculator + taxdata dataset |
 
 <br>
@@ -40,7 +40,7 @@ merge of PR #2772 on 2024-07-11).
 | CY23 Amount | CY26 Amount | Estimate Source |
 | ---:   | ---:   | :---   |
 | 2512.3 | 2849.4 | CBO    |
-| 2247.0 | 2820.2 | Tax-Calculator + phase 3 dataset |
+| 2215.0 | 2786.5 | Tax-Calculator + phase 3 dataset |
 | 2247.9 | 2742.2 | Tax-Calculator + taxdata dataset |
 
 <br>
@@ -51,7 +51,7 @@ merge of PR #2772 on 2024-07-11).
 | ---:   | ---:   | :---   |
 | 122.1  | 57.6   | JCT    |
 | 108.6  | 55.7   | TSY    |
-| 108.9  | 38.9   | Tax-Calculator + phase 3 dataset |
+| 132.2  | 48.6   | Tax-Calculator + phase 3 dataset |
 | 126.3  | 43.1   | Tax-Calculator + taxdata dataset |
 
 <br>
@@ -62,7 +62,7 @@ merge of PR #2772 on 2024-07-11).
 | ---:   | ---:   | :---   |
 | 71.9   | 78.0   | JCT    |
 | 63.6   | 71.2   | TSY    |
-| 82.1   | 92.4   | Tax-Calculator + phase 3 dataset |
+| 78.6   | 88.0   | Tax-Calculator + phase 3 dataset |
 | 73.5   | 82.0   | Tax-Calculator + taxdata dataset |
 
 <br>
@@ -73,7 +73,7 @@ merge of PR #2772 on 2024-07-11).
 | ---:   | ---:   | :---   |
 | 45.9   |  56.4  | JCT    |
 | 31.4   |  38.4  | TSY    |
-| 51.9   |  69.3  | Tax-Calculator + phase 3 dataset |
+| 52.2   |  70.9  | Tax-Calculator + phase 3 dataset |
 | 62.7   |  89.5  | Tax-Calculator + taxdata dataset |
 
 <br>
@@ -84,7 +84,7 @@ merge of PR #2772 on 2024-07-11).
 | ---:   | ---:   | :---   |
 | -56.5  | -53.8  | JCT    |
 |  ----  |  ----  | TSY    |
-| -53.9  | -50.7  | Tax-Calculator + phase 3 dataset |
+| -52.9  | -51.2  | Tax-Calculator + phase 3 dataset |
 | -55.8  | -52.1  | Tax-Calculator + taxdata dataset |
 
 <br>
@@ -95,7 +95,7 @@ merge of PR #2772 on 2024-07-11).
 | ---:   | ---:   | :---   |
 | 259.3  | 239.8  | JCT    |
 | 153.9  | 182.4  | TSY    |
-| 223.4  | 217.0  | Tax-Calculator + phase 3 dataset |
+| 221.7  | 221.9  | Tax-Calculator + phase 3 dataset |
 | 217.7  | 223.6  | Tax-Calculator + taxdata dataset |
 
 <br>
@@ -106,7 +106,7 @@ merge of PR #2772 on 2024-07-11).
 | ---:   | ---:   | :---   |
 | 56.2   |  0.0   | JCT    |
 | 50.4   |  0.0   | TSY    |
-| 55.9   |  0.0   | Tax-Calculator + phase 3 dataset |
+| 54.1   |  0.0   | Tax-Calculator + phase 3 dataset |
 | 19.3   |  0.0   | Tax-Calculator + taxdata dataset |
 
 <br>
@@ -117,5 +117,5 @@ merge of PR #2772 on 2024-07-11).
 | ---:   | ---:   | :---   |
 |  21.2  | 151.3  | JCT    |
 |  26.5  | 149.0  | TSY    |
-|  20.7  | 161.5  | Tax-Calculator + phase 3 dataset |
+|  20.4  | 160.5  | Tax-Calculator + phase 3 dataset |
 |  29.4  | 185.5  | Tax-Calculator + taxdata dataset |
