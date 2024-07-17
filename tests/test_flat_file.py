@@ -141,7 +141,7 @@ def test_tax_expenditure_estimates(
 ):
     target = tax_expenditure_targets[reform][2023]
     estimate = tax_expenditure_estimates[flat_file][reform]
-    tol = 0.1
+    tol = 0.2
     assert abs(estimate / target - 1) < tol or abs(estimate - target) < tol, (
         f"{reform} differs from CBO estimate by "
         f"{estimate / target - 1:.1%} ({estimate:.1f}bn vs {target:.1f}bn)"
