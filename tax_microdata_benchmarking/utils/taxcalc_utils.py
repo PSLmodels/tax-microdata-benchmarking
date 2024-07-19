@@ -112,6 +112,8 @@ def get_tax_expenditure_results(
     weights_file_name: str,
     growfactors_file_name: str,
 ) -> dict:
+    assert input_data_year == 2021
+    assert simulation_year in [2023, 2026]
     baseline = add_taxcalc_outputs(
         flat_file,
         input_data_year,
@@ -141,7 +143,11 @@ def get_tax_expenditure_results(
     if "TAXEXP" in os.environ:
         taxexp_path = STORAGE_FOLDER / "output" / "tax_expenditures"
         year = simulation_year
-        with open(taxexp_path, "w") as tefile:
+        if year == 2023:
+            open_mode = "w"
+        else:
+            open_mode = "a"
+        with open(taxexp_path, open_mode) as tefile:
             res = f"YR,KIND,EST= {year} iitax {tax_revenue_baseline:.1f}\n"
             tefile.write(res)
             for reform, estimate in te_results.items():
