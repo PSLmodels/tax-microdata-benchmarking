@@ -85,10 +85,10 @@ def reweight(
             "business_net_profits",
             "capital_gains_gross",
             "ordinary_dividends",
-            "partnership_and_s_corp_income",     
-            "taxable_interest_income",                   
+            "partnership_and_s_corp_income",
+            "taxable_interest_income",
             "total_pension_income",
-            "total_social_security",            
+            "total_social_security",
         ]
         aggregate_level_targeted_variables = [
             "business_net_losses",
@@ -128,17 +128,12 @@ def reweight(
                 continue  # exclude "taxable returns" statistics
 
             mask = (
-                (agi >= row["AGI lower bound"])
-                * (agi < row["AGI upper bound"])
-                * filer
+                (agi >= row["AGI lower bound"]) * (agi < row["AGI upper bound"]) * filer
             ) > 0
 
             if row["Filing status"] == "Single":
                 mask *= df["filing_status"].values == "SINGLE"
-            elif (
-                row["Filing status"]
-                == "Married Filing Jointly/Surviving Spouse"
-            ):
+            elif row["Filing status"] == "Married Filing Jointly/Surviving Spouse":
                 mask *= df["filing_status"].values == "JOINT"
             elif row["Filing status"] == "Head of Household":
                 mask *= df["filing_status"].values == "HEAD_OF_HOUSEHOLD"
@@ -153,9 +148,7 @@ def reweight(
             agi_range_label = (
                 f"{fmt(row['AGI lower bound'])}-{fmt(row['AGI upper bound'])}"
             )
-            taxable_label = (
-                "taxable" if row["Taxable only"] else "all" + " returns"
-            )
+            taxable_label = "taxable" if row["Taxable only"] else "all" + " returns"
             filing_status_label = row["Filing status"]
 
             variable_label = row["Variable"].replace("_", " ")
@@ -198,9 +191,7 @@ def reweight(
             torch.tensor(output_matrix[col].values, dtype=torch.float32)
         except ValueError:
             print(f"Column {col} is not numeric")
-    output_matrix_tensor = torch.tensor(
-        output_matrix.values, dtype=torch.float32
-    )
+    output_matrix_tensor = torch.tensor(output_matrix.values, dtype=torch.float32)
     target_array = torch.tensor(target_array, dtype=torch.float32)
 
     outputs = (weights * output_matrix_tensor.T).sum(axis=1)
@@ -253,12 +244,8 @@ def reweight(
             for j in range(len(target_array)):
                 metric_name = output_matrix.columns[j]
                 total_projection = outputs[j]
-                rel_error = (
-                    total_projection - target_array[j]
-                ) / target_array[j]
-                writer.add_scalar(
-                    f"Estimate/{metric_name}", total_projection, i
-                )
+                rel_error = (total_projection - target_array[j]) / target_array[j]
+                writer.add_scalar(f"Estimate/{metric_name}", total_projection, i)
                 writer.add_scalar(f"Target/{metric_name}", target_array[j], i)
                 writer.add_scalar(
                     f"Absolute relative error/{metric_name}", abs(rel_error), i
