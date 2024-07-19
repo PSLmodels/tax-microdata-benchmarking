@@ -130,6 +130,14 @@ for dataset, name in zip(datasets_to_test, dataset_names_to_test):
         tmd_weights_path,
         tmd_growfactors_path,
     )
+    assert len(datasets_to_test) == 1
+    _ = get_tax_expenditure_results(
+        datasets_to_test[0],
+        2021,  # dataset year
+        2026,  # simulation year for tax expenditure estimates
+        tmd_weights_path,
+        tmd_growfactors_path,
+    )
 
 
 @pytest.mark.taxexp
