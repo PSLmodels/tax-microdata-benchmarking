@@ -2,13 +2,11 @@
 This module provides utilities for reweighting a flat file to match AGI targets.
 """
 
-import torch
-from torch.optim import Adam
-import numpy as np
 import warnings
+from pathlib import Path
 import pandas as pd
 import numpy as np
-from pathlib import Path
+import torch
 from tax_microdata_benchmarking.storage import STORAGE_FOLDER
 from tax_microdata_benchmarking.utils.soi_replication import tc_to_soi
 from tax_microdata_benchmarking.imputation_assumptions import (
@@ -214,7 +212,10 @@ def reweight(
         if target_array[i] == 0:
             pass  # print(f"Column {output_matrix.columns[i]} has target 0")
 
-    optimizer = Adam([weight_multiplier], lr=1e-1)
+    rng_seed = 65748392
+    torch.manual_seed(rng_seed)  # set the random number seed for CPU
+    torch.cuda.manual_seed_all(rng_seed)  # set the seed for all GPUs
+    optimizer = torch.optim.Adam([weight_multiplier], lr=1e-1)
 
     from torch.utils.tensorboard import SummaryWriter
     from tqdm import tqdm
@@ -227,7 +228,7 @@ def reweight(
         / f"{time_period}_{datetime.now().isoformat()}"
     )
 
-    for i in tqdm(range(4_000), desc="Optimising weights"):
+    for i in tqdm(range(2_000), desc="Optimising weights"):
         optimizer.zero_grad()
         new_weights = weights * (
             torch.clamp(
