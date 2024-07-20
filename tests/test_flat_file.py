@@ -191,7 +191,7 @@ def test_partnership_s_corp_income_close_to_soi(flat_file):
 
 @pytest.mark.taxexpdiffs
 def test_tax_expenditures_differences():
-    abstol = 0.11  # absolute np.allclose tolerance in billions of dollars
+    abstol = 0.01  # absolute np.allclose tolerance in billions of dollars
     act_path = STORAGE_FOLDER / "output" / "tax_expenditures"
     exp_path = STORAGE_FOLDER.parent / "examination" / "tax_expenditures"
     actdf = pd.read_csv(act_path, sep=" ", header=None)
