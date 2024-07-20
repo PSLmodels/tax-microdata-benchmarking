@@ -140,18 +140,17 @@ def get_tax_expenditure_results(
         revenue_effect = tax_revenue_baseline - tax_revenue_reform
         te_results[reform_name] = round(-revenue_effect, 1)
 
-    if "TAXEXP" in os.environ:
-        taxexp_path = STORAGE_FOLDER / "output" / "tax_expenditures"
-        year = simulation_year
-        if year == 2023:
-            open_mode = "w"
-        else:
-            open_mode = "a"
-        with open(taxexp_path, open_mode) as tefile:
-            res = f"YR,KIND,EST= {year} iitax {tax_revenue_baseline:.1f}\n"
+    taxexp_path = STORAGE_FOLDER / "output" / "tax_expenditures"
+    if simulation_year == 2023:
+        open_mode = "w"
+    else:
+        open_mode = "a"
+    year = simulation_year
+    with open(taxexp_path, open_mode) as tefile:
+        res = f"YR,KIND,EST= {year} iitax {tax_revenue_baseline:.1f}\n"
+        tefile.write(res)
+        for reform, estimate in te_results.items():
+            res = f"YR,KIND,EST= {year} {reform} {estimate}\n"
             tefile.write(res)
-            for reform, estimate in te_results.items():
-                res = f"YR,KIND,EST= {year} {reform} {estimate}\n"
-                tefile.write(res)
 
     return te_results

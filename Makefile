@@ -3,7 +3,7 @@ install:
 	python tax_microdata_benchmarking/download_prerequisites.py
 
 test:
-	TAXEXP=x pytest . -v
+	pytest . -v
 
 format:
 	black . -l 79
@@ -22,6 +22,6 @@ reweighting-visualisation:
 	tensorboard --logdir=tax_microdata_benchmarking/storage/output/reweighting
 
 tax-expenditures-report: flat-file
-	-TAXEXP=x pytest . --disable-warnings -m taxexp
+	-pytest . --disable-warnings -m taxexp
 	diff tax_microdata_benchmarking/storage/output/tax_expenditures \
              tax_microdata_benchmarking/examination/tax_expenditures
