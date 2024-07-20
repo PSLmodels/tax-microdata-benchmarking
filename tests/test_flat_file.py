@@ -12,6 +12,7 @@ import pytest
 import pandas as pd
 import subprocess
 import warnings
+import difflib
 from tax_microdata_benchmarking.storage import STORAGE_FOLDER
 from tax_microdata_benchmarking.create_taxcalc_input_variables import (
     create_variable_file,
@@ -186,3 +187,21 @@ def test_partnership_s_corp_income_close_to_soi(flat_file):
     assert (
         abs((flat_file.s006 * flat_file.e26270).sum() / 1e9 / 975 - 1) < 0.1
     ), "Partnership/S-Corp income not within 10 percent of 975bn"
+
+
+@pytest.mark.taxexpdiffs
+def test_tax_expenditures_differences():
+    act_path = STORAGE_FOLDER / "output" / "tax_expenditures"
+    exp_path = STORAGE_FOLDER.parent / "examination" / "tax_expenditures"
+    with open(act_path, "r") as actfile:
+        act = actfile.readlines()
+    with open(exp_path, "r") as expfile:
+        exp = expfile.readlines()
+    diffs = list(
+        difflib.context_diff(act, exp, fromfile="actual", tofile="expect", n=0)
+    )
+    if len(diffs) > 0:
+        emsg = "\nThere are actual vs expect tax expenditure differences:\n"
+        for line in diffs:
+            emsg += line
+        raise ValueError(emsg)
