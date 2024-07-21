@@ -228,7 +228,7 @@ def reweight(
         / f"{time_period}_{datetime.now().isoformat()}"
     )
 
-    for i in tqdm(range(2_000), desc="Optimising weights"):
+    for i in tqdm(range(4_000), desc="Optimising weights"):
         optimizer.zero_grad()
         new_weights = weights * (
             torch.clamp(
