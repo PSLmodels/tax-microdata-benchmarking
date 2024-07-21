@@ -153,7 +153,7 @@ Model-plus-Dataset Estimates for Phase 3
 ----------------------------------------
 
 In the third phase of this project, the
-[Tax-Calculator (3.6.?)](https://github.com/PSLmodels/Tax-Calculator)
+[Tax-Calculator (4.2.0)](https://github.com/PSLmodels/Tax-Calculator)
 microsimulation model is used to compute tax estimates that correspond
 to the federal agency estimates described above.  Tax-Calculator is
 used with two different sets of 2023 and 2026 input datasets.
