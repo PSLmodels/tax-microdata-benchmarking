@@ -20,3 +20,8 @@ documentation:
 
 reweighting-visualisation:
 	tensorboard --logdir=tax_microdata_benchmarking/storage/output/reweighting
+
+tax-expenditures-report: flat-file
+	-pytest . --disable-warnings -m taxexp
+	diff tax_microdata_benchmarking/storage/output/tax_expenditures \
+             tax_microdata_benchmarking/examination/tax_expenditures
