@@ -1,9 +1,7 @@
 Phase 3 Data Examination Results
 ================================
 
-**PRELIMINARY RESULTS AS OF 2024-07-16 (after merge of PR 148)**
-
-**FINAL RESULTS EXPECTED LATER IN JULY 2024**
+**FINAL RESULTS AS OF 2024-07-21 (after merge of PR 155)**
 
 This project is developing a new dataset for use by income and payroll
 tax microsimulation models.  The project is progressing in several
@@ -20,8 +18,9 @@ in subsequent phases.
 For more on the source of the federal agency estimates and on how the
 model-plus-dataset estimates are generated, see the [examination
 methods](./methods.md) document.  The model used to generate the
-following Phase 3 estimates is Tax-Calculator 4.1.0 version (after
-merge of PR #2772 on 2024-07-11).
+following Phase 3 estimates is [Tax-Calculator
+4.2.0]((https://github.com/PSLmodels/Tax-Calculator)) (after merge of
+PR 2774 on 2024-07-21).
 
 Note that Tax-Calculator assumes 100% participation in credits (like
 CTC and EITC), while the federal agencies assume less than 100%
@@ -35,7 +34,7 @@ participation assumptions are discussed below the following tables.
 | CY23 Amount | CY26 Amount | Estimate Source |
 | ---:   | ---:   | :---   |
 | 1580.0 | 1829.9 | CBO    |
-| 1518.3 | 1761.0 | Tax-Calculator + phase 3 dataset |
+| 1523.8 | 1767.4 | Tax-Calculator + phase 3 dataset |
 | 1489.3 | 1711.0 | Tax-Calculator + taxdata dataset |
 
 <br>
@@ -45,7 +44,7 @@ participation assumptions are discussed below the following tables.
 | CY23 Amount | CY26 Amount | Estimate Source |
 | ---:   | ---:   | :---   |
 | 2512.3 | 2849.4 | CBO (probably assumes less than 100% credit participation) |
-| 2215.0 | 2786.5 | Tax-Calculator + phase 3 dataset (100% participation) |
+| 2212.0 | 2786.1 | Tax-Calculator + phase 3 dataset (100% participation) |
 | 2247.9 | 2742.2 | Tax-Calculator + taxdata dataset (100% participation) |
 
 <br>
@@ -56,7 +55,7 @@ participation assumptions are discussed below the following tables.
 | ---:   | ---:   | :---   |
 | 122.1  | 57.6   | JCT (assumes less than 100% participation) |
 | 108.6  | 55.7   | TSY (probably assumes less than 100% participation) |
-| 132.2  | 48.6   | Tax-Calculator + phase 3 dataset (100% participation) |
+| 129.2  | 46.8   | Tax-Calculator + phase 3 dataset (100% participation) |
 | 126.3  | 43.1   | Tax-Calculator + taxdata dataset (100% participation) |
 
 <br>
@@ -67,7 +66,7 @@ participation assumptions are discussed below the following tables.
 | ---:   | ---:   | :---   |
 | 71.9   | 78.0   | JCT (assumes less than 100% participation) |
 | 63.6   | 71.2   | TSY (probably assumes less than 100% participation) |
-| 78.6   | 88.0   | Tax-Calculator + phase 3 dataset (100% participation) |
+| 75.8   | 84.8   | Tax-Calculator + phase 3 dataset (100% participation) |
 | 73.5   | 82.0   | Tax-Calculator + taxdata dataset (100% participation) |
 
 <br>
@@ -78,7 +77,7 @@ participation assumptions are discussed below the following tables.
 | ---:   | ---:   | :---   |
 | 45.9   |  56.4  | JCT    |
 | 31.4   |  38.4  | TSY    |
-| 52.2   |  70.9  | Tax-Calculator + phase 3 dataset |
+| 53.3   |  72.2  | Tax-Calculator + phase 3 dataset |
 | 62.7   |  89.5  | Tax-Calculator + taxdata dataset |
 
 <br>
@@ -89,7 +88,7 @@ participation assumptions are discussed below the following tables.
 | ---:   | ---:   | :---   |
 | -56.5  | -53.8  | JCT    |
 |  ----  |  ----  | TSY    |
-| -52.9  | -51.2  | Tax-Calculator + phase 3 dataset |
+| -57.0  | -55.1  | Tax-Calculator + phase 3 dataset |
 | -55.8  | -52.1  | Tax-Calculator + taxdata dataset |
 
 <br>
@@ -100,7 +99,7 @@ participation assumptions are discussed below the following tables.
 | ---:   | ---:   | :---   |
 | 259.3  | 239.8  | JCT    |
 | 153.9  | 182.4  | TSY    |
-| 221.7  | 221.9  | Tax-Calculator + phase 3 dataset |
+| 234.3  | 232.5  | Tax-Calculator + phase 3 dataset |
 | 217.7  | 223.6  | Tax-Calculator + taxdata dataset |
 
 <br>
@@ -111,7 +110,7 @@ participation assumptions are discussed below the following tables.
 | ---:   | ---:   | :---   |
 | 56.2   |  0.0   | JCT    |
 | 50.4   |  0.0   | TSY    |
-| 54.1   |  0.0   | Tax-Calculator + phase 3 dataset |
+| 55.3   |  0.0   | Tax-Calculator + phase 3 dataset |
 | 19.3   |  0.0   | Tax-Calculator + taxdata dataset |
 
 <br>
@@ -122,7 +121,7 @@ participation assumptions are discussed below the following tables.
 | ---:   | ---:   | :---   |
 |  21.2  | 151.3  | JCT    |
 |  26.5  | 149.0  | TSY    |
-|  20.4  | 160.5  | Tax-Calculator + phase 3 dataset |
+|  20.8  | 162.3  | Tax-Calculator + phase 3 dataset |
 |  29.4  | 185.5  | Tax-Calculator + taxdata dataset |
 
 <br>
@@ -147,15 +146,15 @@ provisions, not the potential tax benefits to which taxpayers are
 entitled." (Quote is from page 18 of the JCX-59-23 publication.)
 
 The only IRS credit participation rates we have found are for the
-EITC, and they are a little bit below 80% and they seem to be tax-unit
-participation rates rather than credit amount (or dollar)
-participation rates.  (See this [IRS
+EITC, and they almost 80% and they are tax-unit participation rates
+rather than credit amount (or dollar) participation rates.  (See this
+[IRS
 document](https://www.eitc.irs.gov/eitc-central/participation-rate-by-state/eitc-participation-rate-by-states).)
 
 Given the differing credit participation assumptions, it should be
 expected that the Tax-Calculator CTC and EITC tax expenditures are
 above the JCT estimates.  The following calculations, which
-arbitrarily assume a 90% dollar participation rate, illustrate how
+arbitrarily assume a 95% dollar participation rate, illustrate how
 the differing 2023 estimates are not as far apart as they seem.
 
 <br>
@@ -164,11 +163,11 @@ the differing 2023 estimates are not as far apart as they seem.
 | CY23 Amount | Estimate Source |
 | ---:   | :---                 |
 | 122.1  | CTC JCT (assumes less than 100% participation) |
-| 132.2  | CTC Tax-Calculator + phase 3 dataset (100% participation) |
-| 119.0  | CTC Tax-Calculator + phase 3 dataset (90% participation) |
+| 129.2  | CTC Tax-Calculator + phase 3 dataset (100% participation) |
+| 122.7  | CTC Tax-Calculator + phase 3 dataset (95% participation) |
 |        |                                                          |
 | 71.9   | EITC JCT (assumes less than 100% participation) |
-| 78.6   | EITC Tax-Calculator + phase 3 dataset (100% participation) |
-| 70.7   | EITC Tax-Calculator + phase 3 dataset (90% participation) |
+| 75.8   | EITC Tax-Calculator + phase 3 dataset (100% participation) |
+| 72.0   | EITC Tax-Calculator + phase 3 dataset (95% participation) |
 
 <br>
