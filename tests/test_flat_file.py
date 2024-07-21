@@ -5,13 +5,14 @@ of the Tax-Data 2023 PUF's totals.
 """
 
 import os
-import pytest
 import yaml
 from pathlib import Path
-import pytest
-import pandas as pd
 import subprocess
 import warnings
+import difflib
+import numpy as np
+import pandas as pd
+import pytest
 from tax_microdata_benchmarking.storage import STORAGE_FOLDER
 from tax_microdata_benchmarking.create_taxcalc_input_variables import (
     create_variable_file,
@@ -186,3 +187,34 @@ def test_partnership_s_corp_income_close_to_soi(flat_file):
     assert (
         abs((flat_file.s006 * flat_file.e26270).sum() / 1e9 / 975 - 1) < 0.1
     ), "Partnership/S-Corp income not within 10 percent of 975bn"
+
+
+@pytest.mark.taxexpdiffs
+def test_tax_expenditures_differences():
+    abstol = 0.11  # absolute np.allclose tolerance in billions of dollars
+    act_path = STORAGE_FOLDER / "output" / "tax_expenditures"
+    exp_path = STORAGE_FOLDER.parent / "examination" / "tax_expenditures"
+    actdf = pd.read_csv(act_path, sep=" ", header=None)
+    actdf = actdf[actdf.iloc[:, 2] != "iitax"]
+    expdf = pd.read_csv(exp_path, sep=" ", header=None)
+    expdf = expdf[expdf.iloc[:, 2] != "iitax"]
+    actval = actdf.iloc[:, 3]
+    expval = expdf.iloc[:, 3]
+    same = np.allclose(actval, expval, rtol=0.0, atol=abstol)
+    if same:
+        return
+    # if same is False
+    with open(act_path, "r") as actfile:
+        act = actfile.readlines()
+    with open(exp_path, "r") as expfile:
+        exp = expfile.readlines()
+    diffs = list(
+        difflib.context_diff(act, exp, fromfile="actual", tofile="expect", n=0)
+    )
+    if len(diffs) > 0:
+        emsg = "\nThere are actual vs expect tax expenditure differences:\n"
+        for line in diffs:
+            if "iitax" in line:
+                continue
+            emsg += line
+        raise ValueError(emsg)
