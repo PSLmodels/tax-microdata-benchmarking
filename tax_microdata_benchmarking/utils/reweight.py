@@ -225,7 +225,7 @@ def reweight(
         log_dir=STORAGE_FOLDER
         / "output"
         / "reweighting"
-        / f"{time_period}_{datetime.now().isoformat()}"
+        / f"{time_period}_{datetime.now().strftime('%Y-%m-%dT%H.%M.%S')}"
     )
 
     for i in tqdm(range(2_000), desc="Optimising weights"):
