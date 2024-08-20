@@ -6,11 +6,10 @@ setup(
     packages=find_packages(),
     python_requires=">=3.10,<3.13",
     install_requires=[
-        "policyengine_us>=1.45.0",
+        "policyengine_us>=1.50.0",
         "taxcalc>=4.2.1",
         "black>=24.4.2",
-        "h5py",
-        "pytables",
+        "tables",
         "pytest",
         "torch",
         "tensorboard",
