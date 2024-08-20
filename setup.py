@@ -6,7 +6,7 @@ setup(
     packages=find_packages(),
     python_requires=">=3.10,<3.13",
     install_requires=[
-        "policyengine_us==0.794",
+        "policyengine_us>=1.50",
         "taxcalc>=4.2.1",
         "pytest",
         "black>=24.4.2",
