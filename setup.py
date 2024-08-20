@@ -8,8 +8,9 @@ setup(
     install_requires=[
         "policyengine_us>=1.45.0",
         "taxcalc>=4.2.1",
-        "pytest",
         "black>=24.4.2",
+        "pytables",
+        "pytest",
         "torch",
         "tensorboard",
         "jupyter-book",
