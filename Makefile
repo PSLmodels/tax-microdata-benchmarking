@@ -2,18 +2,26 @@ install:
 	pip install -e .
 	python tax_microdata_benchmarking/download_prerequisites.py
 
-test:
-	pytest . -v
+tax_microdata_benchmarking/storage/output/tmd_2021.csv:
+	python tax_microdata_benchmarking/create_taxcalc_input_variables.py
+
+tax_microdata_benchmarking/storage/output/tmd_growfactors.csv:
+	python tax_microdata_benchmarking/create_taxcalc_growth_factors.py
+
+tax_microdata_benchmarking/storage/output/tmd_weights.csv.gz:
+	python tax_microdata_benchmarking/create_taxcalc_sampling_weights.py
+
+tmd: tax_microdata_benchmarking/storage/output/tmd_2021.csv \
+     tax_microdata_benchmarking/storage/output/tmd_growfactors.csv \
+     tax_microdata_benchmarking/storage/output/tmd_weights.csv.gz
+
+test: tmd
+	pytest . -v -n4
+
+data: install tmd test
 
 format:
 	black . -l 79
-
-flat-file:
-	python tax_microdata_benchmarking/create_taxcalc_input_variables.py
-	python tax_microdata_benchmarking/create_taxcalc_growth_factors.py
-	python tax_microdata_benchmarking/create_taxcalc_sampling_weights.py
-
-data: install flat-file test
 
 documentation:
 	jb build docs/book
@@ -21,7 +29,7 @@ documentation:
 reweighting-visualisation:
 	tensorboard --logdir=tax_microdata_benchmarking/storage/output/reweighting
 
-tax-expenditures-report: flat-file
+tax-expenditures-report: tmd
 	-pytest . --disable-warnings -m taxexp
 	diff tax_microdata_benchmarking/storage/output/tax_expenditures \
              tax_microdata_benchmarking/examination/tax_expenditures
