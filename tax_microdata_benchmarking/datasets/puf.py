@@ -134,81 +134,81 @@ def preprocess_puf(puf: pd.DataFrame) -> pd.DataFrame:
             4: "HEAD_OF_HOUSEHOLD",
         }
     )
+    qbi = np.maximum(0, puf.E00900 + puf.E26270 + puf.E02100 + puf.E27200)
     newvars = {
         "household_id": puf.RECID,
         "household_weight": puf.S006,
         "filing_status": filing_status,
         "exemptions_count": puf.XTOT,
+        "alimony_expense": puf.E03500,
+        "alimony_income": puf.E00800,
+        "casualty_loss": puf.E20500,
+        "cdcc_relevant_expenses": puf.E32800,
+        "charitable_cash_donations": puf.E19800,
+        "charitable_non_cash_donations": puf.E20100,
+        "domestic_production_ald": puf.E03240,
+        "early_withdrawal_penalty": puf.E03400,
+        "educator_expense": puf.E03220,
+        "employment_income": puf.E00200,
+        "estate_income": (puf.E26390 - puf.E26400),
+        "farm_income": puf.T27800,
+        "farm_rent_income": puf.E27200,
+        "health_savings_account_ald": puf.E03290,
+        "interest_deduction": puf.E19200,
+        "long_term_capital_gains": puf.P23250,
+        "long_term_capital_gains_on_collectibles": puf.E24518,
+        "medical_expense": puf.E17500,
+        "misc_deduction": puf.E20400,
+        "non_qualified_dividend_income": (puf.E00600 - puf.E00650),
+        "partnership_s_corp_income": puf.E26270,
+        "qualified_dividend_income": puf.E00650,
+        "qualified_tuition_expenses": puf.E03230,
+        "real_estate_taxes": puf.E18500,
+        "rental_income": (puf.E25850 - puf.E25860),
+        "self_employment_income": puf.E00900,
+        "self_employed_health_insurance_ald": puf.E03270,
+        "self_employed_pension_contribution_ald": puf.E03300,
+        "short_term_capital_gains": puf.P22250,
+        "social_security": puf.E02400,
+        "state_and_local_sales_or_income_tax": puf.E18400,
+        "student_loan_interest": puf.E03210,
+        "taxable_interest_income": puf.E00300,
+        "taxable_pension_income": puf.E01700,
+        "taxable_unemployment_compensation": puf.E02300,
+        "taxable_ira_distributions": puf.E01400,
+        "tax_exempt_interest_income": puf.E00400,
+        "tax_exempt_pension_income": (puf.E01500 - puf.E01700),
+        "traditional_ira_contributions": puf.E03150,
+        "unrecaptured_section_1250_gain": puf.E24515,
+        "foreign_tax_credit": puf.E07300,
+        "amt_foreign_tax_credit": puf.E62900,
+        "miscellaneous_income": puf.E01200,
+        "salt_refund_income": puf.E00700,
+        "investment_income_elected_form_4952": puf.E58990,
+        "general_business_credit": puf.E07400,
+        "prior_year_minimum_tax_credit": puf.E07600,
+        "excess_withheld_payroll_tax": puf.E11200,
+        "non_sch_d_capital_gains": puf.E01100,
+        "american_opportunity_credit": puf.E87521,
+        "energy_efficient_home_improvement_credit": puf.E07260,
+        "early_withdrawal_penalty": puf.E09900,
+        # "qualified_tuition_expenses": puf.E87530,
+        # PE uses the same variable for qualified tuition (general)
+        # and qualified tuition (Lifetime Learning Credit). Revisit this.
+        "other_credits": puf.P08000,
+        "savers_credit": puf.E07240,
+        "recapture_of_investment_credit": puf.E09700,
+        "unreported_payroll_tax": puf.E09800,
+        # Ignore f2441 (CDCC form attached)
+        # Ignore cmbtp (estimate of AMT income not in AGI)
+        # Ignore k1bx14s and k1bx14p (partner self-employment income included
+        #                             in partnership and S-corp income)
+        # "adjusted_gross_income": puf.E00100,
+        "w2_wages_from_qualified_business": (qbi * W2_WAGES_SCALE),
     }
     newdf = pd.DataFrame(newvars)
-
-    # add new renamed variables
+    # add new renamed variables to original puf dataframe
     puf = pd.concat([puf, newdf], axis=1)
-
-    # puf["adjusted_gross_income"] = puf.E00100
-    puf["alimony_expense"] = puf.E03500
-    puf["alimony_income"] = puf.E00800
-    puf["casualty_loss"] = puf.E20500
-    puf["cdcc_relevant_expenses"] = puf.E32800
-    puf["charitable_cash_donations"] = puf.E19800
-    puf["charitable_non_cash_donations"] = puf.E20100
-    puf["domestic_production_ald"] = puf.E03240
-    puf["early_withdrawal_penalty"] = puf.E03400
-    puf["educator_expense"] = puf.E03220
-    puf["employment_income"] = puf.E00200
-    puf["estate_income"] = puf.E26390 - puf.E26400
-    puf["farm_income"] = puf.T27800
-    puf["farm_rent_income"] = puf.E27200
-    puf["health_savings_account_ald"] = puf.E03290
-    puf["interest_deduction"] = puf.E19200
-    puf["long_term_capital_gains"] = puf.P23250
-    puf["long_term_capital_gains_on_collectibles"] = puf.E24518
-    puf["medical_expense"] = puf.E17500
-    puf["misc_deduction"] = puf.E20400
-    puf["non_qualified_dividend_income"] = puf.E00600 - puf.E00650
-    puf["partnership_s_corp_income"] = puf.E26270
-    puf["qualified_dividend_income"] = puf.E00650
-    puf["qualified_tuition_expenses"] = puf.E03230
-    puf["real_estate_taxes"] = puf.E18500
-    puf["rental_income"] = puf.E25850 - puf.E25860
-    puf["self_employment_income"] = puf.E00900
-    puf["self_employed_health_insurance_ald"] = puf.E03270
-    puf["self_employed_pension_contribution_ald"] = puf.E03300
-    puf["short_term_capital_gains"] = puf.P22250
-    puf["social_security"] = puf.E02400
-    puf["state_and_local_sales_or_income_tax"] = puf.E18400
-    puf["student_loan_interest"] = puf.E03210
-    puf["taxable_interest_income"] = puf.E00300
-    puf["taxable_pension_income"] = puf.E01700
-    puf["taxable_unemployment_compensation"] = puf.E02300
-    puf["taxable_ira_distributions"] = puf.E01400
-    puf["tax_exempt_interest_income"] = puf.E00400
-    puf["tax_exempt_pension_income"] = puf.E01500 - puf.E01700
-    puf["traditional_ira_contributions"] = puf.E03150
-    puf["unrecaptured_section_1250_gain"] = puf.E24515
-    puf["foreign_tax_credit"] = puf.E07300
-    puf["amt_foreign_tax_credit"] = puf.E62900
-    puf["miscellaneous_income"] = puf.E01200
-    puf["salt_refund_income"] = puf.E00700
-    puf["investment_income_elected_form_4952"] = puf.E58990
-    puf["general_business_credit"] = puf.E07400
-    puf["prior_year_minimum_tax_credit"] = puf.E07600
-    puf["excess_withheld_payroll_tax"] = puf.E11200
-    puf["non_sch_d_capital_gains"] = puf.E01100
-    puf["american_opportunity_credit"] = puf.E87521
-    puf["energy_efficient_home_improvement_credit"] = puf.E07260
-    puf["early_withdrawal_penalty"] = puf.E09900
-    # puf["qualified_tuition_expenses"] = puf.E87530 # PE uses the same variable for qualified tuition (general) and qualified tuition (Lifetime Learning Credit). Revisit here.
-    puf["other_credits"] = puf.P08000
-    puf["savers_credit"] = puf.E07240
-    puf["recapture_of_investment_credit"] = puf.E09700
-    puf["unreported_payroll_tax"] = puf.E09800
-    # Ignore f2441 (AMT form attached)
-    # Ignore cmbtp (estimate of AMT income not in AGI)
-    # Ignore k1bx14s and k1bx14p (partner self-employment income included in partnership and S-corp income)
-    qbi = np.maximum(0, puf.E00900 + puf.E26270 + puf.E02100 + puf.E27200)
-    puf["w2_wages_from_qualified_business"] = qbi * W2_WAGES_SCALE
-
     return puf
 
 
