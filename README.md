@@ -14,7 +14,7 @@ To generate the microdata files:
 2. Run `export PSL_TAX_MICRODATA_RELEASE_AUTH_TOKEN=***`
 3. Run `make data`
 
-The two environment tokens can be obtained from [Nikhil Woodruff](mailto:nikhil@policyengine.org).
+The two tokens can be obtained from [Don Boyd](mailto:donboyd5@gmail.com).
 
 To assess, review the data examination results that compare federal
 agency tax estimates with those generated using the microdata file
