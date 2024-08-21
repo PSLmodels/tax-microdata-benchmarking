@@ -12,7 +12,6 @@ setup(
         "black>=24.4.2",
         "tables",  # required by policyengine_us
         "pytest",
-        "pytest-xdist",
         "torch",
         "tensorboard",
         "jupyter-book",

@@ -32,8 +32,8 @@ jobs:
         env:
           POLICYENGINE_GITHUB_MICRODATA_AUTH_TOKEN: ${{ secrets.POLICYENGINE_GITHUB_MICRODATA_AUTH_TOKEN}}
           PSL_TAX_MICRODATA_RELEASE_AUTH_TOKEN: ${{ secrets.PSL_TAX_MICRODATA_RELEASE_AUTH_TOKEN}}
-      - name: Generate tmd dataset
-        run: make tmd
+      - name: Generate tmd files
+        run: make tmd_files
       - name: Run tests
         run: make test
       - name: Build documentation
@@ -44,4 +44,3 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: gh-pages
           folder: docs/book/_build/html
-      
