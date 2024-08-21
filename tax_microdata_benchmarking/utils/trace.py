@@ -16,12 +16,17 @@ def trace1(loc: str, vdf: pd.DataFrame) -> None:
     Returns:
         None
     """
-    tracing = False
+    tracing = True
     if not tracing:
         return
+    filer = vdf.data_source == 1
+    # unweighted tabulations
+    utot = len(filer)
+    upuf = filer.sum()
+    ucps = (~filer).sum()
+    print(f">{loc} count all,puf,cps (#)= " f"{utot} {upuf} {ucps}")
     # weight tabulations
     wght = vdf.s006
-    filer = vdf.data_source == 1
     wtot = wght.sum() * 1e-6
     wpuf = (wght * filer).sum() * 1e-6
     wcps = (wght * ~filer).sum() * 1e-6
