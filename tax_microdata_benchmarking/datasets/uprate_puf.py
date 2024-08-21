@@ -156,12 +156,12 @@ def uprate_puf(puf, from_year, to_year):
     for variable in SOI_TO_PUF_POS_ONLY_RENAMES:
         growth = get_growth(variable, from_year, to_year)
         puf_variable = SOI_TO_PUF_POS_ONLY_RENAMES[variable]
-        puf[puf_variable][puf[puf_variable] > 0] *= growth
+        puf.loc[puf[puf_variable] > 0, puf_variable] *= growth
 
     for variable in SOI_TO_PUF_NEG_ONLY_RENAMES:
         growth = get_growth(variable, from_year, to_year)
         puf_variable = SOI_TO_PUF_NEG_ONLY_RENAMES[variable]
-        puf[puf_variable][puf[puf_variable] < 0] *= growth
+        puf.loc[puf[puf_variable] < 0, puf_variable] *= growth
 
     # Remaining variables, uprate purely by AGI growth
     # (for now, because I'm not sure how to handle the deductions,

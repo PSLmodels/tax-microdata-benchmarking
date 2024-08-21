@@ -1,7 +1,7 @@
 """
-This module adds basic sanity tests for each TC-input flat file,
-checking that the totals of each variable are within the ballpark
-of the Tax-Data 2023 PUF's totals.
+This module adds basic tests for several tmd file variables,
+checking that the variable total is within the ballpark of
+the Tax-Data 2023 PUF's totals.
 """
 
 import os
@@ -21,9 +21,11 @@ from tax_microdata_benchmarking.utils.taxcalc_utils import (
     get_tax_expenditure_results,
 )
 
-warnings.filterwarnings("ignore")
 
-test_mode = os.environ.get("TEST_MODE", "lite")
+# include this test only to gather warnings information
+def test_create_taxcalc_tmd_file():
+    create_variable_file(write_file=False)
+
 
 FOLDER = Path(__file__).parent
 
@@ -157,10 +159,6 @@ def test_tax_expenditure_estimates(
         f"{reform} differs from CBO estimate by "
         f"{estimate / target - 1:.1%} ({estimate:.1f}bn vs {target:.1f}bn)"
     )
-
-
-def test_create_taxcalc_tmd_file():
-    create_variable_file(write_file=False)
 
 
 @pytest.mark.parametrize(

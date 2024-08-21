@@ -29,8 +29,8 @@ jobs:
         env:
           POLICYENGINE_GITHUB_MICRODATA_AUTH_TOKEN: ${{ secrets.POLICYENGINE_GITHUB_MICRODATA_AUTH_TOKEN}}
           PSL_TAX_MICRODATA_RELEASE_AUTH_TOKEN: ${{ secrets.PSL_TAX_MICRODATA_RELEASE_AUTH_TOKEN}}
-      - name: Generate datasets
-        run: make flat-file
+      - name: Generate tmd files
+        run: make tmd_files
       - name: Run tests
         run: make test
       - name: Test documentation builds
