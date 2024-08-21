@@ -122,8 +122,29 @@ def decode_age_dependent(age_range: int) -> int:
 
 
 def preprocess_puf(puf: pd.DataFrame) -> pd.DataFrame:
-    # Add variable renames
+    # rescale weights
     puf.S006 = puf.S006 / 100
+    # remove aggregate records    ????????? ALREADY DONE ????????????
+    # puf = puf[puf.MARS != 0]  # ????????? ALREADY DONE ????????????
+    filing_status = puf.MARS.map(
+        {
+            1: "SINGLE",
+            2: "JOINT",
+            3: "SEPARATE",
+            4: "HEAD_OF_HOUSEHOLD",
+        }
+    )
+    newvars = {
+        "household_id": puf.RECID,
+        "household_weight": puf.S006,
+        "filing_status": filing_status,
+        "exemptions_count": puf.XTOT,
+    }
+    newdf = pd.DataFrame(newvars)
+
+    # add new renamed variables
+    puf = pd.concat([puf, newdf], axis=1)
+
     # puf["adjusted_gross_income"] = puf.E00100
     puf["alimony_expense"] = puf.E03500
     puf["alimony_income"] = puf.E00800
@@ -165,7 +186,6 @@ def preprocess_puf(puf: pd.DataFrame) -> pd.DataFrame:
     puf["tax_exempt_pension_income"] = puf.E01500 - puf.E01700
     puf["traditional_ira_contributions"] = puf.E03150
     puf["unrecaptured_section_1250_gain"] = puf.E24515
-
     puf["foreign_tax_credit"] = puf.E07300
     puf["amt_foreign_tax_credit"] = puf.E62900
     puf["miscellaneous_income"] = puf.E01200
@@ -188,21 +208,6 @@ def preprocess_puf(puf: pd.DataFrame) -> pd.DataFrame:
     # Ignore k1bx14s and k1bx14p (partner self-employment income included in partnership and S-corp income)
     qbi = np.maximum(0, puf.E00900 + puf.E26270 + puf.E02100 + puf.E27200)
     puf["w2_wages_from_qualified_business"] = qbi * W2_WAGES_SCALE
-
-    # Remove aggregate records
-    puf = puf[puf.MARS != 0]
-
-    puf["filing_status"] = puf.MARS.map(
-        {
-            1: "SINGLE",
-            2: "JOINT",
-            3: "SEPARATE",
-            4: "HEAD_OF_HOUSEHOLD",
-        }
-    )
-    puf["household_id"] = puf.RECID
-    puf["household_weight"] = puf.S006
-    puf["exemptions_count"] = puf.XTOT
 
     return puf
 
