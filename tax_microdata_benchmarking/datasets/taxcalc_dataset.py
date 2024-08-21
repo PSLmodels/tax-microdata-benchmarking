@@ -26,7 +26,7 @@ def create_tc_dataset(pe_dataset: Type, year: int) -> pd.DataFrame:
             return np.array(pe_sim.calculate(variable, map_to="tax_unit"))
 
     df = pd.DataFrame()
-        
+
     df["E03500"] = pe("alimony_expense")
     df["E00800"] = pe("alimony_income")
     df["G20500"] = pe(
