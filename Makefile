@@ -60,7 +60,7 @@ reweighting-visualisation:
 	tensorboard --logdir=tax_microdata_benchmarking/storage/output/reweighting
 
 .PHONY=tax-expenditures-report
-tax-expenditures-report: tmd
+tax-expenditures-report: tmd_files
 	-pytest . --disable-warnings -m taxexp
 	diff tax_microdata_benchmarking/storage/output/tax_expenditures \
              tax_microdata_benchmarking/examination/tax_expenditures
