@@ -1,18 +1,16 @@
 # Create a Tax-Calculator-compatible dataset from any PolicyEngine hierarchical dataset.
-from typing import Type
-import pandas as pd
-import numpy as np
 import yaml
+from typing import Type
+import numpy as np
+import pandas as pd
 from tax_microdata_benchmarking.storage import STORAGE_FOLDER
-import taxcalc
+from tax_microdata_benchmarking.datasets.puf import PUF_2015, PUF_2021
+from policyengine_us import Microsimulation
+from policyengine_us.system import system
 
 
 def create_tc_dataset(pe_dataset: Type, year: int) -> pd.DataFrame:
-    from policyengine_us import Microsimulation
-    from policyengine_us.system import system
-
     pe_sim = Microsimulation(dataset=pe_dataset)
-    df = pd.DataFrame()
 
     print(f"Creating tc dataset from '{pe_dataset.label}' for year {year}...")
 
@@ -21,12 +19,14 @@ def create_tc_dataset(pe_dataset: Type, year: int) -> pd.DataFrame:
 
     def pe(variable):
         if system.variables[variable].entity.key == "person":
-            # Sum over non-dependents
+            # sum over non-dependents
             values = pe_sim.calculate(variable).values
             return np.array(tax_unit.sum(values * is_non_dep))
         else:
             return np.array(pe_sim.calculate(variable, map_to="tax_unit"))
 
+    df = pd.DataFrame()
+        
     df["E03500"] = pe("alimony_expense")
     df["E00800"] = pe("alimony_income")
     df["G20500"] = pe(
@@ -208,21 +208,14 @@ def create_tc_dataset(pe_dataset: Type, year: int) -> pd.DataFrame:
 
 
 def create_tc_puf_2015():
-    from tax_microdata_benchmarking.datasets.puf import PUF_2015
-
     return create_tc_dataset(PUF_2015, 2015)
 
 
 def create_tc_puf_2021():
-    from tax_microdata_benchmarking.datasets.puf import PUF_2021
-
     return create_tc_dataset(PUF_2021, 2021)
 
 
 if __name__ == "__main__":
-    from tax_microdata_benchmarking.datasets.puf import PUF_2015, PUF_2021
-    from tax_microdata_benchmarking.storage import STORAGE_FOLDER
-
     create_tc_dataset(PUF_2015).to_csv(
         STORAGE_FOLDER / "output" / "tc_puf_2015.csv.gz", index=False
     )
