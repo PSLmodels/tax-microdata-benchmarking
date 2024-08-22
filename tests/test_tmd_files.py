@@ -8,22 +8,19 @@ import os
 import yaml
 from pathlib import Path
 import subprocess
-import warnings
 import difflib
 import numpy as np
 import pandas as pd
 import pytest
-from tax_microdata_benchmarking.storage import STORAGE_FOLDER
-from tax_microdata_benchmarking.create_taxcalc_input_variables import (
-    create_variable_file,
-)
-from tax_microdata_benchmarking.utils.taxcalc_utils import (
-    get_tax_expenditure_results,
-)
+from tmd.utils.taxcalc_utils import get_tax_expenditure_results
+from tmd.storage import STORAGE_FOLDER
 
 
-# include this test only to gather warnings information
+# run following test only to generate pytest warnings
+# @pytest.mark.skip
 def test_create_taxcalc_tmd_file():
+    from tmd.create_taxcalc_input_variables import create_variable_file
+
     create_variable_file(write_file=False)
 
 

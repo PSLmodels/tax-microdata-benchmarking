@@ -1,9 +1,7 @@
 import pandas as pd
 import numpy as np
-import warnings
-from tax_microdata_benchmarking.storage import STORAGE_FOLDER
+from tmd.storage import STORAGE_FOLDER
 
-warnings.filterwarnings("ignore")
 
 soi = pd.read_csv(STORAGE_FOLDER / "input" / "agi_targets.csv")
 

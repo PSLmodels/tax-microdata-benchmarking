@@ -1,44 +1,44 @@
 .PHONY=clean
 clean:
-	rm -f tax_microdata_benchmarking/storage/output/*
+	rm -f tmd/storage/output/*
 
 .PHONY=install
 install:
 	pip install -e .
-	python tax_microdata_benchmarking/download_prerequisites.py
+	python tmd/download_prerequisites.py
 
-tax_microdata_benchmarking/storage/output/tmd.csv.gz: \
-  tax_microdata_benchmarking/imputation_assumptions.py \
-  tax_microdata_benchmarking/datasets/tmd.py \
-  tax_microdata_benchmarking/datasets/puf.py \
-  tax_microdata_benchmarking/datasets/cps.py \
-  tax_microdata_benchmarking/datasets/taxcalc_dataset.py \
-  tax_microdata_benchmarking/utils/taxcalc_utils.py \
-  tax_microdata_benchmarking/utils/imputation.py \
-  tax_microdata_benchmarking/utils/is_tax_filer.py \
-  tax_microdata_benchmarking/utils/pension_contributions.py \
-  tax_microdata_benchmarking/utils/soi_replication.py \
-  tax_microdata_benchmarking/utils/soi_targets.py \
-  tax_microdata_benchmarking/utils/reweight.py \
-  tax_microdata_benchmarking/utils/trace.py \
-  tax_microdata_benchmarking/create_taxcalc_input_variables.py
-	python tax_microdata_benchmarking/create_taxcalc_input_variables.py
+tmd/storage/output/tmd.csv.gz: \
+  tmd/imputation_assumptions.py \
+  tmd/datasets/tmd.py \
+  tmd/datasets/puf.py \
+  tmd/datasets/cps.py \
+  tmd/datasets/taxcalc_dataset.py \
+  tmd/utils/taxcalc_utils.py \
+  tmd/utils/imputation.py \
+  tmd/utils/is_tax_filer.py \
+  tmd/utils/pension_contributions.py \
+  tmd/utils/soi_replication.py \
+  tmd/utils/soi_targets.py \
+  tmd/utils/reweight.py \
+  tmd/utils/trace.py \
+  tmd/create_taxcalc_input_variables.py
+	python tmd/create_taxcalc_input_variables.py
 
-tax_microdata_benchmarking/storage/output/tmd_growfactors.csv: \
-  tax_microdata_benchmarking/storage/input/puf_growfactors.csv \
-  tax_microdata_benchmarking/create_taxcalc_growth_factors.py
-	python tax_microdata_benchmarking/create_taxcalc_growth_factors.py
+tmd/storage/output/tmd_growfactors.csv: \
+  tmd/storage/input/puf_growfactors.csv \
+  tmd/create_taxcalc_growth_factors.py
+	python tmd/create_taxcalc_growth_factors.py
 
-tax_microdata_benchmarking/storage/output/tmd_weights.csv.gz: \
-  tax_microdata_benchmarking/storage/input/cbo_population_forecast.yaml \
-  tax_microdata_benchmarking/storage/output/tmd.csv.gz \
-  tax_microdata_benchmarking/create_taxcalc_sampling_weights.py
-	python tax_microdata_benchmarking/create_taxcalc_sampling_weights.py
+tmd/storage/output/tmd_weights.csv.gz: \
+  tmd/storage/input/cbo_population_forecast.yaml \
+  tmd/storage/output/tmd.csv.gz \
+  tmd/create_taxcalc_sampling_weights.py
+	python tmd/create_taxcalc_sampling_weights.py
 
 .PHONY=tmd_files
-tmd_files: tax_microdata_benchmarking/storage/output/tmd.csv.gz \
-  tax_microdata_benchmarking/storage/output/tmd_growfactors.csv \
-  tax_microdata_benchmarking/storage/output/tmd_weights.csv.gz
+tmd_files: tmd/storage/output/tmd.csv.gz \
+  tmd/storage/output/tmd_growfactors.csv \
+  tmd/storage/output/tmd_weights.csv.gz
 
 .PHONY=test
 test: tmd_files
@@ -57,10 +57,10 @@ documentation:
 
 .PHONY=reweighting-visualisation
 reweighting-visualisation:
-	tensorboard --logdir=tax_microdata_benchmarking/storage/output/reweighting
+	tensorboard --logdir=tmd/storage/output/reweighting
 
 .PHONY=tax-expenditures-report
 tax-expenditures-report: tmd_files
 	-pytest . --disable-warnings -m taxexp
-	diff tax_microdata_benchmarking/storage/output/tax_expenditures \
-             tax_microdata_benchmarking/examination/tax_expenditures
+	diff tmd/storage/output/tax_expenditures \
+             tmd/examination/tax_expenditures

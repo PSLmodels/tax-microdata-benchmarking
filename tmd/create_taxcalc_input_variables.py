@@ -3,15 +3,15 @@ Construct tmd.csv, a Tax-Calculator-style input variable file for 2021.
 """
 
 import taxcalc as tc
-from tax_microdata_benchmarking.datasets.tmd import create_tmd_2021
-from tax_microdata_benchmarking.imputation_assumptions import (
+from tmd.datasets.tmd import create_tmd_2021
+from tmd.imputation_assumptions import (
     IMPUTATION_RF_RNG_SEED,
     IMPUTATION_BETA_RNG_SEED,
     W2_WAGES_SCALE,
     REWEIGHT_DEVIATION_PENALTY,
     ITMDED_GROW_RATE,
 )
-from tax_microdata_benchmarking.storage import STORAGE_FOLDER
+from tmd.storage import STORAGE_FOLDER
 
 
 TAXYEAR = 2021

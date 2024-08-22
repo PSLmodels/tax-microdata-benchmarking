@@ -2,20 +2,18 @@
 This module provides utilities for reweighting a flat file to match AGI targets.
 """
 
-import warnings
 from pathlib import Path
 import pandas as pd
 import numpy as np
 import torch
-from tax_microdata_benchmarking.storage import STORAGE_FOLDER
-from tax_microdata_benchmarking.utils.soi_replication import tc_to_soi
-from tax_microdata_benchmarking.imputation_assumptions import (
+from tmd.storage import STORAGE_FOLDER
+from tmd.utils.soi_replication import tc_to_soi
+from tmd.imputation_assumptions import (
     REWEIGHT_MULTIPLIER_MIN,
     REWEIGHT_MULTIPLIER_MAX,
     REWEIGHT_DEVIATION_PENALTY,
 )
 
-warnings.filterwarnings("ignore")
 
 INCOME_RANGES = [
     -np.inf,

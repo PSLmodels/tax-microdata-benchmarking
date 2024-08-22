@@ -10,7 +10,7 @@ from pandas import DataFrame, Series
 from tqdm import tqdm
 import h5py
 from policyengine_core.data import Dataset
-from tax_microdata_benchmarking.storage import STORAGE_FOLDER
+from tmd.storage import STORAGE_FOLDER
 
 
 AGED_RNG = np.random.default_rng(seed=374651932)

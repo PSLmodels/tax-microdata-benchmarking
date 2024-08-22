@@ -3,8 +3,8 @@ import yaml
 from typing import Type
 import numpy as np
 import pandas as pd
-from tax_microdata_benchmarking.storage import STORAGE_FOLDER
-from tax_microdata_benchmarking.datasets.puf import PUF_2015, PUF_2021
+from tmd.storage import STORAGE_FOLDER
+from tmd.datasets.puf import PUF_2015, PUF_2021
 from policyengine_us import Microsimulation
 from policyengine_us.system import system
 
