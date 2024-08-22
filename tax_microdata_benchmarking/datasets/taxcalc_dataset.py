@@ -25,6 +25,61 @@ def create_tc_dataset(pe_dataset: Type, year: int) -> pd.DataFrame:
         else:
             return np.array(pe_sim.calculate(variable, map_to="tax_unit"))
 
+    # specify tcname-to-pename dictionary
+    vnames = {
+        "E03500": "alimony_expense",
+        "E00800": "alimony_income",
+        "G20500": "casualty_loss",
+        "E32800": "cdcc_relevant_expenses",
+        "E19800": "charitable_cash_donations",
+        "E20100": "charitable_non_cash_donations",
+        "XTOT": "exemptions_count",
+        "E03240": "domestic_production_ald",
+        "E03400": "early_withdrawal_penalty",
+        "E03220": "educator_expense",
+        "E00200": "employment_income",
+        "E02100": "farm_income",
+        "E27200": "farm_rent_income",
+        "E03290": "health_savings_account_ald",
+        "E19200": "interest_deduction",
+        "P23250": "long_term_capital_gains",
+        "E24518": "long_term_capital_gains_on_collectibles",
+        "E17500": "medical_expense",
+        "E00650": "qualified_dividend_income",
+        "E26270": "partnership_s_corp_income",
+        "E03230": "qualified_tuition_expenses",
+        "E18500": "real_estate_taxes",
+        "E00900": "self_employment_income",
+        "E03270": "self_employed_health_insurance_ald",
+        "E03300": "self_employed_pension_contribution_ald",
+        "P22250": "short_term_capital_gains",
+        "E02400": "social_security",
+        "E18400": "state_and_local_sales_or_income_tax",
+        "E03210": "student_loan_interest",
+        "E00300": "taxable_interest_income",
+        "E01700": "taxable_pension_income",
+        "E02300": "taxable_unemployment_compensation",
+        "E01400": "taxable_ira_distributions",
+        "E00400": "tax_exempt_interest_income",
+        "E01700": "taxable_pension_income",
+        "E03150": "traditional_ira_contributions",
+        "E24515": "unrecaptured_section_1250_gain",
+        "E27200": "farm_rent_income",
+    }
+    # specify Tax-Calculator array variable dictionary
+    var = {}
+    for tcname, pename in vnames.items():
+        var[tcname] = pe(pename)
+
+    var["E00600"] = pe("non_qualified_dividend_income") + pe(
+        "qualified_dividend_income"
+    )
+    var["E01500"] = pe("tax_exempt_pension_income") + pe(
+        "taxable_pension_income"
+    )
+    df = pd.DataFrame(var)
+
+    """
     df = pd.DataFrame()
 
     df["E03500"] = pe("alimony_expense")
@@ -73,6 +128,8 @@ def create_tc_dataset(pe_dataset: Type, year: int) -> pd.DataFrame:
     df["E03150"] = pe("traditional_ira_contributions")
     df["E24515"] = pe("unrecaptured_section_1250_gain")
     df["E27200"] = pe("farm_rent_income")
+    """
+
     df["MARS"] = (
         pd.Series(pe("filing_status"))
         .map(
@@ -98,7 +155,7 @@ def create_tc_dataset(pe_dataset: Type, year: int) -> pd.DataFrame:
     df["FLPDYR"] = year
     df["MIDR"] = 0  # Separately filing spouse itemizes, assume not
     df["PT_SSTB_income"] = (
-        0  # Business income is from specified service trade or business, assume not
+        0  # Business income is from specified service trade assume not
     )
     df["tanf_ben"] = 0  # TANF benefits, assume none
     df["vet_ben"] = 0  # Veteran's benefits, assume none
@@ -190,18 +247,16 @@ def create_tc_dataset(pe_dataset: Type, year: int) -> pd.DataFrame:
     )  # Following TaxData code.
     df["elderly_dependents"] = map_to_tax_unit((age >= 65) * dependent)
 
-    # Correct case of variable names for Tax-Calculator
+    # correct case of variable names for Tax-Calculator
     tc_variable_metadata = yaml.safe_load(
         open(STORAGE_FOLDER / "input" / "taxcalc_variable_metadata.yaml", "r")
     )
-
     renames = {}
     for variable in df.columns:
         if variable.upper() in tc_variable_metadata["read"]:
             renames[variable] = variable.upper()
         elif variable.lower() in tc_variable_metadata["read"]:
             renames[variable] = variable.lower()
-
     df = df.rename(columns=renames)
 
     return df
