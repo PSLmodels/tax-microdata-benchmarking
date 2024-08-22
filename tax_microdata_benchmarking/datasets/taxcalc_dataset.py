@@ -89,7 +89,6 @@ def create_tc_dataset(pe_dataset: Type, year: int) -> pd.DataFrame:
         "f2441": "count_cdcc_eligible",
     }
     # specify Tax-Calculator names of variables that have zero values
-    zeros = np.zeros_like(pe_dataset.tax_unit_weight)
     zero_names = [
         "a_lineno",  # taxdata-specific (CPS matched person ID)
         "agi_bin",  # taxdata-specific (AGI bin)
@@ -118,6 +117,7 @@ def create_tc_dataset(pe_dataset: Type, year: int) -> pd.DataFrame:
     var = {}
     for tcname, pename in vnames.items():
         var[tcname] = pe(pename)
+    zeros = np.zeros_like(var["RECID"])
     for tcname in zero_names:
         var[tcname] = zeros
 
