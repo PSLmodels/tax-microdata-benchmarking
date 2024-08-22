@@ -1,8 +1,8 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="tax_microdata_benchmarking",
-    version="0.1.0",
+    name="tmd",
+    version="0.2.0",
     packages=find_packages(),
     python_requires=">=3.10,<3.13",
     install_requires=[

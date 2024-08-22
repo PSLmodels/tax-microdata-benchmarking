@@ -2,17 +2,15 @@
 This module enables generation of all datasets involved in the repo.
 """
 
-from tax_microdata_benchmarking.datasets import *
-from tax_microdata_benchmarking.create_taxcalc_growth_factors import (
-    create_factors_file,
-)
-from tax_microdata_benchmarking.create_taxcalc_sampling_weights import (
-    create_weights_file,
-)
-from tax_microdata_benchmarking.storage import STORAGE_FOLDER
 import time
+from tmd.datasets import *
+from tmd.create_taxcalc_growth_factors import create_factors_file
+from tmd.create_taxcalc_sampling_weights import create_weights_file
+from tmd.storage import STORAGE_FOLDER
+
 
 outputs = STORAGE_FOLDER / "output"
+
 
 generation_functions = [
     (create_pe_puf_2015, None),
