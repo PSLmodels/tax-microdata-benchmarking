@@ -27,6 +27,8 @@ def create_tc_dataset(pe_dataset: Type, year: int) -> pd.DataFrame:
 
     # specify tcname-to-pename dictionary
     vnames = {
+        "RECID": "household_id",
+        "S006": "tax_unit_weight",
         "E03500": "alimony_expense",
         "E00800": "alimony_income",
         "G20500": "casualty_loss",
@@ -48,6 +50,7 @@ def create_tc_dataset(pe_dataset: Type, year: int) -> pd.DataFrame:
         "E00650": "qualified_dividend_income",
         "E26270": "partnership_s_corp_income",
         "E03230": "qualified_tuition_expenses",
+        "e87530": "qualified_tuition_expenses",
         "E18500": "real_estate_taxes",
         "E00900": "self_employment_income",
         "E03270": "self_employed_health_insurance_ald",
@@ -65,11 +68,58 @@ def create_tc_dataset(pe_dataset: Type, year: int) -> pd.DataFrame:
         "E03150": "traditional_ira_contributions",
         "E24515": "unrecaptured_section_1250_gain",
         "E27200": "farm_rent_income",
+        "PT_binc_w2_wages": "w2_wages_from_qualified_business",
+        "e20400": "misc_deduction",
+        "e07300": "foreign_tax_credit",
+        "e62900": "amt_foreign_tax_credit",
+        "e01200": "miscellaneous_income",
+        "e00700": "salt_refund_income",
+        "e58990": "investment_income_elected_form_4952",
+        "e07400": "general_business_credit",
+        "e07600": "prior_year_minimum_tax_credit",
+        "e11200": "excess_withheld_payroll_tax",
+        "e01100": "non_sch_d_capital_gains",
+        "e87521": "american_opportunity_credit",
+        "e07260": "energy_efficient_home_improvement_credit",
+        "e09900": "early_withdrawal_penalty",
+        "p08000": "other_credits",
+        "e07240": "savers_credit",
+        "e09700": "recapture_of_investment_credit",
+        "e09800": "unreported_payroll_tax",
+        "f2441": "count_cdcc_eligible",
     }
+    # specify Tax-Calculator names of variables that have zero values
+    zeros = np.zeros_like(pe_dataset.tax_unit_weight)
+    zero_names = [
+        "a_lineno",  # taxdata-specific (CPS matched person ID)
+        "agi_bin",  # taxdata-specific (AGI bin)
+        "h_seq",  # taxdata-specific (CPS matched household ID)
+        "ffpos",  # taxdata-specific (CPS matched family ID)
+        "fips",  # no FIPS data
+        "DSI",  # claimed as dependent on another return, assume not
+        "MIDR",  # separately filing spouse itemizes, assume not
+        "PT_SSTB_income",  # PT SSTB business income, assume none
+        "PT_ubia_property",  # PT business capital, assume none
+        "cmbtp",
+        "f6251",
+        "k1bx14p",
+        "k1bx14s",
+        "tanf_ben",  # TANF benefits, assume none
+        "vet_ben",  # veteran's benefits, assume none
+        "wic_ben",  # WIC benefits, assume none
+        "snap_ben",  # SNAP benefits, assume none
+        "housing_ben",  # housing benefits, assume none
+        "ssi_ben",  # SSI benefits, assume none
+        "mcare_ben",  # Medicare benefits, assume none
+        "mcaid_ben",  # Medicaid benefits, assume none
+        "other_ben",  # Other benefits, assume none
+    ]
     # specify Tax-Calculator array variable dictionary
     var = {}
     for tcname, pename in vnames.items():
         var[tcname] = pe(pename)
+    for tcname in zero_names:
+        var[tcname] = zeros
 
     var["E00600"] = pe("non_qualified_dividend_income") + pe(
         "qualified_dividend_income"
@@ -77,6 +127,7 @@ def create_tc_dataset(pe_dataset: Type, year: int) -> pd.DataFrame:
     var["E01500"] = pe("tax_exempt_pension_income") + pe(
         "taxable_pension_income"
     )
+
     df = pd.DataFrame(var)
 
     """
@@ -143,16 +194,25 @@ def create_tc_dataset(pe_dataset: Type, year: int) -> pd.DataFrame:
         )
         .values
     )
+
+    """
     df["RECID"] = pe("household_id")
     df["S006"] = pe("tax_unit_weight")
+    """
+
+    """
     df["a_lineno"] = 0  # TD-specific (CPS matched person ID)
     df["agi_bin"] = 0  # TD-specific (AGI bin)
     df["h_seq"] = 0  # TD-specific (CPS matched household ID)
     df["ffpos"] = 0  # TD-specific (CPS matched family ID)
     df["fips"] = 0  # No FIPS data
     df["DSI"] = 0  # Claimed as dependent on another return, assume not
+    """
+
     df["EIC"] = np.minimum(pe("eitc_child_count"), 3)
     df["FLPDYR"] = year
+
+    """
     df["MIDR"] = 0  # Separately filing spouse itemizes, assume not
     df["PT_SSTB_income"] = (
         0  # Business income is from specified service trade assume not
@@ -166,8 +226,13 @@ def create_tc_dataset(pe_dataset: Type, year: int) -> pd.DataFrame:
     df["mcare_ben"] = 0  # Medicare benefits, assume none
     df["mcaid_ben"] = 0  # Medicaid benefits, assume none
     df["other_ben"] = 0  # Other benefits, assume none
+    """
+
+    """
     df["PT_binc_w2_wages"] = pe("w2_wages_from_qualified_business")
     df["PT_ubia_property"] = 0
+    """
+
     df["data_source"] = 1 if "puf" in pe_dataset.__name__.lower() else 0
     df["e02000"] = (
         pe("rental_income")
@@ -175,8 +240,9 @@ def create_tc_dataset(pe_dataset: Type, year: int) -> pd.DataFrame:
         + pe("estate_income")
         + pe("farm_rent_income")
     )
-    df["e20400"] = pe("misc_deduction")
 
+    """
+    df["e20400"] = pe("misc_deduction")
     df["e07300"] = pe("foreign_tax_credit")
     df["e62900"] = pe("amt_foreign_tax_credit")
     df["e01200"] = pe("miscellaneous_income")
@@ -194,15 +260,17 @@ def create_tc_dataset(pe_dataset: Type, year: int) -> pd.DataFrame:
     df["e09700"] = pe("recapture_of_investment_credit")
     df["e09800"] = pe("unreported_payroll_tax")
     df["f2441"] = pe("count_cdcc_eligible")
-    df["cmbtp"] = 0
     df["e87530"] = df[
         "E03230"
     ]  # Assume same definition for tuition expenses (for now).
+
+    df["cmbtp"] = 0
     df["f6251"] = 0
     df["k1bx14p"] = 0
     df["k1bx14s"] = 0
+    """
 
-    # Filer and spouse pairs
+    # head and spouse pairs
 
     map_to_tax_unit = lambda arr: pe_sim.map_result(arr, "person", "tax_unit")
 
@@ -244,7 +312,7 @@ def create_tc_dataset(pe_dataset: Type, year: int) -> pd.DataFrame:
     df["n21"] = map_to_tax_unit((age >= 21) * dependent)
     df["n24"] = map_to_tax_unit(
         (age < 17) * dependent
-    )  # Following TaxData code.
+    )  # following taxdata code.
     df["elderly_dependents"] = map_to_tax_unit((age >= 65) * dependent)
 
     # correct case of variable names for Tax-Calculator
