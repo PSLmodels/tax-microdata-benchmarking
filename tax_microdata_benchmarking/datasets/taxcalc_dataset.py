@@ -19,13 +19,13 @@ def create_tc_dataset(pe_dataset: Type, year: int) -> pd.DataFrame:
 
     def pe(variable):
         if system.variables[variable].entity.key == "person":
-            # sum over non-dependents
+            # sum over nondependents
             values = pe_sim.calculate(variable).values
             return np.array(tax_unit.sum(values * is_non_dep))
         else:
             return np.array(pe_sim.calculate(variable, map_to="tax_unit"))
 
-    # specify tcname-to-pename dictionary
+    # specify tcname-to-pename dictionary for simple one-to-one variables
     vnames = {
         "RECID": "household_id",
         "S006": "tax_unit_weight",
@@ -113,7 +113,7 @@ def create_tc_dataset(pe_dataset: Type, year: int) -> pd.DataFrame:
         "mcaid_ben",  # Medicaid benefits, assume none
         "other_ben",  # Other benefits, assume none
     ]
-    # specify Tax-Calculator array variable dictionary
+    # specify Tax-Calculator array variable dictionary and use it to create df
     var = {}
     for tcname, pename in vnames.items():
         var[tcname] = pe(pename)
@@ -140,7 +140,7 @@ def create_tc_dataset(pe_dataset: Type, year: int) -> pd.DataFrame:
         .values
     )
     var["EIC"] = np.minimum(pe("eitc_child_count"), 3)
-    ones = np.ones_like(var["RECID"], dtype=int)
+    ones = np.ones_like(zeros, dtype=int)
     var["FLPDYR"] = ones * year
     if "puf" in pe_dataset.__name__.lower():
         var["data_source"] = ones
@@ -154,6 +154,7 @@ def create_tc_dataset(pe_dataset: Type, year: int) -> pd.DataFrame:
     )
     df = pd.DataFrame(var)
 
+    # specify person-to-tax_unit mapping function
     map_to_tax_unit = lambda arr: pe_sim.map_result(arr, "person", "tax_unit")
 
     # specify df head/spouse variables
@@ -201,7 +202,7 @@ def create_tc_dataset(pe_dataset: Type, year: int) -> pd.DataFrame:
             renames[variable] = variable.upper()
         elif variable.lower() in tc_variable_metadata["read"]:
             renames[variable] = variable.lower()
-    df = df.rename(columns=renames)
+    df.rename(columns=renames, inplace=True)
 
     return df
 
