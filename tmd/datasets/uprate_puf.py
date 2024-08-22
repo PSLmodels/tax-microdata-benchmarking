@@ -1,7 +1,8 @@
 import pandas as pd
 import numpy as np
-from tax_microdata_benchmarking.storage import STORAGE_FOLDER
-from tax_microdata_benchmarking.imputation_assumptions import ITMDED_GROW_RATE
+from tmd.imputation_assumptions import ITMDED_GROW_RATE
+from tmd.storage import STORAGE_FOLDER
+
 
 USE_VARIABLE_SPECIFIC_POPULATION_GROWTH_DIVISORS = False
 

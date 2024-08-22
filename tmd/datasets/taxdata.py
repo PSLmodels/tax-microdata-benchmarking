@@ -2,9 +2,9 @@
 Any code relating to the taxdata dataset will go here if needed.
 """
 
-from tax_microdata_benchmarking.storage import STORAGE_FOLDER
-from tax_microdata_benchmarking.utils.taxcalc_utils import add_taxcalc_outputs
-from tax_microdata_benchmarking.utils.cloud import download_gh_release_asset
+from tmd.storage import STORAGE_FOLDER
+from tmd.utils.taxcalc_utils import add_taxcalc_outputs
+from tmd.utils.cloud import download_gh_release_asset
 
 
 def load_taxdata_puf(time_period: int = 2023):

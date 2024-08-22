@@ -1,9 +1,10 @@
 import streamlit as st
-
-from tax_microdata_benchmarking.utils.soi_replication import *
-from tax_microdata_benchmarking.storage import STORAGE_FOLDER
-from tax_microdata_benchmarking.datasets import *
 import pandas as pd
+import plotly.express as px
+from tmd.datasets import *
+from tmd.utils.soi_replication import *
+from tmd.storage import STORAGE_FOLDER
+
 
 INPUTS = STORAGE_FOLDER / "input"
 OUTPUTS = STORAGE_FOLDER / "output"
@@ -90,8 +91,6 @@ st.write(
 )
 
 st.dataframe(comparisons.sort_values("Absolute error", ascending=False))
-
-import plotly.express as px
 
 histogram = px.histogram(
     comparisons,

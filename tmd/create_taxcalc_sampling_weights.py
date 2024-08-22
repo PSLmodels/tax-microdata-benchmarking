@@ -6,7 +6,8 @@ create_taxcalc_input_variable.py script.
 
 import yaml
 import pandas as pd
-from tax_microdata_benchmarking.storage import STORAGE_FOLDER
+from tmd.storage import STORAGE_FOLDER
+
 
 FIRST_YEAR = 2021
 LAST_YEAR = 2074
