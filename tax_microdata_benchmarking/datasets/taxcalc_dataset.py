@@ -117,15 +117,40 @@ def create_tc_dataset(pe_dataset: Type, year: int) -> pd.DataFrame:
     var = {}
     for tcname, pename in vnames.items():
         var[tcname] = pe(pename)
-    zeros = np.zeros_like(var["RECID"])
+    zeros = np.zeros_like(var["RECID"], dtype=int)
     for tcname in zero_names:
         var[tcname] = zeros
-
     var["E00600"] = pe("non_qualified_dividend_income") + pe(
         "qualified_dividend_income"
     )
     var["E01500"] = pe("tax_exempt_pension_income") + pe(
         "taxable_pension_income"
+    )
+    var["MARS"] = (
+        pd.Series(pe("filing_status"))
+        .map(
+            {
+                "SINGLE": 1,
+                "JOINT": 2,
+                "SEPARATE": 3,
+                "HEAD_OF_HOUSEHOLD": 4,
+                "SURVIVING_SPOUSE": 5,
+            }
+        )
+        .values
+    )
+    var["EIC"] = np.minimum(pe("eitc_child_count"), 3)
+    ones = np.ones_like(var["RECID"], dtype=int)
+    var["FLPDYR"] = ones * year
+    if "puf" in pe_dataset.__name__.lower():
+        var["data_source"] = ones
+    else:
+        var["data_source"] = zeros
+    var["e02000"] = (
+        pe("rental_income")
+        + pe("partnership_s_corp_income")
+        + pe("estate_income")
+        + pe("farm_rent_income")
     )
 
     df = pd.DataFrame(var)
@@ -179,8 +204,6 @@ def create_tc_dataset(pe_dataset: Type, year: int) -> pd.DataFrame:
     df["E03150"] = pe("traditional_ira_contributions")
     df["E24515"] = pe("unrecaptured_section_1250_gain")
     df["E27200"] = pe("farm_rent_income")
-    """
-
     df["MARS"] = (
         pd.Series(pe("filing_status"))
         .map(
@@ -194,25 +217,16 @@ def create_tc_dataset(pe_dataset: Type, year: int) -> pd.DataFrame:
         )
         .values
     )
-
-    """
     df["RECID"] = pe("household_id")
     df["S006"] = pe("tax_unit_weight")
-    """
-
-    """
     df["a_lineno"] = 0  # TD-specific (CPS matched person ID)
     df["agi_bin"] = 0  # TD-specific (AGI bin)
     df["h_seq"] = 0  # TD-specific (CPS matched household ID)
     df["ffpos"] = 0  # TD-specific (CPS matched family ID)
     df["fips"] = 0  # No FIPS data
     df["DSI"] = 0  # Claimed as dependent on another return, assume not
-    """
-
     df["EIC"] = np.minimum(pe("eitc_child_count"), 3)
     df["FLPDYR"] = year
-
-    """
     df["MIDR"] = 0  # Separately filing spouse itemizes, assume not
     df["PT_SSTB_income"] = (
         0  # Business income is from specified service trade assume not
@@ -226,13 +240,8 @@ def create_tc_dataset(pe_dataset: Type, year: int) -> pd.DataFrame:
     df["mcare_ben"] = 0  # Medicare benefits, assume none
     df["mcaid_ben"] = 0  # Medicaid benefits, assume none
     df["other_ben"] = 0  # Other benefits, assume none
-    """
-
-    """
     df["PT_binc_w2_wages"] = pe("w2_wages_from_qualified_business")
     df["PT_ubia_property"] = 0
-    """
-
     df["data_source"] = 1 if "puf" in pe_dataset.__name__.lower() else 0
     df["e02000"] = (
         pe("rental_income")
@@ -240,8 +249,6 @@ def create_tc_dataset(pe_dataset: Type, year: int) -> pd.DataFrame:
         + pe("estate_income")
         + pe("farm_rent_income")
     )
-
-    """
     df["e20400"] = pe("misc_deduction")
     df["e07300"] = pe("foreign_tax_credit")
     df["e62900"] = pe("amt_foreign_tax_credit")
