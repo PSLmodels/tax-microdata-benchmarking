@@ -1,4 +1,4 @@
-# Tax microdata benchmarking
+# tax-microdata
 
 This repository contains all working files for a project to develop a
 general-purpose validated microdata file for use in
@@ -12,15 +12,15 @@ To generate the microdata files:
 
 1. Run `export POLICYENGINE_GITHUB_MICRODATA_AUTH_TOKEN=***`
 2. Run `export PSL_TAX_MICRODATA_RELEASE_AUTH_TOKEN=***`
-3. Run `make flat-file`
+3. Run `make data`
 
-The two environment tokens can be obtained from [Nikhil Woodruff](mailto:nikhil@policyengine.org).
+The two tokens can be obtained from [Don Boyd](mailto:donboyd5@gmail.com).
 
 To assess, review the data examination results that compare federal
 agency tax estimates with those generated using the microdata file
 created in each project phase: [phase 1
-results](./tax_microdata_benchmarking/examination/results1.md) and
+results](./tmd/examination/results1.md) and
 [phase 2
-results](./tax_microdata_benchmarking/examination/results2.md) and
-[VERY PRELIMINARY phase 3
-results](./tax_microdata_benchmarking/examination/results3.md).
+results](./tmd/examination/results2.md) and
+[phase 3
+results](./tmd/examination/results3.md).
