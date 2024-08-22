@@ -2,14 +2,12 @@
 **/*.pyc
 **/*.csv.zip
 **/*.csv.gz
+**/*.csv
 **/*.egg-info
-tax_microdata_benchmarking/calibration
 **/_build/
 **/*tfevents*
-**/*.csv
-!tax_microdata_benchmarking/utils/uprating/*.csv*
-!tax_microdata_benchmarking/storage/input/*.csv
-tax_microdata_benchmarking/storage/output/tax_expenditures
+tmd/storage/output/tax_expenditures
+!tmd/storage/input/*.csv
 **demographics_2015.csv
 **puf_2015.csv
 *.DS_STORE

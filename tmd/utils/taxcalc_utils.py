@@ -7,7 +7,7 @@ import pathlib
 import yaml
 import numpy as np
 import pandas as pd
-from tax_microdata_benchmarking.storage import STORAGE_FOLDER
+from tmd.storage import STORAGE_FOLDER
 import taxcalc as tc
 
 

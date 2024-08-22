@@ -1,10 +1,8 @@
 import pandas as pd
 import numpy as np
 from tqdm import tqdm
-from tax_microdata_benchmarking.storage import STORAGE_FOLDER
-import warnings
+from tmd.storage import STORAGE_FOLDER
 
-warnings.filterwarnings("ignore")
 
 soi = pd.read_csv(STORAGE_FOLDER / "input" / "soi.csv")
 

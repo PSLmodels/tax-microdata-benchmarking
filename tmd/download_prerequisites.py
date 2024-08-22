@@ -1,5 +1,5 @@
-from tax_microdata_benchmarking.utils.cloud import download_gh_release_asset
-from tax_microdata_benchmarking.storage import STORAGE_FOLDER
+from tmd.utils.cloud import download_gh_release_asset
+from tmd.storage import STORAGE_FOLDER
 
 
 def download_prerequisites():
