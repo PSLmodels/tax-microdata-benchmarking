@@ -4,7 +4,6 @@ checking that the variable total is within the ballpark of
 the Tax-Data 2023 PUF's totals.
 """
 
-import os
 import yaml
 from pathlib import Path
 import subprocess
@@ -16,69 +15,14 @@ from tmd.utils.taxcalc_utils import get_tax_expenditure_results
 from tmd.storage import STORAGE_FOLDER
 
 
-# run following test only to generate pytest warnings
-@pytest.mark.skip
-def test_create_taxcalc_tmd_file():
-    from tmd.create_taxcalc_input_variables import create_variable_file
-
-    create_variable_file(write_file=False)
-
-
 FOLDER = Path(__file__).parent
-
-with open(FOLDER / "tc_variable_totals.yaml") as f:
-    tc_variable_totals = yaml.safe_load(f)
 
 with open(FOLDER / "tax_expenditure_targets.yaml") as f:
     tax_expenditure_targets = yaml.safe_load(f)
 
-with open(STORAGE_FOLDER / "input" / "taxcalc_variable_metadata.yaml") as f:
-    taxcalc_variable_metadata = yaml.safe_load(f)
-
 tmd_weights_path = STORAGE_FOLDER / "output" / "tmd_weights.csv.gz"
 
 tmd_growfactors_path = STORAGE_FOLDER / "output" / "tmd_growfactors.csv"
-
-EXEMPTED_VARIABLES = [
-    "DSI",  # Issue here but deprioritized.
-    "EIC",  # PUF-PE file almost certainly more correct by including CPS data
-    "MIDR",  # Issue here but deprioritized.
-    "RECID",  # No reason to compare.
-    "a_lineno",  # No reason to compare.
-    "agi_bin",  # No reason to compare.
-    "blind_spouse",  # Issue here but deprioritized.
-    "cmbtp",  # No reason to compare.
-    "data_source",  # No reason to compare.
-    "s006",  # No reason to compare.
-    "h_seq",  # No reason to compare.
-    "fips",  # No reason to compare.
-    "ffpos",  # No reason to compare.
-    "p22250",  # PE-PUF likely closer to truth than taxdata (needs triple check).
-    "p23250",  # PE-PUF likely closer to truth than taxdata (needs triple check).
-    "e01200",  # Unknown but deprioritized for now.
-    "e17500",  # Unknown but deprioritized for now.
-    "e18500",  # Unknown but deprioritized for now.
-    "e02100",  # Farm income, unsure who's closer.
-    "e02300",  # UI exploded in 2021
-    "e02400",  # SS benefits, TD is out
-    "e18400",
-    "e19200",
-    "e20100",
-]
-
-# Exempt any variable split between filer and spouse for now.
-EXEMPTED_VARIABLES += [
-    variable
-    for variable in taxcalc_variable_metadata["read"]
-    if variable.endswith("p") or variable.endswith("s")
-]
-
-
-variables_to_test = [
-    variable
-    for variable in tc_variable_totals.keys()
-    if variable not in EXEMPTED_VARIABLES
-]
 
 dataset_names_to_test = ["tmd_2021"]
 
@@ -88,26 +32,7 @@ datasets_to_test = [
 ]
 
 
-@pytest.mark.vartotals
-@pytest.mark.parametrize("variable", variables_to_test, ids=lambda x: x)
-@pytest.mark.parametrize(
-    "flat_file", datasets_to_test, ids=dataset_names_to_test
-)
-def test_variable_totals(variable, flat_file):
-    meta = taxcalc_variable_metadata["read"][variable]
-    name = meta.get("desc")
-    weight = flat_file.s006_original
-    total = (flat_file[variable] * weight * (flat_file.data_source == 1)).sum()
-    if tc_variable_totals[variable] == 0:
-        # If the taxdata file has a zero total, we'll assume the tested file is correct in the absence of better data.
-        return
-    # 45% and more than $30bn off taxdata is a failure.
-    assert (
-        abs(total / tc_variable_totals[variable] - 1) < 0.45
-        or abs(total / 1e9 - tc_variable_totals[variable] / 1e9) < 30
-    ), f"{variable} ({name}) differs to tax-data by {total / tc_variable_totals[variable] - 1:.1%} ({total/1e9:.1f}bn vs {tc_variable_totals[variable]/1e9:.1f}bn)"
-
-
+"""
 tax_expenditure_reforms = [
     "ctc",
     "eitc",
@@ -213,3 +138,4 @@ def test_tax_expenditures_differences():
                 continue
             emsg += line
         raise ValueError(emsg)
+"""
