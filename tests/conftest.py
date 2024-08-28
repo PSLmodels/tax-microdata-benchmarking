@@ -25,5 +25,5 @@ def tmd_weights_path():
 
 
 @pytest.fixture(scope="session")
-def tmd_gfactors_path():
+def tmd_growfactors_path():
     return STORAGE_FOLDER / "output" / "tmd_growfactors.csv"
