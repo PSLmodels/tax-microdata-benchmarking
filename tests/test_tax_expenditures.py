@@ -18,17 +18,17 @@ def test_tax_expenditures_differences(
     tmd_weights_path,
     tmd_growfactors_path,
 ):
-    abstol = 0.11  # absolute np.allclose tolerance in billions of dollars
+    reltol = 0.003  # relative np.allclose tolerance
     _ = get_tax_expenditure_results(
         tmd_variables,
-        2021,  # input variables year
+        2021,  # input variables data year
         2023,  # simulation year for tax expenditure estimates
         tmd_weights_path,
         tmd_growfactors_path,
     )
     _ = get_tax_expenditure_results(
         tmd_variables,
-        2021,  # input variables year
+        2021,  # input variables data year
         2026,  # simulation year for tax expenditure estimates
         tmd_weights_path,
         tmd_growfactors_path,
@@ -37,13 +37,9 @@ def test_tax_expenditures_differences(
     exp_path = tests_folder / "expected_tax_expenditures"
     actdf = pd.read_csv(act_path, sep=" ", header=None)
     expdf = pd.read_csv(exp_path, sep=" ", header=None)
-
-    actdf = actdf[actdf.iloc[:, 2] != "iitax"]
-    expdf = expdf[expdf.iloc[:, 2] != "iitax"]
-
-    actval = actdf.iloc[:, 3]
-    expval = expdf.iloc[:, 3]
-    same = np.allclose(actval, expval, rtol=0.0, atol=abstol)
+    actval = actdf.iloc[:, 3].to_numpy(dtype=np.float64)
+    expval = expdf.iloc[:, 3].to_numpy(dtype=np.float64)
+    same = np.allclose(actval, expval, atol=0.0, rtol=reltol)
     if same:
         return
     # if same is False
@@ -57,7 +53,5 @@ def test_tax_expenditures_differences(
     if len(diffs) > 0:
         emsg = "\nThere are actual vs expect tax expenditure differences:\n"
         for line in diffs:
-            if "iitax" in line:
-                continue
             emsg += line
         raise ValueError(emsg)
