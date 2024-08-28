@@ -53,7 +53,5 @@ def test_tax_expenditures_differences(
     if len(diffs) > 0:
         emsg = "\nThere are actual vs expect tax expenditure differences:\n"
         for line in diffs:
-            if "iitax" in line:
-                continue
             emsg += line
         raise ValueError(emsg)
