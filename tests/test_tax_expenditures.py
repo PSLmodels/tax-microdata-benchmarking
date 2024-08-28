@@ -37,10 +37,6 @@ def test_tax_expenditures_differences(
     exp_path = tests_folder / "expected_tax_expenditures"
     actdf = pd.read_csv(act_path, sep=" ", header=None)
     expdf = pd.read_csv(exp_path, sep=" ", header=None)
-
-    actdf = actdf[actdf.iloc[:, 2] != "iitax"]
-    expdf = expdf[expdf.iloc[:, 2] != "iitax"]
-
     actval = actdf.iloc[:, 3]
     expval = expdf.iloc[:, 3]
     same = np.allclose(actval, expval, rtol=0.0, atol=abstol)
