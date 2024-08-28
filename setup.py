@@ -10,13 +10,12 @@ setup(
         "tables",  # required by policyengine_us
         "marshmallow<3.22",  # to work around paramtools bug
         "taxcalc>=4.2.1",  # requires paramtools
+        "scikit-learn",
+        "torch",
+        "tensorboard",
         "black>=24.4.2",
         "pytest",
         "pytest-xdist",
-        "torch",
-        "tensorboard",
         "jupyter-book",
-        "furo",
-        "scikit-learn",
     ],
 )
