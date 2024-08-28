@@ -194,7 +194,7 @@ def create_tc_dataset(pe_dataset: Type, year: int) -> pd.DataFrame:
 
     # correct case of df variable names for Tax-Calculator
     tc_variable_metadata = yaml.safe_load(
-        open(STORAGE_FOLDER / "input" / "taxcalc_variable_metadata.yaml", "r")
+        open(STORAGE_FOLDER / "input" / "tc_variable_metadata.yaml", "r")
     )
     renames = {}
     for variable in df.columns:

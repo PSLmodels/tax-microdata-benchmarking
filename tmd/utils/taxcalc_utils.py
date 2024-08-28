@@ -11,7 +11,7 @@ from tmd.storage import STORAGE_FOLDER
 import taxcalc as tc
 
 
-with open(STORAGE_FOLDER / "input" / "taxcalc_variable_metadata.yaml") as f:
+with open(STORAGE_FOLDER / "input" / "tc_variable_metadata.yaml") as f:
     taxcalc_variable_metadata = yaml.safe_load(f)
 
 
