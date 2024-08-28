@@ -18,17 +18,17 @@ def test_tax_expenditures_differences(
     tmd_weights_path,
     tmd_growfactors_path,
 ):
-    abstol = 0.11  # absolute np.allclose tolerance in billions of dollars
+    reltol = 0.0008  # relative np.allclose tolerance in decimal terms
     _ = get_tax_expenditure_results(
         tmd_variables,
-        2021,  # input variables year
+        2021,  # input variables data year
         2023,  # simulation year for tax expenditure estimates
         tmd_weights_path,
         tmd_growfactors_path,
     )
     _ = get_tax_expenditure_results(
         tmd_variables,
-        2021,  # input variables year
+        2021,  # input variables data year
         2026,  # simulation year for tax expenditure estimates
         tmd_weights_path,
         tmd_growfactors_path,
@@ -39,7 +39,7 @@ def test_tax_expenditures_differences(
     expdf = pd.read_csv(exp_path, sep=" ", header=None)
     actval = actdf.iloc[:, 3]
     expval = expdf.iloc[:, 3]
-    same = np.allclose(actval, expval, rtol=0.0, atol=abstol)
+    same = np.allclose(actval, expval, rtol=reltol, atol=0.0)
     if same:
         return
     # if same is False
