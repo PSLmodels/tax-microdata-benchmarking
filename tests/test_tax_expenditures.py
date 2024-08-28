@@ -23,15 +23,15 @@ def test_tax_expenditures_differences(
         tmd_variables,
         2021,  # input variables year
         2023,  # simulation year for tax expenditure estimates
-        str(tmd_weights_path),
-        str(tmd_growfactors_path),
+        tmd_weights_path,
+        tmd_growfactors_path,
     )
     _ = get_tax_expenditure_results(
         tmd_variables,
         2021,  # input variables year
         2026,  # simulation year for tax expenditure estimates
-        str(tmd_weights_path),
-        str(tmd_growfactors_path),
+        tmd_weights_path,
+        tmd_growfactors_path,
     )
     act_path = STORAGE_FOLDER / "output" / "tax_expenditures"
     exp_path = tests_folder / "expected_tax_expenditures"

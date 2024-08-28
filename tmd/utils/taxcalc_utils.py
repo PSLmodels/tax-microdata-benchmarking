@@ -3,7 +3,7 @@ This module provides utilities for working with Tax-Calculator.
 """
 
 import os
-import pathlib
+from pathlib import Path
 import yaml
 import numpy as np
 import pandas as pd
@@ -109,8 +109,8 @@ def get_tax_expenditure_results(
     flat_file: pd.DataFrame,
     input_data_year: int,
     simulation_year: int,
-    weights_file_name: str,
-    growfactors_file_name: str,
+    weights_file_path: Path,
+    growfactors_file_path: Path,
 ) -> dict:
     assert input_data_year == 2021
     assert simulation_year in [2023, 2026]
@@ -119,8 +119,8 @@ def get_tax_expenditure_results(
         input_data_year,
         simulation_year,
         reform=None,
-        weights=weights_file_name,
-        growfactors=growfactors_file_name,
+        weights=weights_file_path,
+        growfactors=growfactors_file_path,
     )
     tax_revenue_baseline = (baseline.iitax * baseline.s006).sum() / 1e9
 
