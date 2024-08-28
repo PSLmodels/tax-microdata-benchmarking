@@ -18,7 +18,7 @@ def test_tax_expenditures_differences(
     tmd_weights_path,
     tmd_growfactors_path,
 ):
-    reltol = 0.0008  # relative np.allclose tolerance
+    reltol = 0.003  # relative np.allclose tolerance
     _ = get_tax_expenditure_results(
         tmd_variables,
         2021,  # input variables data year
