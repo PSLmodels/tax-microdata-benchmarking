@@ -131,8 +131,8 @@ def get_tax_expenditure_results(
             input_data_year,
             simulation_year,
             reform,
-            weights=weights_file_name,
-            growfactors=growfactors_file_name,
+            weights=weights_file_path,
+            growfactors=growfactors_file_path,
         )
         tax_revenue_reform = (
             reform_results.iitax * reform_results.s006
