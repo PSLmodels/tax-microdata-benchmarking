@@ -11,7 +11,7 @@ from tmd.storage import STORAGE_FOLDER
 import taxcalc as tc
 
 
-with open(STORAGE_FOLDER / "input" / "taxcalc_variable_metadata.yaml") as f:
+with open(STORAGE_FOLDER / "input" / "tc_variable_metadata.yaml") as f:
     taxcalc_variable_metadata = yaml.safe_load(f)
 
 
@@ -109,8 +109,8 @@ def get_tax_expenditure_results(
     flat_file: pd.DataFrame,
     input_data_year: int,
     simulation_year: int,
-    weights_file_name: str,
-    growfactors_file_name: str,
+    weights_file_path: pathlib.Path,
+    growfactors_file_path: pathlib.Path,
 ) -> dict:
     assert input_data_year == 2021
     assert simulation_year in [2023, 2026]
@@ -119,8 +119,8 @@ def get_tax_expenditure_results(
         input_data_year,
         simulation_year,
         reform=None,
-        weights=weights_file_name,
-        growfactors=growfactors_file_name,
+        weights=weights_file_path,
+        growfactors=growfactors_file_path,
     )
     tax_revenue_baseline = (baseline.iitax * baseline.s006).sum() / 1e9
 
@@ -131,8 +131,8 @@ def get_tax_expenditure_results(
             input_data_year,
             simulation_year,
             reform,
-            weights=weights_file_name,
-            growfactors=growfactors_file_name,
+            weights=weights_file_path,
+            growfactors=growfactors_file_path,
         )
         tax_revenue_reform = (
             reform_results.iitax * reform_results.s006
