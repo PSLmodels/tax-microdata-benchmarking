@@ -1,0 +1,10 @@
+# DATA SOURCE:
+# https://github.com/US-CBO/eval-projections/blob/main/input_data/baselines.csv
+# revenue ($billion) by federal fiscal year (Oct1-Sep30)
+2021: 1314.088  # report dated 2022-05-01
+2022: 1483.527  # report dated 2023-02-01
+2023: 1562.308  # report dated 2023-05-01
+2024: 1678.453  # report dated 2024-06-01
+2025: 1737.193  # report dated 2024-06-01
+2026: 1814.246  # report dated 2024-06-01
+2027: 1885.543  # report dated 2024-06-01
