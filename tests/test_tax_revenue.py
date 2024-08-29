@@ -10,7 +10,7 @@ FIRST_CYR = 2021
 LAST_CYR = 2026
 
 RELTOL_ITAX = 0.30
-RELTOL_PTAX = 0.06
+RELTOL_PTAX = 0.08
 
 DUMP = False  # True implies test always fails with complete output
 

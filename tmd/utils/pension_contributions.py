@@ -8,11 +8,20 @@ from tmd.imputation_assumptions import (
 )
 
 
-def impute_pension_contributions_to_puf(puf_df):
+def impute_pretax_pension_contributions(puf_df):
 
     cps = Microsimulation(dataset=CPS_2021)
     cps_df = cps.calculate_dataframe(
-        ["employment_income", "household_weight", "pre_tax_contributions"]
+        [
+            "employment_income",
+            "household_weight",
+            "traditional_401k_contributions",
+            "traditional_403b_contributions",
+        ]
+    )
+    cps_df["pretax_pension_contributions"] = (
+        cps_df["traditional_401k_contributions"]
+        + cps_df["traditional_403b_contributions"]
     )
 
     pension_contributions = Imputation()
@@ -21,7 +30,7 @@ def impute_pension_contributions_to_puf(puf_df):
 
     pension_contributions.train(
         X=cps_df[["employment_income"]],
-        Y=cps_df[["pre_tax_contributions"]],
+        Y=cps_df[["pretax_pension_contributions"]],
         sample_weight=cps_df["household_weight"],
     )
     return pension_contributions.predict(

@@ -38,6 +38,16 @@ def trace1(loc: str, vdf: pd.DataFrame) -> None:
     )
     print(wght_results)
     print(f">{loc} weights all_min,all_max (#)= {wght_min:.1f} {wght_max:.1f}")
+    # pencon tabulations
+    pencon = vdf.pencon_p + vdf.pencon_s
+    pencon_amt = (wght * filer * pencon).sum() * 1e-9
+    pencon_num = (wght * filer * (pencon > 0)).sum() * 1e-6
+    print(f">{loc} weighted puf PENCON ($B)= {pencon_amt:.3f}")
+    print(f">{loc} weighted puf PENCON (#M)= {pencon_num:.3f}")
+    pencon_amt = (wght * ~filer * pencon).sum() * 1e-9
+    pencon_num = (wght * ~filer * (pencon > 0)).sum() * 1e-6
+    print(f">{loc} weighted cps PENCON ($B)= {pencon_amt:.3f}")
+    print(f">{loc} weighted cps PENCON (#M)= {pencon_num:.3f}")
     # CTC tabulations
     if "ctc_total" in vdf:
         ctc = vdf.ctc_total * filer
@@ -58,8 +68,8 @@ def trace1(loc: str, vdf: pd.DataFrame) -> None:
     wages_min = w2wages.min()
     wages_max = w2wages.max()
     wages_wtot = (wght * w2wages).sum() * 1e-9
-    print(f">{loc} W2_wages min,max ($)= {wages_min:.0f} {wages_max:.0f}")
-    print(f">{loc} weighted puf W2_wages ($B)= {wages_wtot:.3f}")
+    print(f">{loc} W2_WAGES min,max ($)= {wages_min:.0f} {wages_max:.0f}")
+    print(f">{loc} weighted puf W2_WAGES ($B)= {wages_wtot:.3f}")
     # QBID tabulations
     if "qbided" in vdf:
         qbid = vdf.qbided * filer
