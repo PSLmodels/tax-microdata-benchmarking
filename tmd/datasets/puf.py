@@ -3,7 +3,6 @@ from tqdm import tqdm
 import numpy as np
 import pandas as pd
 from tmd.storage import STORAGE_FOLDER
-from tmd.utils.pension_contributions import impute_pension_contributions_to_puf
 from tmd.datasets.uprate_puf import uprate_puf
 from tmd.utils.imputation import Imputation
 from tmd.imputation_assumptions import (
@@ -267,7 +266,6 @@ FINANCIAL_SUBSET = [
     "savers_credit",
     "recapture_of_investment_credit",
     "unreported_payroll_tax",
-    "pre_tax_contributions",
     "w2_wages_from_qualified_business",
 ]
 
@@ -301,10 +299,6 @@ class PUF(Dataset):
         puf = preprocess_puf(puf)
         print("Imputing missing PUF demographics...")
         puf = impute_missing_demographics(puf, demographics)
-        print("Imputing PUF pension contributions...")
-        puf["pre_tax_contributions"] = impute_pension_contributions_to_puf(
-            puf[["employment_income"]]
-        )
 
         # Sort in original PUF order
         puf = puf.set_index("RECID").loc[original_recid].reset_index()
