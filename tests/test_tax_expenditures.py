@@ -12,7 +12,7 @@ from tmd.storage import STORAGE_FOLDER
 
 
 @pytest.mark.taxexpdiffs
-def test_tax_expenditures_differences(
+def test_tax_exp_diffs(
     tests_folder,
     tmd_variables,
     tmd_weights_path,
