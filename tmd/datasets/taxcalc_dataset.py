@@ -181,9 +181,8 @@ def create_tc_dataset(pe_dataset: Type, year: int) -> pd.DataFrame:
     df["e02100p"] = map_to_tax_unit(farm_income * head)
     df["e02100s"] = map_to_tax_unit(farm_income * spouse)
     if creating_puf:
-        worker = employment_income > 0
-        df["pencon_p"] = map_to_tax_unit(pretax_pencon * head * worker)
-        df["pencon_s"] = map_to_tax_unit(pretax_pencon * spouse * worker)
+        df["pencon_p"] = map_to_tax_unit(pretax_pencon * head)
+        df["pencon_s"] = map_to_tax_unit(pretax_pencon * spouse)
     else:
         df["pencon_p"] = np.zeros_like(df.e00200p)
         df["pencon_s"] = np.zeros_like(df.e00200s)
