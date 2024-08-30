@@ -2,13 +2,12 @@
 This module provides utilities for working with Tax-Calculator.
 """
 
-import os
 import pathlib
 import yaml
 import numpy as np
 import pandas as pd
-from tmd.storage import STORAGE_FOLDER
 import taxcalc as tc
+from tmd.storage import STORAGE_FOLDER
 
 
 with open(STORAGE_FOLDER / "input" / "tc_variable_metadata.yaml") as f:
@@ -27,8 +26,7 @@ def get_tc_variable_description(variable: str) -> str:
     """
     if variable in taxcalc_variable_metadata.get("read", {}):
         return taxcalc_variable_metadata["read"][variable]["desc"]
-    elif variable in taxcalc_variable_metadata.get("calc", {}):
-        return taxcalc_variable_metadata["calc"][variable]["desc"]
+    return taxcalc_variable_metadata["calc"][variable]["desc"]
 
 
 def get_tc_is_input(variable: str) -> bool:
@@ -43,8 +41,7 @@ def get_tc_is_input(variable: str) -> bool:
     """
     if variable in taxcalc_variable_metadata.get("read", {}):
         return True
-    elif variable in taxcalc_variable_metadata.get("calc", {}):
-        return False
+    return False
 
 
 def add_taxcalc_outputs(
@@ -123,7 +120,6 @@ def get_tax_expenditure_results(
         growfactors=growfactors_file_path,
     )
     itax_baseline = (baseline.iitax * baseline.s006).sum() / 1e9
-    ptax_baseline = (baseline.payrolltax * baseline.s006).sum() / 1e9
 
     te_results = {}
     for reform_name, reform in te_reforms.items():
@@ -148,10 +144,6 @@ def get_tax_expenditure_results(
         open_mode = "a"
     year = simulation_year
     with open(taxexp_path, open_mode) as tefile:
-        res = f"YR,KIND,EST= {year} paytax {ptax_baseline:.1f}\n"
-        tefile.write(res)
-        res = f"YR,KIND,EST= {year} iitax {itax_baseline:.1f}\n"
-        tefile.write(res)
         for reform, estimate in te_results.items():
             res = f"YR,KIND,EST= {year} {reform} {estimate}\n"
             tefile.write(res)

@@ -1,4 +1,6 @@
+import numpy as np
 import pandas as pd
+from policyengine_us import Microsimulation
 from tmd.datasets.puf import PUF_2021, create_pe_puf_2021
 from tmd.datasets.cps import CPS_2021, create_cps_2021
 from tmd.datasets.taxcalc_dataset import create_tc_dataset
@@ -6,7 +8,6 @@ from tmd.utils.trace import trace1
 from tmd.utils.taxcalc_utils import add_taxcalc_outputs
 from tmd.utils.reweight import reweight
 from tmd.storage import STORAGE_FOLDER
-from policyengine_us import Microsimulation
 
 
 def create_tmd_2021():
@@ -31,11 +32,18 @@ def create_tmd_2021():
 
     print("Adding Tax-Calculator outputs for 2021...")
     combined = add_taxcalc_outputs(combined, 2021, 2021)
-    combined["s006_original"] = combined.s006.values
+    # ... drop CPS records with positive 2021 income tax amount
+    idx = combined[((combined.data_source == 0) & (combined.iitax > 0))].index
+    combined.drop(idx, inplace=True)
+    # ... scale CPS records weight in order to get correct population count
+    cps_scale = 0.6248
+    scale = np.where(combined.data_source == 0, cps_scale, 1.0)
+    combined["s006"] *= scale
 
     trace1("B", combined)
 
     print("Reweighting...")
+    combined["s006_original"] = combined["s006"].values
     combined = reweight(combined, 2021)
 
     trace1("C", combined)
