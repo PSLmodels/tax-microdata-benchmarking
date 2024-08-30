@@ -36,7 +36,7 @@ def create_tmd_2021():
     idx = combined[((combined.data_source == 0) & (combined.iitax > 0))].index
     combined.drop(idx, inplace=True)
     # ... scale CPS records weight in order to get correct population count
-    cps_scale = 0.6248
+    cps_scale = 0.5806
     scale = np.where(combined.data_source == 0, cps_scale, 1.0)
     combined["s006"] *= scale
 
