@@ -1,18 +1,22 @@
-# Create a Tax-Calculator-compatible dataset from any PolicyEngine hierarchical dataset.
-import yaml
+# Create a Tax-Calculator-compatible dataset from
+# any PolicyEngine hierarchical dataset.
+
 from typing import Type
+import yaml
 import numpy as np
 import pandas as pd
+from policyengine_us.system import system
+from policyengine_us import Microsimulation
 from tmd.storage import STORAGE_FOLDER
 from tmd.datasets.puf import PUF_2015, PUF_2021
-from policyengine_us import Microsimulation
-from policyengine_us.system import system
+from tmd.utils.pension_contributions import impute_pretax_pension_contributions
 
 
 def create_tc_dataset(pe_dataset: Type, year: int) -> pd.DataFrame:
     pe_sim = Microsimulation(dataset=pe_dataset)
 
     print(f"Creating tc dataset from '{pe_dataset.label}' for year {year}...")
+    creating_puf = bool("PUF" in pe_dataset.label.upper())
 
     is_non_dep = ~pe_sim.calculate("is_tax_unit_dependent").values
     tax_unit = pe_sim.populations["tax_unit"]
@@ -22,8 +26,7 @@ def create_tc_dataset(pe_dataset: Type, year: int) -> pd.DataFrame:
             # sum over nondependents
             values = pe_sim.calculate(variable).values
             return np.array(tax_unit.sum(values * is_non_dep))
-        else:
-            return np.array(pe_sim.calculate(variable, map_to="tax_unit"))
+        return np.array(pe_sim.calculate(variable, map_to="tax_unit"))
 
     # specify tcname-to-pename dictionary for simple one-to-one variables
     vnames = {
@@ -155,7 +158,8 @@ def create_tc_dataset(pe_dataset: Type, year: int) -> pd.DataFrame:
     df = pd.DataFrame(var)
 
     # specify person-to-tax_unit mapping function
-    map_to_tax_unit = lambda arr: pe_sim.map_result(arr, "person", "tax_unit")
+    def map_to_tax_unit(var_array):
+        return pe_sim.map_result(var_array, "person", "tax_unit")
 
     # specify df head/spouse variables
     head = pe_sim.calculate("is_tax_unit_head").values
@@ -164,16 +168,23 @@ def create_tc_dataset(pe_dataset: Type, year: int) -> pd.DataFrame:
     employment_income = pe_sim.calculate("employment_income").values
     self_employment_income = pe_sim.calculate("self_employment_income").values
     farm_income = pe_sim.calculate("farm_income").values
-    pre_tax_contributions = pe_sim.calculate("pre_tax_contributions").values
-
+    if creating_puf:
+        ei_df = pd.DataFrame({"employment_income": employment_income})
+        pc_df = impute_pretax_pension_contributions(ei_df)
+        uncapped_pretax_pencon = pc_df.pretax_pension_contributions
+        pretax_pencon = np.minimum(employment_income, uncapped_pretax_pencon)
     df["e00200p"] = map_to_tax_unit(employment_income * head)
     df["e00200s"] = map_to_tax_unit(employment_income * spouse)
     df["e00900p"] = map_to_tax_unit(self_employment_income * head)
     df["e00900s"] = map_to_tax_unit(self_employment_income * spouse)
     df["e02100p"] = map_to_tax_unit(farm_income * head)
     df["e02100s"] = map_to_tax_unit(farm_income * spouse)
-    df["pencon_p"] = map_to_tax_unit(pre_tax_contributions * head)
-    df["pencon_s"] = map_to_tax_unit(pre_tax_contributions * spouse)
+    if creating_puf:
+        df["pencon_p"] = map_to_tax_unit(pretax_pencon * head)
+        df["pencon_s"] = map_to_tax_unit(pretax_pencon * spouse)
+    else:
+        df["pencon_p"] = np.zeros_like(df.e00200p)
+        df["pencon_s"] = np.zeros_like(df.e00200s)
 
     # specify df demographics
     age = pe_sim.calculate("age").values
@@ -216,9 +227,9 @@ def create_tc_puf_2021():
 
 
 if __name__ == "__main__":
-    create_tc_dataset(PUF_2015).to_csv(
+    create_tc_dataset(PUF_2015, 2015).to_csv(
         STORAGE_FOLDER / "output" / "tc_puf_2015.csv.gz", index=False
     )
-    create_tc_dataset(PUF_2021).to_csv(
+    create_tc_dataset(PUF_2021, 2021).to_csv(
         STORAGE_FOLDER / "output" / "tc_puf_2021.csv.gz", index=False
     )
