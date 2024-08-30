@@ -20,5 +20,5 @@ def test_population(tmd_variables):
     people = tmd_variables.XTOT
     population = (weight * people).sum()
     assert (
-        abs(population / 1e6 / 334 - 1) < 0.1
-    ), "Population not within 10% of 334 million"
+        abs(population / 1e6 / 334.18 - 1) < 0.01
+    ), "Population not within 1% of 334.18 million"
