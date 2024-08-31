@@ -6,11 +6,11 @@ import yaml
 import taxcalc as tc
 
 
-FIRST_CYR = 2022
+FIRST_CYR = 2023
 LAST_CYR = 2033
 
-RELTOL_ITAX = 0.20
-RELTOL_PTAX = 0.09
+RELTOL_ITAX = 0.10
+RELTOL_PTAX = 0.02
 
 
 DUMP = False  # True implies test always fails with complete output
