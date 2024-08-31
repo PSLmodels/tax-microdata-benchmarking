@@ -6,11 +6,11 @@ import yaml
 import taxcalc as tc
 
 
-FIRST_CYR = 2021
-LAST_CYR = 2026
+FIRST_CYR = 2022
+LAST_CYR = 2033
 
-RELTOL_ITAX = 0.30
-RELTOL_PTAX = 0.08
+RELTOL_ITAX = 0.20
+RELTOL_PTAX = 0.09
 
 
 DUMP = False  # True implies test always fails with complete output
@@ -51,7 +51,10 @@ def test_tax_revenue(
         sim.advance_to_year(year)
         sim.calc_all()
         wght = sim.array("s006")
-        act_itax[year] = (wght * sim.array("iitax")).sum() * 1e-9
+        itax = sim.array("iitax")  # includes refundable credit amounts
+        refc = sim.array("refund")  # refundable credits considered expenditure
+        itax_cbo = itax + refc  # itax revenue comparable to CBO estimates
+        act_itax[year] = (wght * itax_cbo).sum() * 1e-9
         act_ptax[year] = (wght * sim.array("payrolltax")).sum() * 1e-9
     # compare actual vs expected tax revenues in each calendar year
     emsg = ""
