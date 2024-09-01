@@ -176,7 +176,7 @@ def reweight(
                 loss_matrix[label] = mask * values
                 targets_array.append(row["Value"])
 
-        return loss_matrix, np.array(targets_array)
+        return loss_matrix.copy(), np.array(targets_array)
 
     weights = torch.tensor(flat_file.s006.values, dtype=torch.float32)
     weight_multiplier = torch.tensor(
