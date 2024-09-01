@@ -7,6 +7,6 @@ import pytest
 from tmd.create_taxcalc_input_variables import create_variable_file
 
 
-@pytest.mark.skip
+# @pytest.mark.skip
 def test_create_file():
     create_variable_file(write_file=False)
