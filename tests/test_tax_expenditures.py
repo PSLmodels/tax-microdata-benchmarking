@@ -40,7 +40,7 @@ def test_tax_exp_diffs(
     # compare actdf and expdf rows
     same = True
     # ... compare 2026 itax revenue row using a larger relative diff tolerance
-    itax2026_index = expdf.shape[0] / 2 + 1
+    itax2026_index = int(len(expdf) / 2 + 1)
     actval = actdf.iat[itax2026_index, 3]
     expval = expdf.iat[itax2026_index, 3]
     if not np.allclose(actval, expval, atol=0.0, rtol=0.08):
