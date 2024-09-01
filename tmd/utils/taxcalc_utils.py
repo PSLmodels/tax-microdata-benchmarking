@@ -119,7 +119,9 @@ def get_tax_expenditure_results(
         weights=weights_file_path,
         growfactors=growfactors_file_path,
     )
+    ptax_baseline = (baseline.payrolltax * baseline.s006).sum() / 1e9
     itax_baseline = (baseline.iitax * baseline.s006).sum() / 1e9
+    itax_baseline_refcredits = (baseline.refund * baseline.s006).sum() / 1e9
 
     te_results = {}
     for reform_name, reform in te_reforms.items():
@@ -144,6 +146,11 @@ def get_tax_expenditure_results(
         open_mode = "a"
     year = simulation_year
     with open(taxexp_path, open_mode) as tefile:
+        res = f"YR,KIND,EST= {year} paytax {ptax_baseline:.1f}\n"
+        tefile.write(res)
+        omb_itax_revenue = itax_baseline + itax_baseline_refcredits
+        res = f"YR,KIND,EST= {year} iitax {omb_itax_revenue:.1f}\n"
+        tefile.write(res)
         for reform, estimate in te_results.items():
             res = f"YR,KIND,EST= {year} {reform} {estimate}\n"
             tefile.write(res)
