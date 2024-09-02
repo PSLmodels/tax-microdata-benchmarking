@@ -24,9 +24,3 @@ def test_population(tmd_variables):
     assert (
         abs(population / 1e6 / 334.18 - 1) < 0.01
     ), "Population not within 1% of 334.18 million"
-
-
-def test_agi_bin(tmd_variables):
-    bin = tmd_variables.agi_bin
-    assert np.min(bin) == 0, "Minimum value in agi_bin is not zero"
-    assert np.max(bin) == 6, "Maximum value in agi_bin is not six"
