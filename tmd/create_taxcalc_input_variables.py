@@ -2,7 +2,6 @@
 Construct tmd.csv, a Tax-Calculator-style input variable file for 2021.
 """
 
-import pandas as pd
 import taxcalc as tc
 from tmd.datasets.tmd import create_tmd_2021
 from tmd.imputation_assumptions import (
@@ -12,7 +11,6 @@ from tmd.imputation_assumptions import (
     W2_WAGES_SCALE,
     CPS_WEIGHTS_SCALE,
     REWEIGHT_DEVIATION_PENALTY,
-    SOI_ZIP_AGI_BINS,
 )
 from tmd.storage import STORAGE_FOLDER
 
@@ -34,13 +32,8 @@ def create_variable_file(write_file=True):
     print(f"  ASSUMED CPS_WEIGHTS_SCALE = {CPS_WEIGHTS_SCALE:.5f}")
     vdf = create_tmd_2021()
     vdf.FLPDYR = TAXYEAR
+    vdf.agi_bin = 0
     weights = vdf.s006.copy()
-    vdf.agi_bin = pd.cut(
-        vdf.c00100,
-        SOI_ZIP_AGI_BINS,
-        right=False,
-        labels=False,
-    )
     if write_file:
         # save a copy containing both input and output variables
         fname = STORAGE_FOLDER / "output" / "tmd_2021.csv"
