@@ -11,6 +11,9 @@ are no district files for states with only one congressional district.
 import sys
 import numpy as np
 import pandas as pd
+import jax
+import jax.numpy as jnp
+from scipy.optimize import Bounds, minimize
 from tmd.storage import STORAGE_FOLDER
 from tmd.areas import AREAS_FOLDER
 
@@ -64,9 +67,23 @@ def variable_matrix_and_target_array(area: str, vardf: pd.DataFrame):
         masked_varray = mask * unmasked_varray
         vm_tuple = vm_tuple + (masked_varray,)
     # construct variable matrix and target array and return as tuple
-    var_matrix = np.vstack(vm_tuple)
+    var_matrix = np.vstack(vm_tuple).T
     target_array = np.array(ta_list)
     return (var_matrix, target_array)
+
+
+def func(wght, *args):
+    """
+    Function to be minimized when creating area weights.
+    """
+    var, target = args
+    return jnp.mean(jnp.square(jnp.dot(wght, var) / target - 1))
+
+
+FVAL_AND_FGRAD = jax.jit(jax.value_and_grad(func))
+
+
+# -- High-level logic of the script:
 
 
 def create_area_weights_file(area: str, initial_weights_scale: float):
@@ -83,7 +100,34 @@ def create_area_weights_file(area: str, initial_weights_scale: float):
     variable_matrix, target_array = variable_matrix_and_target_array(area, vdf)
     print(variable_matrix.shape)
     print(target_array.shape)
-    print("dot=", np.dot(variable_matrix, wght)*1e-6)
+    print("dot=", np.dot(wght, variable_matrix) * 1e-6)
+    print(f"POP0= {(wght * vdf.XTOT).sum()*1e-6:.3f}")
+
+
+    ##c00100,     0,    1,     0,      0,  33e6
+
+    # find wght that minimizes mean of squared relative wvar-to-target diffs
+    res = minimize(
+        FVAL_AND_FGRAD,
+        wght,
+        args=(
+            variable_matrix,
+            target_array,
+        ),
+        jac=True,
+        method="L-BFGS-B",
+        bounds=Bounds(lb=0.0, ub=np.inf),
+        options={
+            "ftol": 1e-9,
+            "gtol": 1e-9,
+            "maxiter": 10,
+            "disp": True,
+        },
+    )
+    print(">>> scipy.minimize results:\n", res)
+    num_neg = (res.x < 0).sum()
+    assert num_neg == 0, f"num_negative_weights= {num_neg}"
+    print(f"POP1= {(res.x * vdf.XTOT).sum()*1e-6:.3f}")
 
     """
     # write annual weights extrapolating using national population forecast
