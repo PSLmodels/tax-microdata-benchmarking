@@ -14,14 +14,17 @@ import pandas as pd
 import jax
 import jax.numpy as jnp
 from scipy.optimize import Bounds, minimize
+import taxcalc as tc
 from tmd.storage import STORAGE_FOLDER
 from tmd.areas import AREAS_FOLDER
 
 
 FIRST_YEAR = 2021
 LAST_YEAR = 2074
-VARFILE = STORAGE_FOLDER / "output" / "tmd.csv.gz"
-POPFILE = STORAGE_FOLDER / "input" / "cbo_population_forecast.yaml"
+INFILE_PATH = STORAGE_FOLDER / "output" / "tmd.csv.gz"
+WTFILE_PATH = STORAGE_FOLDER / "output" / "tmd_weights.csv.gz"
+GFFILE_PATH = STORAGE_FOLDER / "output" / "tmd_growfactors.csv"
+POPFILE_PATH = STORAGE_FOLDER / "input" / "cbo_population_forecast.yaml"
 
 
 def variable_matrix_and_target_array(area: str, vardf: pd.DataFrame):
@@ -50,20 +53,14 @@ def variable_matrix_and_target_array(area: str, vardf: pd.DataFrame):
             mask = mask * (vardf.data_source == 1)  # PUF records
         elif row.scope == 2:
             mask = mask * (vardf.data_source == 0)  # CPS records
-        if row.agibin < 0 or row.agibin > 6:
-            raise ValueError(f"agibin value {row.agibin} not in [0,6] range")
-        if row.agibin > 0:
-            mask = mask * (vardf.agi_bin == row.agibin)
-        if not row.fstatus in (0, 1, 2, 4):
-            raise ValueError(f"fstatus value {row.fstatus} not 1, 2, or 4")
+        in_bin = (vardf.c00100 >= row.agilo) & (vardf.c00100 < row.agihi)
+        mask = mask * in_bin
+        if row.fstatus < 0 or row.fstatus > 5:
+            raise ValueError(f"fstatus value {row.fstatus} not [0,5] range")
         if row.fstatus > 0 and row.count != 1:
             raise ValueError(f"fstatus {row.fstatus} > 0 when count != 1")
-        if row.fstatus == 1:
-            mask = mask * (vardf.MARS == 1)  # single filer
-        elif row.fstatus == 2:
-            mask = mask * (vardf.MARS == 2)  # married filing jointly
-        elif row.fstatus == 4:
-            mask = mask * (vardf.MARS == 4)  # head of household filer
+        if row.fstatus > 0:
+            mask = mask * (vardf.MARS == row.fstatus)
         masked_varray = mask * unmasked_varray
         vm_tuple = vm_tuple + (masked_varray,)
     # construct variable matrix and target array and return as tuple
@@ -91,7 +88,18 @@ def create_area_weights_file(area: str, initial_weights_scale: float):
     Create Tax-Calculator-style weights file for FIRST_YEAR through LAST_YEAR
     for specified area and initial_weights_scale.
     """
-    vdf = pd.read_csv(VARFILE)
+    # compute all Tax-Calculator variables
+    input_data = tc.Records(
+        data=pd.read_csv(INFILE_PATH),
+        start_year=2021,
+        weights=str(WTFILE_PATH),
+        gfactors=tc.GrowFactors(growfactors_filename=str(GFFILE_PATH)),
+        adjust_ratios=None,
+        exact_calculations=True,
+    )
+    sim = tc.Calculator(records=input_data, policy=tc.Policy())
+    sim.calc_all()
+    vdf = sim.dataframe([], all_vars=True)
 
     # construct initial weights array
     wght = vdf.s006 * initial_weights_scale
@@ -102,9 +110,7 @@ def create_area_weights_file(area: str, initial_weights_scale: float):
     print(target_array.shape)
     print("dot=", np.dot(wght, variable_matrix) * 1e-6)
     print(f"POP0= {(wght * vdf.XTOT).sum()*1e-6:.3f}")
-
-
-    ##c00100,     0,    1,     0,      0,  33e6
+    print(f"AGI0= {(wght * vdf.c00100).sum()*1e-9:.3f}")
 
     # find wght that minimizes mean of squared relative wvar-to-target diffs
     res = minimize(
@@ -120,7 +126,7 @@ def create_area_weights_file(area: str, initial_weights_scale: float):
         options={
             "ftol": 1e-9,
             "gtol": 1e-9,
-            "maxiter": 10,
+            "maxiter": 100,
             "disp": True,
         },
     )
@@ -128,6 +134,7 @@ def create_area_weights_file(area: str, initial_weights_scale: float):
     num_neg = (res.x < 0).sum()
     assert num_neg == 0, f"num_negative_weights= {num_neg}"
     print(f"POP1= {(res.x * vdf.XTOT).sum()*1e-6:.3f}")
+    print(f"AGI1= {(res.x * vdf.c00100).sum()*1e-9:.3f}")
 
     """
     # write annual weights extrapolating using national population forecast
