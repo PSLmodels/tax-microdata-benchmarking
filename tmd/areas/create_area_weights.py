@@ -9,6 +9,7 @@ are no district files for states with only one congressional district.
 """
 
 import sys
+import time
 import numpy as np
 import pandas as pd
 import jax
@@ -34,42 +35,52 @@ def variable_matrix_and_target_array(area: str, vardf: pd.DataFrame):
     """
     numobs = len(vardf)
     tdf = pd.read_csv(AREAS_FOLDER / "targets" / f"{area}_targets.csv")
-    print("tdf.shape=", tdf.shape)
     vm_tuple = ()
     ta_list = []
+    row_num = 1
     for row in tdf.itertuples(index=False):
+        row_num += 1
+        line = f"{area}:L{row_num}"
         ta_list.append(row.target)
         # construct variable array for this target
-        if row.count < 0 or row.count > 1:
-            raise ValueError(f"count value {row.count} not in [0,1] range")
+        assert (
+            row.count >= 0 and row.count <= 1
+        ), f"count value {row.count} not in [0,1] range on {line}"
         if row.count == 0:
             unmasked_varray = vardf[row.varname]
         else:
             unmasked_varray = vardf[row.varname] > 0
         mask = np.ones(numobs, dtype=int)
-        if row.scope < 0 or row.scope > 2:
-            raise ValueError(f"scope value {row.scope} not in [0,2] range")
+        assert (
+            row.scope >= 0 and row.scope <= 2
+        ), f"scope value {row.scope} not in [0,2] range on {line}"
         if row.scope == 1:
-            mask = mask * (vardf.data_source == 1)  # PUF records
+            mask *= vardf.data_source == 1  # PUF records
         elif row.scope == 2:
-            mask = mask * (vardf.data_source == 0)  # CPS records
+            mask *= vardf.data_source == 0  # CPS records
         in_bin = (vardf.c00100 >= row.agilo) & (vardf.c00100 < row.agihi)
-        mask = mask * in_bin
-        if row.fstatus < 0 or row.fstatus > 5:
-            raise ValueError(f"fstatus value {row.fstatus} not [0,5] range")
-        if row.fstatus > 0 and row.count != 1:
-            raise ValueError(f"fstatus {row.fstatus} > 0 when count != 1")
+        mask *= in_bin
+        assert (
+            row.fstatus >= 0 and row.fstatus <= 5
+        ), f"fstatus value {row.fstatus} not in [0,5] range on {line}"
         if row.fstatus > 0:
-            mask = mask * (vardf.MARS == row.fstatus)
+            assert (
+                row.count == 1
+            ), f"count != 1 when fstatus {row.fstatus} > 0 on {line}"
+        if row.fstatus > 0:
+            mask *= vardf.MARS == row.fstatus
         masked_varray = mask * unmasked_varray
         vm_tuple = vm_tuple + (masked_varray,)
     # construct variable matrix and target array and return as tuple
     var_matrix = np.vstack(vm_tuple).T
     target_array = np.array(ta_list)
-    return (var_matrix, target_array)
+    return (
+        var_matrix,
+        target_array,
+    )
 
 
-def func(wght, *args):
+def loss_function(wght, *args):
     """
     Function to be minimized when creating area weights.
     """
@@ -77,7 +88,7 @@ def func(wght, *args):
     return jnp.mean(jnp.square(jnp.dot(wght, var) / target - 1))
 
 
-FVAL_AND_FGRAD = jax.jit(jax.value_and_grad(func))
+FVAL_AND_FGRAD = jax.jit(jax.value_and_grad(loss_function))
 
 
 # -- High-level logic of the script:
@@ -106,13 +117,14 @@ def create_area_weights_file(area: str, initial_weights_scale: float):
 
     # construct variable matrix and target array
     variable_matrix, target_array = variable_matrix_and_target_array(area, vdf)
-    print(variable_matrix.shape)
-    print(target_array.shape)
-    print("dot=", np.dot(wght, variable_matrix) * 1e-6)
+    # print(variable_matrix.shape)
+    # print(target_array.shape)
+    # print("dot=", np.dot(wght, variable_matrix) * 1e-6)
     print(f"POP0= {(wght * vdf.XTOT).sum()*1e-6:.3f}")
     print(f"AGI0= {(wght * vdf.c00100).sum()*1e-9:.3f}")
 
     # find wght that minimizes mean of squared relative wvar-to-target diffs
+    time0 = time.time()
     res = minimize(
         FVAL_AND_FGRAD,
         wght,
@@ -130,6 +142,8 @@ def create_area_weights_file(area: str, initial_weights_scale: float):
             "disp": True,
         },
     )
+    time1 = time.time()
+    print(f">>> scipy.minimize exectime(secs)= {(time1-time0):.3f}")
     print(">>> scipy.minimize results:\n", res)
     num_neg = (res.x < 0).sum()
     assert num_neg == 0, f"num_negative_weights= {num_neg}"
