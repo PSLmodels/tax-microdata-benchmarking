@@ -13,6 +13,8 @@ setup(
         "scikit-learn",
         "torch",
         "tensorboard",
+        "scipy",
+        "jax",
         "black>=24.4.2",
         "pytest",
         "pytest-xdist",
