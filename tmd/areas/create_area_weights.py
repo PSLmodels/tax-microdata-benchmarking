@@ -150,8 +150,8 @@ def create_area_weights_file(area: str):
         options={
             "ftol": 1e-12,
             "gtol": 1e-12,
-            "maxiter": 200,
-            "disp": True,
+            "maxiter": 1000,
+            "disp": False,
         },
     )
     time1 = time.time()
@@ -159,9 +159,9 @@ def create_area_weights_file(area: str):
     print(">>> scipy.minimize results:\n", res)
     num_neg = (res.x < 0).sum()
     assert num_neg == 0, f"num_negative_weights= {num_neg}"
-    print(f"# units with zero post weight is {(res.x == 0).sum()}")
-    for scale in range(1, 4):
-        wght_rchg = 2.0 * scale
+    print(f"# units with post weight equal to zero is {(res.x == 0).sum()}")
+    for multiplier in range(1, 5):
+        wght_rchg = 2.0 * multiplier
         num_inc = ((res.x / wght) > wght_rchg).sum()
         print(f"# units with post/pre weight ratio > {wght_rchg} is {num_inc}")
 
