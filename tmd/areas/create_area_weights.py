@@ -28,10 +28,12 @@ GFFILE_PATH = STORAGE_FOLDER / "output" / "tmd_growfactors.csv"
 POPFILE_PATH = STORAGE_FOLDER / "input" / "cbo_population_forecast.yaml"
 
 
-def variable_matrix_and_target_array(area: str, vardf: pd.DataFrame):
+def prepared_data(area: str, vardf: pd.DataFrame):
     """
     Construct numpy 2-D variable matrix and 1-D targets array for
-    specified area using specified vardf.
+    specified area using specified vardf.  Also, compute initial
+    weights scaling factor for specified area.  Return all three
+    as a tuple.
     """
     numobs = len(vardf)
     tdf = pd.read_csv(AREAS_FOLDER / "targets" / f"{area}_targets.csv")
@@ -41,6 +43,7 @@ def variable_matrix_and_target_array(area: str, vardf: pd.DataFrame):
     for row in tdf.itertuples(index=False):
         row_num += 1
         line = f"{area}:L{row_num}"
+        # construct target amount for this row
         unscaled_target = row.target
         zero_unscaled_target = bool(unscaled_target == 0)
         if zero_unscaled_target:
@@ -48,6 +51,16 @@ def variable_matrix_and_target_array(area: str, vardf: pd.DataFrame):
         scale = 1.0 / unscaled_target
         scaled_target = unscaled_target * scale
         ta_list.append(scaled_target)
+        # confirm that row_num 2 contains the area population target
+        if row_num == 2:
+            ok1 = bool(row.varname == "XTOT" and row.count == 0)
+            ok2 = bool(row.scope == 0 and row.fstatus == 0)
+            ok3 = bool(row.agilo < -8e99 and row.agihi > 8e99)
+            assert (
+                ok1 and ok2 and ok3
+            ), f"{line} does not contain the area population target"
+            uspop = 334.181e6  # tmd/storage/input/cbo_population_forecast.yaml
+            initial_weights_scale = row.target / uspop
         # construct variable array for this target
         assert (
             row.count >= 0 and row.count <= 1
@@ -79,6 +92,7 @@ def variable_matrix_and_target_array(area: str, vardf: pd.DataFrame):
     return (
         var_matrix,
         target_array,
+        initial_weights_scale,
     )
 
 
@@ -96,10 +110,10 @@ FVAL_AND_FGRAD = jax.jit(jax.value_and_grad(loss_function))
 # -- High-level logic of the script:
 
 
-def create_area_weights_file(area: str, initial_weights_scale: float):
+def create_area_weights_file(area: str):
     """
     Create Tax-Calculator-style weights file for FIRST_YEAR through LAST_YEAR
-    for specified area and initial_weights_scale.
+    for specified area using information in area targets CSV file.
     """
     # compute all Tax-Calculator variables
     input_data = tc.Records(
@@ -114,14 +128,10 @@ def create_area_weights_file(area: str, initial_weights_scale: float):
     sim.calc_all()
     vdf = sim.dataframe([], all_vars=True)
 
-    # construct initial weights array
-    wght = vdf.s006 * initial_weights_scale
+    # construct variable matrix and target array and weights_scale
+    variable_matrix, target_array, weights_scale = prepared_data(area, vdf)
+    wght = vdf.s006 * weights_scale
 
-    # construct variable matrix and target array
-    variable_matrix, target_array = variable_matrix_and_target_array(area, vdf)
-    # print(variable_matrix.shape)
-    # print(target_array.shape)
-    # print("dot=", np.dot(wght, variable_matrix) * 1e-6)
     print(f"POP0= {(wght * vdf.XTOT).sum()*1e-6:.3f}")
     print(f"AGI0= {(wght * vdf.c00100).sum()*1e-9:.3f}")
 
@@ -149,10 +159,12 @@ def create_area_weights_file(area: str, initial_weights_scale: float):
     print(">>> scipy.minimize results:\n", res)
     num_neg = (res.x < 0).sum()
     assert num_neg == 0, f"num_negative_weights= {num_neg}"
+    print(f"# units with zero post weight is {(res.x == 0).sum()}")
     for scale in range(1, 4):
         wght_rchg = 2.0 * scale
         num_inc = ((res.x / wght) > wght_rchg).sum()
-        print(f"# units with pst/pre weight ratio > {wght_rchg} is {num_inc}")
+        print(f"# units with post/pre weight ratio > {wght_rchg} is {num_inc}")
+
     print(f"POP1= {(res.x * vdf.XTOT).sum()*1e-6:.3f}")
     print(f"AGI1= {(res.x * vdf.c00100).sum()*1e-9:.3f}")
 
@@ -184,4 +196,4 @@ def create_area_weights_file(area: str, initial_weights_scale: float):
 
 
 if __name__ == "__main__":
-    sys.exit(create_area_weights_file("xx", 0.1))
+    sys.exit(create_area_weights_file("xx"))
