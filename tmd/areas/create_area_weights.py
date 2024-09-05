@@ -136,9 +136,9 @@ def create_area_weights_file(area: str, initial_weights_scale: float):
         method="L-BFGS-B",
         bounds=Bounds(lb=0.0, ub=np.inf),
         options={
-            "ftol": 1e-9,
-            "gtol": 1e-9,
-            "maxiter": 100,
+            "ftol": 1e-14,
+            "gtol": 1e-14,
+            "maxiter": 200,
             "disp": True,
         },
     )
@@ -147,6 +147,10 @@ def create_area_weights_file(area: str, initial_weights_scale: float):
     print(">>> scipy.minimize results:\n", res)
     num_neg = (res.x < 0).sum()
     assert num_neg == 0, f"num_negative_weights= {num_neg}"
+    for scale in range(1, 4):
+        wght_rchg = 2.0 * scale
+        num_inc = ((res.x / wght) > wght_rchg).sum()
+        print(f"# units with pst/pre weight ratio > {wght_rchg} is {num_inc}")
     print(f"POP1= {(res.x * vdf.XTOT).sum()*1e-6:.3f}")
     print(f"AGI1= {(res.x * vdf.c00100).sum()*1e-9:.3f}")
 
