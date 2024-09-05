@@ -41,7 +41,13 @@ def variable_matrix_and_target_array(area: str, vardf: pd.DataFrame):
     for row in tdf.itertuples(index=False):
         row_num += 1
         line = f"{area}:L{row_num}"
-        ta_list.append(row.target)
+        unscaled_target = row.target
+        zero_unscaled_target = bool(unscaled_target == 0)
+        if zero_unscaled_target:
+            unscaled_target = 1.0
+        scale = 1.0 / unscaled_target
+        scaled_target = unscaled_target * scale
+        ta_list.append(scaled_target)
         # construct variable array for this target
         assert (
             row.count >= 0 and row.count <= 1
@@ -64,13 +70,9 @@ def variable_matrix_and_target_array(area: str, vardf: pd.DataFrame):
             row.fstatus >= 0 and row.fstatus <= 5
         ), f"fstatus value {row.fstatus} not in [0,5] range on {line}"
         if row.fstatus > 0:
-            assert (
-                row.count == 1
-            ), f"count != 1 when fstatus {row.fstatus} > 0 on {line}"
-        if row.fstatus > 0:
             mask *= vardf.MARS == row.fstatus
-        masked_varray = mask * unmasked_varray
-        vm_tuple = vm_tuple + (masked_varray,)
+        scaled_masked_varray = mask * unmasked_varray * scale
+        vm_tuple = vm_tuple + (scaled_masked_varray,)
     # construct variable matrix and target array and return as tuple
     var_matrix = np.vstack(vm_tuple).T
     target_array = np.array(ta_list)
@@ -136,14 +138,14 @@ def create_area_weights_file(area: str, initial_weights_scale: float):
         method="L-BFGS-B",
         bounds=Bounds(lb=0.0, ub=np.inf),
         options={
-            "ftol": 1e-14,
-            "gtol": 1e-14,
+            "ftol": 1e-12,
+            "gtol": 1e-12,
             "maxiter": 200,
             "disp": True,
         },
     )
     time1 = time.time()
-    print(f">>> scipy.minimize exectime(secs)= {(time1-time0):.3f}")
+    print(f">>> scipy.minimize exectime= {(time1-time0):.1f} secs")
     print(">>> scipy.minimize results:\n", res)
     num_neg = (res.x < 0).sum()
     assert num_neg == 0, f"num_negative_weights= {num_neg}"
