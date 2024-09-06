@@ -42,8 +42,7 @@ tmd_files: tmd/storage/output/tmd.csv.gz \
 
 .PHONY=test
 test: tmd_files
-	pytest tests/test_area_weights.py  -v
-#	pytest . -v -n4
+	pytest . -v -n4
 
 .PHONY=data
 data: install tmd_files test
