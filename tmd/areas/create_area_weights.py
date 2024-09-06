@@ -140,10 +140,15 @@ def loss_function_value(wght, variable_matrix, target_array):
     """
     Return loss function value using numpy functions.
     """
-    act_minus_exp = np.dot(wght, variable_matrix) - target_array
+    act = np.dot(wght, variable_matrix)
+    act_minus_exp = act - target_array
     if DUMP_LOSS_FUNCTION_VALUE_COMPONENTS:
         for tnum in range(1, len(target_array) + 1):
-            print(f"ACT-EXP:{tnum}= {act_minus_exp[tnum - 1]:16.9e}")
+            print(
+                f"TARGET{tnum:02d}:ACT-EXP,ACT/EXP= "
+                f"{act_minus_exp[tnum - 1]:16.9e}, "
+                f"{(act[tnum - 1] / target_array[tnum -1]):.3f}"
+            )
     return np.sum(np.square(act_minus_exp))
 
 
@@ -180,7 +185,7 @@ def create_area_weights_file(area: str):
         options={
             "ftol": 1e-30,
             "gtol": 1e-12,
-            "maxiter": 1000,
+            "maxiter": 3000,
             "disp": DUMP_MINIMIZE_ITERS,
         },
     )
