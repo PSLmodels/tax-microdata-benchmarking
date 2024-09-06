@@ -27,6 +27,10 @@ WTFILE_PATH = STORAGE_FOLDER / "output" / "tmd_weights.csv.gz"
 GFFILE_PATH = STORAGE_FOLDER / "output" / "tmd_growfactors.csv"
 POPFILE_PATH = STORAGE_FOLDER / "input" / "cbo_population_forecast.yaml"
 
+DUMP_LOSS_FUNCTION_VALUE_COMPONENTS = True
+DUMP_MINIMIZE_ITERS = False
+DUMP_MINIMIZE_RES = True
+
 
 def all_taxcalc_variables():
     """
@@ -63,19 +67,23 @@ def prepared_data(area: str, vardf: pd.DataFrame):
         line = f"{area}:L{row_num}"
         # construct target amount for this row
         unscaled_target = row.target
-        zero_unscaled_target = bool(unscaled_target == 0)
-        if zero_unscaled_target:
+        if unscaled_target == 0:
             unscaled_target = 1.0
         scale = 1.0 / unscaled_target
         scaled_target = unscaled_target * scale
         ta_list.append(scaled_target)
         # confirm that row_num 2 contains the area population target
         if row_num == 2:
-            ok1 = bool(row.varname == "XTOT" and row.count == 0)
-            ok2 = bool(row.scope == 0 and row.fstatus == 0)
-            ok3 = bool(row.agilo < -8e99 and row.agihi > 8e99)
-            assert (
-                ok1 and ok2 and ok3
+            bool_list = [
+                row.varname == "XTOT",
+                row.count == 0,
+                row.scope == 0,
+                row.agilo < -8e99,
+                row.agihi > 8e99,
+                row.fstatus == 0,
+            ]
+            assert all(
+                bool_list
             ), f"{line} does not contain the area population target"
             uspop = 334.181e6  # tmd/storage/input/cbo_population_forecast.yaml
             initial_weights_scale = row.target / uspop
@@ -84,7 +92,7 @@ def prepared_data(area: str, vardf: pd.DataFrame):
             row.count >= 0 and row.count <= 1
         ), f"count value {row.count} not in [0,1] range on {line}"
         if row.count == 0:
-            unmasked_varray = vardf[row.varname]
+            unmasked_varray = vardf[row.varname].astype(float)
         else:
             unmasked_varray = (vardf[row.varname] > 0).astype(float)
         mask = np.ones(numobs, dtype=int)
@@ -114,15 +122,29 @@ def prepared_data(area: str, vardf: pd.DataFrame):
     )
 
 
-def loss_function(wght, *args):
+def loss_function_value_and_gradient(wght, *args):
     """
-    Function to be minimized when creating area weights.
+    Return loss function value and its gradient as a tuple using jnp functions.
     """
-    var, target = args
-    return jnp.sum(jnp.square(jnp.dot(wght, var) / target - 1))
+    var, target, var_transpose = args
+    act_minus_exp = jnp.dot(wght, var) - target
+    fval = jnp.sum(jnp.square(act_minus_exp))
+    grad = jnp.dot(2.0 * act_minus_exp, var_transpose)
+    return fval, grad
 
 
-FVAL_AND_FGRAD = jax.jit(jax.value_and_grad(loss_function))
+FVAL_AND_FGRAD = jax.jit(loss_function_value_and_gradient)
+
+
+def loss_function_value(wght, variable_matrix, target_array):
+    """
+    Return loss function value using numpy functions.
+    """
+    act_minus_exp = np.dot(wght, variable_matrix) - target_array
+    if DUMP_LOSS_FUNCTION_VALUE_COMPONENTS:
+        for tnum in range(1, len(target_array) + 1):
+            print(f"ACT-EXP:{tnum}= {act_minus_exp[tnum - 1]:16.9e}")
+    return np.sum(np.square(act_minus_exp))
 
 
 # -- High-level logic of the script:
@@ -138,11 +160,9 @@ def create_area_weights_file(area: str):
     variable_matrix, target_array, weights_scale = prepared_data(area, vdf)
     wght = vdf.s006 * weights_scale
 
-    print(f"POP0= {(wght * vdf.XTOT).sum()*1e-6:.3f}")
-    print(f"AGI0= {(wght * vdf.c00100).sum()*1e-9:.3f}")
-    # print(f"HII0= {(wght * (vdf.c00100 >= 1e6)).sum()*1e-6:.4f}")
-    # print(f"LOI0= {(wght * (vdf.c00100 < 30e3)).sum()*1e-6:.4f}")
-    # print(f"FS_2= {(wght * (vdf.MARS == 2)).sum()*1e-6:.4f}")
+    print(f"NUMBER_OF_TARGETS = {len(target_array)}")
+    loss = loss_function_value(wght, variable_matrix, target_array)
+    print(f"LOSS_FUNCTION_VALUE= {loss:.9e}")
 
     # find wght that minimizes mean of squared relative wvar-to-target diffs
     time0 = time.time()
@@ -152,6 +172,7 @@ def create_area_weights_file(area: str):
         args=(
             variable_matrix,
             target_array,
+            variable_matrix.T,
         ),
         jac=True,
         method="L-BFGS-B",
@@ -160,26 +181,29 @@ def create_area_weights_file(area: str):
             "ftol": 1e-30,
             "gtol": 1e-12,
             "maxiter": 1000,
-            "disp": False,
+            "disp": DUMP_MINIMIZE_ITERS,
         },
     )
     time1 = time.time()
-    print(f">>> scipy.minimize exectime= {(time1-time0):.1f} secs")
-    print(">>> scipy.minimize results:\n", res)
-    num_neg = (res.x < 0).sum()
+    res_summary = (
+        f">>> scipy.minimize execution: {(time1-time0):.1f} secs"
+        f"  iterations={res.nit}  success={res.success}"
+    )
+    print(res_summary)
+    if DUMP_MINIMIZE_RES:
+        print(">>> scipy.minimize all results:\n", res)
+    wghtx = res.x
+    num_neg = (wghtx < 0).sum()
     assert num_neg == 0, f"num_negative_weights= {num_neg}"
-    print(f"# units in total is {len(res.x)}")
-    print(f"# units with post weight equal to zero is {(res.x == 0).sum()}")
+
+    print(f"# units in total is {len(wghtx)}")
+    print(f"# units with post weight equal to zero is {(wghtx == 0).sum()}")
     for multiplier in range(1, 5):
         wght_rchg = 2.0 * multiplier
-        num_inc = ((res.x / wght) > wght_rchg).sum()
+        num_inc = ((wghtx / wght) > wght_rchg).sum()
         print(f"# units with post/pre weight ratio > {wght_rchg} is {num_inc}")
-
-    print(f"POP1= {(res.x * vdf.XTOT).sum()*1e-6:.3f}")
-    print(f"AGI1= {(res.x * vdf.c00100).sum()*1e-9:.3f}")
-    # print(f"HII1= {(res.x * (vdf.c00100 >= 1e6)).sum()*1e-6:.4f}")
-    # print(f"LOI1= {(res.x * (vdf.c00100 < 30e3)).sum()*1e-6:.4f}")
-    # print(f"FS_2= {(res.x * (vdf.MARS == 2)).sum()*1e-6:.4f}")
+    loss = loss_function_value(wghtx, variable_matrix, target_array)
+    print(f"LOSS_FUNCTION_VALUE= {loss:.9e}")
 
     """
     # write annual weights extrapolating using national population forecast
@@ -214,12 +238,12 @@ if __name__ == "__main__":
             "ERROR: exactly one command-line argument is required\n"
         )
         sys.exit(1)
-    area = sys.argv[1]
-    tfile = f"{area}_targets.csv"
+    area_code = sys.argv[1]
+    tfile = f"{area_code}_targets.csv"
     target_file = AREAS_FOLDER / "targets" / tfile
     if not target_file.exists():
         sys.stderr.write(
             f"ERROR: {tfile} file not in tmd/areas/targets folder\n"
         )
         sys.exit(1)
-    sys.exit(create_area_weights_file(area))
+    sys.exit(create_area_weights_file(area_code))
