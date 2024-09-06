@@ -28,6 +28,24 @@ GFFILE_PATH = STORAGE_FOLDER / "output" / "tmd_growfactors.csv"
 POPFILE_PATH = STORAGE_FOLDER / "input" / "cbo_population_forecast.yaml"
 
 
+def all_taxcalc_variables():
+    """
+    Return all read and calc Tax-Calculator variables in pd.DataFrame.
+    """
+    input_data = tc.Records(
+        data=pd.read_csv(INFILE_PATH),
+        start_year=2021,
+        weights=str(WTFILE_PATH),
+        gfactors=tc.GrowFactors(growfactors_filename=str(GFFILE_PATH)),
+        adjust_ratios=None,
+        exact_calculations=True,
+    )
+    sim = tc.Calculator(records=input_data, policy=tc.Policy())
+    sim.calc_all()
+    vdf = sim.dataframe([], all_vars=True)
+    return vdf
+
+
 def prepared_data(area: str, vardf: pd.DataFrame):
     """
     Construct numpy 2-D variable matrix and 1-D targets array for
@@ -68,7 +86,7 @@ def prepared_data(area: str, vardf: pd.DataFrame):
         if row.count == 0:
             unmasked_varray = vardf[row.varname]
         else:
-            unmasked_varray = vardf[row.varname] > 0
+            unmasked_varray = (vardf[row.varname] > 0).astype(float)
         mask = np.ones(numobs, dtype=int)
         assert (
             row.scope >= 0 and row.scope <= 2
@@ -101,7 +119,7 @@ def loss_function(wght, *args):
     Function to be minimized when creating area weights.
     """
     var, target = args
-    return jnp.mean(jnp.square(jnp.dot(wght, var) / target - 1))
+    return jnp.sum(jnp.square(jnp.dot(wght, var) / target - 1))
 
 
 FVAL_AND_FGRAD = jax.jit(jax.value_and_grad(loss_function))
@@ -115,25 +133,16 @@ def create_area_weights_file(area: str):
     Create Tax-Calculator-style weights file for FIRST_YEAR through LAST_YEAR
     for specified area using information in area targets CSV file.
     """
-    # compute all Tax-Calculator variables
-    input_data = tc.Records(
-        data=pd.read_csv(INFILE_PATH),
-        start_year=2021,
-        weights=str(WTFILE_PATH),
-        gfactors=tc.GrowFactors(growfactors_filename=str(GFFILE_PATH)),
-        adjust_ratios=None,
-        exact_calculations=True,
-    )
-    sim = tc.Calculator(records=input_data, policy=tc.Policy())
-    sim.calc_all()
-    vdf = sim.dataframe([], all_vars=True)
-
     # construct variable matrix and target array and weights_scale
+    vdf = all_taxcalc_variables()
     variable_matrix, target_array, weights_scale = prepared_data(area, vdf)
     wght = vdf.s006 * weights_scale
 
     print(f"POP0= {(wght * vdf.XTOT).sum()*1e-6:.3f}")
     print(f"AGI0= {(wght * vdf.c00100).sum()*1e-9:.3f}")
+    # print(f"HII0= {(wght * (vdf.c00100 >= 1e6)).sum()*1e-6:.4f}")
+    # print(f"LOI0= {(wght * (vdf.c00100 < 30e3)).sum()*1e-6:.4f}")
+    # print(f"FS_2= {(wght * (vdf.MARS == 2)).sum()*1e-6:.4f}")
 
     # find wght that minimizes mean of squared relative wvar-to-target diffs
     time0 = time.time()
@@ -148,7 +157,7 @@ def create_area_weights_file(area: str):
         method="L-BFGS-B",
         bounds=Bounds(lb=0.0, ub=np.inf),
         options={
-            "ftol": 1e-12,
+            "ftol": 1e-30,
             "gtol": 1e-12,
             "maxiter": 1000,
             "disp": False,
@@ -159,6 +168,7 @@ def create_area_weights_file(area: str):
     print(">>> scipy.minimize results:\n", res)
     num_neg = (res.x < 0).sum()
     assert num_neg == 0, f"num_negative_weights= {num_neg}"
+    print(f"# units in total is {len(res.x)}")
     print(f"# units with post weight equal to zero is {(res.x == 0).sum()}")
     for multiplier in range(1, 5):
         wght_rchg = 2.0 * multiplier
@@ -167,6 +177,9 @@ def create_area_weights_file(area: str):
 
     print(f"POP1= {(res.x * vdf.XTOT).sum()*1e-6:.3f}")
     print(f"AGI1= {(res.x * vdf.c00100).sum()*1e-9:.3f}")
+    # print(f"HII1= {(res.x * (vdf.c00100 >= 1e6)).sum()*1e-6:.4f}")
+    # print(f"LOI1= {(res.x * (vdf.c00100 < 30e3)).sum()*1e-6:.4f}")
+    # print(f"FS_2= {(res.x * (vdf.MARS == 2)).sum()*1e-6:.4f}")
 
     """
     # write annual weights extrapolating using national population forecast
@@ -196,4 +209,17 @@ def create_area_weights_file(area: str):
 
 
 if __name__ == "__main__":
-    sys.exit(create_area_weights_file("xx"))
+    if len(sys.argv) != 2:
+        sys.stderr.write(
+            "ERROR: exactly one command-line argument is required\n"
+        )
+        sys.exit(1)
+    area = sys.argv[1]
+    tfile = f"{area}_targets.csv"
+    target_file = AREAS_FOLDER / "targets" / tfile
+    if not target_file.exists():
+        sys.stderr.write(
+            f"ERROR: {tfile} file not in tmd/areas/targets folder\n"
+        )
+        sys.exit(1)
+    sys.exit(create_area_weights_file(area))
