@@ -169,9 +169,9 @@ def create_area_weights_file(area: str, write_file: bool = True):
 
     print(f"NUMBER_OF_TARGETS = {len(target_array)}")
     loss = loss_function_value(wght, variable_matrix, target_array)
-    print(f"LOSS_FUNCTION_VALUE= {loss:.9e}")
+    print(f"US_PROPORTIONALLY_SCALED_LOSS_FUNCTION_VALUE= {loss:.9e}")
 
-    # find wght that minimizes mean of squared relative wvar-to-target diffs
+    # find wght that minimizes sum of squared wght*var-target deviations
     time0 = time.time()
     res = minimize(
         FVAL_AND_FGRAD,
@@ -210,7 +210,7 @@ def create_area_weights_file(area: str, write_file: bool = True):
         num_inc = ((wghtx / wght) > wght_rchg).sum()
         print(f"# units with post/pre weight ratio > {wght_rchg} is {num_inc}")
     loss = loss_function_value(wghtx, variable_matrix, target_array)
-    print(f"LOSS_FUNCTION_VALUE= {loss:.9e}")
+    print(f"AREA-OPTIMIZED_LOSS_FUNCTION_VALUE= {loss:.9e}")
 
     if not write_file:
         return loss
