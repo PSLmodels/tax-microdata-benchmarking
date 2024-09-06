@@ -155,10 +155,12 @@ def loss_function_value(wght, variable_matrix, target_array):
 # -- High-level logic of the script:
 
 
-def create_area_weights_file(area: str):
+def create_area_weights_file(area: str, write_file: bool = True):
     """
     Create Tax-Calculator-style weights file for FIRST_YEAR through LAST_YEAR
     for specified area using information in area targets CSV file.
+    Return loss_function_value using the optimized weights and optionally
+    write the weights file.
     """
     # construct variable matrix and target array and weights_scale
     vdf = all_taxcalc_variables()
@@ -210,6 +212,10 @@ def create_area_weights_file(area: str):
     loss = loss_function_value(wghtx, variable_matrix, target_array)
     print(f"LOSS_FUNCTION_VALUE= {loss:.9e}")
 
+    if not write_file:
+        return loss
+
+    # write weights file
     """
     # write annual weights extrapolating using national population forecast
     # get population forecast
@@ -234,7 +240,7 @@ def create_area_weights_file(area: str):
     wdf.to_csv(WGTFILE, index=False, float_format="%.0f", compression="gzip")
     """
 
-    return 0
+    return loss
 
 
 if __name__ == "__main__":
@@ -251,4 +257,4 @@ if __name__ == "__main__":
             f"ERROR: {tfile} file not in tmd/areas/targets folder\n"
         )
         sys.exit(1)
-    sys.exit(create_area_weights_file(area_code))
+    create_area_weights_file(area_code, write_file=True)
