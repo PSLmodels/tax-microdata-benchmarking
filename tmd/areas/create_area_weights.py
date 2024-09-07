@@ -141,6 +141,9 @@ def loss_function_value(wght, *args):
     return jnp.sum(jnp.square(jnp.dot(wght, var) - target))
 
 
+# FHESS = jax.hessian(loss_function_value)
+
+
 if JAX_GRADIENT_CALCULATION:
     FVAL_AND_FGRAD = jax.jit(jax.value_and_grad(loss_function_value))
 else:
@@ -194,6 +197,7 @@ def create_area_weights_file(area: str, write_file: bool = True):
             variable_matrix.T,
         ),
         jac=True,
+        # hess=FHESS,
         method="L-BFGS-B",
         bounds=Bounds(lb=0.0, ub=np.inf),
         options={
