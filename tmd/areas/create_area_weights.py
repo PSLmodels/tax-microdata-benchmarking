@@ -26,6 +26,7 @@ WTFILE_PATH = STORAGE_FOLDER / "output" / "tmd_weights.csv.gz"
 GFFILE_PATH = STORAGE_FOLDER / "output" / "tmd_growfactors.csv"
 POPFILE_PATH = STORAGE_FOLDER / "input" / "cbo_population_forecast.yaml"
 
+POST_SCALING_TARGET_VALUE = 1.0
 JAX_GRADIENT_CALCULATION = False
 DUMP_LOSS_FUNCTION_VALUE_COMPONENTS = True
 DUMP_MINIMIZE_ITERATIONS = 50  # set to zero for no iteration information
@@ -70,7 +71,7 @@ def prepared_data(area: str, vardf: pd.DataFrame):
         unscaled_target = row.target
         if unscaled_target == 0:
             unscaled_target = 1.0
-        scale = 1.0 / unscaled_target
+        scale = POST_SCALING_TARGET_VALUE / unscaled_target
         scaled_target = unscaled_target * scale
         ta_list.append(scaled_target)
         # confirm that row_num 2 contains the area population target
