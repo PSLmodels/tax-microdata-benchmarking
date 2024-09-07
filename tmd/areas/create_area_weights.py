@@ -19,7 +19,6 @@ import taxcalc as tc
 from tmd.storage import STORAGE_FOLDER
 from tmd.areas import AREAS_FOLDER
 
-
 FIRST_YEAR = 2021
 LAST_YEAR = 2074
 INFILE_PATH = STORAGE_FOLDER / "output" / "tmd.csv.gz"
@@ -27,9 +26,10 @@ WTFILE_PATH = STORAGE_FOLDER / "output" / "tmd_weights.csv.gz"
 GFFILE_PATH = STORAGE_FOLDER / "output" / "tmd_growfactors.csv"
 POPFILE_PATH = STORAGE_FOLDER / "input" / "cbo_population_forecast.yaml"
 
+JAX_GRADIENT_CALCULATION = False
 DUMP_LOSS_FUNCTION_VALUE_COMPONENTS = True
-DUMP_MINIMIZE_ITERS = True
-DUMP_MINIMIZE_RES = True
+DUMP_MINIMIZE_ITERATIONS = 50  # set to zero for no iteration information
+DUMP_MINIMIZE_RESULTS = True
 
 
 def all_taxcalc_variables():
@@ -133,10 +133,21 @@ def loss_function_value_and_gradient(wght, *args):
     return fval, grad
 
 
-FVAL_AND_FGRAD = jax.jit(loss_function_value_and_gradient)
+def loss_function_value(wght, *args):
+    """
+    Return loss function value using jnp functions.
+    """
+    var, target, _ = args
+    return jnp.sum(jnp.square(jnp.dot(wght, var) - target))
 
 
-def loss_function_value(wght, variable_matrix, target_array):
+if JAX_GRADIENT_CALCULATION:
+    FVAL_AND_FGRAD = jax.jit(jax.value_and_grad(loss_function_value))
+else:
+    FVAL_AND_FGRAD = jax.jit(loss_function_value_and_gradient)
+
+
+def loss_function_val(wght, variable_matrix, target_array):
     """
     Return loss function value using numpy functions.
     """
@@ -169,7 +180,7 @@ def create_area_weights_file(area: str, write_file: bool = True):
 
     numtrgts = len(target_array)
     print(f"USING {area}_targets.csv FILE CONTAINING {numtrgts} TARGETS")
-    loss = loss_function_value(wght, variable_matrix, target_array)
+    loss = loss_function_val(wght, variable_matrix, target_array)
     print(f"US_PROPORTIONALLY_SCALED_LOSS_FUNCTION_VALUE= {loss:.9e}")
 
     # find wght that minimizes sum of squared wght*var-target deviations
@@ -189,7 +200,7 @@ def create_area_weights_file(area: str, write_file: bool = True):
             "ftol": 1e-9,
             "gtol": 1e-9,
             "maxiter": 3000,
-            "disp": DUMP_MINIMIZE_ITERS,
+            "disp": DUMP_MINIMIZE_ITERATIONS,
         },
     )
     time1 = time.time()
@@ -198,7 +209,7 @@ def create_area_weights_file(area: str, write_file: bool = True):
         f"  iterations={res.nit}  success={res.success}"
     )
     print(res_summary)
-    if DUMP_MINIMIZE_RES:
+    if DUMP_MINIMIZE_RESULTS:
         print(">>> scipy.minimize all results:\n", res)
     wghtx = res.x
     num_neg = (wghtx < 0).sum()
@@ -210,7 +221,7 @@ def create_area_weights_file(area: str, write_file: bool = True):
         wght_rchg = 2.0 * multiplier
         num_inc = ((wghtx / wght) > wght_rchg).sum()
         print(f"# units with post/pre weight ratio > {wght_rchg} is {num_inc}")
-    loss = loss_function_value(wghtx, variable_matrix, target_array)
+    loss = loss_function_val(wghtx, variable_matrix, target_array)
     print(f"AREA-OPTIMIZED_LOSS_FUNCTION_VALUE= {loss:.9e}")
 
     if not write_file:
