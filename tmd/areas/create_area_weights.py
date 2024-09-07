@@ -147,7 +147,7 @@ def loss_function_value(wght, variable_matrix, target_array):
             print(
                 f"TARGET{tnum:02d}:ACT-EXP,ACT/EXP= "
                 f"{act_minus_exp[tnum - 1]:16.9e}, "
-                f"{(act[tnum - 1] / target_array[tnum -1]):.3f}"
+                f"{(act[tnum - 1] / target_array[tnum - 1]):.3f}"
             )
     return np.sum(np.square(act_minus_exp))
 
