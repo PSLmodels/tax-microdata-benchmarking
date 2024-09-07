@@ -29,8 +29,11 @@ POPFILE_PATH = STORAGE_FOLDER / "input" / "cbo_population_forecast.yaml"
 POST_SCALING_TARGET_VALUE = 1.0
 JAX_GRADIENT_CALCULATION = False
 DUMP_LOSS_FUNCTION_VALUE_COMPONENTS = True
-DUMP_MINIMIZE_ITERATIONS = 50  # set to zero for no iteration information
-DUMP_MINIMIZE_RESULTS = True
+MINIMIZE_FTOL = 1e-9
+MINIMIZE_GTOL = 1e-9
+MINIMIZE_MAX_ITERATIONS = 10_000
+MINIMIZE_DUMP_EVERY_ITERATION = 50  # set to zero for no iteration information
+MINIMIZE_DUMP_RESULTS = True
 
 
 def all_taxcalc_variables():
@@ -202,10 +205,10 @@ def create_area_weights_file(area: str, write_file: bool = True):
         method="L-BFGS-B",
         bounds=Bounds(lb=0.0, ub=np.inf),
         options={
-            "ftol": 1e-9,
-            "gtol": 1e-9,
-            "maxiter": 3000,
-            "disp": DUMP_MINIMIZE_ITERATIONS,
+            "ftol": MINIMIZE_FTOL,
+            "gtol": MINIMIZE_GTOL,
+            "maxiter": MINIMIZE_MAX_ITERATIONS,
+            "disp": MINIMIZE_DUMP_EVERY_ITERATION,
         },
     )
     time1 = time.time()
@@ -214,7 +217,7 @@ def create_area_weights_file(area: str, write_file: bool = True):
         f"  iterations={res.nit}  success={res.success}"
     )
     print(res_summary)
-    if DUMP_MINIMIZE_RESULTS:
+    if MINIMIZE_DUMP_RESULTS:
         print(">>> scipy.minimize all results:\n", res)
     wghtx = res.x
     num_neg = (wghtx < 0).sum()
