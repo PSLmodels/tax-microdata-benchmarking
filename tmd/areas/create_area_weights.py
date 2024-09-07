@@ -57,6 +57,7 @@ def prepared_data(area: str, vardf: pd.DataFrame):
     weights scaling factor for specified area.  Return all three
     as a tuple.
     """
+    national_population = (vardf.s006 * vardf.XTOT).sum()
     numobs = len(vardf)
     tdf = pd.read_csv(AREAS_FOLDER / "targets" / f"{area}_targets.csv")
     vm_tuple = ()
@@ -85,8 +86,7 @@ def prepared_data(area: str, vardf: pd.DataFrame):
             assert all(
                 bool_list
             ), f"{line} does not contain the area population target"
-            uspop = 334.181e6  # tmd/storage/input/cbo_population_forecast.yaml
-            initial_weights_scale = row.target / uspop
+            initial_weights_scale = row.target / national_population
         # construct variable array for this target
         assert (
             row.count >= 0 and row.count <= 1
