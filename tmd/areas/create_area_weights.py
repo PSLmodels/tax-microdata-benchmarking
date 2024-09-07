@@ -28,7 +28,7 @@ GFFILE_PATH = STORAGE_FOLDER / "output" / "tmd_growfactors.csv"
 POPFILE_PATH = STORAGE_FOLDER / "input" / "cbo_population_forecast.yaml"
 
 DUMP_LOSS_FUNCTION_VALUE_COMPONENTS = True
-DUMP_MINIMIZE_ITERS = False
+DUMP_MINIMIZE_ITERS = True
 DUMP_MINIMIZE_RES = True
 
 
@@ -167,7 +167,8 @@ def create_area_weights_file(area: str, write_file: bool = True):
     variable_matrix, target_array, weights_scale = prepared_data(area, vdf)
     wght = vdf.s006 * weights_scale
 
-    print(f"NUMBER_OF_TARGETS = {len(target_array)}")
+    numtrgts = len(target_array)
+    print(f"USING {area}_targets.csv FILE CONTAINING {numtrgts} TARGETS")
     loss = loss_function_value(wght, variable_matrix, target_array)
     print(f"US_PROPORTIONALLY_SCALED_LOSS_FUNCTION_VALUE= {loss:.9e}")
 
@@ -185,8 +186,8 @@ def create_area_weights_file(area: str, write_file: bool = True):
         method="L-BFGS-B",
         bounds=Bounds(lb=0.0, ub=np.inf),
         options={
-            "ftol": 1e-30,
-            "gtol": 1e-12,
+            "ftol": 1e-9,
+            "gtol": 1e-9,
             "maxiter": 3000,
             "disp": DUMP_MINIMIZE_ITERS,
         },
