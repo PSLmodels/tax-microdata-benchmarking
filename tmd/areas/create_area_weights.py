@@ -12,9 +12,7 @@ import sys
 import time
 import numpy as np
 import pandas as pd
-import jax
-import jax.numpy as jnp
-from scipy.optimize import Bounds, minimize
+from scipy.optimize import lsq_linear
 import taxcalc as tc
 from tmd.storage import STORAGE_FOLDER
 from tmd.areas import AREAS_FOLDER
@@ -26,14 +24,11 @@ WTFILE_PATH = STORAGE_FOLDER / "output" / "tmd_weights.csv.gz"
 GFFILE_PATH = STORAGE_FOLDER / "output" / "tmd_growfactors.csv"
 POPFILE_PATH = STORAGE_FOLDER / "input" / "cbo_population_forecast.yaml"
 
-POST_SCALING_TARGET_VALUE = 1.0
-JAX_GRADIENT_CALCULATION = False
 DUMP_LOSS_FUNCTION_VALUE_COMPONENTS = True
-MINIMIZE_FTOL = 1e-9
-MINIMIZE_GTOL = 1e-9
-MINIMIZE_MAX_ITERATIONS = 10_000
-MINIMIZE_DUMP_EVERY_ITERATION = 50  # set to zero for no iteration information
-MINIMIZE_DUMP_RESULTS = True
+OPTIMIZE_FTOL = 1e-10
+OPTIMIZE_MAXITER = 900
+OPTIMIZE_VERBOSE = 0  # set to zero for no iteration information
+OPTIMIZE_RESULTS = False
 
 
 def all_taxcalc_variables():
@@ -74,7 +69,7 @@ def prepared_data(area: str, vardf: pd.DataFrame):
         unscaled_target = row.target
         if unscaled_target == 0:
             unscaled_target = 1.0
-        scale = POST_SCALING_TARGET_VALUE / unscaled_target
+        scale = 1.0 / unscaled_target
         scaled_target = unscaled_target * scale
         ta_list.append(scaled_target)
         # confirm that row_num 2 contains the area population target
@@ -126,37 +121,9 @@ def prepared_data(area: str, vardf: pd.DataFrame):
     )
 
 
-def loss_function_value_and_gradient(wght, *args):
+def loss_function_value(wght, variable_matrix, target_array):
     """
-    Return loss function value and its gradient as a tuple using jnp functions.
-    """
-    var, target, var_transpose = args
-    act_minus_exp = jnp.dot(wght, var) - target
-    fval = jnp.sum(jnp.square(act_minus_exp))
-    grad = jnp.dot(2.0 * act_minus_exp, var_transpose)
-    return fval, grad
-
-
-def loss_function_value(wght, *args):
-    """
-    Return loss function value using jnp functions.
-    """
-    var, target, _ = args
-    return jnp.sum(jnp.square(jnp.dot(wght, var) - target))
-
-
-# FHESS = jax.hessian(loss_function_value)
-
-
-if JAX_GRADIENT_CALCULATION:
-    FVAL_AND_FGRAD = jax.jit(jax.value_and_grad(loss_function_value))
-else:
-    FVAL_AND_FGRAD = jax.jit(loss_function_value_and_gradient)
-
-
-def loss_function_val(wght, variable_matrix, target_array):
-    """
-    Return loss function value using numpy functions.
+    Return loss function value given specified arguments.
     """
     act = np.dot(wght, variable_matrix)
     act_minus_exp = act - target_array
@@ -167,7 +134,7 @@ def loss_function_val(wght, variable_matrix, target_array):
                 f"{act_minus_exp[tnum - 1]:16.9e}, "
                 f"{(act[tnum - 1] / target_array[tnum - 1]):.3f}"
             )
-    return np.sum(np.square(act_minus_exp))
+    return 0.5 * np.sum(np.square(act_minus_exp))
 
 
 # -- High-level logic of the script:
@@ -184,52 +151,49 @@ def create_area_weights_file(area: str, write_file: bool = True):
     vdf = all_taxcalc_variables()
     variable_matrix, target_array, weights_scale = prepared_data(area, vdf)
     wght = vdf.s006 * weights_scale
-
-    numtrgts = len(target_array)
-    print(f"USING {area}_targets.csv FILE CONTAINING {numtrgts} TARGETS")
-    loss = loss_function_val(wght, variable_matrix, target_array)
+    num_weights = len(wght)
+    num_targets = len(target_array)
+    print(f"USING {area}_targets.csv FILE CONTAINING {num_targets} TARGETS")
+    loss = loss_function_value(wght, variable_matrix, target_array)
     print(f"US_PROPORTIONALLY_SCALED_LOSS_FUNCTION_VALUE= {loss:.9e}")
 
     # find wght that minimizes sum of squared wght*var-target deviations
+    density = np.count_nonzero(variable_matrix) / variable_matrix.size
+    print(f"variable_matrix sparsity ratio = {(1.0 - density):.3f}")
+    lb = np.zeros(num_weights)
+    ub = np.full(num_weights, np.inf)
     time0 = time.time()
-    res = minimize(
-        FVAL_AND_FGRAD,
-        wght,
-        args=(
-            variable_matrix,
-            target_array,
-            variable_matrix.T,
-        ),
-        jac=True,
-        # hess=FHESS,
-        method="L-BFGS-B",
-        bounds=Bounds(lb=0.0, ub=np.inf),
-        options={
-            "ftol": MINIMIZE_FTOL,
-            "gtol": MINIMIZE_GTOL,
-            "maxiter": MINIMIZE_MAX_ITERATIONS,
-            "disp": MINIMIZE_DUMP_EVERY_ITERATION,
-        },
+    res = lsq_linear(
+        variable_matrix.T,
+        target_array,
+        bounds=(lb, ub),
+        method="bvls",
+        tol=OPTIMIZE_FTOL,
+        lsq_solver="exact",
+        lsmr_tol=None,
+        max_iter=OPTIMIZE_MAXITER,
+        verbose=OPTIMIZE_VERBOSE,
     )
     time1 = time.time()
     res_summary = (
-        f">>> scipy.minimize execution: {(time1-time0):.1f} secs"
-        f"  iterations={res.nit}  success={res.success}"
+        f">>> scipy.lsq_linear execution: {(time1-time0):.1f} secs"
+        f"  iterations={res.nit}  success={res.success}\n"
+        f">>> message: {res.message}\n"
+        f">>> lsq_linear optimized loss value: {res.cost:.9e}"
     )
     print(res_summary)
-    if MINIMIZE_DUMP_RESULTS:
-        print(">>> scipy.minimize all results:\n", res)
+    if OPTIMIZE_RESULTS:
+        print(">>> scipy.lsq_linear full results:\n", res)
     wghtx = res.x
     num_neg = (wghtx < 0).sum()
     assert num_neg == 0, f"num_negative_weights= {num_neg}"
-
-    print(f"# units in total is {len(wghtx)}")
+    print(f"# units in total is {num_weights}")
     print(f"# units with post weight equal to zero is {(wghtx == 0).sum()}")
     for multiplier in range(1, 5):
         wght_rchg = 2.0 * multiplier
         num_inc = ((wghtx / wght) > wght_rchg).sum()
         print(f"# units with post/pre weight ratio > {wght_rchg} is {num_inc}")
-    loss = loss_function_val(wghtx, variable_matrix, target_array)
+    loss = loss_function_value(wghtx, variable_matrix, target_array)
     print(f"AREA-OPTIMIZED_LOSS_FUNCTION_VALUE= {loss:.9e}")
 
     if not write_file:
