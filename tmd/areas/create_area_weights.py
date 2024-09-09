@@ -25,6 +25,7 @@ GFFILE_PATH = STORAGE_FOLDER / "output" / "tmd_growfactors.csv"
 POPFILE_PATH = STORAGE_FOLDER / "input" / "cbo_population_forecast.yaml"
 
 DUMP_LOSS_FUNCTION_VALUE_COMPONENTS = True
+SHOW_QUANTILES = True
 OPTIMIZE_FTOL = 1e-10
 OPTIMIZE_MAXITER = 900
 OPTIMIZE_VERBOSE = 2  # set to zero for no iteration information
@@ -165,7 +166,7 @@ def create_area_weights_file(area: str, write_file: bool = True):
     
     # lower and upper bounds for ratio of new to original weight
     lb = np.full(num_weights, 0.01)
-    ub = np.full(num_weights, 100.0)
+    ub = np.full(num_weights, 10.0)
     time0 = time.time()
     res = lsq_linear(
         (variable_matrix * wght[:, np.newaxis]).T,
@@ -197,6 +198,24 @@ def create_area_weights_file(area: str, write_file: bool = True):
         wght_rchg = 2.0 * multiplier
         num_inc = ((wghtx / wght) > wght_rchg).sum()
         print(f"# units with post/pre weight ratio > {wght_rchg} is {num_inc}")
+    
+    def formatted_print(numbers, format_spec=".3f"):
+        formatted_numbers = (f"{num:{format_spec}}" for num in numbers)
+        print(", ".join(formatted_numbers))
+    if SHOW_QUANTILES:
+        qtiles = [0.0, 0.10, 0.25, 0.5, 0.75, 0.90, 1.0]
+        print(f"quantiles of original and new weights, and ratio: ")
+        print(f"quantiles: {qtiles}")
+        wght_quantiles = np.quantile(wght, qtiles)
+        wghtx_quantiles = np.quantile(wghtx, qtiles)
+        ratio_quantiles = np.quantile(wghtx / wght, qtiles)
+        print("original weights: ")
+        formatted_print(wght_quantiles)
+        print("new weights: ")
+        formatted_print(wghtx_quantiles)
+        print("ratio of new to original weights: ")
+        formatted_print(ratio_quantiles)
+        
     loss = loss_function_value(wghtx, variable_matrix, target_array)
     print(f"AREA-OPTIMIZED_LOSS_FUNCTION_VALUE= {loss:.9e}")
 
