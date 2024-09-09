@@ -157,13 +157,13 @@ def create_area_weights_file(area: str, write_file: bool = True):
     print(f"USING {area}_targets.csv FILE CONTAINING {num_targets} TARGETS")
     loss = loss_function_value(wght, variable_matrix, target_array)
     print(f"US_PROPORTIONALLY_SCALED_LOSS_FUNCTION_VALUE= {loss:.9e}")
-    
+
     density = np.count_nonzero(variable_matrix) / variable_matrix.size
     print(f"variable_matrix sparsity ratio = {(1.0 - density):.3f}")
-    
+
     # solve for ratio of unknown new weight (wghtx) to original weight (wght) such that
     # new weight minimizes sum of squared wghtx*var-target deviations
-    
+
     # lower and upper bounds for ratio of new to original weight
     lb = np.full(num_weights, 0.01)
     ub = np.full(num_weights, 10.0)
@@ -198,12 +198,25 @@ def create_area_weights_file(area: str, write_file: bool = True):
         wght_rchg = 2.0 * multiplier
         num_inc = ((wghtx / wght) > wght_rchg).sum()
         print(f"# units with post/pre weight ratio > {wght_rchg} is {num_inc}")
-    
+
     def formatted_print(numbers, format_spec=".3f"):
         formatted_numbers = (f"{num:{format_spec}}" for num in numbers)
         print(", ".join(formatted_numbers))
+
     if SHOW_QUANTILES:
-        qtiles = [0.0, 0.01, 0.05, 0.10, 0.25, 0.5, 0.75, 0.90, 0.95, 0.99, 1.0]
+        qtiles = [
+            0.0,
+            0.01,
+            0.05,
+            0.10,
+            0.25,
+            0.5,
+            0.75,
+            0.90,
+            0.95,
+            0.99,
+            1.0,
+        ]
         print(f"quantiles of original and new weights, and ratio: ")
         print(f"quantiles: {qtiles}")
         wght_quantiles = np.quantile(wght, qtiles)
@@ -215,7 +228,7 @@ def create_area_weights_file(area: str, write_file: bool = True):
         formatted_print(wghtx_quantiles)
         print("ratio of new to original weights: ")
         formatted_print(ratio_quantiles)
-        
+
     loss = loss_function_value(wghtx, variable_matrix, target_array)
     print(f"AREA-OPTIMIZED_LOSS_FUNCTION_VALUE= {loss:.9e}")
 
