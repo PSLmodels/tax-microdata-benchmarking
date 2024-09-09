@@ -25,8 +25,10 @@ GFFILE_PATH = STORAGE_FOLDER / "output" / "tmd_growfactors.csv"
 POPFILE_PATH = STORAGE_FOLDER / "input" / "cbo_population_forecast.yaml"
 
 DUMP_LOSS_FUNCTION_VALUE_COMPONENTS = True
+OPTIMIZE_LO_BOUND_RATIO = 0.0
+OPTIMIZE_HI_BOUND_RATIO = np.inf
 OPTIMIZE_FTOL = 1e-10
-OPTIMIZE_MAXITER = 900
+OPTIMIZE_MAXITER = 5000
 OPTIMIZE_VERBOSE = 0  # set to zero for no iteration information
 OPTIMIZE_RESULTS = False
 
@@ -46,6 +48,7 @@ def all_taxcalc_variables():
     sim = tc.Calculator(records=input_data, policy=tc.Policy())
     sim.calc_all()
     vdf = sim.dataframe([], all_vars=True)
+    assert np.all(vdf.s006 > 0), "Not all weights are positive"
     return vdf
 
 
@@ -130,11 +133,54 @@ def loss_function_value(wght, variable_matrix, target_array):
     if DUMP_LOSS_FUNCTION_VALUE_COMPONENTS:
         for tnum in range(1, len(target_array) + 1):
             print(
-                f"TARGET{tnum:02d}:ACT-EXP,ACT/EXP= "
+                f"TARGET{tnum:03d}:ACT-EXP,ACT/EXP= "
                 f"{act_minus_exp[tnum - 1]:16.9e}, "
                 f"{(act[tnum - 1] / target_array[tnum - 1]):.3f}"
             )
     return 0.5 * np.sum(np.square(act_minus_exp))
+
+
+def weight_ratio_distribution(ratio):
+    """
+    Print distribution of post-optimized to pre-optimized weight ratios.
+    """
+    eps = 1e-6
+    bins = [
+        OPTIMIZE_LO_BOUND_RATIO,
+        OPTIMIZE_LO_BOUND_RATIO + eps,
+        0.2,
+        0.5,
+        0.8,
+        1.2,
+        2.0,
+        5.0,
+        1e1,
+        1e2,
+        1e3,
+        1e4,
+        1e5,
+        1e6,
+        np.inf,
+    ]
+    tot = ratio.size
+    print(f"DISTRIBUTION OF POST/PRE WEIGHT RATIO (n={tot}):")
+    print(f"  with OPTIMIZE_LO_BOUND_RATIO= {OPTIMIZE_LO_BOUND_RATIO:e}")
+    print(f"   and OPTIMIZE_HI_BOUND_RATIO= {OPTIMIZE_HI_BOUND_RATIO:e}")
+    header = (
+        "low bin ratio    high bin ratio"
+        "    bin #    cum #     bin %     cum %"
+    )
+    print(header)
+    out = pd.cut(ratio, bins, right=False, precision=6, duplicates="drop")
+    _, count = np.unique(out, return_counts=True)
+    cum = 0
+    for idx, num in enumerate(count):
+        cum += num
+        line = (
+            f">={bins[idx]:13.6f}, <{bins[idx + 1]:13.6f}:"
+            f"  {num:6d}   {cum:6d}   {num/tot:7.2%}   {cum/tot:7.2%}"
+        )
+        print(line)
 
 
 # -- High-level logic of the script:
@@ -160,13 +206,13 @@ def create_area_weights_file(area: str, write_file: bool = True):
     # find wght that minimizes sum of squared wght*var-target deviations
     density = np.count_nonzero(variable_matrix) / variable_matrix.size
     print(f"variable_matrix sparsity ratio = {(1.0 - density):.3f}")
-    lb = np.zeros(num_weights)
-    ub = np.full(num_weights, np.inf)
+    lob = np.ones(num_weights) * OPTIMIZE_LO_BOUND_RATIO
+    hib = np.ones(num_weights) * OPTIMIZE_HI_BOUND_RATIO
     time0 = time.time()
     res = lsq_linear(
         variable_matrix.T,
         target_array,
-        bounds=(lb, ub),
+        bounds=(lob, hib),
         method="bvls",
         tol=OPTIMIZE_FTOL,
         lsq_solver="exact",
@@ -185,16 +231,9 @@ def create_area_weights_file(area: str, write_file: bool = True):
     if OPTIMIZE_RESULTS:
         print(">>> scipy.lsq_linear full results:\n", res)
     wghtx = res.x
-    num_neg = (wghtx < 0).sum()
-    assert num_neg == 0, f"num_negative_weights= {num_neg}"
-    print(f"# units in total is {num_weights}")
-    print(f"# units with post weight equal to zero is {(wghtx == 0).sum()}")
-    for multiplier in range(1, 5):
-        wght_rchg = 2.0 * multiplier
-        num_inc = ((wghtx / wght) > wght_rchg).sum()
-        print(f"# units with post/pre weight ratio > {wght_rchg} is {num_inc}")
     loss = loss_function_value(wghtx, variable_matrix, target_array)
     print(f"AREA-OPTIMIZED_LOSS_FUNCTION_VALUE= {loss:.9e}")
+    weight_ratio_distribution(wghtx / wght)
 
     if not write_file:
         return loss
