@@ -161,8 +161,8 @@ def create_area_weights_file(area: str, write_file: bool = True):
     density = np.count_nonzero(variable_matrix) / variable_matrix.size
     print(f"variable_matrix sparsity ratio = {(1.0 - density):.3f}")
     
-    # solve for ratio of new weight to original weight such that
-    # new weight (wght) minimizes sum of squared wght*var-target deviations    
+    # solve for ratio of unknown new weight (wghtx) to original weight (wght) such that
+    # new weight minimizes sum of squared wghtx*var-target deviations
     
     # lower and upper bounds for ratio of new to original weight
     lb = np.full(num_weights, 0.01)
