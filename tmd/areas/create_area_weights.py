@@ -25,12 +25,20 @@ GFFILE_PATH = STORAGE_FOLDER / "output" / "tmd_growfactors.csv"
 POPFILE_PATH = STORAGE_FOLDER / "input" / "cbo_population_forecast.yaml"
 
 DUMP_LOSS_FUNCTION_VALUE_COMPONENTS = True
-OPTIMIZE_LO_BOUND_RATIO = 0.0
-OPTIMIZE_HI_BOUND_RATIO = np.inf
+# wide bounds settings:
+# OPTIMIZE_LO_BOUND_RATIO = 2e-6  # must be greater than 1e-6
+# OPTIMIZE_HI_BOUND_RATIO = 9e+9  # must be less than np.inf
+# narrow bounds settings:
+OPTIMIZE_LO_BOUND_RATIO = 1e-2  # must be greater than 1e-6
+OPTIMIZE_HI_BOUND_RATIO = 1e2  # must be less than np.inf
+# tiny bounds settings:
+# OPTIMIZE_LO_BOUND_RATIO = 1e-1  # must be greater than 1e-6
+# OPTIMIZE_HI_BOUND_RATIO = 1e+1  # must be less than np.inf
+OPTIMIZE_RATIOS = True  # True produces much better optimization results
 OPTIMIZE_FTOL = 1e-10
 OPTIMIZE_MAXITER = 5000
 OPTIMIZE_VERBOSE = 0  # set to zero for no iteration information
-OPTIMIZE_RESULTS = False
+OPTIMIZE_RESULTS = False  # set to True to see complete lsq_linear results
 
 
 def all_taxcalc_variables():
@@ -146,7 +154,8 @@ def weight_ratio_distribution(ratio):
     """
     eps = 1e-6
     bins = [
-        OPTIMIZE_LO_BOUND_RATIO,
+        0.0,
+        OPTIMIZE_LO_BOUND_RATIO - eps,
         OPTIMIZE_LO_BOUND_RATIO + eps,
         0.2,
         0.5,
@@ -159,7 +168,6 @@ def weight_ratio_distribution(ratio):
         1e3,
         1e4,
         1e5,
-        1e6,
         np.inf,
     ]
     tot = ratio.size
@@ -172,15 +180,19 @@ def weight_ratio_distribution(ratio):
     )
     print(header)
     out = pd.cut(ratio, bins, right=False, precision=6, duplicates="drop")
-    _, count = np.unique(out, return_counts=True)
+    count = pd.Series(out).value_counts().sort_index().to_dict()
     cum = 0
-    for idx, num in enumerate(count):
+    for interval, num in count.items():
         cum += num
+        if cum == 0:
+            continue
         line = (
-            f">={bins[idx]:13.6f}, <{bins[idx + 1]:13.6f}:"
+            f">={interval.left:13.6f}, <{interval.right:13.6f}:"
             f"  {num:6d}   {cum:6d}   {num/tot:7.2%}   {cum/tot:7.2%}"
         )
         print(line)
+        if cum == tot:
+            break
 
 
 # -- High-level logic of the script:
@@ -196,21 +208,33 @@ def create_area_weights_file(area: str, write_file: bool = True):
     # construct variable matrix and target array and weights_scale
     vdf = all_taxcalc_variables()
     variable_matrix, target_array, weights_scale = prepared_data(area, vdf)
-    wght = vdf.s006 * weights_scale
+    wght = np.array(vdf.s006 * weights_scale)
     num_weights = len(wght)
     num_targets = len(target_array)
     print(f"USING {area}_targets.csv FILE CONTAINING {num_targets} TARGETS")
     loss = loss_function_value(wght, variable_matrix, target_array)
     print(f"US_PROPORTIONALLY_SCALED_LOSS_FUNCTION_VALUE= {loss:.9e}")
-
-    # find wght that minimizes sum of squared wght*var-target deviations
     density = np.count_nonzero(variable_matrix) / variable_matrix.size
     print(f"variable_matrix sparsity ratio = {(1.0 - density):.3f}")
-    lob = np.ones(num_weights) * OPTIMIZE_LO_BOUND_RATIO
-    hib = np.ones(num_weights) * OPTIMIZE_HI_BOUND_RATIO
+
+    # optimize weights by minimizing sum of squared wght*var-target deviations
+    if OPTIMIZE_RATIOS:
+        var_matrix = (variable_matrix * wght[:, np.newaxis]).T
+        lob = OPTIMIZE_LO_BOUND_RATIO * np.ones(num_weights)
+        hib = OPTIMIZE_HI_BOUND_RATIO * np.ones(num_weights)
+    else:  # if optimizing the weights
+        var_matrix = variable_matrix.T
+        lob = OPTIMIZE_LO_BOUND_RATIO * wght
+        hib = OPTIMIZE_HI_BOUND_RATIO * wght
+    print(
+        f"OPTIMIZE_RATIOS= {OPTIMIZE_RATIOS}"
+        f"   var_matrix.shape= {var_matrix.shape}\n"
+        f"OPTIMIZE_LO_BOUND_RATIO= {OPTIMIZE_LO_BOUND_RATIO:e}\n"
+        f"OPTIMIZE_HI_BOUND_RATIO= {OPTIMIZE_HI_BOUND_RATIO:e}"
+    )
     time0 = time.time()
     res = lsq_linear(
-        variable_matrix.T,
+        var_matrix,
         target_array,
         bounds=(lob, hib),
         method="bvls",
@@ -230,7 +254,10 @@ def create_area_weights_file(area: str, write_file: bool = True):
     print(res_summary)
     if OPTIMIZE_RESULTS:
         print(">>> scipy.lsq_linear full results:\n", res)
-    wghtx = res.x
+    if OPTIMIZE_RATIOS:
+        wghtx = res.x * wght
+    else:
+        wghtx = res.x
     loss = loss_function_value(wghtx, variable_matrix, target_array)
     print(f"AREA-OPTIMIZED_LOSS_FUNCTION_VALUE= {loss:.9e}")
     weight_ratio_distribution(wghtx / wght)
