@@ -164,7 +164,7 @@ def create_area_weights_file(area: str, write_file: bool = True):
     ub = np.full(num_weights, np.inf)
     time0 = time.time()
     res = lsq_linear(
-        variable_matrix.T,
+        (variable_matrix * wght[:, np.newaxis]).T,
         target_array,
         bounds=(lb, ub),
         method="bvls",
