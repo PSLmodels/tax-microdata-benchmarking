@@ -184,7 +184,7 @@ def create_area_weights_file(area: str, write_file: bool = True):
     print(res_summary)
     if OPTIMIZE_RESULTS:
         print(">>> scipy.lsq_linear full results:\n", res)
-    wghtx = res.x
+    wghtx = res.x * wght
     num_neg = (wghtx < 0).sum()
     assert num_neg == 0, f"num_negative_weights= {num_neg}"
     print(f"# units in total is {num_weights}")
