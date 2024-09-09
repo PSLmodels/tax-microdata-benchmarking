@@ -27,7 +27,7 @@ POPFILE_PATH = STORAGE_FOLDER / "input" / "cbo_population_forecast.yaml"
 DUMP_LOSS_FUNCTION_VALUE_COMPONENTS = True
 OPTIMIZE_FTOL = 1e-10
 OPTIMIZE_MAXITER = 900
-OPTIMIZE_VERBOSE = 0  # set to zero for no iteration information
+OPTIMIZE_VERBOSE = 2  # set to zero for no iteration information
 OPTIMIZE_RESULTS = False
 
 
@@ -156,12 +156,16 @@ def create_area_weights_file(area: str, write_file: bool = True):
     print(f"USING {area}_targets.csv FILE CONTAINING {num_targets} TARGETS")
     loss = loss_function_value(wght, variable_matrix, target_array)
     print(f"US_PROPORTIONALLY_SCALED_LOSS_FUNCTION_VALUE= {loss:.9e}")
-
-    # find wght that minimizes sum of squared wght*var-target deviations
+    
     density = np.count_nonzero(variable_matrix) / variable_matrix.size
     print(f"variable_matrix sparsity ratio = {(1.0 - density):.3f}")
-    lb = np.zeros(num_weights)
-    ub = np.full(num_weights, np.inf)
+    
+    # solve for ratio of new weight to original weight such that
+    # new weight (wght) minimizes sum of squared wght*var-target deviations    
+    
+    # lower and upper bounds for ratio of new to original weight
+    lb = np.full(num_weights, 0.01)
+    ub = np.full(num_weights, 100.0)
     time0 = time.time()
     res = lsq_linear(
         (variable_matrix * wght[:, np.newaxis]).T,
