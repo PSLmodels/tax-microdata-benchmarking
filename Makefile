@@ -1,11 +1,11 @@
-.PHONY=clean
-clean:
-	rm -f tmd/storage/output/*
-
 .PHONY=install
 install:
 	pip install -e .
 	python tmd/download_prerequisites.py
+
+.PHONY=clean
+clean:
+	rm -f tmd/storage/output/*
 
 tmd/storage/output/tmd.csv.gz: \
   tmd/imputation_assumptions.py \
