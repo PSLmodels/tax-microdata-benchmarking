@@ -203,7 +203,7 @@ def create_area_weights_file(area: str, write_file: bool = True):
         formatted_numbers = (f"{num:{format_spec}}" for num in numbers)
         print(", ".join(formatted_numbers))
     if SHOW_QUANTILES:
-        qtiles = [0.0, 0.10, 0.25, 0.5, 0.75, 0.90, 1.0]
+        qtiles = [0.0, 0.01, 0.05, 0.10, 0.25, 0.5, 0.75, 0.90, 0.95, 0.99, 1.0]
         print(f"quantiles of original and new weights, and ratio: ")
         print(f"quantiles: {qtiles}")
         wght_quantiles = np.quantile(wght, qtiles)
