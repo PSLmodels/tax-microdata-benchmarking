@@ -150,7 +150,7 @@ def create_area_weights_file(area: str, write_file: bool = True):
     # construct variable matrix and target array and weights_scale
     vdf = all_taxcalc_variables()
     variable_matrix, target_array, weights_scale = prepared_data(area, vdf)
-    wght = vdf.s006 * weights_scale
+    wght = np.array(vdf.s006 * weights_scale)
     num_weights = len(wght)
     num_targets = len(target_array)
     print(f"USING {area}_targets.csv FILE CONTAINING {num_targets} TARGETS")
