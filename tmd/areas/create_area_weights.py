@@ -36,8 +36,12 @@ OPTIMIZE_HI_BOUND_RATIO = 1e3  # must be less than np.inf
 # OPTIMIZE_LO_BOUND_RATIO = 1e-1  # must be greater than 1e-6
 # OPTIMIZE_HI_BOUND_RATIO = 1e+1  # must be less than np.inf
 OPTIMIZE_RATIOS = True  # True produces much better optimization results
-OPTIMIZE_REGULARIZATION = True # add regularization term to lsq_linear to penalize (x - a)^2
-REGULARIZATION_LAMBDA = 1e-6 # nonnegative: how much emphasis to put on regularization: 0 = none
+OPTIMIZE_REGULARIZATION = (
+    True  # add regularization term to lsq_linear to penalize (x - a)^2
+)
+REGULARIZATION_LAMBDA = (
+    5e-6  # nonnegative: how much emphasis to put on regularization: 0 = none
+)
 OPTIMIZE_FTOL = 1e-10
 OPTIMIZE_MAXITER = 5000
 OPTIMIZE_VERBOSE = 2  # set to zero for no iteration information
@@ -257,7 +261,7 @@ def create_area_weights_file(area: str, write_file: bool = True):
         )
     elif OPTIMIZE_REGULARIZATION and OPTIMIZE_RATIOS:
         print("adding regularization term")
-        # use sparse matrices       
+        # use sparse matrices
         # res = lsq_linear(
         #     var_matrix,
         #     target_array,
@@ -268,28 +272,37 @@ def create_area_weights_file(area: str, write_file: bool = True):
         #     lsmr_tol=None,
         #     max_iter=OPTIMIZE_MAXITER,
         #     verbose=OPTIMIZE_VERBOSE,
-        # )        
-        
+        # )
+
         # Step 1: convert to sparse arrays
         variable_matrix_sparse = csr_matrix(variable_matrix)
         # Perform element-wise multiplication with wght, broadcasting wght appropriately
-        A_sparse = csr_matrix(variable_matrix_sparse.multiply(wght[:, np.newaxis]).T)
+        A_sparse = csr_matrix(
+            variable_matrix_sparse.multiply(wght[:, np.newaxis]).T
+        )
         # Step 2: Create the regularization matrix and augment A and b
         m = A_sparse.shape[1]  # Number of records
-        I = eye(m, format='csr')  # Identity matrix for regularization (size m x m)
-        
+        I = eye(
+            m, format="csr"
+        )  # Identity matrix for regularization (size m x m)
+
         # Augment the scaled A and b for regularization (penalizing x - 1)
-        A_aug = vstack([csr_matrix(A_sparse), np.sqrt(REGULARIZATION_LAMBDA) * I])  # Augmented matrix
-        b_aug = np.hstack([target_array, np.sqrt(REGULARIZATION_LAMBDA) * np.ones(m)])  # Augmented target
-        
+        A_aug = vstack(
+            [csr_matrix(A_sparse), np.sqrt(REGULARIZATION_LAMBDA) * I]
+        )  # Augmented matrix
+        b_aug = np.hstack(
+            [target_array, np.sqrt(REGULARIZATION_LAMBDA) * np.ones(m)]
+        )  # Augmented target
+
         res = lsq_linear(
-            A_aug, 
-            b_aug, 
+            A_aug,
+            b_aug,
             bounds=(lob, hib),
-            max_iter = OPTIMIZE_MAXITER, 
-            lsmr_tol='auto', 
-            verbose=OPTIMIZE_VERBOSE)
-        
+            max_iter=OPTIMIZE_MAXITER,
+            lsmr_tol="auto",
+            verbose=OPTIMIZE_VERBOSE,
+        )
+
     time1 = time.time()
     res_summary = (
         f">>> scipy.lsq_linear execution: {(time1-time0):.1f} secs"
@@ -307,6 +320,7 @@ def create_area_weights_file(area: str, write_file: bool = True):
     loss = loss_function_value(wghtx, variable_matrix, target_array)
     print(f"AREA-OPTIMIZED_LOSS_FUNCTION_VALUE= {loss:.9e}")
     weight_ratio_distribution(wghtx / wght)
+    print(f"Norm of (x - 1): {np.linalg.norm(res.x - 1)}")
     print(f"Sum of original weights= {sum(wght):,.0f}")
     print(f"Sum of new weights=      {sum(wghtx):,.0f}")
 
