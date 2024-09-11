@@ -13,6 +13,7 @@ import time
 import numpy as np
 import pandas as pd
 from scipy.optimize import lsq_linear
+from scipy.sparse import vstack, eye, csr_matrix, diags
 import taxcalc as tc
 from tmd.storage import STORAGE_FOLDER
 from tmd.areas import AREAS_FOLDER
