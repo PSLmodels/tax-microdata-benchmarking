@@ -37,6 +37,7 @@ OPTIMIZE_HI_BOUND_RATIO = 1e2  # must be less than np.inf
 # OPTIMIZE_HI_BOUND_RATIO = 1e+1  # must be less than np.inf
 OPTIMIZE_RATIOS = True  # True produces much better optimization results
 OPTIMIZE_REGULARIZATION = True # add regularization term to lsq_linear to penalize (x - a)^2
+REGULARIZATION_LAMBDA = 1.0 # nonnegative: how much emphasis to put on regularization: 0 = none
 OPTIMIZE_FTOL = 1e-10
 OPTIMIZE_MAXITER = 5000
 OPTIMIZE_VERBOSE = 0  # set to zero for no iteration information
@@ -263,7 +264,7 @@ def create_area_weights_file(area: str, write_file: bool = True):
             verbose=OPTIMIZE_VERBOSE,
         )        
         
-        # Ste 1: convert to sparse arrays
+        # Step 1: convert to sparse arrays
         variable_matrix_sparse = csr_matrix(variable_matrix)
         # Perform element-wise multiplication with wght, broadcasting wght appropriately
         A_sparse = csr_matrix(variable_matrix_sparse.multiply(wght[:, np.newaxis]).T)
@@ -271,10 +272,14 @@ def create_area_weights_file(area: str, write_file: bool = True):
         m = A_sparse.shape[1]  # Number of records
         I = eye(m, format='csr')  # Identity matrix for regularization (size m x m)
         
+        # Augment the scaled A and b for regularization (penalizing x - 1)
+        A_aug = vstack([csr_matrix(A_sparse), np.sqrt(REGULARIZATION_LAMBDA) * I])  # Augmented matrix
+        b_aug = np.hstack([target_array, np.sqrt(REGULARIZATION_LAMBDA) * np.ones(m)])  # Augmented target
+        
         # res = lsq_linear(
         #     A_aug, 
         #     b_aug, 
-        #     bounds=(lower_bound, upper_bound), 
+        #     bounds=(lob, hib),
         #     max_iter = OPTIMIZE_MAXITER, 
         #     lsmr_tol='auto', 
         #     verbose=OPTIMIZE_VERBOSE)
