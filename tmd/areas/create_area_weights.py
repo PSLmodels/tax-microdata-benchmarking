@@ -34,6 +34,8 @@ OPTIMIZE_HI_BOUND_RATIO = 1e2  # must be less than np.inf
 # tiny bounds settings:
 # OPTIMIZE_LO_BOUND_RATIO = 1e-1  # must be greater than 1e-6
 # OPTIMIZE_HI_BOUND_RATIO = 1e+1  # must be less than np.inf
+OPTIMIZE_LO_BOUND_RATIO = 0.0
+OPTIMIZE_HI_BOUND_RATIO = np.inf
 OPTIMIZE_RATIOS = True  # True produces much better optimization results
 OPTIMIZE_FTOL = 1e-10
 OPTIMIZE_MAXITER = 5000
@@ -70,7 +72,7 @@ def prepared_data(area: str, vardf: pd.DataFrame):
     national_population = (vardf.s006 * vardf.XTOT).sum()
     numobs = len(vardf)
     tdf = pd.read_csv(AREAS_FOLDER / "targets" / f"{area}_targets.csv")
-    vm_tuple = ()
+    tm_tuple = ()
     ta_list = []
     row_num = 1
     for row in tdf.itertuples(index=False):
@@ -121,22 +123,23 @@ def prepared_data(area: str, vardf: pd.DataFrame):
         if row.fstatus > 0:
             mask *= vardf.MARS == row.fstatus
         scaled_masked_varray = mask * unmasked_varray * scale
-        vm_tuple = vm_tuple + (scaled_masked_varray,)
-    # construct variable matrix and target array and return as tuple
-    var_matrix = np.vstack(vm_tuple).T
-    target_array = np.array(ta_list)
+        tm_tuple = tm_tuple + (scaled_masked_varray,)
+    # construct target matrix and target array and return as tuple
+    scale_factor = 1.0  # as high as 1e9 works just fine
+    target_matrix = np.vstack(tm_tuple).T * scale_factor
+    target_array = np.array(ta_list) * scale_factor
     return (
-        var_matrix,
+        target_matrix,
         target_array,
         initial_weights_scale,
     )
 
 
-def loss_function_value(wght, variable_matrix, target_array):
+def loss_function_value(wght, target_matrix, target_array):
     """
     Return loss function value given specified arguments.
     """
-    act = np.dot(wght, variable_matrix)
+    act = np.dot(wght, target_matrix)
     act_minus_exp = act - target_array
     if DUMP_LOSS_FUNCTION_VALUE_COMPONENTS:
         for tnum in range(1, len(target_array) + 1):
@@ -152,11 +155,8 @@ def weight_ratio_distribution(ratio):
     """
     Print distribution of post-optimized to pre-optimized weight ratios.
     """
-    eps = 1e-6
     bins = [
         0.0,
-        OPTIMIZE_LO_BOUND_RATIO - eps,
-        OPTIMIZE_LO_BOUND_RATIO + eps,
         0.2,
         0.5,
         0.8,
@@ -172,8 +172,8 @@ def weight_ratio_distribution(ratio):
     ]
     tot = ratio.size
     print(f"DISTRIBUTION OF POST/PRE WEIGHT RATIO (n={tot}):")
-    print(f"  with OPTIMIZE_LO_BOUND_RATIO= {OPTIMIZE_LO_BOUND_RATIO:e}")
-    print(f"   and OPTIMIZE_HI_BOUND_RATIO= {OPTIMIZE_HI_BOUND_RATIO:e}")
+    print(f"  with OPTIMIZE_LO_BOUND_RATIO= {OPTIMIZE_LO_BOUND_RATIO:.1f}")
+    print(f"   and OPTIMIZE_HI_BOUND_RATIO= {OPTIMIZE_HI_BOUND_RATIO:.1f}")
     header = (
         "low bin ratio    high bin ratio"
         "    bin #    cum #     bin %     cum %"
@@ -207,34 +207,34 @@ def create_area_weights_file(area: str, write_file: bool = True):
     """
     # construct variable matrix and target array and weights_scale
     vdf = all_taxcalc_variables()
-    variable_matrix, target_array, weights_scale = prepared_data(area, vdf)
+    target_matrix, target_array, weights_scale = prepared_data(area, vdf)
     wght = np.array(vdf.s006 * weights_scale)
     num_weights = len(wght)
     num_targets = len(target_array)
     print(f"USING {area}_targets.csv FILE CONTAINING {num_targets} TARGETS")
-    loss = loss_function_value(wght, variable_matrix, target_array)
+    loss = loss_function_value(wght, target_matrix, target_array)
     print(f"US_PROPORTIONALLY_SCALED_LOSS_FUNCTION_VALUE= {loss:.9e}")
-    density = np.count_nonzero(variable_matrix) / variable_matrix.size
-    print(f"variable_matrix sparsity ratio = {(1.0 - density):.3f}")
+    density = np.count_nonzero(target_matrix) / target_matrix.size
+    print(f"target_matrix sparsity ratio = {(1.0 - density):.3f}")
 
     # optimize weights by minimizing sum of squared wght*var-target deviations
     if OPTIMIZE_RATIOS:
-        var_matrix = (variable_matrix * wght[:, np.newaxis]).T
+        tar_matrix = (target_matrix * wght[:, np.newaxis]).T
         lob = OPTIMIZE_LO_BOUND_RATIO * np.ones(num_weights)
         hib = OPTIMIZE_HI_BOUND_RATIO * np.ones(num_weights)
     else:  # if optimizing the weights
-        var_matrix = variable_matrix.T
+        tar_matrix = target_matrix.T
         lob = OPTIMIZE_LO_BOUND_RATIO * wght
         hib = OPTIMIZE_HI_BOUND_RATIO * wght
     print(
         f"OPTIMIZE_RATIOS= {OPTIMIZE_RATIOS}"
-        f"   var_matrix.shape= {var_matrix.shape}\n"
-        f"OPTIMIZE_LO_BOUND_RATIO= {OPTIMIZE_LO_BOUND_RATIO:e}\n"
-        f"OPTIMIZE_HI_BOUND_RATIO= {OPTIMIZE_HI_BOUND_RATIO:e}"
+        f"   target_matrix.shape= {target_matrix.shape}\n"
+        f"OPTIMIZE_LO_BOUND_RATIO= {OPTIMIZE_LO_BOUND_RATIO:.1f}\n"
+        f"OPTIMIZE_HI_BOUND_RATIO= {OPTIMIZE_HI_BOUND_RATIO:.1f}"
     )
     time0 = time.time()
     res = lsq_linear(
-        var_matrix,
+        tar_matrix,
         target_array,
         bounds=(lob, hib),
         method="bvls",
@@ -258,7 +258,7 @@ def create_area_weights_file(area: str, write_file: bool = True):
         wghtx = res.x * wght
     else:
         wghtx = res.x
-    loss = loss_function_value(wghtx, variable_matrix, target_array)
+    loss = loss_function_value(wghtx, target_matrix, target_array)
     print(f"AREA-OPTIMIZED_LOSS_FUNCTION_VALUE= {loss:.9e}")
     weight_ratio_distribution(wghtx / wght)
 
