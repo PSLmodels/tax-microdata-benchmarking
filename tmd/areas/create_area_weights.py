@@ -252,17 +252,17 @@ def create_area_weights_file(area: str, write_file: bool = True):
     elif OPTIMIZE_REGULARIZATION and OPTIMIZE_RATIOS:
         print("adding regularization term")
         # use sparse matrices       
-        res = lsq_linear(
-            var_matrix,
-            target_array,
-            bounds=(lob, hib),
-            method="bvls",
-            tol=OPTIMIZE_FTOL,
-            lsq_solver="exact",
-            lsmr_tol=None,
-            max_iter=OPTIMIZE_MAXITER,
-            verbose=OPTIMIZE_VERBOSE,
-        )        
+        # res = lsq_linear(
+        #     var_matrix,
+        #     target_array,
+        #     bounds=(lob, hib),
+        #     method="bvls",
+        #     tol=OPTIMIZE_FTOL,
+        #     lsq_solver="exact",
+        #     lsmr_tol=None,
+        #     max_iter=OPTIMIZE_MAXITER,
+        #     verbose=OPTIMIZE_VERBOSE,
+        # )        
         
         # Step 1: convert to sparse arrays
         variable_matrix_sparse = csr_matrix(variable_matrix)
@@ -276,13 +276,13 @@ def create_area_weights_file(area: str, write_file: bool = True):
         A_aug = vstack([csr_matrix(A_sparse), np.sqrt(REGULARIZATION_LAMBDA) * I])  # Augmented matrix
         b_aug = np.hstack([target_array, np.sqrt(REGULARIZATION_LAMBDA) * np.ones(m)])  # Augmented target
         
-        # res = lsq_linear(
-        #     A_aug, 
-        #     b_aug, 
-        #     bounds=(lob, hib),
-        #     max_iter = OPTIMIZE_MAXITER, 
-        #     lsmr_tol='auto', 
-        #     verbose=OPTIMIZE_VERBOSE)
+        res = lsq_linear(
+            A_aug, 
+            b_aug, 
+            bounds=(lob, hib),
+            max_iter = OPTIMIZE_MAXITER, 
+            lsmr_tol='auto', 
+            verbose=OPTIMIZE_VERBOSE)
         
     time1 = time.time()
     res_summary = (
