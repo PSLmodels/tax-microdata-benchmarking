@@ -30,14 +30,14 @@ DUMP_LOSS_FUNCTION_VALUE_COMPONENTS = True
 # OPTIMIZE_LO_BOUND_RATIO = 2e-6  # must be greater than 1e-6
 # OPTIMIZE_HI_BOUND_RATIO = 9e+9  # must be less than np.inf
 # narrow bounds settings:
-OPTIMIZE_LO_BOUND_RATIO = 1e-2  # must be greater than 1e-6
+OPTIMIZE_LO_BOUND_RATIO = 0.0  # must be greater than 1e-6
 OPTIMIZE_HI_BOUND_RATIO = 1e2  # must be less than np.inf
 # tiny bounds settings:
 # OPTIMIZE_LO_BOUND_RATIO = 1e-1  # must be greater than 1e-6
 # OPTIMIZE_HI_BOUND_RATIO = 1e+1  # must be less than np.inf
 OPTIMIZE_RATIOS = True  # True produces much better optimization results
 OPTIMIZE_REGULARIZATION = True # add regularization term to lsq_linear to penalize (x - a)^2
-REGULARIZATION_LAMBDA = 1.0 # nonnegative: how much emphasis to put on regularization: 0 = none
+REGULARIZATION_LAMBDA = 1e-5 # nonnegative: how much emphasis to put on regularization: 0 = none
 OPTIMIZE_FTOL = 1e-10
 OPTIMIZE_MAXITER = 5000
 OPTIMIZE_VERBOSE = 0  # set to zero for no iteration information
@@ -158,11 +158,17 @@ def weight_ratio_distribution(ratio):
     eps = 1e-6
     bins = [
         0.0,
-        OPTIMIZE_LO_BOUND_RATIO - eps,
-        OPTIMIZE_LO_BOUND_RATIO + eps,
+        0.1,
         0.2,
         0.5,
         0.8,
+        0.85,
+        0.9,
+        0.95,
+        1.0,
+        1.05,
+        1.1,
+        1.15,
         1.2,
         2.0,
         5.0,
@@ -230,8 +236,8 @@ def create_area_weights_file(area: str, write_file: bool = True):
         lob = OPTIMIZE_LO_BOUND_RATIO * wght
         hib = OPTIMIZE_HI_BOUND_RATIO * wght
     print(
-        f"OPTIMIZE_RATIOS= {OPTIMIZE_RATIOS}"
-        f"OPTIMIZE_REGULARIZATION= {OPTIMIZE_REGULARIZATION}"
+        f"OPTIMIZE_RATIOS= {OPTIMIZE_RATIOS}\n"
+        f"OPTIMIZE_REGULARIZATION= {OPTIMIZE_REGULARIZATION}\n"
         f"   var_matrix.shape= {var_matrix.shape}\n"
         f"OPTIMIZE_LO_BOUND_RATIO= {OPTIMIZE_LO_BOUND_RATIO:e}\n"
         f"OPTIMIZE_HI_BOUND_RATIO= {OPTIMIZE_HI_BOUND_RATIO:e}"
