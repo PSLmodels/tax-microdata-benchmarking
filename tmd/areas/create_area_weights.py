@@ -31,16 +31,16 @@ DUMP_LOSS_FUNCTION_VALUE_COMPONENTS = True
 # OPTIMIZE_HI_BOUND_RATIO = 9e+9  # must be less than np.inf
 # narrow bounds settings:
 OPTIMIZE_LO_BOUND_RATIO = 0.0  # must be greater than 1e-6
-OPTIMIZE_HI_BOUND_RATIO = 1e2  # must be less than np.inf
+OPTIMIZE_HI_BOUND_RATIO = 1e3  # must be less than np.inf
 # tiny bounds settings:
 # OPTIMIZE_LO_BOUND_RATIO = 1e-1  # must be greater than 1e-6
 # OPTIMIZE_HI_BOUND_RATIO = 1e+1  # must be less than np.inf
 OPTIMIZE_RATIOS = True  # True produces much better optimization results
 OPTIMIZE_REGULARIZATION = True # add regularization term to lsq_linear to penalize (x - a)^2
-REGULARIZATION_LAMBDA = 1e-5 # nonnegative: how much emphasis to put on regularization: 0 = none
+REGULARIZATION_LAMBDA = 1e-6 # nonnegative: how much emphasis to put on regularization: 0 = none
 OPTIMIZE_FTOL = 1e-10
 OPTIMIZE_MAXITER = 5000
-OPTIMIZE_VERBOSE = 0  # set to zero for no iteration information
+OPTIMIZE_VERBOSE = 2  # set to zero for no iteration information
 OPTIMIZE_RESULTS = False  # set to True to see complete lsq_linear results
 
 
