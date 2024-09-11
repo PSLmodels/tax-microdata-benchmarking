@@ -36,6 +36,7 @@ OPTIMIZE_HI_BOUND_RATIO = 1e2  # must be less than np.inf
 # OPTIMIZE_LO_BOUND_RATIO = 1e-1  # must be greater than 1e-6
 # OPTIMIZE_HI_BOUND_RATIO = 1e+1  # must be less than np.inf
 OPTIMIZE_RATIOS = True  # True produces much better optimization results
+OPTIMIZE_REGULARIZATION = True # add regularization term to lsq_linear to penalize (x - a)^2
 OPTIMIZE_FTOL = 1e-10
 OPTIMIZE_MAXITER = 5000
 OPTIMIZE_VERBOSE = 0  # set to zero for no iteration information
@@ -229,22 +230,55 @@ def create_area_weights_file(area: str, write_file: bool = True):
         hib = OPTIMIZE_HI_BOUND_RATIO * wght
     print(
         f"OPTIMIZE_RATIOS= {OPTIMIZE_RATIOS}"
+        f"OPTIMIZE_REGULARIZATION= {OPTIMIZE_REGULARIZATION}"
         f"   var_matrix.shape= {var_matrix.shape}\n"
         f"OPTIMIZE_LO_BOUND_RATIO= {OPTIMIZE_LO_BOUND_RATIO:e}\n"
         f"OPTIMIZE_HI_BOUND_RATIO= {OPTIMIZE_HI_BOUND_RATIO:e}"
     )
     time0 = time.time()
-    res = lsq_linear(
-        var_matrix,
-        target_array,
-        bounds=(lob, hib),
-        method="bvls",
-        tol=OPTIMIZE_FTOL,
-        lsq_solver="exact",
-        lsmr_tol=None,
-        max_iter=OPTIMIZE_MAXITER,
-        verbose=OPTIMIZE_VERBOSE,
-    )
+    if not OPTIMIZE_REGULARIZATION:
+        res = lsq_linear(
+            var_matrix,
+            target_array,
+            bounds=(lob, hib),
+            method="bvls",
+            tol=OPTIMIZE_FTOL,
+            lsq_solver="exact",
+            lsmr_tol=None,
+            max_iter=OPTIMIZE_MAXITER,
+            verbose=OPTIMIZE_VERBOSE,
+        )
+    elif OPTIMIZE_REGULARIZATION and OPTIMIZE_RATIOS:
+        print("adding regularization term")
+        # use sparse matrices       
+        res = lsq_linear(
+            var_matrix,
+            target_array,
+            bounds=(lob, hib),
+            method="bvls",
+            tol=OPTIMIZE_FTOL,
+            lsq_solver="exact",
+            lsmr_tol=None,
+            max_iter=OPTIMIZE_MAXITER,
+            verbose=OPTIMIZE_VERBOSE,
+        )        
+        
+        # Ste 1: convert to sparse arrays
+        variable_matrix_sparse = csr_matrix(variable_matrix)
+        # Perform element-wise multiplication with wght, broadcasting wght appropriately
+        A_sparse = csr_matrix(variable_matrix_sparse.multiply(wght[:, np.newaxis]).T)
+        # Step 2: Create the regularization matrix and augment A and b
+        m = A_sparse.shape[1]  # Number of records
+        I = eye(m, format='csr')  # Identity matrix for regularization (size m x m)
+        
+        # res = lsq_linear(
+        #     A_aug, 
+        #     b_aug, 
+        #     bounds=(lower_bound, upper_bound), 
+        #     max_iter = OPTIMIZE_MAXITER, 
+        #     lsmr_tol='auto', 
+        #     verbose=OPTIMIZE_VERBOSE)
+        
     time1 = time.time()
     res_summary = (
         f">>> scipy.lsq_linear execution: {(time1-time0):.1f} secs"
