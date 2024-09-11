@@ -261,6 +261,8 @@ def create_area_weights_file(area: str, write_file: bool = True):
     loss = loss_function_value(wghtx, variable_matrix, target_array)
     print(f"AREA-OPTIMIZED_LOSS_FUNCTION_VALUE= {loss:.9e}")
     weight_ratio_distribution(wghtx / wght)
+    print(f"Sum of original weights= {sum(wght):,.0f}")
+    print(f"Sum of new weights=      {sum(wghtx):,.0f}")
 
     if not write_file:
         return loss
