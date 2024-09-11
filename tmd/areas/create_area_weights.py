@@ -64,7 +64,7 @@ def all_taxcalc_variables():
 
 def prepared_data(area: str, vardf: pd.DataFrame):
     """
-    Construct numpy 2-D variable matrix and 1-D targets array for
+    Construct numpy 2-D target matrix and 1-D target array for
     specified area using specified vardf.  Also, compute initial
     weights scaling factor for specified area.  Return all three
     as a tuple.
@@ -142,11 +142,11 @@ def loss_function_value(wght, target_matrix, target_array):
     act = np.dot(wght, target_matrix)
     act_minus_exp = act - target_array
     if DUMP_LOSS_FUNCTION_VALUE_COMPONENTS:
-        for tnum in range(1, len(target_array) + 1):
+        for tnum, exp in enumerate(target_array):
             print(
-                f"TARGET{tnum:03d}:ACT-EXP,ACT/EXP= "
-                f"{act_minus_exp[tnum - 1]:16.9e}, "
-                f"{(act[tnum - 1] / target_array[tnum - 1]):.3f}"
+                f"TARGET{(tnum + 1):03d}:ACT-EXP,ACT/EXP= "
+                f"{act_minus_exp[tnum]:16.9e}, "
+                f"{(act[tnum] / exp):.3f}"
             )
     return 0.5 * np.sum(np.square(act_minus_exp))
 
