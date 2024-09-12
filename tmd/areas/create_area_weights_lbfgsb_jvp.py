@@ -39,6 +39,7 @@ OPTIMIZE_RESULTS = False  # set to True to see complete lsq_linear results
 
 REGULARIZATION_LAMBDA = 5e-7
 
+
 def residual_function(x, A, b, lambda_):
     # Define the residual function using JAX
     A_dot_x = A @ x  # JAX sparse matrix-vector multiplication
@@ -46,10 +47,12 @@ def residual_function(x, A, b, lambda_):
     regularization = jnp.sqrt(lambda_) * (x - 1)  # Regularization term
     return jnp.concatenate([residual, regularization])
 
+
 # Objective function for minimization (sum of squared residuals)
 def objective_function(x, A, b, lambda_):
     res = residual_function(x, A, b, lambda_)
     return jnp.sum(jnp.square(res))
+
 
 # Function to compute the JVP using JAX
 def jvp_residual_function(x, A, b, lambda_, v):
@@ -57,10 +60,12 @@ def jvp_residual_function(x, A, b, lambda_, v):
     _, jvp = jax.jvp(lambda x: residual_function(x, A, b, lambda_), (x,), (v,))
     return jvp
 
+
 # Define gradient using JAX autodiff
 def gradient_function(x, A, b, lambda_):
     grad = jax.grad(objective_function)(x, A, b, lambda_)
     return np.asarray(grad)
+
 
 def all_taxcalc_variables():
     """
@@ -236,7 +241,7 @@ def create_area_weights_file(area: str, write_file: bool = True):
     vdf = all_taxcalc_variables()
     variable_matrix, target_array, weights_scale = prepared_data(area, vdf)
     wght = np.array(vdf.s006 * weights_scale)
-       
+
     num_weights = len(wght)
     num_targets = len(target_array)
     print(f"USING {area}_targets.csv FILE CONTAINING {num_targets} TARGETS")
@@ -245,44 +250,40 @@ def create_area_weights_file(area: str, write_file: bool = True):
     density = np.count_nonzero(variable_matrix) / variable_matrix.size
     print(f"variable_matrix sparsity ratio = {(1.0 - density):.3f}")
 
-    # optimize weights by minimizing sum of squared wght*var-target deviations        
+    # optimize weights by minimizing sum of squared wght*var-target deviations
     # while also minimizing sum of squared differences of weight ratios from 1
     var_matrix = (variable_matrix * wght[:, np.newaxis]).T
-    
+
     # use traditional Ax = b nomenclature
     # Convert SciPy sparse matrix to JAX-compatible BCOO format
     A_csr = csr_matrix(var_matrix)
     A_jax = BCOO.from_scipy_sparse(A_csr)
     b = target_array
-    
-    # lob = OPTIMIZE_LO_BOUND_RATIO * np.ones(num_weights)
-    # hib = OPTIMIZE_HI_BOUND_RATIO * np.ones(num_weights)
-    bounds = [(OPTIMIZE_LO_BOUND_RATIO, 
-               OPTIMIZE_HI_BOUND_RATIO) for _ in range(num_weights)]
+
+    bounds = [
+        (OPTIMIZE_LO_BOUND_RATIO, OPTIMIZE_HI_BOUND_RATIO)
+        for _ in range(num_weights)
+    ]
 
     print(
         f"   var_matrix.shape= {var_matrix.shape}\n"
         f"OPTIMIZE_LO_BOUND_RATIO= {OPTIMIZE_LO_BOUND_RATIO:e}\n"
         f"OPTIMIZE_HI_BOUND_RATIO= {OPTIMIZE_HI_BOUND_RATIO:e}"
     )
-    
+
     time0 = time.time()
 
     res = minimize(
-        fun=objective_function,            # Objective function
-        x0=np.ones(num_weights),           # Initial guess
-        jac=gradient_function,             # Gradient (JVP-based)
-        args=(A_jax,
-              b,
-              REGULARIZATION_LAMBDA),      # Additional arguments
-        method='L-BFGS-B',                 # Use L-BFGS-B solver for large-scale problems
-        bounds=bounds,                     # Non-negative bounds
-        options={
-            'maxiter': 1000,
-            'disp': True}                  # Display convergence info
-    )    
+        fun=objective_function,  # Objective function
+        x0=np.ones(num_weights),  # Initial guess
+        jac=gradient_function,  # Gradient (JVP-based)
+        args=(A_jax, b, REGULARIZATION_LAMBDA),  # Additional arguments
+        method="L-BFGS-B",  # Use L-BFGS-B solver for large-scale problems
+        bounds=bounds,  # Non-negative bounds
+        options={"maxiter": 1000, "disp": True},  # Display convergence info
+    )
     time1 = time.time()
-    
+
     res_summary = (
         f">>> scipy.lsq_linear execution: {(time1-time0):.1f} secs"
         f"  iterations={res.nit}  success={res.success}\n"
@@ -297,9 +298,9 @@ def create_area_weights_file(area: str, write_file: bool = True):
     print(f"AREA-OPTIMIZED_LOSS_FUNCTION_VALUE= {loss:.9e}")
     weight_ratio_distribution(wghtx / wght)
     print(f"Euclidean norm of (x - 1): {np.linalg.norm(res.x - 1)}")
-    
+
     # Quantiles of ratios and targets
-    qtiles = [0, .1, .25, .5, .75, .9, 1]
+    qtiles = [0, 0.1, 0.25, 0.5, 0.75, 0.9, 1]
     print(f"quantiles = {qtiles}")
     print("quantiles of x:")
     print(np.quantile(res.x, qtiles))
@@ -308,8 +309,10 @@ def create_area_weights_file(area: str, write_file: bool = True):
     diff = A_csr @ res.x - b
     pdiff = diff / b
     print(np.quantile(pdiff, qtiles))
-    print(f"Euclidean norm of target percent differences: {np.linalg.norm(pdiff)}")
-    
+    print(
+        f"Euclidean norm of target percent differences: {np.linalg.norm(pdiff)}"
+    )
+
     print(f"Sum of original weights= {sum(wght):,.0f}")
     print(f"Sum of new weights=      {sum(wghtx):,.0f}")
 
@@ -359,4 +362,3 @@ if __name__ == "__main__":
         )
         sys.exit(1)
     create_area_weights_file(area_code, write_file=True)
-
