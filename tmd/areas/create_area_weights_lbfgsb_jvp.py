@@ -29,13 +29,13 @@ GFFILE_PATH = STORAGE_FOLDER / "output" / "tmd_growfactors.csv"
 POPFILE_PATH = STORAGE_FOLDER / "input" / "cbo_population_forecast.yaml"
 
 DUMP_LOSS_FUNCTION_VALUE_COMPONENTS = True
-OPTIMIZE_LO_BOUND_RATIO = 0.0  # must be greater than 1e-6
+OPTIMIZE_LO_BOUND_RATIO = 0.0  # must be non-negative
 OPTIMIZE_HI_BOUND_RATIO = 1e3  # must be less than np.inf
 
-OPTIMIZE_FTOL = 1e-10
+OPTIMIZE_FTOL = 1e-7
 OPTIMIZE_MAXITER = 5000
-OPTIMIZE_VERBOSE = 2  # set to zero for no iteration information
-OPTIMIZE_RESULTS = False  # set to True to see complete lsq_linear results
+OPTIMIZE_IPRINT = 1  # set to None for no iteration information
+OPTIMIZE_RESULTS = True  # set to True to see complete optimization results
 
 REGULARIZATION_LAMBDA = 5e-7
 
@@ -48,21 +48,21 @@ def residual_function(x, A, b, lambda_):
     return jnp.concatenate([residual, regularization])
 
 
-# Objective function for minimization (sum of squared residuals)
 def objective_function(x, A, b, lambda_):
+    # Objective function for minimization (sum of squared residuals)
     res = residual_function(x, A, b, lambda_)
     return jnp.sum(jnp.square(res))
 
 
-# Function to compute the JVP using JAX
 def jvp_residual_function(x, A, b, lambda_, v):
+    # Function to compute the JVP using JAX
     # Computes the Jacobian-vector product (JVP) without forming the full Jacobian
     _, jvp = jax.jvp(lambda x: residual_function(x, A, b, lambda_), (x,), (v,))
     return jvp
 
 
-# Define gradient using JAX autodiff
 def gradient_function(x, A, b, lambda_):
+    # Define gradient using JAX autodiff
     grad = jax.grad(objective_function)(x, A, b, lambda_)
     return np.asarray(grad)
 
@@ -280,19 +280,23 @@ def create_area_weights_file(area: str, write_file: bool = True):
         args=(A_jax, b, REGULARIZATION_LAMBDA),  # Additional arguments
         method="L-BFGS-B",  # Use L-BFGS-B solver for large-scale problems
         bounds=bounds,  # Non-negative bounds
-        options={"maxiter": 1000, "disp": True},  # Display convergence info
+        options={
+            "maxiter": OPTIMIZE_MAXITER,
+            "ftol": OPTIMIZE_FTOL,
+            "disp": OPTIMIZE_IPRINT,
+        },
     )
     time1 = time.time()
 
     res_summary = (
-        f">>> scipy.lsq_linear execution: {(time1-time0):.1f} secs"
+        f">>> optimization execution time: {(time1-time0):.1f} secs"
         f"  iterations={res.nit}  success={res.success}\n"
         f">>> message: {res.message}\n"
         f">>> L-BFGS-B optimized loss value: {res.fun:.9e}"
     )
     print(res_summary)
     if OPTIMIZE_RESULTS:
-        print(">>> scipy.lsq_linear full results:\n", res)
+        print(">>> full optimization results:\n", res)
     wghtx = res.x * wght
     loss = loss_function_value(wghtx, variable_matrix, target_array)
     print(f"AREA-OPTIMIZED_LOSS_FUNCTION_VALUE= {loss:.9e}")
