@@ -25,18 +25,18 @@ GFFILE_PATH = STORAGE_FOLDER / "output" / "tmd_growfactors.csv"
 POPFILE_PATH = STORAGE_FOLDER / "input" / "cbo_population_forecast.yaml"
 
 DUMP_LOSS_FUNCTION_VALUE_COMPONENTS = True
+OPTIMIZE_RATIOS = True  # True produces much better optimization results
 # wide bounds settings:
 # OPTIMIZE_LO_BOUND_RATIO = 2e-6  # must be greater than 1e-6
 # OPTIMIZE_HI_BOUND_RATIO = 9e+9  # must be less than np.inf
 # narrow bounds settings:
-OPTIMIZE_LO_BOUND_RATIO = 1e-2  # must be greater than 1e-6
-OPTIMIZE_HI_BOUND_RATIO = 1e2  # must be less than np.inf
+# OPTIMIZE_LO_BOUND_RATIO = 1e-2  # must be greater than 1e-6
+# OPTIMIZE_HI_BOUND_RATIO = 1e2  # must be less than np.inf
 # tiny bounds settings:
 # OPTIMIZE_LO_BOUND_RATIO = 1e-1  # must be greater than 1e-6
 # OPTIMIZE_HI_BOUND_RATIO = 1e+1  # must be less than np.inf
 OPTIMIZE_LO_BOUND_RATIO = 0.0
 OPTIMIZE_HI_BOUND_RATIO = np.inf
-OPTIMIZE_RATIOS = True  # True produces much better optimization results
 OPTIMIZE_FTOL = 1e-10
 OPTIMIZE_MAXITER = 5000
 OPTIMIZE_VERBOSE = 0  # set to zero for no iteration information
@@ -171,7 +171,7 @@ def weight_ratio_distribution(ratio):
         np.inf,
     ]
     tot = ratio.size
-    print(f"DISTRIBUTION OF POST/PRE WEIGHT RATIO (n={tot}):")
+    print(f"DISTRIBUTION OF AREA/US WEIGHT RATIO (n={tot}):")
     print(f"  with OPTIMIZE_LO_BOUND_RATIO= {OPTIMIZE_LO_BOUND_RATIO:.1f}")
     print(f"   and OPTIMIZE_HI_BOUND_RATIO= {OPTIMIZE_HI_BOUND_RATIO:.1f}")
     header = (
@@ -193,6 +193,8 @@ def weight_ratio_distribution(ratio):
         print(line)
         if cum == tot:
             break
+    ssqdev = np.sum(np.square(ratio - 1.0))
+    print(f"SUM OF SQUARED AREA/US WEIGHT RATIO DEVIATIONS= {ssqdev:e}")
 
 
 # -- High-level logic of the script:
@@ -208,24 +210,24 @@ def create_area_weights_file(area: str, write_file: bool = True):
     # construct variable matrix and target array and weights_scale
     vdf = all_taxcalc_variables()
     target_matrix, target_array, weights_scale = prepared_data(area, vdf)
-    wght = np.array(vdf.s006 * weights_scale)
-    num_weights = len(wght)
+    wght_us = np.array(vdf.s006 * weights_scale)
+    num_weights = len(wght_us)
     num_targets = len(target_array)
     print(f"USING {area}_targets.csv FILE CONTAINING {num_targets} TARGETS")
-    loss = loss_function_value(wght, target_matrix, target_array)
+    loss = loss_function_value(wght_us, target_matrix, target_array)
     print(f"US_PROPORTIONALLY_SCALED_LOSS_FUNCTION_VALUE= {loss:.9e}")
     density = np.count_nonzero(target_matrix) / target_matrix.size
     print(f"target_matrix sparsity ratio = {(1.0 - density):.3f}")
 
     # optimize weights by minimizing sum of squared wght*var-target deviations
     if OPTIMIZE_RATIOS:
-        tar_matrix = (target_matrix * wght[:, np.newaxis]).T
+        tar_matrix = (target_matrix * wght_us[:, np.newaxis]).T
         lob = OPTIMIZE_LO_BOUND_RATIO * np.ones(num_weights)
         hib = OPTIMIZE_HI_BOUND_RATIO * np.ones(num_weights)
     else:  # if optimizing the weights
         tar_matrix = target_matrix.T
-        lob = OPTIMIZE_LO_BOUND_RATIO * wght
-        hib = OPTIMIZE_HI_BOUND_RATIO * wght
+        lob = OPTIMIZE_LO_BOUND_RATIO * wght_us
+        hib = OPTIMIZE_HI_BOUND_RATIO * wght_us
     print(
         f"OPTIMIZE_RATIOS= {OPTIMIZE_RATIOS}"
         f"   target_matrix.shape= {target_matrix.shape}\n"
@@ -255,12 +257,14 @@ def create_area_weights_file(area: str, write_file: bool = True):
     if OPTIMIZE_RESULTS:
         print(">>> scipy.lsq_linear full results:\n", res)
     if OPTIMIZE_RATIOS:
-        wghtx = res.x * wght
+        wght_ratio = res.x
+        wght_area = res.x * wght_us
     else:
-        wghtx = res.x
-    loss = loss_function_value(wghtx, target_matrix, target_array)
+        wght_ratio = res.x / wght_us
+        wght_area = res.x
+    loss = loss_function_value(wght_area, target_matrix, target_array)
     print(f"AREA-OPTIMIZED_LOSS_FUNCTION_VALUE= {loss:.9e}")
-    weight_ratio_distribution(wghtx / wght)
+    weight_ratio_distribution(wght_ratio)
 
     if not write_file:
         return loss
