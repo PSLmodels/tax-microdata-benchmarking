@@ -37,27 +37,27 @@ OPTIMIZE_MAXITER = 5000
 OPTIMIZE_VERBOSE = 2  # set to zero for no iteration information
 OPTIMIZE_RESULTS = False  # set to True to see complete lsq_linear results
 
-def residual_function(x, A, b, lambd):
+def residual_function(x, A, b, lambda_):
     # Define the residual function using JAX
     A_dot_x = A @ x  # JAX sparse matrix-vector multiplication
     residual = A_dot_x - b
-    regularization = jnp.sqrt(lambd) * (x - 1)  # Regularization term
+    regularization = jnp.sqrt(lambda_) * (x - 1)  # Regularization term
     return jnp.concatenate([residual, regularization])
 
 # Objective function for minimization (sum of squared residuals)
-def objective_function(x, A, b, lambd):
-    res = residual_function(x, A, b, lambd)
+def objective_function(x, A, b, lambda_):
+    res = residual_function(x, A, b, lambda_)
     return jnp.sum(jnp.square(res))
 
 # Function to compute the JVP using JAX
-def jvp_residual_function(x, A, b, lambd, v):
+def jvp_residual_function(x, A, b, lambda_, v):
     # Computes the Jacobian-vector product (JVP) without forming the full Jacobian
-    _, jvp = jax.jvp(lambda x: residual_function(x, A, b, lambd), (x,), (v,))
+    _, jvp = jax.jvp(lambda x: residual_function(x, A, b, lambda_), (x,), (v,))
     return jvp
 
 # Define gradient using JAX autodiff
-def gradient_function(x, A, b, lambd):
-    grad = jax.grad(objective_function)(x, A, b, lambd)
+def gradient_function(x, A, b, lambda_):
+    grad = jax.grad(objective_function)(x, A, b, lambda_)
     return np.asarray(grad)
 
 def all_taxcalc_variables():
@@ -246,7 +246,7 @@ def create_area_weights_file(area: str, write_file: bool = True):
     # optimize weights by minimizing sum of squared wght*var-target deviations        
     var_matrix = (variable_matrix * wght[:, np.newaxis]).T
     
-    lambd = 1e-6  # Regularization parameter
+    lambda_ = 1e-6  # Regularization parameter
     
     # use traditional Ax = b nomenclature
     # Convert SciPy sparse matrix to JAX-compatible BCOO format
@@ -271,7 +271,7 @@ def create_area_weights_file(area: str, write_file: bool = True):
         fun=objective_function,            # Objective function
         x0=np.ones(num_weights),           # Initial guess
         jac=gradient_function,             # Gradient (JVP-based)
-        args=(A_jax, b, lambd),            # Additional arguments
+        args=(A_jax, b, lambda_),            # Additional arguments
         method='L-BFGS-B',                 # Use L-BFGS-B solver for large-scale problems
         bounds=bounds,                     # Non-negative bounds
         options={
