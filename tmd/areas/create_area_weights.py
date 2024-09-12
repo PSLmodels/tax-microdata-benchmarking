@@ -147,12 +147,12 @@ def loss_function_value(wght, target_matrix, target_array):
 
 def objective_function(x, A, b, lambda_):
     """
-    Objective function for minimization (sum of squared residuals).
+    Objective function for minimization of sum of squared deviations.
     """
     target_deviation = A @ x - b  # JAX sparse matrix-vector multiplication
     weight_deviation = jnp.sqrt(lambda_) * (x - 1)
-    residuals = jnp.concatenate([target_deviation, weight_deviation])
-    return jnp.sum(jnp.square(residuals))
+    deviations = jnp.concatenate([target_deviation, weight_deviation])
+    return jnp.sum(jnp.square(deviations))
 
 
 def gradient_function(x, A, b, lambda_):
