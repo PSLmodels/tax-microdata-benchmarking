@@ -12,7 +12,14 @@ import sys
 import time
 import numpy as np
 import pandas as pd
-from scipy.optimize import lsq_linear
+from scipy.sparse import csr_matrix
+from scipy.optimize import Bounds, minimize
+import jax
+
+jax.config.update("jax_enable_x64", True)  # use double precision floats
+jax.config.update("jax_platform_name", "cpu")  # ignore GPU/TPU if present
+import jax.numpy as jnp
+from jax.experimental.sparse import BCOO
 import taxcalc as tc
 from tmd.storage import STORAGE_FOLDER
 from tmd.areas import AREAS_FOLDER
@@ -25,22 +32,12 @@ GFFILE_PATH = STORAGE_FOLDER / "output" / "tmd_growfactors.csv"
 POPFILE_PATH = STORAGE_FOLDER / "input" / "cbo_population_forecast.yaml"
 
 DUMP_LOSS_FUNCTION_VALUE_COMPONENTS = True
-OPTIMIZE_RATIOS = True  # True produces much better optimization results
-# wide bounds settings:
-# OPTIMIZE_LO_BOUND_RATIO = 2e-6  # must be greater than 1e-6
-# OPTIMIZE_HI_BOUND_RATIO = 9e+9  # must be less than np.inf
-# narrow bounds settings:
-# OPTIMIZE_LO_BOUND_RATIO = 1e-2  # must be greater than 1e-6
-# OPTIMIZE_HI_BOUND_RATIO = 1e2  # must be less than np.inf
-# tiny bounds settings:
-# OPTIMIZE_LO_BOUND_RATIO = 1e-1  # must be greater than 1e-6
-# OPTIMIZE_HI_BOUND_RATIO = 1e+1  # must be less than np.inf
-OPTIMIZE_LO_BOUND_RATIO = 0.0
-OPTIMIZE_HI_BOUND_RATIO = np.inf
-OPTIMIZE_FTOL = 1e-10
+REGULARIZATION_LAMBDA = 5e-7
+OPTIMIZE_FTOL = 1e-7
+OPTIMIZE_GTOL = 1e-7
 OPTIMIZE_MAXITER = 5000
-OPTIMIZE_VERBOSE = 0  # set to zero for no iteration information
-OPTIMIZE_RESULTS = False  # set to True to see complete lsq_linear results
+OPTIMIZE_IPRINT = 20  # set to zero for no iteration information
+OPTIMIZE_RESULTS = True  # set to True to see complete optimization results
 
 
 def all_taxcalc_variables():
@@ -151,15 +148,58 @@ def loss_function_value(wght, target_matrix, target_array):
     return 0.5 * np.sum(np.square(act_minus_exp))
 
 
+def residual_function(x, A, b, lambda_):
+    """
+    Define the residual function using JAX.
+    """
+    A_dot_x = A @ x  # JAX sparse matrix-vector multiplication
+    residual = A_dot_x - b
+    regularization = jnp.sqrt(lambda_) * (x - 1)  # Regularization term
+    return jnp.concatenate([residual, regularization])
+
+
+def objective_function(x, A, b, lambda_):
+    """
+    Objective function for minimization (sum of squared residuals).
+    """
+    res = residual_function(x, A, b, lambda_)
+    return jnp.sum(jnp.square(res))
+
+
+def jvp_residual_function(x, A, b, lambda_, v):
+    """
+    Function to compute the JVP using JAX
+    Compute Jacobian-vector product (JVP) without forming the full Jacobian
+    """
+    _, jvp = jax.jvp(lambda x: residual_function(x, A, b, lambda_), (x,), (v,))
+    return jvp
+
+
+def gradient_function(x, A, b, lambda_):
+    """
+    Define gradient using JAX autodiff.
+    """
+    grad = jax.grad(objective_function)(x, A, b, lambda_)
+    return np.asarray(grad)
+
+
 def weight_ratio_distribution(ratio):
     """
     Print distribution of post-optimized to pre-optimized weight ratios.
     """
     bins = [
         0.0,
+        0.1,
         0.2,
         0.5,
         0.8,
+        0.85,
+        0.9,
+        0.95,
+        1.0,
+        1.05,
+        1.1,
+        1.15,
         1.2,
         2.0,
         5.0,
@@ -172,8 +212,7 @@ def weight_ratio_distribution(ratio):
     ]
     tot = ratio.size
     print(f"DISTRIBUTION OF AREA/US WEIGHT RATIO (n={tot}):")
-    print(f"  with OPTIMIZE_LO_BOUND_RATIO= {OPTIMIZE_LO_BOUND_RATIO:.1f}")
-    print(f"   and OPTIMIZE_HI_BOUND_RATIO= {OPTIMIZE_HI_BOUND_RATIO:.1f}")
+    print(f"  with REGULARIZATION_LAMBDA= {REGULARIZATION_LAMBDA:e}")
     header = (
         "low bin ratio    high bin ratio"
         "    bin #    cum #     bin %     cum %"
@@ -207,6 +246,7 @@ def create_area_weights_file(area: str, write_file: bool = True):
     Return loss_function_value using the optimized weights and optionally
     write the weights file.
     """
+    print(f"CREATING AREA WEIGHTS FILE FOR AREA {area} ...")
     # construct variable matrix and target array and weights_scale
     vdf = all_taxcalc_variables()
     target_matrix, target_array, weights_scale = prepared_data(area, vdf)
@@ -219,49 +259,43 @@ def create_area_weights_file(area: str, write_file: bool = True):
     density = np.count_nonzero(target_matrix) / target_matrix.size
     print(f"target_matrix sparsity ratio = {(1.0 - density):.3f}")
 
-    # optimize weights by minimizing sum of squared wght*var-target deviations
-    if OPTIMIZE_RATIOS:
-        tar_matrix = (target_matrix * wght_us[:, np.newaxis]).T
-        lob = OPTIMIZE_LO_BOUND_RATIO * np.ones(num_weights)
-        hib = OPTIMIZE_HI_BOUND_RATIO * np.ones(num_weights)
-    else:  # if optimizing the weights
-        tar_matrix = target_matrix.T
-        lob = OPTIMIZE_LO_BOUND_RATIO * wght_us
-        hib = OPTIMIZE_HI_BOUND_RATIO * wght_us
+    # optimize weight ratios by minimizing the sum of squared deviations
+    # of area-to-us weight ratios from one such that the optimized ratios
+    # hit all of the areas targets, using traditional Ax = b nomenclature
+    A_dense = (target_matrix * wght_us[:, np.newaxis]).T
+    A = BCOO.from_scipy_sparse(csr_matrix(A_dense))  # A is JAX sparse matrix
+    b = target_array
     print(
-        f"OPTIMIZE_RATIOS= {OPTIMIZE_RATIOS}"
-        f"   target_matrix.shape= {target_matrix.shape}\n"
-        f"OPTIMIZE_LO_BOUND_RATIO= {OPTIMIZE_LO_BOUND_RATIO:.1f}\n"
-        f"OPTIMIZE_HI_BOUND_RATIO= {OPTIMIZE_HI_BOUND_RATIO:.1f}"
+        f"OPTIMIZE_RATIOS: target_matrix.shape= {target_matrix.shape}\n"
+        f"REGULARIZATION_LAMBDA= {REGULARIZATION_LAMBDA:e}"
     )
     time0 = time.time()
-    res = lsq_linear(
-        tar_matrix,
-        target_array,
-        bounds=(lob, hib),
-        method="bvls",
-        tol=OPTIMIZE_FTOL,
-        lsq_solver="exact",
-        lsmr_tol=None,
-        max_iter=OPTIMIZE_MAXITER,
-        verbose=OPTIMIZE_VERBOSE,
+    res = minimize(
+        fun=objective_function,  # objective function
+        x0=np.ones(num_weights),  # initial wght_ratio guess
+        jac=gradient_function,  # objective function gradient
+        args=(A, b, REGULARIZATION_LAMBDA),  # fixed arguments
+        method="L-BFGS-B",  # use L-BFGS-B solver
+        bounds=Bounds(0.0, np.inf),  # consider only non-negative weight ratios
+        options={
+            "maxiter": OPTIMIZE_MAXITER,
+            "ftol": OPTIMIZE_FTOL,
+            "gtol": OPTIMIZE_GTOL,
+            "iprint": OPTIMIZE_IPRINT,
+        },
     )
     time1 = time.time()
     res_summary = (
-        f">>> scipy.lsq_linear execution: {(time1-time0):.1f} secs"
+        f">>> optimization execution time: {(time1-time0):.1f} secs"
         f"  iterations={res.nit}  success={res.success}\n"
         f">>> message: {res.message}\n"
-        f">>> lsq_linear optimized loss value: {res.cost:.9e}"
+        f">>> L-BFGS-B optimized loss value: {res.fun:.9e}"
     )
     print(res_summary)
     if OPTIMIZE_RESULTS:
-        print(">>> scipy.lsq_linear full results:\n", res)
-    if OPTIMIZE_RATIOS:
-        wght_ratio = res.x
-        wght_area = res.x * wght_us
-    else:
-        wght_ratio = res.x / wght_us
-        wght_area = res.x
+        print(">>> full optimization results:\n", res)
+    wght_ratio = res.x
+    wght_area = res.x * wght_us
     loss = loss_function_value(wght_area, target_matrix, target_array)
     print(f"AREA-OPTIMIZED_LOSS_FUNCTION_VALUE= {loss:.9e}")
     weight_ratio_distribution(wght_ratio)
