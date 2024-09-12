@@ -28,7 +28,7 @@ WTFILE_PATH = STORAGE_FOLDER / "output" / "tmd_weights.csv.gz"
 GFFILE_PATH = STORAGE_FOLDER / "output" / "tmd_growfactors.csv"
 POPFILE_PATH = STORAGE_FOLDER / "input" / "cbo_population_forecast.yaml"
 
-DUMP_LOSS_FUNCTION_VALUE_COMPONENTS = True
+DUMP_TARGET_LOSS_FUNCTION_VALUE_COMPONENTS = True
 REGULARIZATION_LAMBDA = 1e-9
 OPTIMIZE_FTOL = 1e-8
 OPTIMIZE_GTOL = 1e-8
@@ -129,13 +129,13 @@ def prepared_data(area: str, vardf: pd.DataFrame):
     )
 
 
-def loss_function_value(wght, target_matrix, target_array):
+def target_loss_function_value(wght, target_matrix, target_array):
     """
-    Return loss function value given specified arguments.
+    Return target loss function value given specified arguments.
     """
     act = np.dot(wght, target_matrix)
     act_minus_exp = act - target_array
-    if DUMP_LOSS_FUNCTION_VALUE_COMPONENTS:
+    if DUMP_TARGET_LOSS_FUNCTION_VALUE_COMPONENTS:
         for tnum, exp in enumerate(target_array):
             print(
                 f"TARGET{(tnum + 1):03d}:ACT-EXP,ACT/EXP= "
@@ -145,22 +145,18 @@ def loss_function_value(wght, target_matrix, target_array):
     return 0.5 * np.sum(np.square(act_minus_exp))
 
 
-def objective_function(x, A, b, lambda_):
+def objective_function(x, *args):
     """
     Objective function for minimization of sum of squared deviations.
     """
-    target_deviation = A @ x - b  # JAX sparse matrix-vector multiplication
-    weight_deviation = jnp.sqrt(lambda_) * (x - 1)
-    deviations = jnp.concatenate([target_deviation, weight_deviation])
+    A, b, lambda_ = args
+    target_deviations = A @ x - b  # JAX sparse matrix-vector multiplication
+    weight_deviations = jnp.sqrt(lambda_) * (x - 1)
+    deviations = jnp.concatenate([target_deviations, weight_deviations])
     return jnp.sum(jnp.square(deviations))
 
 
-def gradient_function(x, A, b, lambda_):
-    """
-    Define gradient using JAX autodiff.
-    """
-    grad = jax.grad(objective_function)(x, A, b, lambda_)
-    return np.asarray(grad)
+JIT_FVAL_AND_GRAD = jax.jit(jax.value_and_grad(objective_function))
 
 
 def weight_ratio_distribution(ratio):
@@ -223,8 +219,8 @@ def create_area_weights_file(area: str, write_file: bool = True):
     """
     Create Tax-Calculator-style weights file for FIRST_YEAR through LAST_YEAR
     for specified area using information in area targets CSV file.
-    Return loss_function_value using the optimized weights and optionally
-    write the weights file.
+    Return target_loss_function_value using the optimized weights and
+    optionally write the weights file.
     """
     print(f"CREATING WEIGHTS FILE FOR AREA {area} ...")
     jax.config.update("jax_platform_name", "cpu")  # ignore GPU/TPU if present
@@ -237,14 +233,29 @@ def create_area_weights_file(area: str, write_file: bool = True):
     num_weights = len(wght_us)
     num_targets = len(target_array)
     print(f"USING {area}_targets.csv FILE CONTAINING {num_targets} TARGETS")
-    loss = loss_function_value(wght_us, target_matrix, target_array)
-    print(f"US_PROPORTIONALLY_SCALED_LOSS_FUNCTION_VALUE= {loss:.9e}")
+    loss = target_loss_function_value(wght_us, target_matrix, target_array)
+    print(f"US_PROPORTIONALLY_SCALED_TARGET_LOSS_FUNCTION_VALUE= {loss:.9e}")
     density = np.count_nonzero(target_matrix) / target_matrix.size
     print(f"target_matrix sparsity ratio = {(1.0 - density):.3f}")
 
     # optimize weight ratios by minimizing the sum of squared deviations
     # of area-to-us weight ratios from one such that the optimized ratios
-    # hit all of the areas targets, using traditional Ax = b nomenclature
+    # hit all of the area targets
+    #   NOTE: the optimization method is a version of the augmented
+    #         Lagrangian method that is simplified because of the
+    #         constraints (one for each target) are linear and
+    #         because the objective function is very simple (the
+    #         sum of the squared weight ratio deviations from one).
+    #         These simplifications obviate the need to iterate from
+    #         a lower constraint multiple to higher constraint multiple.
+    #         The multiple is the "mu sub k" variable in the third
+    #         equation in the "General method" section of the Wikipedia
+    #         article on the augmented Lagrangian method:
+    #         https://en.wikipedia.org/wiki/Augmented_Lagrangian_method
+    #         Instead of applying the multiple to the constraint functions,
+    #         here we apply the inverse of the multiple (which is called
+    #         the REGULARIZATION_LAMBDA) to the sum of the squared weight
+    #         ratio deviations from one, which is logically equivalent.
     A_dense = (target_matrix * wght_us[:, np.newaxis]).T
     A = BCOO.from_scipy_sparse(csr_matrix(A_dense))  # A is JAX sparse matrix
     b = target_array
@@ -254,11 +265,11 @@ def create_area_weights_file(area: str, write_file: bool = True):
     )
     time0 = time.time()
     res = minimize(
-        fun=objective_function,  # objective function
+        fun=JIT_FVAL_AND_GRAD,  # objective function and its gradient
         x0=np.ones(num_weights),  # initial wght_ratio guess
-        jac=gradient_function,  # objective function gradient
+        jac=True,  # use gradient from JIT_FVAL_AND_GRAD function
         args=(A, b, REGULARIZATION_LAMBDA),  # fixed arguments
-        method="L-BFGS-B",  # use L-BFGS-B solver
+        method="L-BFGS-B",  # use L-BFGS-B algorithm
         bounds=Bounds(0.0, np.inf),  # consider only non-negative weight ratios
         options={
             "maxiter": OPTIMIZE_MAXITER,
@@ -279,8 +290,8 @@ def create_area_weights_file(area: str, write_file: bool = True):
         print(">>> full optimization results:\n", res)
     wght_ratio = res.x
     wght_area = res.x * wght_us
-    loss = loss_function_value(wght_area, target_matrix, target_array)
-    print(f"AREA-OPTIMIZED_LOSS_FUNCTION_VALUE= {loss:.9e}")
+    loss = target_loss_function_value(wght_area, target_matrix, target_array)
+    print(f"AREA-OPTIMIZED_TARGET_LOSS_FUNCTION_VALUE= {loss:.9e}")
     weight_ratio_distribution(wght_ratio)
 
     if not write_file:
