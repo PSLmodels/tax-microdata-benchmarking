@@ -37,6 +37,8 @@ OPTIMIZE_MAXITER = 5000
 OPTIMIZE_VERBOSE = 2  # set to zero for no iteration information
 OPTIMIZE_RESULTS = False  # set to True to see complete lsq_linear results
 
+REGULARIZATION_LAMBDA = 5e-7
+
 def residual_function(x, A, b, lambda_):
     # Define the residual function using JAX
     A_dot_x = A @ x  # JAX sparse matrix-vector multiplication
@@ -244,9 +246,8 @@ def create_area_weights_file(area: str, write_file: bool = True):
     print(f"variable_matrix sparsity ratio = {(1.0 - density):.3f}")
 
     # optimize weights by minimizing sum of squared wght*var-target deviations        
+    # while also minimizing sum of squared differences of weight ratios from 1
     var_matrix = (variable_matrix * wght[:, np.newaxis]).T
-    
-    lambda_ = 1e-6  # Regularization parameter
     
     # use traditional Ax = b nomenclature
     # Convert SciPy sparse matrix to JAX-compatible BCOO format
@@ -271,7 +272,9 @@ def create_area_weights_file(area: str, write_file: bool = True):
         fun=objective_function,            # Objective function
         x0=np.ones(num_weights),           # Initial guess
         jac=gradient_function,             # Gradient (JVP-based)
-        args=(A_jax, b, lambda_),            # Additional arguments
+        args=(A_jax,
+              b,
+              REGULARIZATION_LAMBDA),      # Additional arguments
         method='L-BFGS-B',                 # Use L-BFGS-B solver for large-scale problems
         bounds=bounds,                     # Non-negative bounds
         options={
@@ -293,7 +296,7 @@ def create_area_weights_file(area: str, write_file: bool = True):
     loss = loss_function_value(wghtx, variable_matrix, target_array)
     print(f"AREA-OPTIMIZED_LOSS_FUNCTION_VALUE= {loss:.9e}")
     weight_ratio_distribution(wghtx / wght)
-    print(f"Norm of (x - 1): {np.linalg.norm(res.x - 1)}")
+    print(f"Euclidean norm of (x - 1): {np.linalg.norm(res.x - 1)}")
     
     # Quantiles of ratios and targets
     qtiles = [0, .1, .25, .5, .75, .9, 1]
@@ -305,6 +308,7 @@ def create_area_weights_file(area: str, write_file: bool = True):
     diff = A_csr @ res.x - b
     pdiff = diff / b
     print(np.quantile(pdiff, qtiles))
+    print(f"Euclidean norm of target percent differences: {np.linalg.norm(pdiff)}")
     
     print(f"Sum of original weights= {sum(wght):,.0f}")
     print(f"Sum of new weights=      {sum(wghtx):,.0f}")
