@@ -145,22 +145,14 @@ def loss_function_value(wght, target_matrix, target_array):
     return 0.5 * np.sum(np.square(act_minus_exp))
 
 
-def residual_function(x, A, b, lambda_):
-    """
-    Define the residual function using JAX.
-    """
-    A_dot_x = A @ x  # JAX sparse matrix-vector multiplication
-    residual = A_dot_x - b
-    regularization = jnp.sqrt(lambda_) * (x - 1)  # Regularization term
-    return jnp.concatenate([residual, regularization])
-
-
 def objective_function(x, A, b, lambda_):
     """
     Objective function for minimization (sum of squared residuals).
     """
-    res = residual_function(x, A, b, lambda_)
-    return jnp.sum(jnp.square(res))
+    target_deviation = A @ x - b  # JAX sparse matrix-vector multiplication
+    weight_deviation = jnp.sqrt(lambda_) * (x - 1)
+    residuals = jnp.concatenate([target_deviation, weight_deviation])
+    return jnp.sum(jnp.square(residuals))
 
 
 def gradient_function(x, A, b, lambda_):
