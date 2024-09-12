@@ -15,9 +15,6 @@ import pandas as pd
 from scipy.sparse import csr_matrix
 from scipy.optimize import Bounds, minimize
 import jax
-
-jax.config.update("jax_enable_x64", True)  # use double precision floats
-jax.config.update("jax_platform_name", "cpu")  # ignore GPU/TPU if present
 import jax.numpy as jnp
 from jax.experimental.sparse import BCOO
 import taxcalc as tc
@@ -32,9 +29,9 @@ GFFILE_PATH = STORAGE_FOLDER / "output" / "tmd_growfactors.csv"
 POPFILE_PATH = STORAGE_FOLDER / "input" / "cbo_population_forecast.yaml"
 
 DUMP_LOSS_FUNCTION_VALUE_COMPONENTS = True
-REGULARIZATION_LAMBDA = 5e-7
-OPTIMIZE_FTOL = 1e-7
-OPTIMIZE_GTOL = 1e-7
+REGULARIZATION_LAMBDA = 1e-9
+OPTIMIZE_FTOL = 1e-8
+OPTIMIZE_GTOL = 1e-8
 OPTIMIZE_MAXITER = 5000
 OPTIMIZE_IPRINT = 20  # set to zero for no iteration information
 OPTIMIZE_RESULTS = True  # set to True to see complete optimization results
@@ -166,15 +163,6 @@ def objective_function(x, A, b, lambda_):
     return jnp.sum(jnp.square(res))
 
 
-def jvp_residual_function(x, A, b, lambda_, v):
-    """
-    Function to compute the JVP using JAX
-    Compute Jacobian-vector product (JVP) without forming the full Jacobian
-    """
-    _, jvp = jax.jvp(lambda x: residual_function(x, A, b, lambda_), (x,), (v,))
-    return jvp
-
-
 def gradient_function(x, A, b, lambda_):
     """
     Define gradient using JAX autodiff.
@@ -246,7 +234,10 @@ def create_area_weights_file(area: str, write_file: bool = True):
     Return loss_function_value using the optimized weights and optionally
     write the weights file.
     """
-    print(f"CREATING AREA WEIGHTS FILE FOR AREA {area} ...")
+    print(f"CREATING WEIGHTS FILE FOR AREA {area} ...")
+    jax.config.update("jax_platform_name", "cpu")  # ignore GPU/TPU if present
+    jax.config.update("jax_enable_x64", True)  # use double precision floats
+
     # construct variable matrix and target array and weights_scale
     vdf = all_taxcalc_variables()
     target_matrix, target_array, weights_scale = prepared_data(area, vdf)
