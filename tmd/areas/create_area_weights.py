@@ -33,7 +33,7 @@ REGULARIZATION_LAMBDA = 1e-9
 OPTIMIZE_FTOL = 1e-8
 OPTIMIZE_GTOL = 1e-8
 OPTIMIZE_MAXITER = 5000
-OPTIMIZE_IPRINT = 0  # set to zero for no iteration information
+OPTIMIZE_IPRINT = 0  # good diagnostic value is 20; set to 0 to silence
 OPTIMIZE_RESULTS = False  # set to True to see complete optimization results
 
 
