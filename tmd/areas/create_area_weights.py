@@ -13,7 +13,7 @@ import time
 import numpy as np
 import pandas as pd
 from scipy.sparse import csr_matrix
-from scipy.optimize import Bounds, minimize
+from scipy.optimize import minimize, Bounds
 import jax
 import jax.numpy as jnp
 from jax.experimental.sparse import BCOO
@@ -28,13 +28,13 @@ WTFILE_PATH = STORAGE_FOLDER / "output" / "tmd_weights.csv.gz"
 GFFILE_PATH = STORAGE_FOLDER / "output" / "tmd_growfactors.csv"
 POPFILE_PATH = STORAGE_FOLDER / "input" / "cbo_population_forecast.yaml"
 
-DUMP_TARGET_DEVIATIONS = True
-REGULARIZATION_DELTA = 1e-9
+REGULARIZATION_DELTA = 1.0e-9
 OPTIMIZE_FTOL = 1e-8
 OPTIMIZE_GTOL = 1e-8
-OPTIMIZE_MAXITER = 1000
-OPTIMIZE_IPRINT = 0  # a good diagnostic value is 20; set to 0 to silence
+OPTIMIZE_MAXITER = 5000
+OPTIMIZE_IPRINT = 0  # 20 is a good diagnostic value; set to 0 for production
 OPTIMIZE_RESULTS = False  # set to True to see complete optimization results
+DUMP_ALL_TARGET_DEVIATIONS = False  # set to True only for diagnostic work
 
 
 def all_taxcalc_variables():
@@ -135,13 +135,55 @@ def target_rmse(wght, target_matrix, target_array):
     """
     act = np.dot(wght, target_matrix)
     act_minus_exp = act - target_array
-    if DUMP_TARGET_DEVIATIONS:
-        for tnum, exp in enumerate(target_array):
+    ratio = act / target_array
+    if DUMP_ALL_TARGET_DEVIATIONS:
+        for tnum, ratio_ in enumerate(ratio):
             print(
                 f"TARGET{(tnum + 1):03d}:ACT-EXP,ACT/EXP= "
-                f"{act_minus_exp[tnum]:16.9e}, "
-                f"{(act[tnum] / exp):.3f}"
+                f"{act_minus_exp[tnum]:16.9e}, {ratio_:.3f}"
             )
+    # show distribution of target ratios
+    bins = [
+        0.0,
+        0.4,
+        0.8,
+        0.9,
+        0.99,
+        0.9995,
+        1.0005,
+        1.01,
+        1.1,
+        1.2,
+        1.6,
+        2.0,
+        3.0,
+        4.0,
+        5.0,
+        np.inf,
+    ]
+    tot = ratio.size
+    print(f"DISTRIBUTION OF TARGET ACT/EXP RATIOS (n={tot}):")
+    print(f"  with REGULARIZATION_DELTA= {REGULARIZATION_DELTA:e}")
+    header = (
+        "low bin ratio    high bin ratio"
+        "    bin #    cum #     bin %     cum %"
+    )
+    print(header)
+    out = pd.cut(ratio, bins, right=False, precision=6)
+    count = pd.Series(out).value_counts().sort_index().to_dict()
+    cum = 0
+    for interval, num in count.items():
+        cum += num
+        if cum == 0:
+            continue
+        line = (
+            f">={interval.left:13.6f}, <{interval.right:13.6f}:"
+            f"  {num:6d}   {cum:6d}   {num/tot:7.2%}   {cum/tot:7.2%}"
+        )
+        print(line)
+        if cum == tot:
+            break
+    # return RMSE of ACT-EXP targets
     return np.sqrt(np.mean(np.square(act_minus_exp)))
 
 
@@ -196,7 +238,7 @@ def weight_ratio_distribution(ratio):
         "    bin #    cum #     bin %     cum %"
     )
     print(header)
-    out = pd.cut(ratio, bins, right=False, precision=6, duplicates="drop")
+    out = pd.cut(ratio, bins, right=False, precision=6)
     count = pd.Series(out).value_counts().sort_index().to_dict()
     cum = 0
     for interval, num in count.items():
@@ -224,7 +266,10 @@ def create_area_weights_file(area: str, write_file: bool = True):
     Return target RMSE using the optimized area weights and optionally write
     the weights file.
     """
-    print(f"CREATING WEIGHTS FILE FOR AREA {area} ...")
+    if write_file:
+        print(f"CREATING WEIGHTS FILE FOR AREA {area} ...")
+    else:
+        print(f"DOING JUST WEIGHTS FILE CALCULATIONS FOR AREA {area} ...")
     jax.config.update("jax_platform_name", "cpu")  # ignore GPU/TPU if present
     jax.config.update("jax_enable_x64", True)  # use double precision floats
 
