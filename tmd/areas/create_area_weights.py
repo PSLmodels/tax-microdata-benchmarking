@@ -33,8 +33,8 @@ REGULARIZATION_LAMBDA = 1e-9
 OPTIMIZE_FTOL = 1e-8
 OPTIMIZE_GTOL = 1e-8
 OPTIMIZE_MAXITER = 5000
-OPTIMIZE_IPRINT = 20  # set to zero for no iteration information
-OPTIMIZE_RESULTS = True  # set to True to see complete optimization results
+OPTIMIZE_IPRINT = 0  # set to zero for no iteration information
+OPTIMIZE_RESULTS = False  # set to True to see complete optimization results
 
 
 def all_taxcalc_variables():
@@ -147,13 +147,15 @@ def target_loss_function_value(wght, target_matrix, target_array):
 
 def objective_function(x, *args):
     """
-    Objective function for minimization of sum of squared deviations.
+    Unconstrained objective function for minimization.
     """
     A, b, lambda_ = args
-    target_deviations = A @ x - b  # JAX sparse matrix-vector multiplication
-    weight_deviations = jnp.sqrt(lambda_) * (x - 1)
-    deviations = jnp.concatenate([target_deviations, weight_deviations])
-    return jnp.sum(jnp.square(deviations))
+    # calculate primary objective function value, pofv
+    pofv = jnp.sum(jnp.square(x - 1.0))
+    # calculate constraint functions value, cfv
+    cfv = jnp.sum(jnp.square(A @ x - b))
+    # reduce pofv rather than increase cfv to maintain better scaling balance
+    return lambda_ * pofv + cfv
 
 
 JIT_FVAL_AND_GRAD = jax.jit(jax.value_and_grad(objective_function))
@@ -277,6 +279,7 @@ def create_area_weights_file(area: str, write_file: bool = True):
             "ftol": OPTIMIZE_FTOL,
             "gtol": OPTIMIZE_GTOL,
             "iprint": OPTIMIZE_IPRINT,
+            "disp": OPTIMIZE_IPRINT != 0,
         },
     )
     time1 = time.time()
