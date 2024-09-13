@@ -4,8 +4,8 @@ for 2021+ for the specified sub-national AREA.
 
 AREA prefix for state areas are the two lower-case character postal codes.
 AREA prefix for congressional districts are the state prefix followed by
-two digits (with a leading zero) identifying the district.  Note there
-are no district files for states with only one congressional district.
+two digits (with a leading zero) identifying the district.  There are no
+district files for states with only one congressional district.
 """
 
 import sys
@@ -29,11 +29,11 @@ GFFILE_PATH = STORAGE_FOLDER / "output" / "tmd_growfactors.csv"
 POPFILE_PATH = STORAGE_FOLDER / "input" / "cbo_population_forecast.yaml"
 
 DUMP_TARGET_DEVIATIONS = True
-REGULARIZATION_LAMBDA = 1e-9
+REGULARIZATION_DELTA = 1e-9
 OPTIMIZE_FTOL = 1e-8
 OPTIMIZE_GTOL = 1e-8
-OPTIMIZE_MAXITER = 5000
-OPTIMIZE_IPRINT = 0  # good diagnostic value is 20; set to 0 to silence
+OPTIMIZE_MAXITER = 1000
+OPTIMIZE_IPRINT = 0  # a good diagnostic value is 20; set to 0 to silence
 OPTIMIZE_RESULTS = False  # set to True to see complete optimization results
 
 
@@ -147,15 +147,14 @@ def target_rmse(wght, target_matrix, target_array):
 
 def objective_function(x, *args):
     """
-    Unconstrained objective function for minimization.
+    Objective function for minimization.
+    Search for NOTE in this file for methodological details.
+    https://web.stanford.edu/~boyd/cvxbook/bv_cvxbook.pdf#page=320
     """
-    A, b, lambda_ = args
-    # calculate primary objective function value, pofv
-    pofv = jnp.sum(jnp.square(x - 1.0))
-    # calculate constraint functions value, cfv
-    cfv = jnp.sum(jnp.square(A @ x - b))
-    # reduce pofv rather than increase cfv to maintain better scaling balance
-    return lambda_ * pofv + cfv
+    A, b, delta = args  # A is a jax sparse matrix
+    ssq_target_deviations = jnp.sum(jnp.square(A @ x - b))
+    ssq_weight_deviations = jnp.sum(jnp.square(x - 1.0))
+    return ssq_target_deviations + delta * ssq_weight_deviations
 
 
 JIT_FVAL_AND_GRAD = jax.jit(jax.value_and_grad(objective_function))
@@ -191,7 +190,7 @@ def weight_ratio_distribution(ratio):
     ]
     tot = ratio.size
     print(f"DISTRIBUTION OF AREA/US WEIGHT RATIO (n={tot}):")
-    print(f"  with REGULARIZATION_LAMBDA= {REGULARIZATION_LAMBDA:e}")
+    print(f"  with REGULARIZATION_DELTA= {REGULARIZATION_DELTA:e}")
     header = (
         "low bin ratio    high bin ratio"
         "    bin #    cum #     bin %     cum %"
@@ -244,34 +243,29 @@ def create_area_weights_file(area: str, write_file: bool = True):
     # optimize weight ratios by minimizing the sum of squared deviations
     # of area-to-us weight ratios from one such that the optimized ratios
     # hit all of the area targets
-    #   NOTE: the optimization method is a version of the augmented
-    #         Lagrangian method that is simplified because of the
-    #         constraints (one for each target) are linear and
-    #         because the objective function is very simple (the
-    #         sum of the squared weight ratio deviations from one).
-    #         These simplifications obviate the need to iterate from
-    #         a lower constraint multiple to higher constraint multiple.
-    #         The multiple is the "mu sub k" variable in the third
-    #         equation in the "General method" section of the Wikipedia
-    #         article on the augmented Lagrangian method:
-    #         https://en.wikipedia.org/wiki/Augmented_Lagrangian_method
-    #         Instead of applying the multiple to the constraint functions,
-    #         here we apply the inverse of the multiple (which is called
-    #         the REGULARIZATION_LAMBDA) to the sum of the squared weight
-    #         ratio deviations from one, which is logically equivalent.
+    #
+    # NOTE: This a bi-criterion minimization problem that can be
+    #       solved using regularization methods.  For background,
+    #       consult Stephen Boyd and Lieven Vandenberghe, Convex
+    #       Optimization, Cambridge University Press, 2004, in
+    #       particular equation (6.9) on page 306 (see LINK below).
+    #       Our problem is exactly the same as (6.9) except that
+    #       we measure x deviations from one rather than from zero.
+    # LINK: https://web.stanford.edu/~boyd/cvxbook/bv_cvxbook.pdf#page=320
+    #
     A_dense = (target_matrix * wght_us[:, np.newaxis]).T
     A = BCOO.from_scipy_sparse(csr_matrix(A_dense))  # A is JAX sparse matrix
     b = target_array
     print(
         f"OPTIMIZE_WEIGHT_RATIOS: target_matrix.shape= {target_matrix.shape}\n"
-        f"REGULARIZATION_LAMBDA= {REGULARIZATION_LAMBDA:e}"
+        f"REGULARIZATION_DELTA= {REGULARIZATION_DELTA:e}"
     )
     time0 = time.time()
     res = minimize(
         fun=JIT_FVAL_AND_GRAD,  # objective function and its gradient
         x0=np.ones(num_weights),  # initial guess for weight ratios
         jac=True,  # use gradient from JIT_FVAL_AND_GRAD function
-        args=(A, b, REGULARIZATION_LAMBDA),  # fixed arguments
+        args=(A, b, REGULARIZATION_DELTA),  # fixed arguments of objective func
         method="L-BFGS-B",  # use L-BFGS-B algorithm
         bounds=Bounds(0.0, np.inf),  # consider only non-negative weight ratios
         options={
