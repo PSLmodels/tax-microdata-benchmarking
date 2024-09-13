@@ -165,6 +165,7 @@ def weight_ratio_distribution(ratio):
     """
     bins = [
         0.0,
+        1e-6,
         0.1,
         0.2,
         0.5,
