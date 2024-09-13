@@ -28,7 +28,7 @@ WTFILE_PATH = STORAGE_FOLDER / "output" / "tmd_weights.csv.gz"
 GFFILE_PATH = STORAGE_FOLDER / "output" / "tmd_growfactors.csv"
 POPFILE_PATH = STORAGE_FOLDER / "input" / "cbo_population_forecast.yaml"
 
-DUMP_TARGET_LOSS_FUNCTION_VALUE_COMPONENTS = True
+DUMP_TARGET_DEVIATIONS = True
 REGULARIZATION_LAMBDA = 1e-9
 OPTIMIZE_FTOL = 1e-8
 OPTIMIZE_GTOL = 1e-8
@@ -129,20 +129,20 @@ def prepared_data(area: str, vardf: pd.DataFrame):
     )
 
 
-def target_loss_function_value(wght, target_matrix, target_array):
+def target_rmse(wght, target_matrix, target_array):
     """
-    Return target loss function value given specified arguments.
+    Return RMSE of the target deviations given specified arguments.
     """
     act = np.dot(wght, target_matrix)
     act_minus_exp = act - target_array
-    if DUMP_TARGET_LOSS_FUNCTION_VALUE_COMPONENTS:
+    if DUMP_TARGET_DEVIATIONS:
         for tnum, exp in enumerate(target_array):
             print(
                 f"TARGET{(tnum + 1):03d}:ACT-EXP,ACT/EXP= "
                 f"{act_minus_exp[tnum]:16.9e}, "
                 f"{(act[tnum] / exp):.3f}"
             )
-    return 0.5 * np.sum(np.square(act_minus_exp))
+    return np.sqrt(np.mean(np.square(act_minus_exp)))
 
 
 def objective_function(x, *args):
@@ -222,8 +222,8 @@ def create_area_weights_file(area: str, write_file: bool = True):
     """
     Create Tax-Calculator-style weights file for FIRST_YEAR through LAST_YEAR
     for specified area using information in area targets CSV file.
-    Return target_loss_function_value using the optimized weights and
-    optionally write the weights file.
+    Return target RMSE using the optimized area weights and optionally write
+    the weights file.
     """
     print(f"CREATING WEIGHTS FILE FOR AREA {area} ...")
     jax.config.update("jax_platform_name", "cpu")  # ignore GPU/TPU if present
@@ -236,8 +236,8 @@ def create_area_weights_file(area: str, write_file: bool = True):
     num_weights = len(wght_us)
     num_targets = len(target_array)
     print(f"USING {area}_targets.csv FILE CONTAINING {num_targets} TARGETS")
-    loss = target_loss_function_value(wght_us, target_matrix, target_array)
-    print(f"US_PROPORTIONALLY_SCALED_TARGET_LOSS_FUNCTION_VALUE= {loss:.9e}")
+    rmse = target_rmse(wght_us, target_matrix, target_array)
+    print(f"US_PROPORTIONALLY_SCALED_TARGET_RMSE= {rmse:.9e}")
     density = np.count_nonzero(target_matrix) / target_matrix.size
     print(f"target_matrix sparsity ratio = {(1.0 - density):.3f}")
 
@@ -263,13 +263,13 @@ def create_area_weights_file(area: str, write_file: bool = True):
     A = BCOO.from_scipy_sparse(csr_matrix(A_dense))  # A is JAX sparse matrix
     b = target_array
     print(
-        f"OPTIMIZE_RATIOS: target_matrix.shape= {target_matrix.shape}\n"
+        f"OPTIMIZE_WEIGHT_RATIOS: target_matrix.shape= {target_matrix.shape}\n"
         f"REGULARIZATION_LAMBDA= {REGULARIZATION_LAMBDA:e}"
     )
     time0 = time.time()
     res = minimize(
         fun=JIT_FVAL_AND_GRAD,  # objective function and its gradient
-        x0=np.ones(num_weights),  # initial wght_ratio guess
+        x0=np.ones(num_weights),  # initial guess for weight ratios
         jac=True,  # use gradient from JIT_FVAL_AND_GRAD function
         args=(A, b, REGULARIZATION_LAMBDA),  # fixed arguments
         method="L-BFGS-B",  # use L-BFGS-B algorithm
@@ -287,19 +287,18 @@ def create_area_weights_file(area: str, write_file: bool = True):
         f">>> optimization execution time: {(time1-time0):.1f} secs"
         f"  iterations={res.nit}  success={res.success}\n"
         f">>> message: {res.message}\n"
-        f">>> L-BFGS-B optimized loss value: {res.fun:.9e}"
+        f">>> L-BFGS-B optimized objective function value: {res.fun:.9e}"
     )
     print(res_summary)
     if OPTIMIZE_RESULTS:
         print(">>> full optimization results:\n", res)
-    wght_ratio = res.x
     wght_area = res.x * wght_us
-    loss = target_loss_function_value(wght_area, target_matrix, target_array)
-    print(f"AREA-OPTIMIZED_TARGET_LOSS_FUNCTION_VALUE= {loss:.9e}")
-    weight_ratio_distribution(wght_ratio)
+    rmse = target_rmse(wght_area, target_matrix, target_array)
+    print(f"AREA-OPTIMIZED_TARGET_RMSE= {rmse:.9e}")
+    weight_ratio_distribution(res.x)
 
     if not write_file:
-        return loss
+        return rmse
 
     # write weights file
     """
@@ -326,7 +325,7 @@ def create_area_weights_file(area: str, write_file: bool = True):
     wdf.to_csv(WGTFILE, index=False, float_format="%.0f", compression="gzip")
     """
 
-    return loss
+    return rmse
 
 
 if __name__ == "__main__":
