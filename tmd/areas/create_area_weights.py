@@ -10,6 +10,7 @@ district files for states with only one congressional district.
 
 import sys
 import time
+import yaml
 import numpy as np
 import pandas as pd
 from scipy.sparse import csr_matrix
@@ -22,7 +23,7 @@ from tmd.storage import STORAGE_FOLDER
 from tmd.areas import AREAS_FOLDER
 
 FIRST_YEAR = 2021
-LAST_YEAR = 2074
+LAST_YEAR = 2034
 INFILE_PATH = STORAGE_FOLDER / "output" / "tmd.csv.gz"
 WTFILE_PATH = STORAGE_FOLDER / "output" / "tmd_weights.csv.gz"
 GFFILE_PATH = STORAGE_FOLDER / "output" / "tmd_growfactors.csv"
@@ -344,18 +345,13 @@ def create_area_weights_file(area: str, write_file: bool = True):
     if not write_file:
         return rmse
 
-    # write weights file
-    """
-    # write annual weights extrapolating using national population forecast
-    # get population forecast
-    with open(pop_file, "r", encoding="utf-8") as pfile:
+    # write area weights file extrapolating using national population forecast
+    # ... get population forecast
+    with open(POPFILE_PATH, "r", encoding="utf-8") as pfile:
         pop = yaml.safe_load(pfile.read())
-
-    # get FIRST_YEAR weights from VARFILE
-    vdf = pd.read_csv(VARFILE)
-    weights = vdf.s006 * 100  # scale up weights by 100 for Tax-Calculator
-
-    # construct dictionary of scaled-up weights by year
+    # ... set FIRST_YEAR weights
+    weights = wght_area * 100  # scale up weights by 100 for Tax-Calculator
+    # ... construct dictionary of scaled-up weights by year
     wdict = {f"WT{FIRST_YEAR}": weights}
     cum_pop_growth = 1.0
     for year in range(FIRST_YEAR + 1, LAST_YEAR + 1):
@@ -363,11 +359,10 @@ def create_area_weights_file(area: str, write_file: bool = True):
         cum_pop_growth *= annual_pop_growth
         wght = weights.copy() * cum_pop_growth
         wdict[f"WT{year}"] = wght
-
-    # write rounded integer scaled-up weights to CSV-formatted file
+    # ... write rounded integer scaled-up weights to CSV-formatted file
     wdf = pd.DataFrame.from_dict(wdict)
-    wdf.to_csv(WGTFILE, index=False, float_format="%.0f", compression="gzip")
-    """
+    awfile = AREAS_FOLDER / "weights" / f"{area}_tmd_weights.csv.gz"
+    wdf.to_csv(awfile, index=False, float_format="%.0f", compression="gzip")
 
     return rmse
 
