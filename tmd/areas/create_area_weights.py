@@ -277,6 +277,11 @@ def create_area_weights_file(area: str, write_file: bool = True):
     vdf = all_taxcalc_variables()
     target_matrix, target_array, weights_scale = prepared_data(area, vdf)
     wght_us = np.array(vdf.s006 * weights_scale)
+    print("INITIAL WEIGHTS STATISTICS:")
+    print(f"weights_scale= {weights_scale:e}")
+    wdf = pd.DataFrame({"s006": vdf.s006, "wght_us": wght_us})
+    print(wdf.describe())
+    del wdf
     num_weights = len(wght_us)
     num_targets = len(target_array)
     print(f"USING {area}_targets.csv FILE CONTAINING {num_targets} TARGETS")
