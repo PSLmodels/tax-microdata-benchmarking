@@ -11,4 +11,3 @@ def test_area_bb():
     """
     rmse = create_area_weights_file("bb", write_file=False)
     assert rmse < 1e-4
-    assert 1 == 2, "SHOWING STDOUT RESULTS"
