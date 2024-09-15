@@ -8,6 +8,7 @@ clean:
 	rm -f tmd/storage/output/*
 
 tmd/storage/output/tmd.csv.gz: \
+  setup.py \
   tmd/imputation_assumptions.py \
   tmd/datasets/tmd.py \
   tmd/datasets/puf.py \
