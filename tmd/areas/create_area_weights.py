@@ -407,7 +407,7 @@ def create_area_weights_file(area: str, write_file: bool = True):
     awfile = AREAS_FOLDER / "weights" / f"{area}_tmd_weights.csv.gz"
     wdf.to_csv(awfile, index=False, float_format="%.0f", compression="gzip")
 
-    return rmse
+    return 0
 
 
 if __name__ == "__main__":
@@ -424,4 +424,4 @@ if __name__ == "__main__":
             f"ERROR: {tfile} file not in tmd/areas/targets folder\n"
         )
         sys.exit(1)
-    create_area_weights_file(area_code, write_file=True)
+    sys.exit(create_area_weights_file(area_code, write_file=True))
