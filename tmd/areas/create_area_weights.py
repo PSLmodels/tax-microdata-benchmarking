@@ -29,6 +29,7 @@ WTFILE_PATH = STORAGE_FOLDER / "output" / "tmd_weights.csv.gz"
 GFFILE_PATH = STORAGE_FOLDER / "output" / "tmd_growfactors.csv"
 POPFILE_PATH = STORAGE_FOLDER / "input" / "cbo_population_forecast.yaml"
 
+TARGET_RATIO_TOLERANCE = 0.0005
 REGULARIZATION_DELTA = 1.0e-9
 OPTIMIZE_FTOL = 1e-8
 OPTIMIZE_GTOL = 1e-8
@@ -130,6 +131,17 @@ def prepared_data(area: str, vardf: pd.DataFrame):
     )
 
 
+def target_misses(wght, target_matrix, target_array):
+    """
+    Return number of target misses for the specified weight array.
+    """
+    actual = np.dot(wght, target_matrix)
+    tratio = actual / target_array
+    lob = 1.0 - TARGET_RATIO_TOLERANCE
+    hib = 1.0 + TARGET_RATIO_TOLERANCE
+    return ((tratio < lob) | (tratio >= hib)).sum()
+
+
 def target_rmse(wght, target_matrix, target_array):
     """
     Return RMSE of the target deviations given specified arguments.
@@ -150,8 +162,8 @@ def target_rmse(wght, target_matrix, target_array):
         0.8,
         0.9,
         0.99,
-        0.9995,
-        1.0005,
+        1.0 - TARGET_RATIO_TOLERANCE,
+        1.0 + TARGET_RATIO_TOLERANCE,
         1.01,
         1.1,
         1.2,
@@ -338,6 +350,8 @@ def create_area_weights_file(area: str, write_file: bool = True):
     if OPTIMIZE_RESULTS:
         print(">>> full optimization results:\n", res)
     wght_area = res.x * wght_us
+    misses = target_misses(wght_area, target_matrix, target_array)
+    print(f"AREA-OPTIMIZED_TARGET_MISSES= {misses}")
     rmse = target_rmse(wght_area, target_matrix, target_array)
     print(f"AREA-OPTIMIZED_TARGET_RMSE= {rmse:.9e}")
     weight_ratio_distribution(res.x)
