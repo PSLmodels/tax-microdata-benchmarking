@@ -6,7 +6,7 @@ import sys
 from difflib import context_diff
 import pytest
 from tmd.areas import AREAS_FOLDER
-from tmd.areas.make_all.py import make_all_areas
+from tmd.areas.make_all import make_all_areas
 
 
 @pytest.skip
