@@ -34,7 +34,7 @@ def time_of_newest_other_dependency():
 # --- High-level logic of the script
 
 
-def make_all_areas():
+def make_all_areas(only_list=None):
     """
     Call create_area_weights.py for each out-of-date or non-existent
     weights file for which there is a targets file.
@@ -58,6 +58,8 @@ def make_all_areas():
     tpaths = sorted(list(tfolder.glob("*_targets.csv")))
     for tpath in tpaths:
         area = tpath.name.split("_")[0]
+        if only_list and area not in only_list:
+            continue  # skip this area
         wpath = AREAS_FOLDER / "weights" / f"{area}_tmd_weights.csv.gz"
         if wpath.exists():
             wtime = wpath.stat().st_mtime

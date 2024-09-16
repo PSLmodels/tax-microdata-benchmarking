@@ -9,13 +9,12 @@ from tmd.areas import AREAS_FOLDER
 from tmd.areas.make_all import make_all_areas
 
 
-@pytest.skip
+# @pytest.mark.skip
 def test_area_make():
     """
-    Optimize national weights for faux bb area using the faux bb area targets.
+    Make area weights for faux bb area using the faux bb area targets.
     """
-    # write area/weights/bb_tmd_weights.csv.gz and area/weights/bb.log files
-    create_area_weights_file("bb", write_file=True)
+    make_all_areas(only_list=["bb"])
     # compare area/weights/bb.log file with area/weights/bb.log-expect file
     wpath = AREAS_FOLDER / "weights"
     with open(wpath / "bb.log", "r", encoding="utf-8") as afile:
