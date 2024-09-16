@@ -1,5 +1,5 @@
 """
-Tests of tmd/areas/create_area_weights.py script.
+Tests of tmd/areas/make_all.py script.
 """
 
 import sys
@@ -12,10 +12,9 @@ from tmd.areas.make_all import make_all_areas
 # @pytest.mark.skip
 def test_area_make():
     """
-    Make area weights for faux bb area using the faux bb area targets.
+    Compare areas/weights/bb.log file with areas/weights/bb.log-expect file.
     """
-    make_all_areas(only_list=["bb"])
-    # compare area/weights/bb.log file with area/weights/bb.log-expect file
+    make_all_areas(make_only_list=["bb"])
     wpath = AREAS_FOLDER / "weights"
     with open(wpath / "bb.log", "r", encoding="utf-8") as afile:
         act = afile.readlines()
@@ -30,6 +29,7 @@ def test_area_make():
         sys.stdout.writelines(act)
         sys.stdout.write("------------------------------------------------\n")
         sys.stdout.write(">>>>> DIFFS FILE:\n")
+        sys.stdout.write("------------------------------------------------\n")
         sys.stdout.writelines(diffs)
         sys.stdout.write("------------------------------------------------\n")
-        raise ValueError("ACT vs EXP differences for area/weights/bb.log")
+        raise ValueError("ACT vs EXP differences for areas/weights/bb.log")
