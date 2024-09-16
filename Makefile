@@ -5,7 +5,7 @@ install:
 
 .PHONY=clean
 clean:
-	rm -f tmd/storage/output/*
+	rm -f tmd/storage/output/tmd*
 
 tmd/storage/output/tmd.csv.gz: \
   setup.py \
