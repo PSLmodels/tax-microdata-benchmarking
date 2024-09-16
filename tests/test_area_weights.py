@@ -23,7 +23,7 @@ def test_area_bb():
     with open(wpath / "bb.log-expect", "r", encoding="utf-8") as efile:
         exp = efile.readlines()
     diffs = list(
-        context_diff(act, exp, fromfile='ACTUAL', tofile='EXPECT', n=0)
+        context_diff(act, exp, fromfile="ACTUAL", tofile="EXPECT", n=0)
     )
     if len(diffs) > 0:
         sys.stdout.writelines(diffs)
