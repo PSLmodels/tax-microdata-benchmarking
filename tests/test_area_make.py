@@ -25,5 +25,11 @@ def test_area_make():
         context_diff(act, exp, fromfile="ACTUAL", tofile="EXPECT", n=0)
     )
     if len(diffs) > 0:
+        sys.stdout.write(">>>>> FULL FILE:\n")
+        sys.stdout.write("------------------------------------------------\n")
+        sys.stdout.writelines(act)
+        sys.stdout.write("------------------------------------------------\n")
+        sys.stdout.write(">>>>> DIFFS FILE:\n")
         sys.stdout.writelines(diffs)
+        sys.stdout.write("------------------------------------------------\n")
         raise ValueError("ACT vs EXP differences for area/weights/bb.log")
