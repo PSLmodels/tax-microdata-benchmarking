@@ -10,7 +10,6 @@ import subprocess
 from tmd.areas import AREAS_FOLDER
 from tmd.storage import STORAGE_FOLDER
 
-
 OTHER_DEPENDENCIES = [
     AREAS_FOLDER / "create_area_weights.py",
     STORAGE_FOLDER / "output" / "tmd.csv.gz",
@@ -68,6 +67,8 @@ def make_all_areas(make_only_list=None):
         up_to_date = wtime > max(newest_dtime, tpath.stat().st_mtime)
         if not up_to_date:
             todo_areas.append(area)
+
+    # show processing plan
     if todo_areas:
         msg = "(press Ctrl-C to stop)"
         print(f"Plan to create_area_weights for the following areas {msg}:")
