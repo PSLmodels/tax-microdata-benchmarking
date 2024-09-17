@@ -29,10 +29,6 @@ def test_tmd_stats(tmd_variables, tests_folder):
         context_diff(act, exp, fromfile="ACTUAL", tofile="EXPECT", n=0)
     )
     if len(diffs) > 0:
-        sys.stdout.write(">>>>> ACTUAL FILE:\n")
-        sys.stdout.write("------------------------------------------------\n")
-        sys.stdout.writelines(act)
-        sys.stdout.write("------------------------------------------------\n")
         sys.stdout.write(">>>>> DIFFS FILE:\n")
         sys.stdout.write("------------------------------------------------\n")
         sys.stdout.writelines(diffs)
