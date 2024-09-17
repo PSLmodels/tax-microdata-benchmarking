@@ -1,6 +1,6 @@
 """
 Construct AREA_tmd_weights.csv.gz, a Tax-Calculator-style weights file
-for 2021+ for the specified sub-national AREA.
+for FIRST_YEAR through LAST_YEAR for the specified sub-national AREA.
 
 AREA prefix for state areas are the two lower-case character postal codes.
 AREA prefix for congressional districts are the state prefix followed by
@@ -52,7 +52,7 @@ def all_taxcalc_variables():
     """
     input_data = tc.Records(
         data=pd.read_csv(INFILE_PATH),
-        start_year=2021,
+        start_year=FIRST_YEAR,
         weights=str(WTFILE_PATH),
         gfactors=tc.GrowFactors(growfactors_filename=str(GFFILE_PATH)),
         adjust_ratios=None,
