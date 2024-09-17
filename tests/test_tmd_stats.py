@@ -7,8 +7,8 @@ from difflib import context_diff
 import pytest
 
 
-# @pytest.mark.skip
-def test_tmd_stats(tmd_variables, tests_folder):
+@pytest.mark.skip
+def test_tmd_stats(tests_folder, tmd_variables):
     """
     Create tests/tmd.stats-actual and compare with tests/tmd.stats-expect.
     """
@@ -29,7 +29,7 @@ def test_tmd_stats(tmd_variables, tests_folder):
         context_diff(act, exp, fromfile="ACTUAL", tofile="EXPECT", n=0)
     )
     if len(diffs) > 0:
-        sys.stdout.write(">>>>> DIFFS FILE:\n")
+        sys.stdout.write(">>>>> TMD.STATS DIFF FILE:\n")
         sys.stdout.write("------------------------------------------------\n")
         sys.stdout.writelines(diffs)
         sys.stdout.write("------------------------------------------------\n")
