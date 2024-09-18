@@ -373,10 +373,16 @@ def create_area_weights_file(
         time1 = time.time()
         wght_area = res.x * wght_us
         misses = target_misses(wght_area, target_matrix, target_array)
-        out.write(
-            f"  ::loop,delta,misses,exectime(secs):   {loop}"
-            f"   {delta:e}   {misses}   {(time1 - time0):.1f}\n"
-        )
+        if write_log:
+            out.write(
+                f"  ::loop,delta,misses:   {loop}"
+                f"   {delta:e}   {misses}\n"
+            )
+        else:
+            out.write(
+                f"  ::loop,delta,misses,exectime(secs):   {loop}"
+                f"   {delta:e}   {misses}   {(time1 - time0):.1f}\n"
+            )
         if misses == 0 or res.success is False:
             break  # out of regularization delta loop
         # prepare for next regularization delta loop
@@ -385,12 +391,20 @@ def create_area_weights_file(
         if delta < 1e-20:
             delta = 0.0
     # ... show regularization/optimization results
-    res_summary = (
-        f">>> final delta loop exectime= {(time1-time0):.1f} secs"
-        f"  iterations={res.nit}  success={res.success}\n"
-        f">>> message: {res.message}\n"
-        f">>> L-BFGS-B optimized objective function value: {res.fun:.9e}\n"
-    )
+    if write_log:
+        res_summary = (
+            f">>> final delta loop"
+            f" iterations={res.nit}  success={res.success}\n"
+            f">>> message: {res.message}\n"
+            f">>> L-BFGS-B optimized objective function value: {res.fun:.9e}\n"
+        )
+    else:
+        res_summary = (
+            f">>> final delta loop exectime= {(time1-time0):.1f} secs"
+            f"  iterations={res.nit}  success={res.success}\n"
+            f">>> message: {res.message}\n"
+            f">>> L-BFGS-B optimized objective function value: {res.fun:.9e}\n"
+        )
     out.write(res_summary)
     if OPTIMIZE_RESULTS:
         out.write(">>> full final delta loop optimization results:\n")

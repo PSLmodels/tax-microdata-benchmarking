@@ -1,12 +1,14 @@
 """
-Call create_area_weights.py for each out-of-date or non-existent
-weights file for which there is a targets file, and remove each
-weights file for which there is no corresponding targets file.
+Call create_area_weights_file() in the create_area_weights.py module
+for each out-of-date or non-existent weights file for which there is
+a targets file, and remove each weights and log file for which there
+is no corresponding targets file.
 """
 
 import sys
 import time
-import subprocess
+from multiprocessing import Pool
+from tmd.areas.create_area_weights import create_area_weights_file
 from tmd.areas import AREAS_FOLDER
 from tmd.storage import STORAGE_FOLDER
 
@@ -30,13 +32,9 @@ def time_of_newest_other_dependency():
     return max_dep_time
 
 
-# --- High-level logic of the script
-
-
-def make_all_areas(make_only_list=None):
+def to_do_areas(make_only_list=None):
     """
-    Call create_area_weights.py for each out-of-date or non-existent
-    weights file for which there is a targets file.
+    Return list of areas that need to have a weights file created.
     """
     # remove each weights file for which there is no correponding targets file
     wfolder = AREAS_FOLDER / "weights"
@@ -49,7 +47,6 @@ def make_all_areas(make_only_list=None):
             print(f"removing orphan weights file {wpath.name}")
             wpath.unlink()
             lpath.unlink(missing_ok=True)
-
     # prepare area list of not up-to-date weights files
     todo_areas = []
     newest_dtime = time_of_newest_other_dependency()
@@ -67,46 +64,50 @@ def make_all_areas(make_only_list=None):
         up_to_date = wtime > max(newest_dtime, tpath.stat().st_mtime)
         if not up_to_date:
             todo_areas.append(area)
+    return todo_areas
 
+
+def create_area_weights(area : str):
+    """
+    Call create_area_weights_file for specified area.
+    """
+    time0 = time.time()
+    create_area_weights_file(area)
+    time1 = time.time()
+    print(f"... {area} exectime(secs)= {(time1 - time0):.1f}")
+
+
+# --- High-level logic of the script
+
+
+def make_all_areas(num_workers, make_only_list=None):
+    """
+    Call create_area_weights(area) for each out-of-date or non-existent
+    area weights file for which there is an area targets file.
+    """
+    todo_areas = to_do_areas(make_only_list=make_only_list)
     # show processing plan
     if todo_areas:
-        msg = "(press Ctrl-C to stop)"
-        print(f"Plan to create_area_weights for the following areas {msg}:")
+        print(f"Plan to create area weights for the following areas:")
         area_num = 0
         for area in todo_areas:
             area_num += 1
-            sys.stdout.write(f"{area:>5s}")
-            if area_num % 15 == 0:
+            sys.stdout.write(f"{area:>7s}")
+            if area_num % 10 == 0:
                 sys.stdout.write("\n")
-        if area_num % 15 != 0:
+        if area_num % 10 != 0:
             sys.stdout.write("\n")
-
     # process each target file for which the weights file is not up-to-date
-    for area in todo_areas:
-        time0 = time.time()
-        print(f"creating weights file and log file for {area} ...")
-        cmd = [
-            "python",
-            str(OTHER_DEPENDENCIES[0]),
-            area,
-        ]
-        result = subprocess.run(
-            cmd,
-            capture_output=True,
-            text=True,
-            check=True,
-        )
-        logpath = AREAS_FOLDER / "weights" / f"{area}.log"
-        with open(logpath, "w", encoding="utf-8") as logfile:
-            logfile.write(result.stdout)
-        exectime = time.time() - time0
-        if result.returncode != 0:
-            print(f"  ... failed after {exectime:.1f} secs")
-        else:
-            print(f"  ... finished after {exectime:.1f} secs")
-
+    with Pool(num_workers) as pool:
+        pool.map(create_area_weights, todo_areas)
     return 0
 
 
 if __name__ == "__main__":
-    sys.exit(make_all_areas())
+    workers = 1
+    if len(sys.argv) == 2:
+        pools = int(sys.argv[1])
+        if workers < 1:
+            sys.stderr.write(f"ERROR: {workers} is not a positive integer\n")
+            sys.exit(1)
+    sys.exit(make_all_areas(workers))
