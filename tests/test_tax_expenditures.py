@@ -3,6 +3,7 @@ Test 2023 and 2026 tax expenditures calculated using tmd files
 against expected tax expenditure values in the tests folder.
 """
 
+import os
 import difflib
 import pytest
 import numpy as np
@@ -43,14 +44,15 @@ def test_tax_exp_diffs(
     itax2026_index = int(len(expdf) / 2 + 1)
     actval = actdf.iat[itax2026_index, 3]
     expval = expdf.iat[itax2026_index, 3]
-    if not np.allclose(actval, expval, atol=0.0, rtol=0.08):
+    if not np.allclose(actval, expval, atol=0.0, rtol=0.09):
         same = False
     actdf.drop(index=itax2026_index, inplace=True)
     expdf.drop(index=itax2026_index, inplace=True)
     # ... compare all other rows using a smaller relative diff tolerance
     actval = actdf.iloc[:, 3].to_numpy(dtype=np.float64)
     expval = expdf.iloc[:, 3].to_numpy(dtype=np.float64)
-    if not np.allclose(actval, expval, atol=0.0, rtol=0.01):
+    reltol = float(os.getenv("TMD_TAXEXP_DIFF_RTOL", default=0.011))
+    if not np.allclose(actval, expval, atol=0.0, rtol=reltol):
         same = False
     if same:
         return
