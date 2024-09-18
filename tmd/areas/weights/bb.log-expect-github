@@ -1,16 +1,8 @@
 CREATING WEIGHTS FILE FOR AREA bb ...
 INITIAL WEIGHTS STATISTICS:
-weights_scale= 9.871864e-02
-                s006        wght_us
-count  225256.000000  225256.000000
-mean      816.957848      80.648965
-std      1140.733386     112.611644
-min         0.110000       0.010859
-25%        23.590000       2.328773
-50%       389.970000      38.497307
-75%      1282.730000     126.629357
-max     15801.890000    1559.941035
-USING bb_targets.csv FILE CONTAINING 16 TARGETS
+sum of national weights = 1.840247e+08
+area weights_scale = 9.871864e-02
+USING bb_targets.csv FILE WITH 16 TARGETS
 DISTRIBUTION OF TARGET ACT/EXP RATIOS (n=16):
 low bin ratio    high bin ratio    bin #    cum #     bin %     cum %
 >=     0.400000, <     0.800000:       1        1     6.25%     6.25%
@@ -32,8 +24,8 @@ target_matrix sparsity ratio = 0.597
 OPTIMIZE WEIGHT RATIOS IN A REGULARIZATION LOOP
   where REGULARIZATION DELTA starts at 1.000000e-09
   and where target_matrix.shape= (225256, 16)
-  ::loop,delta,misses,exectime(secs):   1   1.000000e-09   0   141.3
->>> final delta loop exectime= 141.3 secs  iterations=148  success=True
+  ::loop,delta,misses:   1   1.000000e-09   0
+>>> final delta loop iterations=148  success=True
 >>> message: CONVERGENCE: REL_REDUCTION_OF_F_<=_FACTR*EPSMCH
 >>> L-BFGS-B optimized objective function value: 1.267485693e-04
 AREA-OPTIMIZED_TARGET_MISSES= 0
