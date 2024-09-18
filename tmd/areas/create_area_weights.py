@@ -375,8 +375,7 @@ def create_area_weights_file(
         misses = target_misses(wght_area, target_matrix, target_array)
         if write_log:
             out.write(
-                f"  ::loop,delta,misses:   {loop}"
-                f"   {delta:e}   {misses}\n"
+                f"  ::loop,delta,misses:   {loop}" f"   {delta:e}   {misses}\n"
             )
         else:
             out.write(

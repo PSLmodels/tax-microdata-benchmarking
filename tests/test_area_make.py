@@ -9,7 +9,7 @@ from tmd.areas import AREAS_FOLDER
 from tmd.areas.make_all import make_all_areas
 
 
-#@pytest.mark.skip
+# @pytest.mark.skip
 def test_area_make():
     """
     Compare areas/weights/bb.log file with areas/weights/bb.log-expect file.
