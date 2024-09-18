@@ -67,7 +67,7 @@ def to_do_areas(make_only_list=None):
     return todo_areas
 
 
-def create_area_weights(area : str):
+def create_area_weights(area: str):
     """
     Call create_area_weights_file for specified area.
     """
