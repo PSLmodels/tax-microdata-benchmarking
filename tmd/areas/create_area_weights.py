@@ -42,7 +42,7 @@ DELTA_LOOP_DECREMENT = DELTA_INIT_VALUE / (DELTA_MAX_LOOPS - 1)
 OPTIMIZE_FTOL = 1e-8
 OPTIMIZE_GTOL = 1e-8
 OPTIMIZE_MAXITER = 5000
-OPTIMIZE_IPRINT= 0  # 20 is a good diagnostic value; set to 0 for production
+OPTIMIZE_IPRINT = 0  # 20 is a good diagnostic value; set to 0 for production
 OPTIMIZE_RESULTS = False  # set to True to see complete optimization results
 
 
@@ -281,9 +281,9 @@ def weight_ratio_distribution(ratio, delta, out):
 
 
 def create_area_weights_file(
-        area: str,
-        write_log: bool = True,
-        write_file: bool = True,
+    area: str,
+    write_log: bool = True,
+    write_file: bool = True,
 ):
     """
     Create Tax-Calculator-style weights file for FIRST_YEAR through LAST_YEAR
