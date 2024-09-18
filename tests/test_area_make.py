@@ -14,7 +14,7 @@ def test_area_make():
     """
     Compare areas/weights/bb.log file with areas/weights/bb.log-expect file.
     """
-    make_all_areas(make_only_list=["bb"])
+    make_all_areas(1, make_only_list=["bb"])
     wpath = AREAS_FOLDER / "weights"
     with open(wpath / "bb.log", "r", encoding="utf-8") as afile:
         act = afile.readlines()
