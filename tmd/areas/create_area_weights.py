@@ -42,7 +42,7 @@ DELTA_LOOP_DECREMENT = DELTA_INIT_VALUE / (DELTA_MAX_LOOPS - 1)
 OPTIMIZE_FTOL = 1e-8
 OPTIMIZE_GTOL = 1e-8
 OPTIMIZE_MAXITER = 5000
-OPTIMIZE_IPRINT = 0  # 20 is a good diagnostic value; set to 0 for production
+OPTIMIZE_IPRINT= 0  # 20 is a good diagnostic value; set to 0 for production
 OPTIMIZE_RESULTS = False  # set to True to see complete optimization results
 
 
@@ -149,7 +149,7 @@ def target_misses(wght, target_matrix, target_array):
     return ((tratio < lob) | (tratio >= hib)).sum()
 
 
-def target_rmse(wght, target_matrix, target_array, delta=None):
+def target_rmse(wght, target_matrix, target_array, out, delta=None):
     """
     Return RMSE of the target deviations given specified arguments.
     """
@@ -158,9 +158,9 @@ def target_rmse(wght, target_matrix, target_array, delta=None):
     ratio = act / target_array
     if DUMP_ALL_TARGET_DEVIATIONS:
         for tnum, ratio_ in enumerate(ratio):
-            print(
+            out.write(
                 f"TARGET{(tnum + 1):03d}:ACT-EXP,ACT/EXP= "
-                f"{act_minus_exp[tnum]:16.9e}, {ratio_:.3f}"
+                f"{act_minus_exp[tnum]:16.9e}, {ratio_:.3f}/n"
             )
     # show distribution of target ratios
     bins = [
@@ -182,16 +182,16 @@ def target_rmse(wght, target_matrix, target_array, delta=None):
         np.inf,
     ]
     tot = ratio.size
-    print(f"DISTRIBUTION OF TARGET ACT/EXP RATIOS (n={tot}):")
+    out.write(f"DISTRIBUTION OF TARGET ACT/EXP RATIOS (n={tot}):\n")
     if delta is not None:
-        print(f"  with REGULARIZATION_DELTA= {delta:e}")
+        out.write(f"  with REGULARIZATION_DELTA= {delta:e}\n")
     header = (
         "low bin ratio    high bin ratio"
-        "    bin #    cum #     bin %     cum %"
+        "    bin #    cum #     bin %     cum %\n"
     )
-    print(header)
-    out = pd.cut(ratio, bins, right=False, precision=6)
-    count = pd.Series(out).value_counts().sort_index().to_dict()
+    out.write(header)
+    cutout = pd.cut(ratio, bins, right=False, precision=6)
+    count = pd.Series(cutout).value_counts().sort_index().to_dict()
     cum = 0
     for interval, num in count.items():
         cum += num
@@ -199,9 +199,9 @@ def target_rmse(wght, target_matrix, target_array, delta=None):
             continue
         line = (
             f">={interval.left:13.6f}, <{interval.right:13.6f}:"
-            f"  {num:6d}   {cum:6d}   {num/tot:7.2%}   {cum/tot:7.2%}"
+            f"  {num:6d}   {cum:6d}   {num/tot:7.2%}   {cum/tot:7.2%}\n"
         )
-        print(line)
+        out.write(line)
         if cum == tot:
             break
     # return RMSE of ACT-EXP targets
@@ -223,7 +223,7 @@ def objective_function(x, *args):
 JIT_FVAL_AND_GRAD = jax.jit(jax.value_and_grad(objective_function))
 
 
-def weight_ratio_distribution(ratio, delta):
+def weight_ratio_distribution(ratio, delta, out):
     """
     Print distribution of post-optimized to pre-optimized weight ratios.
     """
@@ -252,15 +252,15 @@ def weight_ratio_distribution(ratio, delta):
         np.inf,
     ]
     tot = ratio.size
-    print(f"DISTRIBUTION OF AREA/US WEIGHT RATIO (n={tot}):")
-    print(f"  with REGULARIZATION_DELTA= {delta:e}")
+    out.write(f"DISTRIBUTION OF AREA/US WEIGHT RATIO (n={tot}):\n")
+    out.write(f"  with REGULARIZATION_DELTA= {delta:e}\n")
     header = (
         "low bin ratio    high bin ratio"
-        "    bin #    cum #     bin %     cum %"
+        "    bin #    cum #     bin %     cum %\n"
     )
-    print(header)
-    out = pd.cut(ratio, bins, right=False, precision=6)
-    count = pd.Series(out).value_counts().sort_index().to_dict()
+    out.write(header)
+    cutout = pd.cut(ratio, bins, right=False, precision=6)
+    count = pd.Series(cutout).value_counts().sort_index().to_dict()
     cum = 0
     for interval, num in count.items():
         cum += num
@@ -268,29 +268,48 @@ def weight_ratio_distribution(ratio, delta):
             continue
         line = (
             f">={interval.left:13.6f}, <{interval.right:13.6f}:"
-            f"  {num:6d}   {cum:6d}   {num/tot:7.2%}   {cum/tot:7.2%}"
+            f"  {num:6d}   {cum:6d}   {num/tot:7.2%}   {cum/tot:7.2%}\n"
         )
-        print(line)
+        out.write(line)
         if cum == tot:
             break
     ssqdev = np.sum(np.square(ratio - 1.0))
-    print(f"SUM OF SQUARED AREA/US WEIGHT RATIO DEVIATIONS= {ssqdev:e}")
+    out.write(f"SUM OF SQUARED AREA/US WEIGHT RATIO DEVIATIONS= {ssqdev:e}\n")
 
 
 # -- High-level logic of the script:
 
 
-def create_area_weights_file(area: str, write_file: bool = True):
+def create_area_weights_file(
+        area: str,
+        write_log: bool = True,
+        write_file: bool = True,
+):
     """
     Create Tax-Calculator-style weights file for FIRST_YEAR through LAST_YEAR
     for specified area using information in area targets CSV file.
-    Return target RMSE using the optimized area weights and optionally write
-    the weights file.
+    Return target RMSE using the optimized area weights if write_file=False,
+    otherwise return exit code.
+    Write log file if write_log=True, otherwise log is written to stdout.
+    Write weights file if write_file=True, otherwise just do calculations.
     """
-    if write_file:
-        print(f"CREATING WEIGHTS FILE FOR AREA {area} ...")
+    # remove any existing log or weights files
+    awpath = AREAS_FOLDER / "weights" / f"{area}_tmd_weights.csv.gz"
+    awpath.unlink(missing_ok=True)
+    logpath = AREAS_FOLDER / "weights" / f"{area}.log"
+    logpath.unlink(missing_ok=True)
+
+    # specify log output device
+    if write_log:
+        out = open(logpath, "w", encoding="utf-8")
     else:
-        print(f"DOING JUST WEIGHTS FILE CALCULATIONS FOR AREA {area} ...")
+        out = sys.stdout
+    if write_file:
+        out.write(f"CREATING WEIGHTS FILE FOR AREA {area} ...\n")
+    else:
+        out.write(f"DOING JUST WEIGHTS FILE CALCS FOR AREA {area} ...\n")
+
+    # configure jax library
     jax.config.update("jax_platform_name", "cpu")  # ignore GPU/TPU if present
     jax.config.update("jax_enable_x64", True)  # use double precision floats
 
@@ -298,18 +317,16 @@ def create_area_weights_file(area: str, write_file: bool = True):
     vdf = all_taxcalc_variables()
     target_matrix, target_array, weights_scale = prepared_data(area, vdf)
     wght_us = np.array(vdf.s006 * weights_scale)
-    print("INITIAL WEIGHTS STATISTICS:")
-    print(f"weights_scale= {weights_scale:e}")
-    wdf = pd.DataFrame({"s006": vdf.s006, "wght_us": wght_us})
-    print(wdf.describe())
-    del wdf
+    out.write("INITIAL WEIGHTS STATISTICS:\n")
+    out.write(f"sum of national weights = {vdf.s006.sum():e}\n")
+    out.write(f"area weights_scale = {weights_scale:e}\n")
     num_weights = len(wght_us)
     num_targets = len(target_array)
-    print(f"USING {area}_targets.csv FILE CONTAINING {num_targets} TARGETS")
-    rmse = target_rmse(wght_us, target_matrix, target_array)
-    print(f"US_PROPORTIONALLY_SCALED_TARGET_RMSE= {rmse:.9e}")
+    out.write(f"USING {area}_targets.csv FILE WITH {num_targets} TARGETS\n")
+    rmse = target_rmse(wght_us, target_matrix, target_array, out)
+    out.write(f"US_PROPORTIONALLY_SCALED_TARGET_RMSE= {rmse:.9e}\n")
     density = np.count_nonzero(target_matrix) / target_matrix.size
-    print(f"target_matrix sparsity ratio = {(1.0 - density):.3f}")
+    out.write(f"target_matrix sparsity ratio = {(1.0 - density):.3f}\n")
 
     # optimize weight ratios by minimizing the sum of squared deviations
     # of area-to-us weight ratios from one such that the optimized ratios
@@ -327,10 +344,10 @@ def create_area_weights_file(area: str, write_file: bool = True):
     A_dense = (target_matrix * wght_us[:, np.newaxis]).T
     A = BCOO.from_scipy_sparse(csr_matrix(A_dense))  # A is JAX sparse matrix
     b = target_array
-    print(
+    out.write(
         "OPTIMIZE WEIGHT RATIOS IN A REGULARIZATION LOOP\n"
         f"  where REGULARIZATION DELTA starts at {DELTA_INIT_VALUE:e}\n"
-        f"  and where target_matrix.shape= {target_matrix.shape}"
+        f"  and where target_matrix.shape= {target_matrix.shape}\n"
     )
     # ... reduce value of regularization delta if not all targets are hit
     loop = 1
@@ -356,9 +373,9 @@ def create_area_weights_file(area: str, write_file: bool = True):
         time1 = time.time()
         wght_area = res.x * wght_us
         misses = target_misses(wght_area, target_matrix, target_array)
-        print(
+        out.write(
             f"  ::loop,delta,misses,exectime(secs):   {loop}"
-            f"   {delta:e}   {misses}   {(time1 - time0):.1f}"
+            f"   {delta:e}   {misses}   {(time1 - time0):.1f}\n"
         )
         if misses == 0 or res.success is False:
             break  # out of regularization delta loop
@@ -367,24 +384,27 @@ def create_area_weights_file(area: str, write_file: bool = True):
         delta -= DELTA_LOOP_DECREMENT
         if delta < 1e-20:
             delta = 0.0
-        ####wght0 = res.x
     # ... show regularization/optimization results
     res_summary = (
         f">>> final delta loop exectime= {(time1-time0):.1f} secs"
         f"  iterations={res.nit}  success={res.success}\n"
         f">>> message: {res.message}\n"
-        f">>> L-BFGS-B optimized objective function value: {res.fun:.9e}"
+        f">>> L-BFGS-B optimized objective function value: {res.fun:.9e}\n"
     )
-    print(res_summary)
+    out.write(res_summary)
     if OPTIMIZE_RESULTS:
-        print(">>> full final delta loop optimization results:\n", res)
+        out.write(">>> full final delta loop optimization results:\n")
+        for key in res.keys():
+            out.write(f"    {key}: {res.get(key)}\n")
     wght_area = res.x * wght_us
     misses = target_misses(wght_area, target_matrix, target_array)
-    print(f"AREA-OPTIMIZED_TARGET_MISSES= {misses}")
-    rmse = target_rmse(wght_area, target_matrix, target_array, delta)
-    print(f"AREA-OPTIMIZED_TARGET_RMSE= {rmse:.9e}")
-    weight_ratio_distribution(res.x, delta)
+    out.write(f"AREA-OPTIMIZED_TARGET_MISSES= {misses}\n")
+    rmse = target_rmse(wght_area, target_matrix, target_array, out, delta)
+    out.write(f"AREA-OPTIMIZED_TARGET_RMSE= {rmse:.9e}\n")
+    weight_ratio_distribution(res.x, delta, out)
 
+    if write_log:
+        out.close()
     if not write_file:
         return rmse
 
@@ -404,8 +424,7 @@ def create_area_weights_file(area: str, write_file: bool = True):
         wdict[f"WT{year}"] = wght
     # ... write rounded integer scaled-up weights to CSV-formatted file
     wdf = pd.DataFrame.from_dict(wdict)
-    awfile = AREAS_FOLDER / "weights" / f"{area}_tmd_weights.csv.gz"
-    wdf.to_csv(awfile, index=False, float_format="%.0f", compression="gzip")
+    wdf.to_csv(awpath, index=False, float_format="%.0f", compression="gzip")
 
     return 0
 
@@ -424,4 +443,6 @@ if __name__ == "__main__":
             f"ERROR: {tfile} file not in tmd/areas/targets folder\n"
         )
         sys.exit(1)
-    sys.exit(create_area_weights_file(area_code, write_file=True))
+    sys.exit(
+        create_area_weights_file(area_code, write_log=False, write_file=True)
+    )
