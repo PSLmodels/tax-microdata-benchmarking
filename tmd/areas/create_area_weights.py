@@ -39,8 +39,8 @@ DELTA_MAX_LOOPS = 5
 DELTA_LOOP_DECREMENT = DELTA_INIT_VALUE / (DELTA_MAX_LOOPS - 1)
 
 # optimization parameters:
-OPTIMIZE_FTOL = 1e-8
-OPTIMIZE_GTOL = 1e-8
+OPTIMIZE_FTOL = 1e-9
+OPTIMIZE_GTOL = 1e-9
 OPTIMIZE_MAXITER = 5000
 OPTIMIZE_IPRINT = 0  # 20 is a good diagnostic value; set to 0 for production
 OPTIMIZE_RESULTS = False  # set to True to see complete optimization results
