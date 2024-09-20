@@ -1,0 +1,19 @@
+# variable statistics that are targeted in the area weights optimization:
+popall:   33  # # million
+e00300:   20  # $ billion
+e00900:   30  # $ billion
+e00200: 1000  # $ billion
+e02000:   30  # $ billion
+e02400:   60  # $ billion
+c00100: 1200  # $ billion
+agihic:   10  # # thousand
+e00400:    2  # $ billion
+e00600:    8  # $ billion
+e00650:    7  # $ billion
+e01700:   12  # $ billion
+e02300:   10  # $ billion
+e17500:    5  # $ billion
+e18400:   10  # $ billion
+e18500:   10  # $ billion
+# variable statistics that are not targeted in the area weights optimization:
+# ... none available in the faux xx area ...

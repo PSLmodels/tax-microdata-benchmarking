@@ -42,7 +42,7 @@ def to_do_areas(make_only_list=None):
     for wpath in wpaths:
         area = wpath.name.split("_")[0]
         tpath = AREAS_FOLDER / "targets" / f"{area}_targets.csv"
-        lpath = AREAS_FOLDER / "targets" / f"{area}.log"
+        lpath = AREAS_FOLDER / "weights" / f"{area}.log"
         if not tpath.exists():
             print(f"removing orphan weights file {wpath.name}")
             wpath.unlink()
