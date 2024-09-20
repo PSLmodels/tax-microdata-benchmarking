@@ -288,8 +288,6 @@ def create_area_weights_file(
     """
     Create Tax-Calculator-style weights file for FIRST_YEAR through LAST_YEAR
     for specified area using information in area targets CSV file.
-    Return target RMSE using the optimized area weights if write_file=False,
-    otherwise return exit code.
     Write log file if write_log=True, otherwise log is written to stdout.
     Write weights file if write_file=True, otherwise just do calculations.
     """
@@ -419,7 +417,7 @@ def create_area_weights_file(
     if write_log:
         out.close()
     if not write_file:
-        return rmse
+        return 0
 
     # write area weights file extrapolating using national population forecast
     # ... get population forecast
