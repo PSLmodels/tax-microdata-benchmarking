@@ -18,7 +18,7 @@ def test_area_xx(tests_folder):
     and compare actual Tax-Calculator results with expected results when
     using area weights along with national input data and growfactors.
     """
-    rc = create_area_weights_file("xx", write_log=False, write_file=True)
+    rc = create_area_weights_file("xx", write_log=True, write_file=True)
     assert rc == 0, "create_areas_weights_file has non-zero return code"
     # compare actual vs expected results for faux area xx
     # ... instantiate Tax-Calculator object for {area}
