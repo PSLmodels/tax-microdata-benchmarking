@@ -301,6 +301,7 @@ def create_area_weights_file(
 
     # specify log output device
     if write_log:
+        logpath = AREAS_FOLDER / "weights" / f"{area}.log"
         out = open(logpath, "w", encoding="utf-8")
     else:
         out = sys.stdout
