@@ -1,8 +1,9 @@
-# tax_microdata_benchmarking
+# tmd : tax_microdata
 
-This module contains four submodules:
+This package has five submodules:
 
-* datasets: contains code defining generation functions for the datasets used in the benchmarking.
-* examination: contains code and assets for examining the performance of the benchmarked datasets.
-* storage: a folder housing input data and output data created by this package.
-* utils: contains utility functions used in the benchmarking process that aren't specific to one dataset.
+* datasets: contains code for generating national datasets used in the benchmarking.
+* examination: contains code for examining the quality of the national datasets.
+* storage: contains national input and output data created by this package.
+* utils: contains utility functions that aren't specific to one dataset.
+* areas: contains code for generating sub-national area weights and examining their quality.
