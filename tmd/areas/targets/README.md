@@ -1,1 +1,3 @@
-# AREA TARGET FILES
+# areas / targets
+
+Contains sub-national area targets files.
