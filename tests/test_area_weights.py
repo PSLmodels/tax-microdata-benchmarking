@@ -1,6 +1,7 @@
 """
 Tests of tmd/areas/create_area_weights.py script.
 """
+
 import yaml
 import pandas as pd
 import taxcalc as tc
