@@ -48,6 +48,8 @@ def create_tmd_2021():
 
     trace1("C", combined)
 
+    combined = combined.reindex(sorted(combined.columns), axis=1)
+
     return combined
 
 
