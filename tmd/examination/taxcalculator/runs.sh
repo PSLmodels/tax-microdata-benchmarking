@@ -2,11 +2,10 @@
 # Execute several Tax-Calculator runs using the execute.sh script.
 # USAGE:
 #   ./runs.sh  DATAFILE(without_trailing_.csv) YEAR(tailing_two_digits)
-#   DATAFILES: puf|pe23|xb23|xb26|tmd
+#   DATAFILES: puf|pe23|xb23|xb26
 #              (where puf is from the taxdata repository)
 #              (where pe23 is the Phase 1 work product)
 #              (where xb23 and xb26 are Phase 2 work products)
-#              (where tmd is from a Phase 3 work product)
 
 D="DATAFILE(without_trailing_.csv)"
 Y="YEAR(tailing_two_digits)"
@@ -44,10 +43,6 @@ if [[ "$1" == "xb26" ]]; then
         echo "USAGE: ./runs.sh xb26 26" >&2
         exit 1
     fi
-    OK=1
-fi
-if [[ "$1" == "tmd" ]]; then
-    unzip -oq tmd.csv.zip
     OK=1
 fi
 if [[ "$OK" -ne 1 ]]; then
