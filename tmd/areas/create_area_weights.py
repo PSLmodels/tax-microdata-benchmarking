@@ -46,6 +46,114 @@ OPTIMIZE_IPRINT = 0  # 20 is a good diagnostic value; set to 0 for production
 OPTIMIZE_RESULTS = False  # set to True to see complete optimization results
 
 
+def valid_area(area: str):
+    """
+    Check validity of area string returning a boolean value.
+    """
+    # Data in the state_info dictionary is taken from the following document:
+    # 2020 Census Apportionment Results, April 26, 2021,
+    # Table C1. Number of Seats in
+    #           U.S. House of Representatives by State: 1910 to 2020
+    # https://www.census.gov/data/tables/2020/dec/2020-apportionment-data.html
+    state_info = {
+        "AL": {2020: 7, 2010: 7},
+        "AK": {2020: 1, 2010: 1},
+        "AZ": {2020: 9, 2010: 9},
+        "AR": {2020: 4, 2010: 4},
+        "CA": {2020: 52, 2010: 53},
+        "CO": {2020: 8, 2010: 7},
+        "CT": {2020: 5, 2010: 5},
+        "DE": {2020: 1, 2010: 1},
+        "FL": {2020: 28, 2010: 27},
+        "GA": {2020: 14, 2010: 14},
+        "HI": {2020: 2, 2010: 2},
+        "ID": {2020: 2, 2010: 2},
+        "IL": {2020: 17, 2010: 18},
+        "IN": {2020: 9, 2010: 9},
+        "IA": {2020: 4, 2010: 4},
+        "KS": {2020: 4, 2010: 4},
+        "KY": {2020: 6, 2010: 6},
+        "LA": {2020: 6, 2010: 6},
+        "ME": {2020: 2, 2010: 2},
+        "MD": {2020: 8, 2010: 8},
+        "MA": {2020: 9, 2010: 9},
+        "MI": {2020: 13, 2010: 14},
+        "MN": {2020: 8, 2010: 8},
+        "MS": {2020: 4, 2010: 4},
+        "MO": {2020: 8, 2010: 8},
+        "MT": {2020: 2, 2010: 1},
+        "NE": {2020: 3, 2010: 3},
+        "NV": {2020: 4, 2010: 4},
+        "NH": {2020: 2, 2010: 2},
+        "NJ": {2020: 12, 2010: 12},
+        "NM": {2020: 3, 2010: 3},
+        "NY": {2020: 26, 2010: 27},
+        "NC": {2020: 14, 2010: 13},
+        "ND": {2020: 1, 2010: 1},
+        "OH": {2020: 15, 2010: 16},
+        "OK": {2020: 5, 2010: 5},
+        "OR": {2020: 6, 2010: 5},
+        "PA": {2020: 17, 2010: 18},
+        "RI": {2020: 2, 2010: 2},
+        "SC": {2020: 7, 2010: 7},
+        "SD": {2020: 1, 2010: 1},
+        "TN": {2020: 9, 2010: 9},
+        "TX": {2020: 38, 2010: 36},
+        "UT": {2020: 4, 2010: 4},
+        "VT": {2020: 1, 2010: 1},
+        "VA": {2020: 11, 2010: 11},
+        "WA": {2020: 10, 2010: 10},
+        "WV": {2020: 2, 2010: 3},
+        "WI": {2020: 8, 2010: 8},
+        "WY": {2020: 1, 2010: 1},
+        # include three faux states used in testing:
+        "XX": {2020: 1, 2010: 1},
+        "YY": {2020: 1, 2010: 1},
+        "ZZ": {2020: 1, 2010: 1},
+    }
+    # check state_info validity
+    assert len(state_info) == 50 + 3
+    total = {2010: 0, 2020: 0}
+    for scode, seats in state_info.items():
+        total[2010] += seats[2010]
+        total[2020] += seats[2020]
+    assert total[2010] == 435 + 3
+    assert total[2020] == 435 + 3
+    # conduct series of validity checks on specified area string
+    all_ok = True
+    # check that specified area string has expected length
+    ok_length = len(area) == 2 or len(area) == 4
+    if not ok_length:
+        sys.stderr.write(f": area '{area}' is not two or four in length\n")
+        all_ok = False
+    # check that specified area begins with a two-character state code
+    s_c = area[0:2]
+    if not s_c.islower():
+        sys.stderr.write(f": state code '{s_c}' must be all lower case\n")
+        all_ok = False
+    scode = s_c.upper()
+    if scode not in state_info:
+        sys.stderr.write(f": state '{s_c}' is unknown\n")
+        all_ok = False
+    # check congressional district number if appropriate
+    if len(area) == 4:
+        max_cdn = state_info[scode][2010]  # assuming CDs based on 2010 Census
+        if max_cdn <= 1:
+            sys.stderr.write(
+                f": use area '{s_c}' for this one-district state\n"
+            )
+            all_ok = False
+        else:
+            cdn = int(area[2:4])
+            if cdn <= 0:
+                sys.stderr.write(f": cd number '{cdn}' is non-positive\n")
+                all_ok = False
+            if cdn > max_cdn:
+                sys.stderr.write(f": cd number '{cdn}' exceeds {max_cdn}\n")
+                all_ok = False
+    return all_ok
+
+
 def all_taxcalc_variables():
     """
     Return all read and calc Tax-Calculator variables in pd.DataFrame.
@@ -447,6 +555,9 @@ if __name__ == "__main__":
         )
         sys.exit(1)
     area_code = sys.argv[1]
+    if not valid_area(area_code):
+        sys.stderr.write(f"ERROR: {area_code} is not valid\n")
+        sys.exit(1)
     tfile = f"{area_code}_targets.csv"
     target_file = AREAS_FOLDER / "targets" / tfile
     if not target_file.exists():
