@@ -1,5 +1,5 @@
-Data Examination Methods
-========================
+National Data Examination Methods
+=================================
 
 This document describes the methods used to compare model-plus-dataset
 estimates of basic federal tax amounts against corresponding federal
@@ -218,7 +218,8 @@ document](results4.md) for Tax-Calculator version details.
 
 The 2023 and 2026 tax revenue and tax expenditure estimates using the
 most recent version of the `tmd` data filse are generated as part of
-the [tax expenditures test](../../tests/test_tax_expenditures.py).
+the [tax expenditures test](../../tests/test_tax_expenditures.py) and
+stored in this [output file](../storage/output/tax_expenditures).
 
 Here are the details of the tax expenditure reforms:
 
