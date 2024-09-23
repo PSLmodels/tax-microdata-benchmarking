@@ -473,7 +473,6 @@ def create_area_weights_file(
                 "ftol": OPTIMIZE_FTOL,
                 "gtol": OPTIMIZE_GTOL,
                 "iprint": OPTIMIZE_IPRINT,
-                "disp": OPTIMIZE_IPRINT != 0,
             },
         )
         time1 = time.time()
