@@ -106,7 +106,7 @@ def make_all_areas(num_workers, make_only_list=None):
         if area_num % 10 != 0:
             sys.stdout.write("\n")
     else:
-        sys.stdout.write("Nothing to do")
+        sys.stdout.write("Nothing to do\n")
     # process each target file for which the weights file is not up-to-date
     TAXCALC_AGI_CACHE.unlink(missing_ok=True)
     with Pool(num_workers) as pool:
