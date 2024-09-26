@@ -450,6 +450,8 @@ def create_area_weights_file(
     num_weights = len(wght_us)
     num_targets = len(target_array)
     out.write(f"USING {area}_targets.csv FILE WITH {num_targets} TARGETS\n")
+    tolstr = "ASSUMING TARGET_RATIO_TOLERANCE"
+    out.write(f"{tolstr} = {TARGET_RATIO_TOLERANCE:.6f}\n")
     rmse = target_rmse(wght_us, target_matrix, target_array, out)
     out.write(f"US_PROPORTIONALLY_SCALED_TARGET_RMSE= {rmse:.9e}\n")
     density = np.count_nonzero(target_matrix) / target_matrix.size
@@ -539,8 +541,10 @@ def create_area_weights_file(
         for key in res.keys():
             out.write(f"    {key}: {res.get(key)}\n")
     wght_area = res.x * wght_us
-    misses = target_misses(wght_area, target_matrix, target_array)
+    misses, minfo = target_misses(wght_area, target_matrix, target_array)
     out.write(f"AREA-OPTIMIZED_TARGET_MISSES= {misses}\n")
+    if misses > 0:
+        out.write(minfo)
     rmse = target_rmse(wght_area, target_matrix, target_array, out, delta)
     out.write(f"AREA-OPTIMIZED_TARGET_RMSE= {rmse:.9e}\n")
     weight_ratio_distribution(res.x, delta, out)
