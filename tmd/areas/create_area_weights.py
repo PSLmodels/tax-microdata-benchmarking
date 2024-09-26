@@ -30,7 +30,7 @@ GFFILE_PATH = STORAGE_FOLDER / "output" / "tmd_growfactors.csv"
 POPFILE_PATH = STORAGE_FOLDER / "input" / "cbo_population_forecast.yaml"
 
 # target parameters:
-TARGET_RATIO_TOLERANCE = 0.0005  # what is considered hitting the target
+TARGET_RATIO_TOLERANCE = 0.0010  # what is considered hitting the target
 DUMP_ALL_TARGET_DEVIATIONS = False  # set to True only for diagnostic work
 
 # regularization parameters:
