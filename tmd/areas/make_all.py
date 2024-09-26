@@ -8,7 +8,10 @@ is no corresponding targets file.
 import sys
 import time
 from multiprocessing import Pool
-from tmd.areas.create_area_weights import create_area_weights_file
+from tmd.areas.create_area_weights import (
+    create_area_weights_file,
+    TAXCALC_AGI_CACHE,
+)
 from tmd.areas import AREAS_FOLDER
 from tmd.storage import STORAGE_FOLDER
 
@@ -72,7 +75,12 @@ def create_area_weights(area: str):
     Call create_area_weights_file for specified area.
     """
     time0 = time.time()
-    create_area_weights_file(area)
+    create_area_weights_file(
+        area,
+        write_log=True,
+        write_file=True,
+        write_cache=True,
+    )
     time1 = time.time()
     print(f"... {area} exectime(secs)= {(time1 - time0):.1f}")
 
@@ -88,7 +96,7 @@ def make_all_areas(num_workers, make_only_list=None):
     todo_areas = to_do_areas(make_only_list=make_only_list)
     # show processing plan
     if todo_areas:
-        print(f"Plan to create area weights for the following areas:")
+        print("Plan to create area weights for the following areas:")
         area_num = 0
         for area in todo_areas:
             area_num += 1
@@ -97,17 +105,21 @@ def make_all_areas(num_workers, make_only_list=None):
                 sys.stdout.write("\n")
         if area_num % 10 != 0:
             sys.stdout.write("\n")
+    else:
+        sys.stdout.write("Nothing to do\n")
     # process each target file for which the weights file is not up-to-date
+    TAXCALC_AGI_CACHE.unlink(missing_ok=True)
     with Pool(num_workers) as pool:
         pool.map(create_area_weights, todo_areas)
+    TAXCALC_AGI_CACHE.unlink(missing_ok=True)
     return 0
 
 
 if __name__ == "__main__":
-    workers = 1
+    WORKERS = 1
     if len(sys.argv) == 2:
-        pools = int(sys.argv[1])
-        if workers < 1:
-            sys.stderr.write(f"ERROR: {workers} is not a positive integer\n")
+        WORKERS = int(sys.argv[1])
+        if WORKERS < 1:
+            sys.stderr.write(f"ERROR: {WORKERS} is not a positive integer\n")
             sys.exit(1)
-    sys.exit(make_all_areas(workers))
+    sys.exit(make_all_areas(WORKERS))
