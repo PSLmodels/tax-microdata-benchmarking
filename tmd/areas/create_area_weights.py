@@ -258,13 +258,23 @@ def prepared_data(area: str, vardf: pd.DataFrame):
 
 def target_misses(wght, target_matrix, target_array):
     """
-    Return number of target misses for the specified weight array.
+    Return number of target misses for the specified weight array and a
+    string containing size of each actual/expect target miss as a tuple.
     """
     actual = np.dot(wght, target_matrix)
     tratio = actual / target_array
     lob = 1.0 - TARGET_RATIO_TOLERANCE
     hib = 1.0 + TARGET_RATIO_TOLERANCE
-    return ((tratio < lob) | (tratio >= hib)).sum()
+    num = ((tratio < lob) | (tratio >= hib)).sum()
+    mstr = ""
+    if num > 0:
+        for tnum, ratio in enumerate(tratio):
+            if ratio < lob or ratio >= hib:
+                mstr += (
+                    f"  ::::TARGET{(tnum + 1):03d}:ACT/EXP,lob,hib="
+                    f"  {ratio:.6f}  {lob:.6f}  {hib:.6f}\n"
+                )
+    return (num, mstr)
 
 
 def target_rmse(wght, target_matrix, target_array, out, delta=None):
@@ -489,7 +499,7 @@ def create_area_weights_file(
         )
         time1 = time.time()
         wght_area = res.x * wght_us
-        misses = target_misses(wght_area, target_matrix, target_array)
+        misses, minfo = target_misses(wght_area, target_matrix, target_array)
         if write_log:
             out.write(
                 f"  ::loop,delta,misses:   {loop}" f"   {delta:e}   {misses}\n"
@@ -501,6 +511,8 @@ def create_area_weights_file(
             )
         if misses == 0 or res.success is False:
             break  # out of regularization delta loop
+        # show magnitude of target misses
+        out.write(minfo)
         # prepare for next regularization delta loop
         loop += 1
         delta -= DELTA_LOOP_DECREMENT
