@@ -45,6 +45,9 @@ OPTIMIZE_MAXITER = 5000
 OPTIMIZE_IPRINT = 0  # 20 is a good diagnostic value; set to 0 for production
 OPTIMIZE_RESULTS = False  # set to True to see complete optimization results
 
+# taxcalc calculated variable cache files:
+TAXCALC_AGI_CACHE = AREAS_FOLDER / "cache_agi.npy"
+
 
 def valid_area(area: str):
     """
@@ -154,21 +157,28 @@ def valid_area(area: str):
     return all_ok
 
 
-def all_taxcalc_variables():
+def all_taxcalc_variables(write_cache):
     """
-    Return all read and calc Tax-Calculator variables in pd.DataFrame.
+    Return all read and needed calc Tax-Calculator variables in pd.DataFrame.
     """
-    input_data = tc.Records(
-        data=pd.read_csv(INFILE_PATH),
-        start_year=FIRST_YEAR,
-        weights=str(WTFILE_PATH),
-        gfactors=tc.GrowFactors(growfactors_filename=str(GFFILE_PATH)),
-        adjust_ratios=None,
-        exact_calculations=True,
-    )
-    sim = tc.Calculator(records=input_data, policy=tc.Policy())
-    sim.calc_all()
-    vdf = sim.dataframe([], all_vars=True)
+    vdf = pd.read_csv(INFILE_PATH)
+    if TAXCALC_AGI_CACHE.exists():
+        vdf["c00100"] = np.load(TAXCALC_AGI_CACHE)
+    else:
+        input_data = tc.Records(
+            data=vdf,
+            start_year=FIRST_YEAR,
+            weights=str(WTFILE_PATH),
+            gfactors=tc.GrowFactors(growfactors_filename=str(GFFILE_PATH)),
+            adjust_ratios=None,
+            exact_calculations=True,
+        )
+        sim = tc.Calculator(records=input_data, policy=tc.Policy())
+        sim.calc_all()
+        agi = sim.array("c00100")
+        vdf["c00100"] = agi
+        if write_cache:
+            np.save(TAXCALC_AGI_CACHE, agi, allow_pickle=False)
     assert np.all(vdf.s006 > 0), "Not all weights are positive"
     return vdf
 
@@ -248,13 +258,23 @@ def prepared_data(area: str, vardf: pd.DataFrame):
 
 def target_misses(wght, target_matrix, target_array):
     """
-    Return number of target misses for the specified weight array.
+    Return number of target misses for the specified weight array and a
+    string containing size of each actual/expect target miss as a tuple.
     """
     actual = np.dot(wght, target_matrix)
     tratio = actual / target_array
     lob = 1.0 - TARGET_RATIO_TOLERANCE
     hib = 1.0 + TARGET_RATIO_TOLERANCE
-    return ((tratio < lob) | (tratio >= hib)).sum()
+    num = ((tratio < lob) | (tratio >= hib)).sum()
+    mstr = ""
+    if num > 0:
+        for tnum, ratio in enumerate(tratio):
+            if ratio < lob or ratio >= hib:
+                mstr += (
+                    f"  ::::TARGET{(tnum + 1):03d}:ACT/EXP,lob,hib="
+                    f"  {ratio:.6f}  {lob:.6f}  {hib:.6f}\n"
+                )
+    return (num, mstr)
 
 
 def target_rmse(wght, target_matrix, target_array, out, delta=None):
@@ -392,6 +412,7 @@ def create_area_weights_file(
     area: str,
     write_log: bool = True,
     write_file: bool = True,
+    write_cache: bool = True,
 ):
     """
     Create Tax-Calculator-style weights file for FIRST_YEAR through LAST_YEAR
@@ -420,7 +441,7 @@ def create_area_weights_file(
     jax.config.update("jax_enable_x64", True)  # use double precision floats
 
     # construct variable matrix and target array and weights_scale
-    vdf = all_taxcalc_variables()
+    vdf = all_taxcalc_variables(write_cache)
     target_matrix, target_array, weights_scale = prepared_data(area, vdf)
     wght_us = np.array(vdf.s006 * weights_scale)
     out.write("INITIAL WEIGHTS STATISTICS:\n")
@@ -429,6 +450,8 @@ def create_area_weights_file(
     num_weights = len(wght_us)
     num_targets = len(target_array)
     out.write(f"USING {area}_targets.csv FILE WITH {num_targets} TARGETS\n")
+    tolstr = "ASSUMING TARGET_RATIO_TOLERANCE"
+    out.write(f"{tolstr} = {TARGET_RATIO_TOLERANCE:.6f}\n")
     rmse = target_rmse(wght_us, target_matrix, target_array, out)
     out.write(f"US_PROPORTIONALLY_SCALED_TARGET_RMSE= {rmse:.9e}\n")
     density = np.count_nonzero(target_matrix) / target_matrix.size
@@ -473,11 +496,12 @@ def create_area_weights_file(
                 "ftol": OPTIMIZE_FTOL,
                 "gtol": OPTIMIZE_GTOL,
                 "iprint": OPTIMIZE_IPRINT,
+                "disp": False if OPTIMIZE_IPRINT == 0 else None,
             },
         )
         time1 = time.time()
         wght_area = res.x * wght_us
-        misses = target_misses(wght_area, target_matrix, target_array)
+        misses, minfo = target_misses(wght_area, target_matrix, target_array)
         if write_log:
             out.write(
                 f"  ::loop,delta,misses:   {loop}" f"   {delta:e}   {misses}\n"
@@ -489,6 +513,8 @@ def create_area_weights_file(
             )
         if misses == 0 or res.success is False:
             break  # out of regularization delta loop
+        # show magnitude of target misses
+        out.write(minfo)
         # prepare for next regularization delta loop
         loop += 1
         delta -= DELTA_LOOP_DECREMENT
@@ -515,8 +541,10 @@ def create_area_weights_file(
         for key in res.keys():
             out.write(f"    {key}: {res.get(key)}\n")
     wght_area = res.x * wght_us
-    misses = target_misses(wght_area, target_matrix, target_array)
+    misses, minfo = target_misses(wght_area, target_matrix, target_array)
     out.write(f"AREA-OPTIMIZED_TARGET_MISSES= {misses}\n")
+    if misses > 0:
+        out.write(minfo)
     rmse = target_rmse(wght_area, target_matrix, target_array, out, delta)
     out.write(f"AREA-OPTIMIZED_TARGET_RMSE= {rmse:.9e}\n")
     weight_ratio_distribution(res.x, delta, out)
@@ -564,6 +592,10 @@ if __name__ == "__main__":
             f"ERROR: {tfile} file not in tmd/areas/targets folder\n"
         )
         sys.exit(1)
-    sys.exit(
-        create_area_weights_file(area_code, write_log=False, write_file=True)
+    RCODE = create_area_weights_file(
+        area_code,
+        write_log=False,
+        write_file=True,
+        write_cache=False,
     )
+    sys.exit(RCODE)
