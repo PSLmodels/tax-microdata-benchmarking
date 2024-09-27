@@ -9,6 +9,7 @@
 tmd/storage/output/tax_expenditures
 !tmd/storage/input/*.csv
 !tmd/areas/targets/*.csv
+tmd/areas/weights/*.log
 **demographics_2015.csv
 **puf_2015.csv
 *.DS_STORE
