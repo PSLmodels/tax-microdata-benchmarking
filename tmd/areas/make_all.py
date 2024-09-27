@@ -64,7 +64,13 @@ def to_do_areas(make_only_list=None):
             wtime = wpath.stat().st_mtime
         else:
             wtime = 0.0
-        up_to_date = wtime > max(newest_dtime, tpath.stat().st_mtime)
+        tpath_time = tpath.stat().st_mtime
+        ppath = AREAS_FOLDER / "targets" / f"{area}_params.yaml"
+        if ppath.exists():
+            ppath_time = ppath.stat().st_mtime
+        else:
+            ppath_time = 0.0
+        up_to_date = wtime > max(newest_dtime, tpath_time, ppath_time)
         if not up_to_date:
             todo_areas.append(area)
     return todo_areas

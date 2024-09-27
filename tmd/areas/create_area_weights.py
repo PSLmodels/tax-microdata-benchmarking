@@ -30,24 +30,26 @@ WTFILE_PATH = STORAGE_FOLDER / "output" / "tmd_weights.csv.gz"
 GFFILE_PATH = STORAGE_FOLDER / "output" / "tmd_growfactors.csv"
 POPFILE_PATH = STORAGE_FOLDER / "input" / "cbo_population_forecast.yaml"
 
-# target parameters:
+# taxcalc calculated variable cache files:
+TAXCALC_AGI_CACHE = AREAS_FOLDER / "cache_agi.npy"
+
+PARAMS = {}
+
+# default target parameters:
 TARGET_RATIO_TOLERANCE = 0.0010  # what is considered hitting the target
 DUMP_ALL_TARGET_DEVIATIONS = False  # set to True only for diagnostic work
 
-# regularization parameters:
+# default regularization parameters:
 DELTA_INIT_VALUE = 1.0e-9
 DELTA_MAX_LOOPS = 5
 DELTA_LOOP_DECREMENT = DELTA_INIT_VALUE / (DELTA_MAX_LOOPS - 1)
 
-# optimization parameters:
+# default optimization parameters:
 OPTIMIZE_FTOL = 1e-9
 OPTIMIZE_GTOL = 1e-9
 OPTIMIZE_MAXITER = 5000
 OPTIMIZE_IPRINT = 0  # 20 is a good diagnostic value; set to 0 for production
 OPTIMIZE_RESULTS = False  # set to True to see complete optimization results
-
-# taxcalc calculated variable cache files:
-TAXCALC_AGI_CACHE = AREAS_FOLDER / "cache_agi.npy"
 
 
 def valid_area(area: str):
@@ -268,8 +270,9 @@ def target_misses(wght, target_matrix, target_array):
     """
     actual = np.dot(wght, target_matrix)
     tratio = actual / target_array
-    lob = 1.0 - TARGET_RATIO_TOLERANCE
-    hib = 1.0 + TARGET_RATIO_TOLERANCE
+    tol = PARAMS.get("target_ratio_tolerance", TARGET_RATIO_TOLERANCE)
+    lob = 1.0 - tol
+    hib = 1.0 + tol
     num = ((tratio < lob) | (tratio >= hib)).sum()
     mstr = ""
     if num > 0:
@@ -296,14 +299,15 @@ def target_rmse(wght, target_matrix, target_array, out, delta=None):
                 f"{act_minus_exp[tnum]:16.9e}, {ratio_:.3f}/n"
             )
     # show distribution of target ratios
+    tol = PARAMS.get("target_ratio_tolerance", TARGET_RATIO_TOLERANCE)
     bins = [
         0.0,
         0.4,
         0.8,
         0.9,
         0.99,
-        1.0 - TARGET_RATIO_TOLERANCE,
-        1.0 + TARGET_RATIO_TOLERANCE,
+        1.0 - tol,
+        1.0 + tol,
         1.01,
         1.1,
         1.2,
@@ -445,6 +449,37 @@ def create_area_weights_file(
     jax.config.update("jax_platform_name", "cpu")  # ignore GPU/TPU if present
     jax.config.update("jax_enable_x64", True)  # use double precision floats
 
+    # read optional parameters file
+    global PARAMS
+    PARAMS = {}
+    p_file = f"{area}_params.yaml"
+    params_file = AREAS_FOLDER / "targets" / p_file
+    if params_file.exists():
+        with open(params_file, "r", encoding="utf-8") as paramfile:
+            PARAMS = yaml.safe_load(paramfile.read())
+        num_p = 1
+        if len(PARAMS) != num_p:
+            out.write(
+                f"ERROR: {p_file} must contain exactly {num_p} parameter(s)\n"
+                f"IGNORING CONTENTS OF {p_file}\n"
+            )
+            PARAMS = {}
+        else:
+            exp_params = sorted(["target_ratio_tolerance"])
+            act_params = sorted(list(PARAMS.keys()))
+            if act_params != exp_params:
+                out.write(
+                    f"ERROR: {p_file} actual parameters != expect parameters\n"
+                )
+                for param in exp_params:
+                    out.write(f": EXPECT= {param}\n")
+                for param in act_params:
+                    out.write(f": ACTUAL= {param}\n")
+                out.write(f"IGNORING CONTENTS OF {p_file}\n")
+                PARAMS = {}
+        if PARAMS:
+            out.write(f"USING CUSTOMIZED PARAMETERS IN {p_file}\n")
+
     # construct variable matrix and target array and weights_scale
     vdf = all_taxcalc_variables(write_cache)
     target_matrix, target_array, weights_scale = prepared_data(area, vdf)
@@ -456,7 +491,8 @@ def create_area_weights_file(
     num_targets = len(target_array)
     out.write(f"USING {area}_targets.csv FILE WITH {num_targets} TARGETS\n")
     tolstr = "ASSUMING TARGET_RATIO_TOLERANCE"
-    out.write(f"{tolstr} = {TARGET_RATIO_TOLERANCE:.6f}\n")
+    tol = PARAMS.get("target_ratio_tolerance", TARGET_RATIO_TOLERANCE)
+    out.write(f"{tolstr} = {tol:.6f}\n")
     rmse = target_rmse(wght_us, target_matrix, target_array, out)
     out.write(f"US_PROPORTIONALLY_SCALED_TARGET_RMSE= {rmse:.9e}\n")
     density = np.count_nonzero(target_matrix) / target_matrix.size
