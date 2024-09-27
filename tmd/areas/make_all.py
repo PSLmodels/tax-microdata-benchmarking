@@ -93,6 +93,7 @@ def make_all_areas(num_workers, make_only_list=None):
     Call create_area_weights(area) for each out-of-date or non-existent
     area weights file for which there is an area targets file.
     """
+    TAXCALC_AGI_CACHE.unlink(missing_ok=True)
     todo_areas = to_do_areas(make_only_list=make_only_list)
     # show processing plan
     if todo_areas:
@@ -108,7 +109,6 @@ def make_all_areas(num_workers, make_only_list=None):
     else:
         sys.stdout.write("Nothing to do\n")
     # process each target file for which the weights file is not up-to-date
-    TAXCALC_AGI_CACHE.unlink(missing_ok=True)
     with Pool(num_workers) as pool:
         pool.map(create_area_weights, todo_areas)
     TAXCALC_AGI_CACHE.unlink(missing_ok=True)
