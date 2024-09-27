@@ -1,0 +1,2 @@
+# custom parameters file for xx area:
+target_ratio_tolerance: 0.0005  # a more precise definition of "hitting target"
