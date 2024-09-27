@@ -9,6 +9,7 @@ district files for states with only one congressional district.
 """
 
 import sys
+import re
 import time
 import yaml
 import numpy as np
@@ -109,36 +110,40 @@ def valid_area(area: str):
         "WV": {2020: 2, 2010: 3},
         "WI": {2020: 8, 2010: 8},
         "WY": {2020: 1, 2010: 1},
-        # include three faux states used in testing:
-        "XX": {2020: 1, 2010: 1},
-        "YY": {2020: 1, 2010: 1},
-        "ZZ": {2020: 1, 2010: 1},
     }
     # check state_info validity
-    assert len(state_info) == 50 + 3
+    assert len(state_info) == 50
     total = {2010: 0, 2020: 0}
     for scode, seats in state_info.items():
         total[2010] += seats[2010]
         total[2020] += seats[2020]
-    assert total[2010] == 435 + 3
-    assert total[2020] == 435 + 3
+    assert total[2010] == 435
+    assert total[2020] == 435
     # conduct series of validity checks on specified area string
     all_ok = True
     # check that specified area string has expected length
     ok_length = len(area) == 2 or len(area) == 4
     if not ok_length:
-        sys.stderr.write(f": area '{area}' is not two or four in length\n")
+        sys.stderr.write(f": area '{area}' length is not two or four\n")
         all_ok = False
-    # check that specified area begins with a two-character state code
+    # check that specified area string contains valid characters
+    if not re.match(r"^[a-z][a-z](\d\d)*", area):
+        emsg = "begin with two characters and optionally end with two numbers"
+        sys.stderr.write(f": area '{area}' must {emsg}\n")
+        all_ok = False
+    if not all_ok:
+        return False
+    # handle faux areas
+    if re.match(r"[x-z][a-z](\d\d)*", area) is not None:
+        # is a faux area
+        return True
+    # if not a faux area
     s_c = area[0:2]
-    if not s_c.islower():
-        sys.stderr.write(f": state code '{s_c}' must be all lower case\n")
-        all_ok = False
     scode = s_c.upper()
     if scode not in state_info:
         sys.stderr.write(f": state '{s_c}' is unknown\n")
         all_ok = False
-    # check congressional district number if appropriate
+    # check state congressional district number if appropriate
     if len(area) == 4:
         max_cdn = state_info[scode][2010]  # assuming CDs based on 2010 Census
         if max_cdn <= 1:
@@ -146,7 +151,7 @@ def valid_area(area: str):
                 f": use area '{s_c}' for this one-district state\n"
             )
             all_ok = False
-        else:
+        else:  # if max_cdn > 2
             cdn = int(area[2:4])
             if cdn <= 0:
                 sys.stderr.write(f": cd number '{cdn}' is non-positive\n")
