@@ -147,7 +147,8 @@ def valid_area(area: str):
         all_ok = False
     # check state congressional district number if appropriate
     if len(area) == 4:
-        max_cdn = state_info[scode][2010]  # assuming CDs based on 2010 Census
+        # assume CDs are based on 2020 Census (that is, 118th Congress)
+        max_cdn = state_info[scode][2020]
         if max_cdn <= 1:
             sys.stderr.write(
                 f": use area '{s_c}' for this one-district state\n"
