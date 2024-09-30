@@ -453,33 +453,39 @@ def create_area_weights_file(
     # read optional parameters file
     global PARAMS
     PARAMS = {}
-    p_file = f"{area}_params.yaml"
-    params_file = AREAS_FOLDER / "targets" / p_file
+    pfile = f"{area}_params.yaml"
+    params_file = AREAS_FOLDER / "targets" / pfile
     if params_file.exists():
         with open(params_file, "r", encoding="utf-8") as paramfile:
             PARAMS = yaml.safe_load(paramfile.read())
-        num_p = 1
-        if len(PARAMS) != num_p:
+        exp_params = [
+            "target_ratio_tolerance",
+            "iprint",
+        ]
+        if len(PARAMS) > len(exp_params):
+            nump = len(exp_params)
             out.write(
-                f"ERROR: {p_file} must contain exactly {num_p} parameter(s)\n"
-                f"IGNORING CONTENTS OF {p_file}\n"
+                f"ERROR: {pfile} must contain no more than {nump} parameters\n"
+                f"IGNORING CONTENTS OF {pfile}\n"
             )
             PARAMS = {}
         else:
-            exp_params = sorted(["target_ratio_tolerance"])
-            act_params = sorted(list(PARAMS.keys()))
-            if act_params != exp_params:
-                out.write(
-                    f"ERROR: {p_file} actual parameters != expect parameters\n"
-                )
-                for param in exp_params:
-                    out.write(f": EXPECT= {param}\n")
-                for param in act_params:
-                    out.write(f": ACTUAL= {param}\n")
-                out.write(f"IGNORING CONTENTS OF {p_file}\n")
+            act_params = list(PARAMS.keys())
+            all_ok = True
+            if len(set(act_params)) != len(act_params):
+                all_ok = False
+                out.write(f"ERROR: {pfile} contains duplicate parameter\n")
+            for param in act_params:
+                if param not in exp_params:
+                    all_ok = False
+                    out.write(
+                        f"ERROR: {pfile} parameter {param} is not expected\n"
+                    )
+            if not all_ok:
+                out.write(f"IGNORING CONTENTS OF {pfile}\n")
                 PARAMS = {}
         if PARAMS:
-            out.write(f"USING CUSTOMIZED PARAMETERS IN {p_file}\n")
+            out.write(f"USING CUSTOMIZED PARAMETERS IN {pfile}\n")
 
     # construct variable matrix and target array and weights_scale
     vdf = all_taxcalc_variables(write_cache)
@@ -503,7 +509,7 @@ def create_area_weights_file(
     # of area-to-us weight ratios from one such that the optimized ratios
     # hit all of the area targets
     #
-    # NOTE: This a bi-criterion minimization problem that can be
+    # NOTE: This is a bi-criterion minimization problem that can be
     #       solved using regularization methods.  For background,
     #       consult Stephen Boyd and Lieven Vandenberghe, Convex
     #       Optimization, Cambridge University Press, 2004, in
@@ -520,6 +526,11 @@ def create_area_weights_file(
         f"  where REGULARIZATION DELTA starts at {DELTA_INIT_VALUE:e}\n"
         f"  and where target_matrix.shape= {target_matrix.shape}\n"
     )
+    # ... specify possibly customized value of iprint
+    if write_log:
+        iprint = OPTIMIZE_IPRINT
+    else:
+        iprint = PARAMS.get("iprint", OPTIMIZE_IPRINT)
     # ... reduce value of regularization delta if not all targets are hit
     loop = 1
     delta = DELTA_INIT_VALUE
@@ -537,8 +548,8 @@ def create_area_weights_file(
                 "maxiter": OPTIMIZE_MAXITER,
                 "ftol": OPTIMIZE_FTOL,
                 "gtol": OPTIMIZE_GTOL,
-                "iprint": OPTIMIZE_IPRINT,
-                "disp": False if OPTIMIZE_IPRINT == 0 else None,
+                "iprint": iprint,
+                "disp": False if iprint == 0 else None,
             },
         )
         time1 = time.time()

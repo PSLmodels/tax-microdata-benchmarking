@@ -103,7 +103,7 @@ def make_all_areas(num_workers, make_only_list=None):
     todo_areas = to_do_areas(make_only_list=make_only_list)
     # show processing plan
     if todo_areas:
-        print("Plan to create area weights for the following areas:")
+        print("Create area weights for the following areas:")
         area_num = 0
         for area in todo_areas:
             area_num += 1
