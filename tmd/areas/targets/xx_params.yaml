@@ -1,2 +1,3 @@
 # custom parameters file for xx area:
+iprint: 20  # scipy.minimize iteration details are written to stderr
 target_ratio_tolerance: 0.0005  # a more precise definition of "hitting target"
