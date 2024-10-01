@@ -173,12 +173,10 @@ def all_taxcalc_variables(write_cache):
     if TAXCALC_AGI_CACHE.exists():
         vdf["c00100"] = np.load(TAXCALC_AGI_CACHE)
     else:
-        input_data = tc.Records(
-            data=vdf,
-            start_year=FIRST_YEAR,
-            weights=str(WTFILE_PATH),
-            gfactors=tc.GrowFactors(growfactors_filename=str(GFFILE_PATH)),
-            adjust_ratios=None,
+        input_data = tc.Records.tmd_constructor(
+            data_path=INFILE_PATH,
+            weights_path=WTFILE_PATH,
+            growfactors_path=GFFILE_PATH,
             exact_calculations=True,
         )
         sim = tc.Calculator(records=input_data, policy=tc.Policy())
