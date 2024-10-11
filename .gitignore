@@ -14,3 +14,5 @@ tmd/areas/weights/*.log
 **puf_2015.csv
 *.DS_STORE
 .Rproj.user
+
+tmd/areas/cache_agi.npy
