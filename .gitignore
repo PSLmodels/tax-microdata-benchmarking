@@ -13,3 +13,4 @@ tmd/areas/weights/*.log
 **demographics_2015.csv
 **puf_2015.csv
 *.DS_STORE
+.Rproj.user
