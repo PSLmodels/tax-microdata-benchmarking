@@ -1,21 +1,34 @@
 # libraries ---------------------------------------------------------------
 
-library(rlang)
+library(DT)
+library(fs)
+library(readxl)
+library(stringr)
 library(tidyverse)
+# includes: dplyr, forcats, ggplot2, lubridate, purrr, stringr, tibble, tidyr
+
 tprint <- 75  # default tibble print
 options(tibble.print_max = tprint, tibble.print_min = tprint) # show up to tprint rows
- 
-library(fs)
+
+
+# possible libraries ------------------------------------------------------
+
+# library(rlang)
+# library(tidyverse)
+# tprint <- 75  # default tibble print
+# options(tibble.print_max = tprint, tibble.print_min = tprint) # show up to tprint rows
+#  
+# library(fs)
  
 # tools
-library(vroom)
+# library(vroom)
 # library(readxl)
 # library(openxlsx) # for writing xlsx files
-library(lubridate)
+# library(lubridate)
 # library(RColorBrewer)
-library(RcppRoll)
+# library(RcppRoll)
 # library(fredr)
-library(tidycensus)
+# library(tidycensus)
 # library(googledrive)
 # library(arrow)
 # 
