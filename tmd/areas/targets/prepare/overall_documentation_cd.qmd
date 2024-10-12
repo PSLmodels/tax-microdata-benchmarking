@@ -81,4 +81,8 @@ To verify that this produces a proper calculation of the number of districts by 
 
 ### Exemptions
 
-Note that there are no data on exemptions but we do have total number of individuals (N2)
+Note that there are no data on exemptions but we do have total number of individuals (N2).
+
+When run on 2024-10-12 tmd national population was 334,283,385 (\`national_population = (vardf.s006 \* vardf.XTOT).sum()\`). By contrast, the sum of N2 for the U.S. was 289,054,220, or 13.5% less, according to 21incdall.xlsx.
+
+FWIW, IRS total number of returns in was 160,824,340 per 21in14ar.xls. When run on 2024-10-12 tmd sum of s006 was 184,024,657, or 14.4% more. By contrast, the sum of N1 for the U.S. was 157,375,370, or 2.1% less, according to 21incdall.xlsx.
