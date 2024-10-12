@@ -81,7 +81,8 @@ data2 <- data |>
          .by = STATE) |> 
   relocate(nrecs, nstub0) |> 
   mutate(rectype = case_when(
-    STATE == "US" ~ "us",
+    STATE == "US" ~ "US",
+    STATE == "DC" ~ "DC",
     nstub0 == 1 ~ "cdstate", # the cd and state record for 8 states with only 1 cd
     nstub0 > 1 & CONG_DISTRICT == "00" ~ "state",
     nstub0 > 1 & CONG_DISTRICT != "00" ~ "cd", # cd records for multi-cd states
