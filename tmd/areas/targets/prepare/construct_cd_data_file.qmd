@@ -40,7 +40,7 @@ count(data, CONG_DISTRICT) # max is 53
 
 
 ```{r}
-#| label: clean-cddata
+#| label: clean-save-cddata-wide
 #| eval: false
 
 # cleaning and reshaping:
@@ -48,10 +48,8 @@ count(data, CONG_DISTRICT) # max is 53
 
 data2 <- data |> 
   rename_with(toupper) |>  # agi_stub becomes upper case
-  mutate(nrecs = n(), 
-         nstub0 = sum(AGI_STUB == 0),
+  mutate(nstub0 = sum(AGI_STUB == 0),
          .by = STATE) |> 
-  relocate(nrecs, nstub0) |> 
   mutate(rectype = case_when(
     STATE == "US" ~ "US",
     STATE == "DC" ~ "DC",
@@ -60,29 +58,40 @@ data2 <- data |>
     nstub0 > 1 & CONG_DISTRICT != "00" ~ "cd", # cd records for multi-cd states
     .default = "ERROR"
   )) |> 
-  relocate(rectype)
+  mutate(ndist = sum(AGI_STUB ==0 & rectype %in% c("cdstate", "cd")), .by=STATE) |> 
+  select(-nstub0) |> 
+  relocate(rectype, ndist)
+
+glimpse(data2)
+count(data2, STATE, ndist)
+
+cdnums <- data2 |> 
+  select(STATE, ndist) |> 
+  distinct() |> 
+  janitor::adorn_totals()
+
+# single-CD states
+cdnums |> 
+  filter(ndist==1)
 
 data2 |> 
   filter(AGI_STUB == 0) |> 
   count(rectype)
 
-tmp <- data2 |> 
-  filter(rectype == "state") |> 
-  select(1:9)
+write_csv(data2, fs::path(CDINTERMEDIATE, "cddata_wide_clean.csv"))
 
-count(tmp, STATE)
+```
 
-tmp <- data2 |> 
-  filter(rectype %in% c("cdstate", "cd"), AGI_STUB == 0) |> 
-  select(1:8) |> 
-  mutate(ndist = n(), .by=STATE)
 
-tmp |> 
-  select(STATE, ndist) |> 
-  distinct() |> 
-  janitor::adorn_totals()
+## Create long data file
 
-dlong1 <- data2 |> 
+```{r}
+#| label: create-save-cddata-long
+#| eval: false
+
+cdwide <- read_csv(fs::path(CDINTERMEDIATE, "cddata_wide_clean.csv"))
+
+dlong1 <- cdwide |> 
   pivot_longer(cols = -c(1:4)) |> 
   left_join()
 
@@ -98,5 +107,4 @@ dlong <- data |>
   pivot_longer(cols = -all_of(idvars))
 
 ```
-
 
