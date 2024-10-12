@@ -16,12 +16,14 @@ Clean the CD data and save.
 source(here::here("R", "libraries.R"))
 source(here::here("R", "constants.R"))
 
+# 334283385.27000004 national pop
+
 ```
 
 
-## Prepare and save long data file
+## Prepare, clean, and save wide data file
 
-Set eval: to true for these chunks to recreate the long data file.
+Set eval: to true for these chunks to recreate the data file.
 
 ```{r}
 #| label: parse-cddata
