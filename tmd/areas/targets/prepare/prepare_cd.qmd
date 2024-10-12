@@ -60,18 +60,61 @@ download.file(url = CDDOCURL, destfile = fs::path(CDRAW, fname), mode = "wb")
 
 ## Parse and show Congressional District data documentation
 
+Note that we do not have number of exemptions, but we do have:
+
+-   N1 -- number of returns
+
+-   N2 -- number of individuals
+
+Footnote 5 in the IRS documentation file says:
+
+> Beginning in 2018, personal exemption deductions were suspended for the primary, secondary, and dependent taxpayers. However, the data used to create the “Number of individuals”—filing status, dependent status indicator, and identifying dependent information—are still available on the Form 1040. This field is based on these data.
+
+
 ```{r}
 #| label: parse-doc
 #| output: false
 
 doc1 <- read_excel(fs::path(CDRAW, CDDOCEXTRACT), sheet = "cleaned", range = "A2:D169")
 
-# clean the reference field so that we can show line breaks in datatable
 doc2 <- doc1 |> 
-  mutate(reference = str_replace_all(reference,
-                                 coll("\r\n"),
+  mutate(
+    across(everything(),
+           \(x) str_trim(x)),
+    # clean reference field so that we can show line breaks in datatable
+    reference = str_replace_all(reference,
+                                coll("\r\n"),
                                  "<br>"
-                                 ))
+                                 )) |> 
+  # determine whether variable is count, amount, or other
+  mutate(vtype = case_when(
+    vname %in% c("STATEFIPS", "STATE", "CONG_DISTRICT", "AGI_STUB") ~ "other",
+    str_detect(description,
+               coll("number of", ignore_case = TRUE)) ~ "count",
+    str_detect(description, coll("amount", ignore_case = TRUE)) ~ "amount",
+    # dollar amounts where description does not contain "amount"
+    vname %in% c("A00100", "A02910", "A04475", "A11520", "A11530", "A18460") ~ "amount",
+    .default = "ERROR"))
+
+doc2 |> 
+  filter(type != "Num")
+
+count(doc2, vtype)
+
+doc2 |> 
+  filter(vtype=="ERROR")
+
+doc2 |> 
+  filter(vtype=="other")
+
+# check these next 2 to be sure they are appropriate
+countvars <- doc2 |> 
+  filter(vtype=="count")
+
+amountvars <- doc2 |> 
+  filter(vtype=="amount")
+
+rm(amountvars, countvars, doc1)
 
 ```
 
