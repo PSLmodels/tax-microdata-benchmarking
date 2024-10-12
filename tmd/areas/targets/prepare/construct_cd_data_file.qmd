@@ -80,6 +80,8 @@ data2 |>
 
 write_csv(data2, fs::path(CDINTERMEDIATE, "cddata_wide_clean.csv"))
 
+rm(data, data2, cdnums)
+
 ```
 
 
@@ -90,21 +92,33 @@ write_csv(data2, fs::path(CDINTERMEDIATE, "cddata_wide_clean.csv"))
 #| eval: false
 
 cdwide <- read_csv(fs::path(CDINTERMEDIATE, "cddata_wide_clean.csv"))
+doc <- read_csv(fs::path(CDINTERMEDIATE, "variable_documentation.csv"))
+
+glimpse(cdwide)
+glimpse(doc)
+
+idvars <- c("rectype", "ndist", "STATEFIPS", "STATE", "CONG_DISTRICT", "AGI_STUB" )
 
 dlong1 <- cdwide |> 
-  pivot_longer(cols = -c(1:4)) |> 
-  left_join()
+  pivot_longer(cols = -all_of(idvars),
+               names_to = "vname") |> 
+  left_join(doc |> 
+              select(vname, description, reference, vtype),
+            by = join_by(vname))
+
+count(dlong1, vname)
+count(dlong1, vtype)
 
 
 # create a cleaned, long, data frame
-idvars <- c("stfips", "stabbr", "cd", "agistub")
-dlong <- data |> 
-  rename_with(tolower) |> 
-  rename(stfips = "statefips",
-         stabbr = "state",
-         cd = "cong_district",
-         agistub = "agi_stub") |> 
-  pivot_longer(cols = -all_of(idvars))
+# idvars <- c("stfips", "stabbr", "cd", "agistub")
+# dlong <- data |> 
+#   rename_with(tolower) |> 
+#   rename(stfips = "statefips",
+#          stabbr = "state",
+#          cd = "cong_district",
+#          agistub = "agi_stub") |> 
+#   pivot_longer(cols = -all_of(idvars))
 
 ```
 

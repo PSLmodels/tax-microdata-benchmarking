@@ -5,4 +5,5 @@ tmd/areas/cache_agi.npy
 /.quarto/
 _docs/
 _freeze/
+intermediate/
 
