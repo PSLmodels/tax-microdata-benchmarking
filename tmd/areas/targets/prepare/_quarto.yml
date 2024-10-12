@@ -20,6 +20,7 @@ book:
     - index.qmd
     - part: "IRS Congressional District data"
       chapters:
+        - document_cd.qmd
         - prepare_cd.qmd
 
 format:
