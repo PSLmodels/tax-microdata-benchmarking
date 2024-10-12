@@ -19,10 +19,13 @@ source(here::here("R", "constants.R"))
 ```
 
 
+## Prepare and save long data file
+
+Set eval: to true for these chunks to recreate the long data file.
+
 ```{r}
 #| label: parse-cddata
 #| eval: false
-
 
 # read the csv file from the zip archive that contains it
 zpath <-  fs::path(CDRAW, fs::path_file(CDZIPURL))
@@ -30,39 +33,8 @@ con <- unz(zpath, "21incd.csv")
 data <- read_csv(con)
 rm(con)
 
-# data checks
-
 count(data, STATE) # US, DC, and 50 states
 count(data, CONG_DISTRICT) # max is 53
-data |> 
-  filter(STATE != "US") |> 
-  select(STATE, CONG_DISTRICT) |> 
-  distinct() |> 
-  summarise(n=n(), .by=STATE) |> 
-  janitor::adorn_totals() # how can we have 479 CDs??
-  
-check <- data |> 
-  filter(STATE != "US") |> 
-  select(STATE, CONG_DISTRICT) |> 
-  distinct() |> 
-  mutate(n=n(), .by=STATE)
-
-nbystate <- check |> 
-  select(STATE, n) |> 
-  distinct()
-
-data |> 
-  filter(STATE != "US", agi_stub==0) |> 
-  select(STATE, CONG_DISTRICT, N1) |> 
-  arrange(desc(N1))
-
-temp <- data |>
-  select(1:5) |> 
-  filter(STATE != "US", agi_stub==0) |> 
-  mutate(ndists=n(), .by=STATE) |> 
-  mutate(keep=(ndists == 1) | (CONG_DISTRICT != "00")) |> 
-  filter(keep)
-
 
 ```
 
@@ -90,22 +62,9 @@ data2 <- data |>
   )) |> 
   relocate(rectype)
 
-count(data2, rectype)
-
 data2 |> 
   filter(AGI_STUB == 0) |> 
   count(rectype)
-
-data2 |> 
-  filter(STATE != "US", AGI_STUB ==0) |> 
-  select(STATE, nstub0) |> 
-  distinct() |> 
-  janitor::adorn_totals()
-  
-
-tmp <- data2 |> 
-  filter(rectype == "cdstate") |> 
-  select(1:9)
 
 tmp <- data2 |> 
   filter(rectype == "state") |> 
