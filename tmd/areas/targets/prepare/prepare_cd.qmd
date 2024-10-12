@@ -8,7 +8,7 @@ editor_options:
 
 ## About the data
 
-The following comments are extracted from the IRS SOI data documentation (21incddocguide.docx).
+The following comments are extracted from the IRS SOI data documentation (21incddocguide.docx). All text in this section is a direct quote from the documentation.
 
 ### Time period
 
@@ -42,14 +42,24 @@ The matching process first utilizes the 9-digit ZIP code, if present on the retu
 
 Eight states (AK, DC, DE, MT, ND, SD, VT, and WY) have only one congressional district, therefore the matching procedures are not performed on these states. Returns with only one congressional district represent 2 percent of the total number of returns.
 
+### Disclosure Protection Procedures
+
+SOI did not attempt to correct any ZIP codes listed on the tax returns; however, it did take the following precautions to avoid disclosing information about specific taxpayers:
+
+-   Income and tax items with less than 20 returns for a particular AGI class were combined with another AGI class within the same congressional district.  Collapsed AGI classes are identified with a double asterisk (**) in the Excel files.
+
+-   Income and tax items with less than 20 returns for a congressional district were excluded.
+
+-   If an income or tax item from one return constitutes more than a specified percentage of the total of any particular cell, the specific data item for that return is excluded from that cell.  For example, if the amount for wages from one return represents 75 percent of the value of the total for that cell, the data item will be suppressed. The actual threshold percentage used cannot be released.   
+
+## Comments on the data
+
+... Determining which records are CD records...
 
 ## Setup
 
 ```{r}
 #| label: load-packages
-
-# source(here::here("r", "libraries.R"))
-# source(here::here("r", "functions.r"))
 
 library(DT)
 library(fs)
@@ -145,6 +155,8 @@ con <- unz(zpath, "21incd.csv")
 data <- read_csv(con)
 close(con)
 
+# data checks
+
 count(data, STATE) # US, DC, and 50 states
 count(data, CONG_DISTRICT) # max is 53
 data |> 
@@ -154,6 +166,35 @@ data |>
   summarise(n=n(), .by=STATE) |> 
   janitor::adorn_totals() # how can we have 479 CDs??
   
+check <- data |> 
+  filter(STATE != "US") |> 
+  select(STATE, CONG_DISTRICT) |> 
+  distinct() |> 
+  mutate(n=n(), .by=STATE)
+
+nbystate <- check |> 
+  select(STATE, n) |> 
+  distinct()
+
+data |> 
+  filter(STATE != "US", agi_stub==0) |> 
+  select(STATE, CONG_DISTRICT, N1) |> 
+  arrange(desc(N1))
+
+temp <- data |>
+  select(1:5) |> 
+  filter(STATE != "US", agi_stub==0) |> 
+  mutate(ndists=n(), .by=STATE) |> 
+  mutate(keep=(ndists == 1) | (CONG_DISTRICT != "00")) |> 
+  filter(keep)
+
+
+```
+
+
+```{r}
+#| label: clean-cddata
+#| eval: false
 
 dlong1 <- data |> 
   rename_with(toupper) |> 
@@ -171,11 +212,7 @@ dlong <- data |>
          cd = "cong_district",
          agistub = "agi_stub") |> 
   pivot_longer(cols = -all_of(idvars))
-  
-
-
-
-
-
 
 ```
+
+
