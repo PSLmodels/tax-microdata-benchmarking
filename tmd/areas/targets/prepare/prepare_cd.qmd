@@ -6,13 +6,102 @@ editor_options:
 
 # Get Congressional District files
 
-## Load packages
+## Setup
 
 ```{r}
-#| label: setup
+#| label: load-packages
 
-source(here::here("r", "libraries.r"))
-source(here::here("r", "functions.r"))
+# source(here::here("r", "libraries.R"))
+# source(here::here("r", "functions.r"))
+
+library(DT)
+library(fs)
+library(readxl)
+library(stringr)
+library(tidyverse)
+# includes: dplyr, forcats, ggplot2, lubridate, purrr, stringr, tibble, tidyr
+
+tprint <- 75  # default tibble print
+options(tibble.print_max = tprint, tibble.print_min = tprint) # show up to tprint rows
+
+```
+
+
+```{r}
+#| label: constants
+
+CDZIPURL <- "https://www.irs.gov/pub/irs-soi/congressional2021.zip"
+CDDOCURL <- "https://www.irs.gov/pub/irs-soi/21incddocguide.docx"
+
+CDDIR <- here::here("cds")
+CDRAW <- fs::path(CDDIR, "raw_data")
+
+CDDOCEXTRACT <- "cd_documentation_extracted_from_21incddocguide.docx.xlsx"
+
+```
+
+
+## Download CD data and documentation if not already downloaded
+
+-   [SOI Congressional Districts landing page](https://www.irs.gov/statistics/soi-tax-stats-data-by-congressional-district)
+
+    -   [2021 folder](https://www.irs.gov/statistics/soi-tax-stats-data-by-congressional-district-2021)
+
+NOTE: To download data, change eval: to true in the header of the following chunk. Otherwise, this program assumes data already have been downloaded.
+
+
+```{r}
+#| label: downloads
+#| eval: false
+
+# data
+fname <- fs::path_file(CDZIPURL)
+download.file(url = CDZIPURL, destfile = fs::path(CDRAW, fname), mode = "wb")
+
+# documentation
+fname <- fs::path_file(CDDOCURL)
+download.file(url = CDDOCURL, destfile = fs::path(CDRAW, fname), mode = "wb")
+
+```
+
+
+## Parse and show Congressional District data documentation
+
+```{r}
+#| label: parse-doc
+#| output: false
+
+doc1 <- read_excel(fs::path(CDRAW, CDDOCEXTRACT), sheet = "cleaned", range = "A2:D169")
+
+# clean the reference field so that we can show line breaks in datatable
+doc2 <- doc1 |> 
+  mutate(reference = str_replace_all(reference,
+                                 coll("\r\n"),
+                                 "<br>"
+                                 ))
+
+```
+
+Show documentation table for variables in the Congressional District csv data.
+
+```{r}
+#| label: show-doc
+
+doc2 |> 
+  DT::datatable(options = list(autoWidth = TRUE), escape = FALSE)
+
+```
+
+
+## Parse the Congressional District data
+
+```{r}
+#| label: parse-cddata
+
 
 
 ```
+
+
+
+

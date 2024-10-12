@@ -1,0 +1,42 @@
+project:
+  type: book
+  output-dir: _docs
+
+# https://prerelease.quarto.org/
+
+execute:
+  eval: true
+  echo: true
+  output: true
+  freeze: auto  # auto: during global project renders, re-render only when source changes
+
+book:
+  title: "Get IRS data for area targeting"
+  subtitle: "Create csv file"
+  # author: "Don Boyd"
+  date: today
+  date-format: long
+  chapters:
+    - index.qmd
+    - part: "IRS Congressional District data"
+      chapters:
+        - prepare_cd.qmd
+
+format:
+  html:
+    theme: cosmo
+    code-fold: true    
+
+editor_options:
+  chunk_output_type: console
+
+
+# possibly use this at start of each doc
+# ---
+# output: html_document
+# editor_options: 
+#   chunk_output_type: console
+# ---
+
+  
+  

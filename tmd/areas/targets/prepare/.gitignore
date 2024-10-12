@@ -1,2 +1,8 @@
 
 tmd/areas/cache_agi.npy
+
+# folders to ignore
+/.quarto/
+_docs/
+_freeze/
+
