@@ -1,0 +1,142 @@
+---
+output: html_document
+editor_options: 
+ chunk_output_type: console
+---
+
+# Parse the Congressional District data
+
+Clean the CD data and save.
+
+## Setup
+
+```{r}
+#| label: setup
+
+source(here::here("R", "libraries.R"))
+source(here::here("R", "constants.R"))
+
+```
+
+
+```{r}
+#| label: parse-cddata
+#| eval: false
+
+
+# read the csv file from the zip archive that contains it
+zpath <-  fs::path(CDRAW, fs::path_file(CDZIPURL))
+con <- unz(zpath, "21incd.csv")
+data <- read_csv(con)
+rm(con)
+
+# data checks
+
+count(data, STATE) # US, DC, and 50 states
+count(data, CONG_DISTRICT) # max is 53
+data |> 
+  filter(STATE != "US") |> 
+  select(STATE, CONG_DISTRICT) |> 
+  distinct() |> 
+  summarise(n=n(), .by=STATE) |> 
+  janitor::adorn_totals() # how can we have 479 CDs??
+  
+check <- data |> 
+  filter(STATE != "US") |> 
+  select(STATE, CONG_DISTRICT) |> 
+  distinct() |> 
+  mutate(n=n(), .by=STATE)
+
+nbystate <- check |> 
+  select(STATE, n) |> 
+  distinct()
+
+data |> 
+  filter(STATE != "US", agi_stub==0) |> 
+  select(STATE, CONG_DISTRICT, N1) |> 
+  arrange(desc(N1))
+
+temp <- data |>
+  select(1:5) |> 
+  filter(STATE != "US", agi_stub==0) |> 
+  mutate(ndists=n(), .by=STATE) |> 
+  mutate(keep=(ndists == 1) | (CONG_DISTRICT != "00")) |> 
+  filter(keep)
+
+
+```
+
+
+```{r}
+#| label: clean-cddata
+#| eval: false
+
+# cleaning and reshaping:
+#  - determine record type
+
+data2 <- data |> 
+  rename_with(toupper) |>  # agi_stub becomes upper case
+  mutate(nrecs = n(), 
+         nstub0 = sum(AGI_STUB == 0),
+         .by = STATE) |> 
+  relocate(nrecs, nstub0) |> 
+  mutate(rectype = case_when(
+    STATE == "US" ~ "us",
+    nstub0 == 1 ~ "cdstate", # the cd and state record for 8 states with only 1 cd
+    nstub0 > 1 & CONG_DISTRICT == "00" ~ "state",
+    nstub0 > 1 & CONG_DISTRICT != "00" ~ "cd", # cd records for multi-cd states
+    .default = "ERROR"
+  )) |> 
+  relocate(rectype)
+
+count(data2, rectype)
+
+data2 |> 
+  filter(AGI_STUB == 0) |> 
+  count(rectype)
+
+data2 |> 
+  filter(STATE != "US", AGI_STUB ==0) |> 
+  select(STATE, nstub0) |> 
+  distinct() |> 
+  janitor::adorn_totals()
+  
+
+tmp <- data2 |> 
+  filter(rectype == "cdstate") |> 
+  select(1:9)
+
+tmp <- data2 |> 
+  filter(rectype == "state") |> 
+  select(1:9)
+
+count(tmp, STATE)
+
+tmp <- data2 |> 
+  filter(rectype %in% c("cdstate", "cd"), AGI_STUB == 0) |> 
+  select(1:8) |> 
+  mutate(ndist = n(), .by=STATE)
+
+tmp |> 
+  select(STATE, ndist) |> 
+  distinct() |> 
+  janitor::adorn_totals()
+
+dlong1 <- data2 |> 
+  pivot_longer(cols = -c(1:4)) |> 
+  left_join()
+
+
+# create a cleaned, long, data frame
+idvars <- c("stfips", "stabbr", "cd", "agistub")
+dlong <- data |> 
+  rename_with(tolower) |> 
+  rename(stfips = "statefips",
+         stabbr = "state",
+         cd = "cong_district",
+         agistub = "agi_stub") |> 
+  pivot_longer(cols = -all_of(idvars))
+
+```
+
+

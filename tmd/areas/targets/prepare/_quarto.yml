@@ -2,7 +2,7 @@ project:
   type: book
   output-dir: _docs
 
-# https://prerelease.quarto.org/
+# https://prerelease.quarto.org/  # quarto documentation at this link
 
 execute:
   eval: true
@@ -20,9 +20,12 @@ book:
     - index.qmd
     - part: "IRS Congressional District data"
       chapters:
-        - documentation_cd.qmd
-        - prepare_cd.qmd
-
+        - overall_documentation_cd.qmd
+        - download_data_cd.qmd
+        - construct_variable_documentation.qmd
+        - construct_cd_data_file.qmd
+        # - map_cd_variables_to_puf_variables.qmd
+        
 format:
   html:
     theme: cosmo

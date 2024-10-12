@@ -6,4 +6,10 @@ editor_options:
 
 # Introduction
 
-Get data for area targeting.
+Get data for area targeting:
+
+-   States (to come)
+
+-   Congressional districts
+
+Note that each qmd file has its own setup section in which it loads packages and constants. This is unnecessary duplication when rendering the entire project, but it is useful during development because it allows rendering individual qmd files without rendering the entire project.
