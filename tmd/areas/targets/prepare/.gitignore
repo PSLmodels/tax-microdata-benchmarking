@@ -7,3 +7,6 @@ _docs/
 _freeze/
 intermediate/
 
+# files to ignore
+.Rhistory
+
