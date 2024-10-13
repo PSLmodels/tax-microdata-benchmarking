@@ -1,0 +1,23 @@
+---
+output: html_document
+editor_options: 
+ chunk_output_type: console
+---
+
+# Get Congressional District Census population data
+
+## Setup
+
+```{r}
+#| label: setup
+
+source(here::here("R", "libraries.R"))
+source(here::here("R", "constants.R"))
+
+# 334283385.27000004 national pop
+library(sf)
+library(tidycensus)
+library(tigris)
+
+
+```
