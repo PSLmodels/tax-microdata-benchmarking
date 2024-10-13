@@ -4,8 +4,8 @@ for FIRST_YEAR through LAST_YEAR for the specified sub-national AREA.
 
 AREA prefix for state areas are the two lower-case character postal codes.
 AREA prefix for congressional districts are the state prefix followed by
-two digits (with a leading zero) identifying the district.  There are no
-district files for states with only one congressional district.
+two digits (with a leading zero) identifying the district.  States with
+only one congressional district have 00 as the two digits.
 """
 
 import sys
@@ -70,6 +70,7 @@ def valid_area(area: str):
         "CO": {2020: 8, 2010: 7},
         "CT": {2020: 5, 2010: 5},
         "DE": {2020: 1, 2010: 1},
+        "DC": {2020: 0, 2010: 0},
         "FL": {2020: 28, 2010: 27},
         "GA": {2020: 14, 2010: 14},
         "HI": {2020: 2, 2010: 2},
@@ -114,7 +115,7 @@ def valid_area(area: str):
         "WY": {2020: 1, 2010: 1},
     }
     # check state_info validity
-    assert len(state_info) == 50
+    assert len(state_info) == 50 + 1
     total = {2010: 0, 2020: 0}
     for scode, seats in state_info.items():
         total[2010] += seats[2010]
@@ -149,15 +150,16 @@ def valid_area(area: str):
     if len(area) == 4:
         # assume CDs are based on 2010 Census (that is, 117th Congress)
         max_cdn = state_info[scode][2010]
+        cdn = int(area[2:4])
         if max_cdn <= 1:
-            sys.stderr.write(
-                f": use area '{s_c}' for this one-district state\n"
-            )
-            all_ok = False
-        else:  # if max_cdn > 2
-            cdn = int(area[2:4])
-            if cdn <= 0:
-                sys.stderr.write(f": cd number '{cdn}' is non-positive\n")
+            if cdn != 0:
+                sys.stderr.write(
+                    f": use area '{s_c}00' for this one-district state\n"
+                )
+                all_ok = False
+        else:  # if max_cdn >= 2
+            if cdn < 1:
+                sys.stderr.write(f": cd number '{cdn}' is less than one\n")
                 all_ok = False
             if cdn > max_cdn:
                 sys.stderr.write(f": cd number '{cdn}' exceeds {max_cdn}\n")
