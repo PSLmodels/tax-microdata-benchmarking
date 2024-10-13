@@ -12,6 +12,13 @@ library(tidyverse)
 tprint <- 75  # default tibble print
 options(tibble.print_max = tprint, tibble.print_min = tprint) # show up to tprint rows
 
+# census_api_key("b27cb41e46ffe3488af186dd80c64dce66bd5e87", install = TRUE) # stored in .Renviron
+# libraries needed for census population
+library(sf)
+library(tidycensus)
+library(tigris)
+options(tigris_use_cache = TRUE)
+
 
 # possible libraries ------------------------------------------------------
 
