@@ -16,7 +16,7 @@ Note that each qmd file has its own setup section in which it loads packages and
 
 ## Issues and considerations
 
--   The Congressional District data for 2021 does not have exemptions. Thus, we cannot directly construct exemption targets, and more important this interferes with the current method of using the XTOT target as a way to develop an initial scaling ratio:  `initial_weights_scale = row.target / national_population`. The short term workaround is to create an estimated XTOT target but longer term we should revisit the initial scaling approach. Using the number of filers (returns) may be a better approach.
+-   Get 2021 population by Congressional District to create the row 0 "XTOT" (population) target as a way to develop an initial scaling ratio:  `initial_weights_scale = row.target / national_population`.
 
 -   The create_area_weights.py docstring says "There are no district files for states with only one congressional district." There are 7 such states. For these states SOI sets the CONG_DISTRICT variable to 00 and that's what will be used in the CD target files.
 
