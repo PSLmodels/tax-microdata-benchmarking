@@ -1,8 +1,5 @@
 ---
 output: html_document
-editor:
-  markdown:
-    wrap: none
 editor_options: 
  chunk_output_type: console
 ---
@@ -20,7 +17,6 @@ source(here::here("R", "libraries.R"))
 source(here::here("R", "constants.R"))
 
 # 334283385.27000004 national pop
-
 
 ```
 
