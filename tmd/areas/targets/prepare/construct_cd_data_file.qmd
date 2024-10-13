@@ -139,8 +139,14 @@ file="AGI_STUB; range; agilo; agihi
 9; $500,000 or more; 500e3; 9e99
 ")
 
-df |> knitr::kable()
-# devtools::install_github("rstudio/gt")
+df |> kable()
+df |> 
+  gt() |> 
+  fmt_number(columns=c(agilo, agihi),
+             rows=3:9,
+             # scale=1e-9,
+             decimals=0)
+
 
 ```
 
