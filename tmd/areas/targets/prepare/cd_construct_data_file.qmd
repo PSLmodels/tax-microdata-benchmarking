@@ -163,17 +163,22 @@ doc <- read_csv(fs::path(CDINTERMEDIATE, "variable_documentation.csv"))
 glimpse(cdwide)
 glimpse(doc)
 
-idvars <- c("rectype", "ndist", "STATEFIPS", "STATE", "CONG_DISTRICT", "AGI_STUB" )
+idvars <- c("rectype", "ndist", "STATEFIPS", "STATE", "CONG_DISTRICT", 
+            "AGI_STUB", "agirange", "agilo", "agihi")
+
+# TODO: put amount units in dollars!!
 
 dlong1 <- cdwide |> 
   pivot_longer(cols = -all_of(idvars),
                names_to = "vname") |> 
   left_join(doc |> 
-              select(vname, description, reference, vtype),
+              select(vname, description, reference, vtype, basevname),
             by = join_by(vname))
 
 count(dlong1, vname)
 count(dlong1, vtype)
+
+write_csv(dlong1, fs::path(CDINTERMEDIATE, "cddata_long_clean.csv"))
 
 
 # create a cleaned, long, data frame

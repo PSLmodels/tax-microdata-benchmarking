@@ -20,11 +20,11 @@ book:
     - index.qmd
     - part: "IRS Congressional District data"
       chapters:
-        - overall_documentation_cd.qmd
-        - download_data_cd.qmd
-        - construct_variable_documentation.qmd
-        - construct_cd_data_file.qmd
-        # - map_cd_variables_to_puf_variables.qmd
+        - cd_overall_documentation.qmd
+        - cd_download_data.qmd
+        - cd_construct_variable_documentation.qmd
+        - cd_construct_data_file.qmd
+        # - cd_map_variables_to_puf_variables.qmd
         
 format:
   html:
