@@ -2,6 +2,8 @@
 
 library(DT)
 library(fs)
+library(gt)
+library(knitr)
 library(readxl)
 library(stringr)
 library(tidyverse)
