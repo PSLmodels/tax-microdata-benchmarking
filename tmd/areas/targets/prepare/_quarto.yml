@@ -35,6 +35,9 @@ format:
 editor_options:
   chunk_output_type: console
 
+# R packages using old 209 libxml
+#  gt, 
+
 
 # rendering commands
 #   quarto render
