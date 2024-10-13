@@ -20,6 +20,46 @@ source(here::here("R", "constants.R"))
 
 ```
 
+## Background
+
+> AREA prefix for state areas are the two lower-case character postal codes. AREA prefix for congressional districts are the state prefix followed by two digits (with a leading zero) identifying the district. There are no district files for states with only one congressional district.
+
+Here is an example targets file:
+
+varname,count,scope,agilo,agihi,fstatus,target
+
+XTOT, 0, 0,-9e99, 9e99, 0, 33e6
+
+e00300, 0, 1,-9e99, 9e99, 0, 20e9
+
+e00900, 0, 1,-9e99, 9e99, 0, 30e9
+
+e00200, 0, 1,-9e99, 9e99, 0,1000e9
+
+e02000, 0, 1,-9e99, 9e99, 0, 30e9
+
+e02400, 0, 1,-9e99, 9e99, 0, 60e9
+
+c00100, 0, 1,-9e99, 9e99, 0,1200e9
+
+XTOT, 1, 1, 1e6, 9e99, 0, 10e3
+
+e00400, 0, 1,-9e99, 9e99, 0, 2e9
+
+e00600, 0, 1,-9e99, 9e99, 0, 8e9
+
+e00650, 0, 1,-9e99, 9e99, 0, 7e9
+
+e01700, 0, 1,-9e99, 9e99, 0, 12e9
+
+e02300, 0, 1,-9e99, 9e99, 0, 10e9
+
+e17500, 0, 1,-9e99, 9e99, 0, 5e9
+
+e18400, 0, 1,-9e99, 9e99, 0, 10e9
+
+e18500, 0, 1,-9e99, 9e99, 0, 10e9
+
 ## Create AGI stub information
 
 ```{r}
@@ -73,16 +113,22 @@ file="AGI_STUB; agirange; agilo; agihi
 9; $500,000 or more; 500e3; 9e99
 ")
 
-agibins |> kable()
+write_csv(agibins, fs::path(CDINTERMEDIATE, "cd_agi_bins.csv"))
+
+# agibins |> kable()
 agibins |> 
   gt() |> 
+  tab_header(
+    title = html("Congressional District AGI bins"),
+    subtitle = html("in_bin = (vardf.c00100 >= row.agilo) & (vardf.c00100 < row.agihi)")) |>
   fmt_number(columns=c(agilo, agihi),
              rows=3:9,
              # scale=1e-9,
              decimals=0)
 
-```
 
+
+```
 
 ## Prepare, clean, and save wide data file
 
@@ -103,13 +149,14 @@ count(data, CONG_DISTRICT) # max is 53
 
 ```
 
-
 ```{r}
 #| label: clean-save-cddata-wide
 #| eval: false
 
 # cleaning and reshaping:
 #  - determine record type
+
+agibins <- read_csv(fs::path(CDINTERMEDIATE, "cd_agi_bins.csv"))
 
 data2 <- data |> 
   rename_with(toupper) |>  # agi_stub becomes upper case
@@ -192,4 +239,3 @@ write_csv(dlong1, fs::path(CDINTERMEDIATE, "cddata_long_clean.csv"))
 #   pivot_longer(cols = -all_of(idvars))
 
 ```
-
