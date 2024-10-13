@@ -89,6 +89,7 @@ rm(data, data2, cdnums)
 ## Create AGI stub information
 
 ```{r}
+#| label: agi-bins
 
 # example of targets file
 # varname,count,scope,agilo,agihi,fstatus,target
@@ -122,18 +123,24 @@ rm(data, data2, cdnums)
 # 8 = $200,000 under $500,000
 # 9 = $500,000 or more
 
-
-# varname,count,scope,agilo,agihi,fstatus,target
 df <- read_delim(
 delim=";",
-file="AGI_STUB;range;agilo;agihi
-0;Total;-9e99;9e99
-1;Under $1;-9e99;1
+trim_ws = TRUE,
+file="AGI_STUB; range; agilo; agihi
+0; Total; -9e99; 9e99
+1; Under $1; -9e99; 1
+2; $1 under $10,000; 1; 10e3
+3; $10,000 under $25,000; 10e3; 25e3
+4; $25,000 under $50,000; 25e3; 50e3
+5; $50,000 under $75,000; 50e3; 75e3
+6; $75,000 under $100,000; 75e3; 100e3
+7; $100,000 under $200,000; 100e3; 200e3
+8; $200,000 under $500,000; 200e3; 500e3
+9; $500,000 or more; 500e3; 9e99
 ")
 
-df
-# df$agilo
-
+df |> knitr::kable()
+# devtools::install_github("rstudio/gt")
 
 ```
 
