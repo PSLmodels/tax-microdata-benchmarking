@@ -35,6 +35,10 @@ editor_options:
   chunk_output_type: console
 
 
+# rendering commands
+#   quarto render
+#   quarto publish netlify --no-prompt --no-render --no-browser
+
 # possibly use this at start of each doc
 # ---
 # output: html_document
