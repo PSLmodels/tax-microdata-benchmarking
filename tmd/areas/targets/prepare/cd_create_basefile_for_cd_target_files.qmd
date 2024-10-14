@@ -120,17 +120,48 @@ cdlong2 <- cdlong1 |>
 
 ```
 
-### Define fstatus, scope, count; put amounts in dollars
+
+### Address agi issue
+
+We have an issue with AGI: for Congressional Districts IRS does NOT report the number of returns with AGI. See the discussion on the introduction page.
+
+We are going to create new rows for N00100 (Number of returns with AGI (estimated)), equal to N1, add it to the data.
 
 ```{r}
-#| label: fstatus-split
+#| label: address-agi
 
-cdlong3 <- cdlong2 |> 
-    mutate(fstatus = case_when(
-      vname == "MARS1" ~ 1,
-      vname == "MARS2" ~ 2,
-      vname == "MARS4" ~ 4, # VERIFY WITH MARTIN
-      .default = 0),
+nagi <- cdlong2 |> 
+  filter(vname == "N1") |> 
+  mutate(vname = "N00100",
+         basevname = "v00100",
+         description = "Number of returns with Adjusted Gross Income - AGI (estimated)")
+
+cdlong3 <- bind_rows(cdlong2, nagi) |> 
+  mutate(basevname = ifelse(vname == "A00100",
+                            "v00100",
+                            basevname))
+
+# check
+temp <- cdlong3 |> 
+  filter(basevname=="v00100", STATE=="WY") |> 
+  arrange(STATE, CONG_DISTRICT, basevname, desc(vtype), AGI_STUB)
+
+```
+
+
+### Define statecd, fstatus, scope, count; put amounts in dollars; sort
+
+```{r}
+#| label: fstatus-misc
+
+cdlong4 <- cdlong3 |> 
+    mutate(
+      statecd = paste0(STATE, CONG_DISTRICT),
+      fstatus = case_when(
+        vname == "MARS1" ~ 1,
+        vname == "MARS2" ~ 2,
+        vname == "MARS4" ~ 4, # VERIFY WITH MARTIN
+        .default = 0),
       
       count = case_when(
         vtype == "count" ~ 1,
@@ -143,9 +174,11 @@ cdlong3 <- cdlong2 |>
                      value)
       )
   
-count(cdlong3, fstatus)
-count(cdlong3, count, vtype)
-count(cdlong3, scope)
+summary(cdlong4)
+skim(cdlong4)
+count(cdlong4, fstatus)
+count(cdlong4, count, vtype)
+count(cdlong4, scope)
 
 ```
 

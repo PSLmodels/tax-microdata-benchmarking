@@ -5,6 +5,7 @@ library(fs)
 library(gt)
 library(knitr)
 library(readxl)
+library(skimr)
 library(stringr)
 library(tidyverse)
 # includes: dplyr, forcats, ggplot2, lubridate, purrr, stringr, tibble, tidyr
