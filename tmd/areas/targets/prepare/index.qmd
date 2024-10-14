@@ -30,4 +30,6 @@ Note that each qmd file has its own setup section in which it loads packages and
 
 -   Web page - should we include it in GitHub? Discuss.
 
+-   Verify with Martin: description of target files; fstatus; scope.
+
 
