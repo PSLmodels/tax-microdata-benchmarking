@@ -418,8 +418,10 @@ def weight_ratio_distribution(ratio, delta, out):
         out.write(line)
         if cum == tot:
             break
-    ssqdev = np.sum(np.square(ratio - 1.0))
-    out.write(f"SUM OF SQUARED AREA/US WEIGHT RATIO DEVIATIONS= {ssqdev:e}\n")
+    # write RMSE of area/us weight ratio deviations from one
+    rmse = np.sqrt(np.mean(np.square(ratio - 1.0)))
+    line = f"RMSE OF AREA/US WEIGHT RATIO DEVIATIONS FROM ONE = {rmse:e}\n"
+    out.write(line)
 
 
 # -- High-level logic of the script:
