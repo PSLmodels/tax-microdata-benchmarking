@@ -102,6 +102,7 @@ cdlong1 <- cdlong |>
 # quick data checks
 cdlong1 |> filter(AGI_STUB==0) |> count(STATE)
 cdlong1 |> filter(AGI_STUB==0) |> select(STATE, CONG_DISTRICT) |> distinct() |> nrow()
+count(cdlong1, vtype)
 
 # winnow data to variables we might consider targeting
 # show candidates for dropping in a nice order
@@ -119,20 +120,32 @@ cdlong2 <- cdlong1 |>
 
 ```
 
-### Split out fstatus 0 records and other records
+### Define fstatus, scope, count; put amounts in dollars
 
 ```{r}
 #| label: fstatus-split
 
-nonzero_fstatvars <- c("MARS1", "MARS2", "MARS4")
-
-fstatus0 <- cdlong2 |> 
-  filter(!vname %in% nonzero_fstatvars) |> 
-  mutate(fstatus = 0)
-
-fstatusnz <- cdlong2 |> 
-  filter(vname %in% nonzero_fstatvars) |> 
-
+cdlong3 <- cdlong2 |> 
+    mutate(fstatus = case_when(
+      vname == "MARS1" ~ 1,
+      vname == "MARS2" ~ 2,
+      vname == "MARS4" ~ 4, # VERIFY WITH MARTIN
+      .default = 0),
+      
+      count = case_when(
+        vtype == "count" ~ 1,
+        vtype == "amount" ~ 0,
+        .default = -99),
+      
+      scope = 1,
+      value = ifelse(vtype == "amount",
+                     value * 1000,
+                     value)
+      )
+  
+count(cdlong3, fstatus)
+count(cdlong3, count, vtype)
+count(cdlong3, scope)
 
 ```
 
