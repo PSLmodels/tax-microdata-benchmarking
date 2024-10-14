@@ -22,4 +22,6 @@ Note that each qmd file has its own setup section in which it loads packages and
 
 -   create_area_weights.py defines `state_info`, which lists the number of CDs in each of the 50 states. It does not list DC, which has a non-voting district (not included in the count of 435 districts). SOI  provides data for this and we should include it, as some policymakers may be interested in the effects of policy changes in the District of Columbia.
 
+-   Per IRS documentation: "Income and tax items with less than 20 returns for a particular AGI class were combined with another AGI class within the same congressional district. Collapsed AGI classes are identified with a double asterisk (dropped) in the Excel files." **This will require attention soon.**
+
 
