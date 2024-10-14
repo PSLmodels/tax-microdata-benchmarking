@@ -234,7 +234,7 @@ def prepared_data(area: str, vardf: pd.DataFrame):
         if row.count == 0:
             unmasked_varray = vardf[row.varname].astype(float)
         else:
-            unmasked_varray = (vardf[row.varname] > 0).astype(float)
+            unmasked_varray = (vardf[row.varname] > -np.inf).astype(float)
         mask = np.ones(numobs, dtype=int)
         assert (
             row.scope >= 0 and row.scope <= 2
