@@ -295,11 +295,12 @@ def target_rmse(wght, target_matrix, target_array, out, delta=None):
     ratio = act / target_array
     min_ratio = np.min(ratio)
     max_ratio = np.max(ratio)
-    if DUMP_ALL_TARGET_DEVIATIONS:
+    dump = PARAMS.get("dump_all_target_deviations", DUMP_ALL_TARGET_DEVIATIONS)
+    if dump:
         for tnum, ratio_ in enumerate(ratio):
             out.write(
                 f"TARGET{(tnum + 1):03d}:ACT-EXP,ACT/EXP= "
-                f"{act_minus_exp[tnum]:16.9e}, {ratio_:.3f}/n"
+                f"{act_minus_exp[tnum]:16.9e}, {ratio_:.3f}\n"
             )
     # show distribution of target ratios
     tol = PARAMS.get("target_ratio_tolerance", TARGET_RATIO_TOLERANCE)
@@ -470,6 +471,7 @@ def create_area_weights_file(
         exp_params = [
             "target_ratio_tolerance",
             "iprint",
+            "dump_all_target_deviations",
         ]
         if len(PARAMS) > len(exp_params):
             nump = len(exp_params)
