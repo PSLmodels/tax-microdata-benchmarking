@@ -117,6 +117,8 @@ dropvars <- c("CPREP", "DIR_DEP", "ELDERLY", "ELF", "PREP", "RAC", "TCE",
 cdlong2 <- cdlong1 |> 
   filter(!vname %in% dropvars)
 
+rm(dropvars)
+
 ```
 
 
@@ -141,9 +143,11 @@ cdlong3 <- bind_rows(cdlong2, nagi) |>
                             basevname))
 
 # check
-temp <- cdlong3 |> 
+check <- cdlong3 |> 
   filter(basevname=="v00100", STATE=="WY") |> 
   arrange(STATE, CONG_DISTRICT, basevname, desc(vtype), AGI_STUB)
+
+rm(nagi, check)
 
 ```
 
@@ -221,8 +225,13 @@ fmatch |> filter(is.na(target)) # good, we matched on all CDs
 
       # statecd = paste0(STATE, CONG_DISTRICT),
 
+rm(soistubs, fmatch)
+
 ```
 
 
+```{r}
+
+```
 
 
