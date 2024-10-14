@@ -1,0 +1,85 @@
+---
+output: html_document
+editor_options: 
+ chunk_output_type: console
+---
+
+# Map tax calculator vars to soi vars and extract targets
+
+
+```{r}
+#| label: setup
+
+source(here::here("R", "libraries.R"))
+source(here::here("R", "constants.R"))
+
+# 334283385.27000004 national pop
+
+
+```
+
+## Get needed data
+
+```{r}
+#| label: get-cdbasefile
+
+cdbase <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile.csv"))
+
+```
+
+## Create variable mapping
+
+```{r}
+#| label: tc-soi-variablemap
+
+soivars <- count(cdbase, basevname)
+soivars$basevname
+
+vmap <- read_csv(file="
+tcvar, soivar
+XTOT, XTOT
+c00100, v00100
+e00200, v00200
+300300, v00300
+")
+
+```
+
+```{r}
+#| label: mapped-file
+
+mapped <- cdbase |> 
+  filter(basevname %in% vmap$soivar) |> 
+  mutate(varname=factor(basevname, levels=vmap$soivar, labels=vmap$tcvar))
+
+count(mapped, varname, vname)
+
+```
+
+
+```{r}
+#| label: extracts
+
+# varname,count,scope,agilo,agihi,fstatus,target
+# XTOT,       0,    0,-9e99, 9e99,      0,  33e6
+# e00300,     0,    1,-9e99, 9e99,      0,  20e9
+
+# define extracts we want
+statecds <- "ny21"
+
+extracted <- mapped |> 
+  filter(statecd %in% statecds) |> 
+  arrange(statecd, src, scope, fstatus, basevname, count, agistub) # to be safe
+
+targets <- extracted |> 
+  filter(varname %in% c("XTOT", "c00100")) |> 
+  filter(varname == "XTOT" | (agistub != 0)) |> 
+  select(varname, count, scope, agilo, agihi, fstatus, target)
+
+write_csv(targets, fs::path(CDFINAL, "ny21_targets.csv"))
+
+
+```
+
+
+
