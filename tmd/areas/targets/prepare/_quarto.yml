@@ -25,7 +25,7 @@ book:
         - cd_download_soi_data.qmd
         - cd_construct_variable_documentation.qmd
         - cd_construct_data_file.qmd
-        # - cd_map_variables_to_puf_variables.qmd
+        - cd_create_basefile_for_cd_target_files.qmd
         
 format:
   html:
