@@ -293,6 +293,8 @@ def target_rmse(wght, target_matrix, target_array, out, delta=None):
     act = np.dot(wght, target_matrix)
     act_minus_exp = act - target_array
     ratio = act / target_array
+    min_ratio = np.min(ratio)
+    max_ratio = np.max(ratio)
     if DUMP_ALL_TARGET_DEVIATIONS:
         for tnum, ratio_ in enumerate(ratio):
             out.write(
@@ -342,6 +344,11 @@ def target_rmse(wght, target_matrix, target_array, out, delta=None):
         out.write(line)
         if cum == tot:
             break
+    # write minimum and maximum ratio values
+    line = f"MINIMUM VALUE OF TARGET ACT/EXP RATIO = {min_ratio:.3f}\n"
+    out.write(line)
+    line = f"MAXIMUM VALUE OF TARGET ACT/EXP RATIO = {max_ratio:.3f}\n"
+    out.write(line)
     # return RMSE of ACT-EXP targets
     return np.sqrt(np.mean(np.square(act_minus_exp)))
 
