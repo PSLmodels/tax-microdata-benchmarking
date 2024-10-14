@@ -41,8 +41,7 @@ DUMP_ALL_TARGET_DEVIATIONS = False  # set to True only for diagnostic work
 
 # default regularization parameters:
 DELTA_INIT_VALUE = 1.0e-9
-DELTA_MAX_LOOPS = 5
-DELTA_LOOP_DECREMENT = DELTA_INIT_VALUE / (DELTA_MAX_LOOPS - 1)
+DELTA_MAX_LOOPS = 1
 
 # default optimization parameters:
 OPTIMIZE_FTOL = 1e-9
@@ -472,6 +471,8 @@ def create_area_weights_file(
             "target_ratio_tolerance",
             "iprint",
             "dump_all_target_deviations",
+            "delta_init_value",
+            "delta_max_loops",
         ]
         if len(PARAMS) > len(exp_params):
             nump = len(exp_params)
@@ -532,11 +533,21 @@ def create_area_weights_file(
     A_dense = (target_matrix * wght_us[:, np.newaxis]).T
     A = BCOO.from_scipy_sparse(csr_matrix(A_dense))  # A is JAX sparse matrix
     b = target_array
+    delta = PARAMS.get("delta_init_values", DELTA_INIT_VALUE)
+    max_loop = PARAMS.get("delta_max_loops", DELTA_MAX_LOOPS)
+    if max_loop > 1:
+        delta_loop_decrement = delta / (max_loop - 1)
+    else:
+        delta_loop_decrement = delta
     out.write(
-        "OPTIMIZE WEIGHT RATIOS IN A REGULARIZATION LOOP\n"
-        f"  where REGULARIZATION DELTA starts at {DELTA_INIT_VALUE:e}\n"
-        f"  and where target_matrix.shape= {target_matrix.shape}\n"
+        "OPTIMIZE WEIGHT RATIOS POSSIBLY IN A REGULARIZATION LOOP\n"
+        f"  where initial REGULARIZATION DELTA value is {delta:e}\n"
     )
+    if max_loop > 1:
+        out.write(f"  and there are at most {max_loop} REGULARIZATION LOOPS\n")
+    else:
+        out.write("  and there is only one REGULARIZATION LOOP\n")
+    out.write(f"  and where target_matrix.shape= {target_matrix.shape}\n")
     # ... specify possibly customized value of iprint
     if write_log:
         iprint = OPTIMIZE_IPRINT
@@ -546,7 +557,7 @@ def create_area_weights_file(
     loop = 1
     delta = DELTA_INIT_VALUE
     wght0 = np.ones(num_weights)
-    while loop <= DELTA_MAX_LOOPS:
+    while loop <= max_loop:
         time0 = time.time()
         res = minimize(
             fun=JIT_FVAL_AND_GRAD,  # objective function and its gradient
@@ -581,7 +592,7 @@ def create_area_weights_file(
         out.write(minfo)
         # prepare for next regularization delta loop
         loop += 1
-        delta -= DELTA_LOOP_DECREMENT
+        delta -= delta_loop_decrement
         if delta < 1e-20:
             delta = 0.0
     # ... show regularization/optimization results
