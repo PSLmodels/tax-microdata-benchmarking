@@ -202,9 +202,12 @@ Prepare the Census population data.
 cdpop <- read_csv(fs::path(CDINTERMEDIATE, "cdpop1year.csv"))
 glimpse(cdpop)
 
-cdpop_insert <- cdpop |> 
+cdpop1 <- cdpop |> 
   select(STATEFIPS, STATE, CONG_DISTRICT, target=pop2021) |> 
-  mutate(AGI_STUB = 0,
+  mutate(vname="XTOT",
+         basevname="XTOT",
+         description = "CD population in 2021 per Census ACS",
+         AGI_STUB = 0,
          agirange = "Total",
          agilo = -9e99,
          agihi = 9e99,
@@ -214,16 +217,20 @@ cdpop_insert <- cdpop |>
   
 # how well does cdpop merge against the soi data?
 soistubs <- cdlong4 |> 
-  select(STATEFIPS, STATE, CONG_DISTRICT) |> 
+  select(STATEFIPS, STATE, CONG_DISTRICT, rectype, ndist) |> 
   distinct()
 
 fmatch <- soistubs |> 
-  left_join(cdpop_insert,
+  left_join(cdpop1,
             by = join_by(STATEFIPS, STATE, CONG_DISTRICT))
 
 fmatch |> filter(is.na(target)) # good, we matched on all CDs
 
-      # statecd = paste0(STATE, CONG_DISTRICT),
+# put rectype and ndist on the cdpop file
+cdpop2 <- cdpop1 |> 
+  left_join(fmatch |> 
+              select(STATE, CONG_DISTRICT, rectype, ndist),
+            by = join_by(STATE, CONG_DISTRICT))# statecd = paste0(STATE, CONG_DISTRICT),
 
 rm(soistubs, fmatch)
 
@@ -231,6 +238,32 @@ rm(soistubs, fmatch)
 
 
 ```{r}
+#| label: create-cdbasefile
+
+cdbasefile <- bind_rows(cdlong4 |> 
+                          rename(target=value) |> 
+                          mutate(src="soi"),
+                        cdpop2 |> mutate(src="census")) |> 
+  mutate(statecd = paste0(STATE, CONG_DISTRICT),
+         basevname=case_when(
+           is.na(basevname) & vname=="A00101" ~ "v00101", # special handling
+           is.na(basevname) ~ vname,
+           .default = basevname)) |> # THINK ABOUT THIS CAREFULLY
+  select(src, rectype, stabbr=STATE, cd=CONG_DISTRICT, statecd,
+         agistub=AGI_STUB, agilo, agihi, basevname, scope, fstatus, count, target,
+         vname, description, agirange) |> 
+  arrange(statecd, src, scope, fstatus, basevname, count, agistub)
+  
+glimpse(cdbasefile)
+summary(cdbasefile)
+skim(cdbasefile)
+
+cdbasefile |> count(basevname)
+
+cdbasefile |> filter(statecd=="WY00", agistub==0, basevname=="v00100")
+cdbasefile |> filter(statecd=="WY00", agistub==0, basevname=="v00101")
+
+write_csv(cdbasefile, fs::path(CDINTERMEDIATE, "cdbasefile.csv"))
 
 ```
 
