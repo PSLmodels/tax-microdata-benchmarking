@@ -77,10 +77,9 @@ source(here::here("R", "constants.R"))
 ## Get needed data
 
 ```{r}
-#| label: get-data
+#| label: get-soi-based-data
 
 cdlong <- read_csv(fs::path(CDINTERMEDIATE, "cddata_long_clean.csv"))
-cdpop <- read_csv(fs::path(CDINTERMEDIATE, "cdpop1year.csv"))
 
 ```
 
@@ -89,7 +88,7 @@ cdpop <- read_csv(fs::path(CDINTERMEDIATE, "cdpop1year.csv"))
 
 -   Drop non-CD records.
 -   Drop variables we would never want.
--   Construct fstatus 0 records and records with counts byt filing status.
+-   Construct fstatus 0 records and records with counts by filing status.
 
 ### Drop non-CD records and variables we won't want
 
@@ -156,7 +155,6 @@ temp <- cdlong3 |>
 
 cdlong4 <- cdlong3 |> 
     mutate(
-      statecd = paste0(STATE, CONG_DISTRICT),
       fstatus = case_when(
         vname == "MARS1" ~ 1,
         vname == "MARS2" ~ 2,
@@ -182,6 +180,48 @@ count(cdlong4, scope)
 
 ```
 
+### Add Census population records to data
+
+Prepare the Census population data.
+
+```{r}
+#| label: prepare-census-pop
+
+# -   **varname**: XTOT
+# -   **count**: 0
+# -   **scope**: 0
+# -   **agilo**: must be \< -8e99
+# -   **agihi**: must be \> 8e99
+# -   **fstatus**: 0
+# -   **target**: area population
+
+cdpop <- read_csv(fs::path(CDINTERMEDIATE, "cdpop1year.csv"))
+glimpse(cdpop)
+
+cdpop_insert <- cdpop |> 
+  select(STATEFIPS, STATE, CONG_DISTRICT, target=pop2021) |> 
+  mutate(AGI_STUB = 0,
+         agirange = "Total",
+         agilo = -9e99,
+         agihi = 9e99,
+         count = 0,
+         scope = 0, 
+         fstatus = 0)
+  
+# how well does cdpop merge against the soi data?
+soistubs <- cdlong4 |> 
+  select(STATEFIPS, STATE, CONG_DISTRICT) |> 
+  distinct()
+
+fmatch <- soistubs |> 
+  left_join(cdpop_insert,
+            by = join_by(STATEFIPS, STATE, CONG_DISTRICT))
+
+fmatch |> filter(is.na(target)) # good, we matched on all CDs
+
+      # statecd = paste0(STATE, CONG_DISTRICT),
+
+```
 
 
 
