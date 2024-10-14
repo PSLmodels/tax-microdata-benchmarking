@@ -26,4 +26,6 @@ Note that each qmd file has its own setup section in which it loads packages and
 
 -   We have an issue with AGI: for Congressional Districts IRS does NOT report the number of returns with AGI. They report two variables that should be close in concept: N1 (Number of returns), and N02650 (Number of returns with total income). For all CDs in the U.S. N1 was 157,375,370 in 2021 and N02650 was 155,283,590. Since N1 is larger and is probably a better indicator of total number of filers, we'll use that as the number-of-returns counterpart to AGI (c00100). We address this late in the process because for most of the data development we try to keep the data faithful to what IRS reports and because the solution chosen here may be suboptimal and we may want to change it later.
 
+-   File sizes, GitHub limits, and file types (e.g., binary instead of csv). To discuss.
+
 
