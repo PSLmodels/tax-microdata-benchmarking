@@ -65,7 +65,7 @@ count(mapped, varname, vname)
 # e00300,     0,    1,-9e99, 9e99,      0,  20e9
 
 # define extracts we want
-statecds <- "ny21"
+statecds <- "NY21"
 
 extracted <- mapped |> 
   filter(statecd %in% statecds) |> 
