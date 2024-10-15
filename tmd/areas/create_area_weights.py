@@ -41,8 +41,7 @@ DUMP_ALL_TARGET_DEVIATIONS = False  # set to True only for diagnostic work
 
 # default regularization parameters:
 DELTA_INIT_VALUE = 1.0e-9
-DELTA_MAX_LOOPS = 5
-DELTA_LOOP_DECREMENT = DELTA_INIT_VALUE / (DELTA_MAX_LOOPS - 1)
+DELTA_MAX_LOOPS = 1
 
 # default optimization parameters:
 OPTIMIZE_FTOL = 1e-9
@@ -235,7 +234,7 @@ def prepared_data(area: str, vardf: pd.DataFrame):
         if row.count == 0:
             unmasked_varray = vardf[row.varname].astype(float)
         else:
-            unmasked_varray = (vardf[row.varname] > 0).astype(float)
+            unmasked_varray = np.ones(numobs, dtype=float)
         mask = np.ones(numobs, dtype=int)
         assert (
             row.scope >= 0 and row.scope <= 2
@@ -293,11 +292,14 @@ def target_rmse(wght, target_matrix, target_array, out, delta=None):
     act = np.dot(wght, target_matrix)
     act_minus_exp = act - target_array
     ratio = act / target_array
-    if DUMP_ALL_TARGET_DEVIATIONS:
+    min_ratio = np.min(ratio)
+    max_ratio = np.max(ratio)
+    dump = PARAMS.get("dump_all_target_deviations", DUMP_ALL_TARGET_DEVIATIONS)
+    if dump:
         for tnum, ratio_ in enumerate(ratio):
             out.write(
                 f"TARGET{(tnum + 1):03d}:ACT-EXP,ACT/EXP= "
-                f"{act_minus_exp[tnum]:16.9e}, {ratio_:.3f}/n"
+                f"{act_minus_exp[tnum]:16.9e}, {ratio_:.3f}\n"
             )
     # show distribution of target ratios
     tol = PARAMS.get("target_ratio_tolerance", TARGET_RATIO_TOLERANCE)
@@ -342,6 +344,11 @@ def target_rmse(wght, target_matrix, target_array, out, delta=None):
         out.write(line)
         if cum == tot:
             break
+    # write minimum and maximum ratio values
+    line = f"MINIMUM VALUE OF TARGET ACT/EXP RATIO = {min_ratio:.3f}\n"
+    out.write(line)
+    line = f"MAXIMUM VALUE OF TARGET ACT/EXP RATIO = {max_ratio:.3f}\n"
+    out.write(line)
     # return RMSE of ACT-EXP targets
     return np.sqrt(np.mean(np.square(act_minus_exp)))
 
@@ -411,8 +418,10 @@ def weight_ratio_distribution(ratio, delta, out):
         out.write(line)
         if cum == tot:
             break
-    ssqdev = np.sum(np.square(ratio - 1.0))
-    out.write(f"SUM OF SQUARED AREA/US WEIGHT RATIO DEVIATIONS= {ssqdev:e}\n")
+    # write RMSE of area/us weight ratio deviations from one
+    rmse = np.sqrt(np.mean(np.square(ratio - 1.0)))
+    line = f"RMSE OF AREA/US WEIGHT RATIO DEVIATIONS FROM ONE = {rmse:e}\n"
+    out.write(line)
 
 
 # -- High-level logic of the script:
@@ -461,6 +470,9 @@ def create_area_weights_file(
         exp_params = [
             "target_ratio_tolerance",
             "iprint",
+            "dump_all_target_deviations",
+            "delta_init_value",
+            "delta_max_loops",
         ]
         if len(PARAMS) > len(exp_params):
             nump = len(exp_params)
@@ -521,11 +533,21 @@ def create_area_weights_file(
     A_dense = (target_matrix * wght_us[:, np.newaxis]).T
     A = BCOO.from_scipy_sparse(csr_matrix(A_dense))  # A is JAX sparse matrix
     b = target_array
+    delta = PARAMS.get("delta_init_values", DELTA_INIT_VALUE)
+    max_loop = PARAMS.get("delta_max_loops", DELTA_MAX_LOOPS)
+    if max_loop > 1:
+        delta_loop_decrement = delta / (max_loop - 1)
+    else:
+        delta_loop_decrement = delta
     out.write(
-        "OPTIMIZE WEIGHT RATIOS IN A REGULARIZATION LOOP\n"
-        f"  where REGULARIZATION DELTA starts at {DELTA_INIT_VALUE:e}\n"
-        f"  and where target_matrix.shape= {target_matrix.shape}\n"
+        "OPTIMIZE WEIGHT RATIOS POSSIBLY IN A REGULARIZATION LOOP\n"
+        f"  where initial REGULARIZATION DELTA value is {delta:e}\n"
     )
+    if max_loop > 1:
+        out.write(f"  and there are at most {max_loop} REGULARIZATION LOOPS\n")
+    else:
+        out.write("  and there is only one REGULARIZATION LOOP\n")
+    out.write(f"  and where target_matrix.shape= {target_matrix.shape}\n")
     # ... specify possibly customized value of iprint
     if write_log:
         iprint = OPTIMIZE_IPRINT
@@ -535,7 +557,7 @@ def create_area_weights_file(
     loop = 1
     delta = DELTA_INIT_VALUE
     wght0 = np.ones(num_weights)
-    while loop <= DELTA_MAX_LOOPS:
+    while loop <= max_loop:
         time0 = time.time()
         res = minimize(
             fun=JIT_FVAL_AND_GRAD,  # objective function and its gradient
@@ -570,7 +592,7 @@ def create_area_weights_file(
         out.write(minfo)
         # prepare for next regularization delta loop
         loop += 1
-        delta -= DELTA_LOOP_DECREMENT
+        delta -= delta_loop_decrement
         if delta < 1e-20:
             delta = 0.0
     # ... show regularization/optimization results
