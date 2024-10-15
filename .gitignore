@@ -16,3 +16,5 @@ tmd/areas/weights/*.log
 .Rproj.user
 
 tmd/areas/cache_agi.npy
+
+tmd/areas/targets/
