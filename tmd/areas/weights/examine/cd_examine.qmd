@@ -4,7 +4,7 @@ editor_options:
  chunk_output_type: console
 ---
 
-# Map tax calculator vars to soi vars and extract targets
+# Read data and weights and examine them
 
 
 ```{r}
@@ -14,3 +14,11 @@ source(here::here("R", "libraries.R"))
 source(here::here("R", "constants.R"))
 
 ```
+
+
+```{r}
+
+
+
+```
+
