@@ -1,4 +1,8 @@
 
+# \\wsl.localhost\Ubuntu\home\donboyd5\Documents\python_projects\tax-microdata-benchmarking\tmd\storage\output
+TMDDIR <- here::here("..", "..", "..", "storage", "output")
+# list.files(TMDDIR)
+
 TARGETSDIR <- here::here("..", "..", "targets")
 WEIGHTSDIR <- here::here("..")
 # list.files(TARGETSDIR)
