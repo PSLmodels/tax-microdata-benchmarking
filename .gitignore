@@ -18,3 +18,5 @@ tmd/areas/weights/*.log
 tmd/areas/cache_agi.npy
 
 tmd/areas/targets/
+
+tmd/areas/weights/examine/.Rhistory
