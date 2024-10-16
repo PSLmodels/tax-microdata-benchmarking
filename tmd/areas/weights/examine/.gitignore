@@ -1,0 +1,10 @@
+
+# folders to ignore
+/.quarto/
+.Rproj.user
+_examine/
+_freeze/
+
+# files to ignore
+.Rhistory
+
