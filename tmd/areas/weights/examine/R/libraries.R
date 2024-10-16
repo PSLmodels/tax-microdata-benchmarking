@@ -19,6 +19,7 @@ library(sf)
 library(tidycensus)
 library(tigris)
 options(tigris_use_cache = TRUE)
+library(vroom)
 
 
 # possible libraries ------------------------------------------------------
