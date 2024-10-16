@@ -17,8 +17,31 @@ source(here::here("R", "constants.R"))
 
 
 ```{r}
+#| label: get-tmd-2021
 
+
+fpath <-  fs::path(TMDDIR, "tmd_2021.csv")
+tmd2021 <- read_csv(fpath)
+
+# con <- unz(zpath, "21incd.csv")
+# data <- read_csv(con)
+
+```
+
+
+```{r}
+
+library(vroom)
+wtfiles <- dir_ls(WEIGHTSDIR, glob="*.gz") #  |> path_file()
+df <- vroom(wtfiles, id="src") |> 
+  mutate(src = str_sub(path_file(src), 1, 4))
+glimpse(df)
+count(df, src)
+
+phase4_statecds <- c("AK00", "DE00", "ID01", "ID02", "ME02", "MT00", "ND00", "PA08", "SD00", "WY00")
 
 
 ```
+
+
 
