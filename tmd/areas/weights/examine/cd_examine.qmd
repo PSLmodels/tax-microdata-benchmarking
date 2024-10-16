@@ -1,0 +1,16 @@
+---
+output: html_document
+editor_options: 
+ chunk_output_type: console
+---
+
+# Map tax calculator vars to soi vars and extract targets
+
+
+```{r}
+#| label: setup
+
+source(here::here("R", "libraries.R"))
+source(here::here("R", "constants.R"))
+
+```
