@@ -36,7 +36,7 @@ TAXCALC_AGI_CACHE = AREAS_FOLDER / "cache_agi.npy"
 PARAMS = {}
 
 # default target parameters:
-TARGET_RATIO_TOLERANCE = 0.0010  # what is considered hitting the target
+TARGET_RATIO_TOLERANCE = 0.0040  # what is considered hitting the target
 DUMP_ALL_TARGET_DEVIATIONS = False  # set to True only for diagnostic work
 
 # default regularization parameters:
