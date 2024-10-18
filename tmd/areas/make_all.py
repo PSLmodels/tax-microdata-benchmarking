@@ -9,6 +9,7 @@ import sys
 import time
 from multiprocessing import Pool
 from tmd.areas.create_area_weights import (
+    valid_area,
     create_area_weights_file,
     TAXCALC_AGI_CACHE,
 )
@@ -35,7 +36,7 @@ def time_of_newest_other_dependency():
     return max_dep_time
 
 
-def to_do_areas(make_only_list=None):
+def to_do_areas():
     """
     Return list of areas that need to have a weights file created.
     """
@@ -47,7 +48,7 @@ def to_do_areas(make_only_list=None):
         tpath = AREAS_FOLDER / "targets" / f"{area}_targets.csv"
         lpath = AREAS_FOLDER / "weights" / f"{area}.log"
         if not tpath.exists():
-            print(f"removing orphan weights file {wpath.name}")
+            print(f"Removing orphan weights file {wpath.name}")
             wpath.unlink()
             lpath.unlink(missing_ok=True)
     # prepare area list of not up-to-date weights files
@@ -57,7 +58,8 @@ def to_do_areas(make_only_list=None):
     tpaths = sorted(list(tfolder.glob("*_targets.csv")))
     for tpath in tpaths:
         area = tpath.name.split("_")[0]
-        if make_only_list and area not in make_only_list:
+        if not valid_area(area):
+            print(f"Skipping invalid area name {area}")
             continue  # skip this area
         wpath = AREAS_FOLDER / "weights" / f"{area}_tmd_weights.csv.gz"
         if wpath.exists():
@@ -94,13 +96,13 @@ def create_area_weights(area: str):
 # --- High-level logic of the script
 
 
-def make_all_areas(num_workers, make_only_list=None):
+def make_all_areas(num_workers):
     """
     Call create_area_weights(area) for each out-of-date or non-existent
     area weights file for which there is an area targets file.
     """
     TAXCALC_AGI_CACHE.unlink(missing_ok=True)
-    todo_areas = to_do_areas(make_only_list=make_only_list)
+    todo_areas = to_do_areas()
     # show processing plan
     if todo_areas:
         print("Create area weights for the following areas:")
