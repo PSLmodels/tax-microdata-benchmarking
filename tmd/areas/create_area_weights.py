@@ -199,7 +199,8 @@ def prepared_data(area: str, vardf: pd.DataFrame):
     """
     national_population = (vardf.s006 * vardf.XTOT).sum()
     numobs = len(vardf)
-    tdf = pd.read_csv(AREAS_FOLDER / "targets" / f"{area}_targets.csv")
+    targets_file = AREAS_FOLDER / "targets" / f"{area}_targets.csv"
+    tdf = pd.read_csv(targets_file, comment="#")
     tm_tuple = ()
     ta_list = []
     row_num = 1
