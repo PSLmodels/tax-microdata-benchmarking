@@ -36,7 +36,7 @@ TAXCALC_AGI_CACHE = AREAS_FOLDER / "cache_agi.npy"
 PARAMS = {}
 
 # default target parameters:
-TARGET_RATIO_TOLERANCE = 0.0010  # what is considered hitting the target
+TARGET_RATIO_TOLERANCE = 0.0040  # what is considered hitting the target
 DUMP_ALL_TARGET_DEVIATIONS = False  # set to True only for diagnostic work
 
 # default regularization parameters:
@@ -147,8 +147,8 @@ def valid_area(area: str):
         all_ok = False
     # check state congressional district number if appropriate
     if len(area) == 4:
-        # assume CDs are based on 2010 Census (that is, 117th Congress)
-        max_cdn = state_info[scode][2010]
+        # assume CDs are based on 2020 Census (that is, 118th Congress)
+        max_cdn = state_info[scode][2020]
         cdn = int(area[2:4])
         if max_cdn <= 1:
             if cdn != 0:
