@@ -21,7 +21,8 @@ book:
     - part: "IRS Congressional District data"
       chapters:
         # - cd_overall_documentation.qmd
-        - cd_examine.qmd
+        - cd_prepare_data.qmd
+        - cd_tables.qmd
 
         
 format:
