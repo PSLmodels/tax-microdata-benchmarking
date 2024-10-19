@@ -31,6 +31,62 @@ ns <- function(obj){
 
 ```
 
+## Download files from google drive
+
+```{r}
+
+library(googledrive)
+drive_auth() # authenticate
+
+```
+
+
+```{r}
+#| label: download-files
+
+# /AFPI_2024/Phase 4
+# folder_id <- "1pEdofaxeQgEeDLM8NOpo0vOGL1jT8Qa1" # AFPI folder
+folder_id <- "1Z7ZWYTbldfuQCFbpqKi4Z8FYxkbwmhnu" # Phase 4 folder
+
+files <- drive_ls(as_id(folder_id))
+files
+
+f <- function(gdfname){
+  fpath <- here::here("temp_data", gdfname)
+  print(fpath)
+  drive_download(gdfname, path = fpath, overwrite = TRUE)
+}
+# f(files$name[[1]])
+
+files |> 
+  # slice_head(n = 2) |> 
+  pull(name) |> 
+  walk(\(gdfname) f(gdfname))
+  # walk(~ drive_download(as_id(.x), overwrite = TRUE))
+
+```
+
+
+```{r}
+
+weightfiles <- dir_ls(here::here("temp_data")) |> str_subset("weights.csv.gz")
+
+targetfiles <- dir_ls(here::here("temp_data")) |> str_subset("targets.csv")
+targets1 <- vroom(targetfiles, id="src") |> 
+  mutate(src=path_file(src) |> str_sub(1, 4)) |> 
+  mutate(active=!(str_sub(varname, 1, 1) == "#"),
+         varname = ifelse(!active, 
+                          varname |> str_remove("#") |> str_trim(),
+                          varname))
+count(targets1, src)
+count(targets1, active)
+count(targets1, varname)
+count(targets1, varname, active)
+
+
+```
+
+
 ## Get and prepare tmd data and area weights
 
 ```{r}
