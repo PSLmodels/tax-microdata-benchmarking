@@ -20,3 +20,6 @@ tmd/areas/cache_agi.npy
 tmd/areas/targets/
 
 tmd/areas/weights/examine/.Rhistory
+
+# Local Netlify folder
+.netlify
