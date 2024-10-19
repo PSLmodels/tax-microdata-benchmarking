@@ -22,7 +22,7 @@ book:
       chapters:
         # - cd_overall_documentation.qmd
         - cd_prepare_data.qmd
-        - cd_tables.qmd
+        - cd_prepare_tables.qmd
 
         
 format:
