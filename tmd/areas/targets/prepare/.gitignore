@@ -1,0 +1,9 @@
+
+# folders to ignore
+/.quarto/
+_docs/
+_freeze/
+
+# files to ignore
+.Rhistory
+
