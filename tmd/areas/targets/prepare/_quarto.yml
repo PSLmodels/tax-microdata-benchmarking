@@ -4,12 +4,17 @@ project:
 
 # https://prerelease.quarto.org/  # quarto documentation at this link
 
+
+# site info:
+  # id: 4d646266-9d1f-4d69-acb4-b9a17b63a5ff
+  # url: https://tmd-area-targets.netlify.app
+
 # publishing with netlify cli:
 #  open terminal in prepare
-# quarto render && netlify deploy --prod --dir=_docs # change to _prepare??
+#  quarto render && netlify deploy --prod --dir=_docs # change to _prepare??
 
 #  quarto render # inspect to be sure it is as desired
-#  netlify deploy --prod --dir=_examine
+#  netlify deploy --prod --dir=_docs
 
 # or step by step
 #  netlify deploy # to test it, give _examine as publish directory
