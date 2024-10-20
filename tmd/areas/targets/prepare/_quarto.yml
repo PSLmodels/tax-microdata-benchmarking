@@ -27,8 +27,8 @@ execute:
   freeze: auto  # auto: during global project renders, re-render only when source changes
 
 book:
-  title: "Get IRS data for area targeting"
-  subtitle: "Create csv file"
+  title: "Develop targets for subnational areas"
+  subtitle: "Create csv target files for use by area targeting routies"
   # author: "Don Boyd"
   date: today
   date-format: long
