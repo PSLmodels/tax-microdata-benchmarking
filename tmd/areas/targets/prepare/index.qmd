@@ -38,3 +38,15 @@ Used to create the row 0 "XTOT" (population) target as a way to develop an initi
 
 -   2021 was a strange year for population data because of Covid. It might be better to use the 5-year ACS ending in 2021 for more stable and representative data.
 
+### Address SALT deductions
+
+Two possible approaches:
+
+-   Calculate total relevant 2021 deductions in the TMD 2021 file ("e" variables), by AGI range. Allocate that to CDs based on their share of corresponding SOI amounts among all CDs. Easy, straightforward, does not require changes to optimization cache variables.
+
+-   Add TMD 2021 "c" variables to the optimization cache. Map these variables to SOI variables based on their share of corresponding SOI amounts among all CDs. Requires modifying the cache in create_area_weights.py.
+
+### Estimate targets for 118th Congress district boundaries weighting by population weights
+
+-   Use population crosswalk from Missouri Census Data Center to allocate 117th Congress district targets to 118th Congress districts.
+
