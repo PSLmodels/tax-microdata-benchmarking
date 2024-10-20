@@ -1,7 +1,6 @@
 
 # folders to ignore
 /.quarto/
-.Rproj.user
 _examine/
 _freeze/
 temp_data/
