@@ -11,3 +11,5 @@ intermediate/
 # files to ignore
 .Rhistory
 
+
+/.quarto/
