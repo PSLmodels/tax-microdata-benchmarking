@@ -102,7 +102,7 @@ Set eval: to true for these chunks to recreate the data file.
 
 ```{r}
 #| label: parse-cddata
-#| eval: false
+#| eval: true
 
 # read the csv file from the zip archive that contains it
 zpath <-  fs::path(CDRAW, fs::path_file(CDZIPURL))
@@ -117,7 +117,7 @@ count(data, CONG_DISTRICT) # max is 53
 
 ```{r}
 #| label: clean-save-cddata-wide
-#| eval: false
+#| eval: true
 
 # cleaning and reshaping:
 #  - determine record type
@@ -164,10 +164,10 @@ rm(data, data2, cdnums)
 
 ```
 
-## Create long data file
+## Create long SOI data file
 
 ```{r}
-#| label: create-save-cddata-long
+#| label: create-save-soi-cddata-long
 #| eval: false
 
 cdwide <- read_csv(fs::path(CDINTERMEDIATE, "cddata_wide_clean.csv"))
@@ -192,16 +192,5 @@ count(dlong1, vname)
 count(dlong1, vtype)
 
 write_csv(dlong1, fs::path(CDINTERMEDIATE, "cddata_long_clean.csv"))
-
-
-# create a cleaned, long, data frame
-# idvars <- c("stfips", "stabbr", "cd", "agistub")
-# dlong <- data |> 
-#   rename_with(tolower) |> 
-#   rename(stfips = "statefips",
-#          stabbr = "state",
-#          cd = "cong_district",
-#          agistub = "agi_stub") |> 
-#   pivot_longer(cols = -all_of(idvars))
 
 ```
