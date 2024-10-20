@@ -40,7 +40,7 @@ book:
         - cd_get_census_population.qmd
         - cd_download_soi_data.qmd
         - cd_construct_variable_documentation.qmd
-        - cd_construct_data_file.qmd
+        - cd_construct_long_soi_data_file.qmd
         - cd_create_basefile_for_cd_target_files.qmd
         - cd_map_tcvars_and_extract_target_files.qmd
         
