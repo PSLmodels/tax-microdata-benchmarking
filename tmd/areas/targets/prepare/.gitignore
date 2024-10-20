@@ -13,3 +13,6 @@ intermediate/
 
 
 /.quarto/
+
+# Local Netlify folder
+.netlify
