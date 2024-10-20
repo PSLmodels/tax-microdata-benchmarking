@@ -1,0 +1,13 @@
+
+tmd/areas/cache_agi.npy
+
+# folders to ignore
+.quarto/
+.Rproj.user/
+_docs/
+_freeze/
+intermediate/
+
+# files to ignore
+.Rhistory
+
