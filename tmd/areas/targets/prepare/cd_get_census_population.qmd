@@ -50,14 +50,14 @@ write_csv(cdpop1year, fs::path(CDRAW, "cdpop1year_acs.csv"))
 ```{r}
 #| label: cdpop-clean
 
-cdpop1year <- read_csv(fs::path(CDINTERMEDIATE, "cdpop1year_acs.csv"))
-cdpop5year <- read_csv(fs::path(CDINTERMEDIATE, "cdpop5year_acs.csv"))
+cdpop1year <- read_csv(fs::path(CDRAW, "cdpop1year_acs.csv"))
+cdpop5year <- read_csv(fs::path(CDRAW, "cdpop5year_acs.csv"))
 
 cdpop1year |> summarise(estimate=sum(estimate)) # 335157329
 cdpop5year |> summarise(estimate=sum(estimate)) # 333036755
 
 
-stcodes <- states() |> 
+stcodes <- tigris::states() |> 
   as.data.frame() |> 
   select(STATEFIPS=STATEFP, STATE=STUSPS)
 
