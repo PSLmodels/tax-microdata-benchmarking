@@ -35,12 +35,18 @@ cdbase <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile.csv"))
 soivars <- count(cdbase, basevname)
 soivars$basevname
 
+# the MARS mappings let us get counts by filing status by agi range
 vmap <- read_csv(file="
 tcvar, soivar
 XTOT, XTOT
+c00100, MARS1
+c00100, MARS2
+c00100, MARS4
 c00100, v00100
 e00200, v00200
-300300, v00300
+e00300, v00300
+e01700, v01700
+e26270, v26270
 ")
 
 ```
@@ -65,18 +71,43 @@ count(mapped, varname, vname)
 # e00300,     0,    1,-9e99, 9e99,      0,  20e9
 
 # define extracts we want
-statecds <- "NY21"
+
+phase4cds <- c("AK00", "DE00", "ID01", "ID02", "ME02", "MT00", "ND00", "PA08", "SD00", "WY00")
+# statecds <- "NY21"
+
+statecds <- phase4cds
 
 extracted <- mapped |> 
   filter(statecd %in% statecds) |> 
   arrange(statecd, src, scope, fstatus, basevname, count, agistub) # to be safe
 
-targets <- extracted |> 
-  filter(varname %in% c("XTOT", "c00100")) |> 
-  filter(varname == "XTOT" | (agistub != 0)) |> 
-  select(varname, count, scope, agilo, agihi, fstatus, target)
+count(extracted, statecd)
+count(extracted, basevname, varname)
 
-write_csv(targets, fs::path(CDFINAL, "ny21_targets.csv"))
+targets <- extracted |> 
+  filter(varname %in% c("XTOT", "c00100", "e00200", "e26270")) |> 
+  filter(varname == "XTOT" | (agistub != 0)) |> 
+  filter(!(count == 1 & (varname != "c00100"))) |> 
+  select(statecd, varname, count, scope, agilo, agihi, fstatus, target)
+
+check <- targets |> 
+  filter(statecd == "AK00")
+
+f <- function(data, group){
+  cd <- group$statecd |> 
+    str_to_lower()
+  fname <- paste0(cd, "_targets.csv")
+  fpath <- fs::path(CDFINAL, fname)
+  print(fpath)
+  write_csv(data, fpath)
+}
+
+targets |> 
+  group_by(statecd) |> 
+  group_walk(~f(.x, .y))
+
+
+# write_csv(targets, fs::path(CDFINAL, "ny21_targets.csv"))
 
 
 ```
