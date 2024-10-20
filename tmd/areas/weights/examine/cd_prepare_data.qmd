@@ -43,6 +43,7 @@ drive_auth() # authenticate
 
 ```{r}
 #| label: download-files
+#| eval: false
 
 # /AFPI_2024/Phase 4
 # folder_id <- "1pEdofaxeQgEeDLM8NOpo0vOGL1jT8Qa1" # AFPI folder
@@ -59,17 +60,28 @@ f <- function(gdfname){
 # f(files$name[[1]])
 
 files |> 
-  # slice_head(n = 2) |> 
   pull(name) |> 
   walk(\(gdfname) f(gdfname))
   # walk(~ drive_download(as_id(.x), overwrite = TRUE))
 
 ```
 
+## Prepare target files
+
+Get all targets prepared
 
 ```{r}
+#| label: targets-all
 
-weightfiles <- dir_ls(here::here("temp_data")) |> str_subset("weights.csv.gz")
+```
+
+
+Get targets used in the optimization
+
+```{r}
+#| label: targets-used
+
+# weightfiles <- dir_ls(here::here("temp_data")) |> str_subset("weights.csv.gz")
 
 targetfiles <- dir_ls(here::here("temp_data")) |> str_subset("targets.csv")
 targets1 <- vroom(targetfiles, id="src") |> 
@@ -78,10 +90,14 @@ targets1 <- vroom(targetfiles, id="src") |>
          varname = ifelse(!active, 
                           varname |> str_remove("#") |> str_trim(),
                           varname))
+
+glimpse(targets1)
 count(targets1, src)
 count(targets1, active)
 count(targets1, varname)
 count(targets1, varname, active)
+
+targets1 |> filter(src == "ak00")
 
 
 ```
