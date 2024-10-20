@@ -177,7 +177,7 @@ cdlong4 <- cdlong3 |>
       )
   
 summary(cdlong4)
-skim(cdlong4)
+# skim(cdlong4)
 count(cdlong4, fstatus)
 count(cdlong4, count, vtype)
 count(cdlong4, scope)
