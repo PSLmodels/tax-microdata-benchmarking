@@ -73,6 +73,15 @@ Get all targets prepared
 ```{r}
 #| label: targets-all
 
+# ~/Documents/python_projects/tax-microdata-benchmarking/tmd/areas/weights/examine   # project dir
+# ~/Documents/python_projects/tax-microdata-benchmarking/tmd/areas/targets/prepare/cds/intermediate  # cdbasefile
+HERE <- here::here()
+CDTARGETSDIR <- fs::path(HERE, "..", "..", "targets", "prepare", "cds", "intermediate")
+# list.files(CDTARGETSDIR)
+
+targets_data <- read_csv(fs::path(CDTARGETSDIR, "cdbasefile.csv"))
+glimpse(targets_data)
+
 ```
 
 
@@ -81,24 +90,22 @@ Get targets used in the optimization
 ```{r}
 #| label: targets-used
 
-# weightfiles <- dir_ls(here::here("temp_data")) |> str_subset("weights.csv.gz")
-
 targetfiles <- dir_ls(here::here("temp_data")) |> str_subset("targets.csv")
-targets1 <- vroom(targetfiles, id="src") |> 
+
+targets_used <- vroom(targetfiles, id="src") |> 
   mutate(src=path_file(src) |> str_sub(1, 4)) |> 
   mutate(active=!(str_sub(varname, 1, 1) == "#"),
          varname = ifelse(!active, 
                           varname |> str_remove("#") |> str_trim(),
                           varname))
 
-glimpse(targets1)
-count(targets1, src)
-count(targets1, active)
-count(targets1, varname)
-count(targets1, varname, active)
+glimpse(targets_used)
+count(targets_used, src)
+count(targets_used, active)
+count(targets_used, varname)
+count(targets_used, varname, active)
 
-targets1 |> filter(src == "ak00")
-
+targets_used |> filter(src == "ak00")
 
 ```
 
@@ -128,6 +135,7 @@ sum(uswts$WT2021) # 184,024,656.95 # must divide by 100
 #| label: prep-weights
 #| output: false
 
+# weightfiles <- dir_ls(here::here("temp_data")) |> str_subset("weights.csv.gz")
 wtfiles <- dir_ls(WEIGHTSDIR, glob="*.gz") #  |> path_file()
 
 df <- read_csv(wtfiles[1])
