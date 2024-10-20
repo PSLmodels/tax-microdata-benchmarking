@@ -24,9 +24,9 @@ source(here::here("R", "constants.R"))
 
 > AREA prefix for state areas are the two lower-case character postal codes. AREA prefix for congressional districts are the state prefix followed by two digits (with a leading zero) identifying the district. There are no district files for states with only one congressional district.
 
-Here is an example targets file:
+Here is an example of the first few rows of a targets file:
 
-![](Clipboard%20Image.jpg)
+![](images/Image 2024-10-20 at 5.23.32 PM.jpeg)
 
 ## Create AGI stub information
 
@@ -93,8 +93,6 @@ agibins |>
              rows=3:9,
              # scale=1e-9,
              decimals=0)
-
-
 
 ```
 
@@ -207,4 +205,3 @@ write_csv(dlong1, fs::path(CDINTERMEDIATE, "cddata_long_clean.csv"))
 #   pivot_longer(cols = -all_of(idvars))
 
 ```
-
