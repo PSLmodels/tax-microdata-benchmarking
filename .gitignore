@@ -13,13 +13,3 @@ tmd/areas/weights/*.log
 **demographics_2015.csv
 **puf_2015.csv
 *.DS_STORE
-.Rproj.user
-
-tmd/areas/cache_agi.npy
-
-tmd/areas/targets/
-
-tmd/areas/weights/examine/.Rhistory
-
-# Local Netlify folder
-.netlify
