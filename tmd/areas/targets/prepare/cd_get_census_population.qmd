@@ -33,7 +33,7 @@ cdpop5year <- get_acs(
   year = 2021,
   survey = "acs5"  # Use 5-year estimates for better coverage, especially in smaller areas
 )
-write_csv(cdpop5year, fs::path(CDINTERMEDIATE, "cdpop5year_acs.csv"))
+write_csv(cdpop5year, fs::path(CDRAW, "cdpop5year_acs.csv"))
 
 cdpop1year <- get_acs(
   geography = "congressional district",
@@ -41,7 +41,7 @@ cdpop1year <- get_acs(
   year = 2021,
   survey = "acs1"  # Use 5-year estimates for better coverage, especially in smaller areas
 )
-write_csv(cdpop1year, fs::path(CDINTERMEDIATE, "cdpop1year_acs.csv"))
+write_csv(cdpop1year, fs::path(CDRAW, "cdpop1year_acs.csv"))
 
 ```
 
