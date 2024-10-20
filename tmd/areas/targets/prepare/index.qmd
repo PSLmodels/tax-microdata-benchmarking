@@ -50,3 +50,7 @@ Two possible approaches:
 
 -   Use population crosswalk from Missouri Census Data Center to allocate 117th Congress district targets to 118th Congress districts.
 
+### Add instructions for creating web pages
+
+-   In prepare-targets and examine-results branches
+
