@@ -169,9 +169,14 @@ fstatussums <- details3 |>
             .by=c(area, scope, varname, vartype, irange)) |> 
   mutate(fstatus=0)
 
-details4 <- bind_rows(details3, fstatussums)
+details4 <- bind_rows(details3, fstatussums) |> 
+  mutate(agistub=as.integer(irange) - 1)
 glimpse(details4)
 count(details4, fstatus)
+count(details4, agistub, irange)
+
+saveRDS(details4, here::here("temp_data", "area_details.rds"))
+rm(tmd_long, tmd_long1, tmd2, tmd3, tmd4, details, details2, details3, details4)
 
 ```
 
@@ -182,12 +187,74 @@ count(details4, fstatus)
 #| label: prepdata-targets-for-tables
 #| output: false
 
+agibins <- read_delim(
+delim=";",
+trim_ws = TRUE,
+file="agistub; agirange; agilo; agihi
+0; Total; -9e99; 9e99
+1; Under $1; -9e99; 1
+2; $1 under $10,000; 1; 10e3
+3; $10,000 under $25,000; 10e3; 25e3
+4; $25,000 under $50,000; 25e3; 50e3
+5; $50,000 under $75,000; 50e3; 75e3
+6; $75,000 under $100,000; 75e3; 100e3
+7; $100,000 under $200,000; 100e3; 200e3
+8; $200,000 under $500,000; 200e3; 500e3
+9; $500,000 or more; 500e3; 9e99
+")
+
+# area  scope fstatus varname vartype irange              wtdvalue
+
 targets_used
 
 targ1 <- targets_used |> 
-  select()
+  rename(area=src) |> 
+  mutate(vartype=ifelse(count==0, "amount", "count")) |> 
+  select(-count) |> 
+  left_join(agibins,
+            by = join_by(agilo, agihi))
+count(targ1, agistub, agirange, agilo, agihi)
 
+targ2 <- targ1 |> 
+  select(area, scope, fstatus, varname, vartype, active, agistub, agirange, target)
+glimpse(targ2)
 
 ```
+
+
+Comparison file
+
+```{r}
+
+area_details <- readRDS(here::here("temp_data", "area_details.rds"))
+
+compfile <- targ2 |> 
+  left_join(area_details,
+            by = join_by(area, scope, fstatus, varname, vartype, agistub)) |> 
+  select(-irange) |> 
+  mutate(diff = wtdvalue - target,
+         pdiff = diff / target)
+
+summary(compfile)
+summary(compfile |> filter(active))
+
+```
+
+
+```{r}
+
+vdoc |>
+  select(-type) |> 
+  DT::datatable(rownames = FALSE,
+                options = list(order = list(0, "asc"), # use 1st column (0) for sorting
+                               scrollX = TRUE, scrollY = TRUE, paging = TRUE, pageLength = 20,
+                               autoWidth = TRUE),
+                filter="top",
+                escape = FALSE)
+
+```
+
+
+
 
 
