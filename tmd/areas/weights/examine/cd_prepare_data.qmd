@@ -33,7 +33,11 @@ ns <- function(obj){
 
 ## Download files from google drive
 
+Only do this when target files and results have changed. Otherwise, necessary data should be in the temp_data folder.
+
 ```{r}
+#| label: hookup-googledrive
+#| eval: false
 
 library(googledrive)
 drive_auth() # authenticate
@@ -71,6 +75,7 @@ Get all targets prepared
 
 ```{r}
 #| label: targets-all
+#| output: false
 
 # ~/Documents/python_projects/tax-microdata-benchmarking/tmd/areas/weights/examine   # project dir
 # ~/Documents/python_projects/tax-microdata-benchmarking/tmd/areas/targets/prepare/cds/intermediate  # cdbasefile
@@ -88,6 +93,7 @@ Get targets used in the optimization
 
 ```{r}
 #| label: targets-used
+#| output: false
 
 targetfiles <- dir_ls(here::here("temp_data")) |> str_subset("targets.csv")
 
@@ -105,6 +111,7 @@ count(targets_used, varname)
 count(targets_used, varname, active)
 
 targets_used |> filter(src == "ak00")
+targets_used |> filter(src == "de00")
 
 ```
 
@@ -176,7 +183,7 @@ icuts <- c(-Inf, 1, 10e3, 25e3, 50e3, 75e3, 100e3, 200e3, 500e3, Inf)
 
 # prep tmd
 tmd2 <- tmd2021 |> 
-  select(RECID, data_source, s006, c00100, e00200, iitax) |> 
+  select(RECID, data_source, s006, c00100, e00200, e26270, iitax) |> 
   mutate(irange=cut(c00100, icuts, right = FALSE, ordered_result = TRUE),
          irange = factor(irange, 
                          levels = levels(irange), # Ensure ordering is maintained
@@ -205,6 +212,7 @@ details <- tmd3 |>
   summarise(n=n(), wtdn = sum(weight), 
             agi=sum(weight * c00100),
             wages = sum(weight * e00200),
+            scorppartner = sum(weight * e26270),
             iitax = sum(weight * iitax),
             .by=c(irange, area)) |> 
   mutate(irange = fct_expand(irange, "total")) |> 
@@ -214,7 +222,7 @@ details <- tmd3 |>
 count(details, irange)
 
 areasums <- details |> 
-  summarise(across(c(wtdn, agi, wages, iitax),
+  summarise(across(c(wtdn, agi, wages, scorppartner, iitax),
                    \(x) sum(x)),
             .by=area) |> 
   mutate(irange="total",
@@ -335,6 +343,31 @@ tmd4 |>
 
 
 ```
+
+
+### Average S Corporation and partnership income (net)
+
+```{r}
+#| label: tables-scorppartner
+#| output: true
+
+tmd4 |> 
+  select(-n) |> 
+   mutate(across(c(agi, wages, scorppartner, iitax),
+                \(x) x / wtdn)) |> 
+  select(irange, area, value=scorppartner) |> 
+  pivot_wider(names_from = area,
+              values_from = value) |> 
+  relocate(us, .after = irange) |> 
+  gt() |> 
+  tab_header("Average S Corporation and partnership income in $, 2021 tax year",
+             subtitle = "Filers and nonfilers") |> 
+  fmt_number(columns = -irange,
+             decimals = 0)
+
+
+```
+
 
 ### Average iitax
 
