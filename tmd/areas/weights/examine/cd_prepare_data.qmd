@@ -62,7 +62,6 @@ f <- function(gdfname){
 files |> 
   pull(name) |> 
   walk(\(gdfname) f(gdfname))
-  # walk(~ drive_download(as_id(.x), overwrite = TRUE))
 
 ```
 
