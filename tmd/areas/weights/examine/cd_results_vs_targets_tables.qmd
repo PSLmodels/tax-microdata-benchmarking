@@ -44,6 +44,7 @@ Add weights and make long file
 
 ```{r}
 #| label: prepdata-microdata-for-tables
+#| eval: false
 #| output: false
 
 # ns(tmd2021)
@@ -99,6 +100,9 @@ tmd3 <- tmd2 |>
 Make long file
 
 ```{r}
+#| label: long-file
+#| eval: false
+#| output: false
 
 tmd_long1 <- tmd3 |> 
   # flip the areas
@@ -124,6 +128,9 @@ tmd_long1 <- tmd3 |>
 Summarize microdata, then construct and concatenate totals
 
 ```{r}
+#| label: summarise-save
+#| eval: false
+#| output: false
 
 details <- tmd_long1 |>
   summarise(wtdvalue = sum(wtdvalue),
@@ -205,8 +212,6 @@ file="agistub; agirange; agilo; agihi
 
 # area  scope fstatus varname vartype irange              wtdvalue
 
-targets_used
-
 targ1 <- targets_used |> 
   rename(area=src) |> 
   mutate(vartype=ifelse(count==0, "amount", "count")) |> 
@@ -225,6 +230,8 @@ glimpse(targ2)
 Comparison file
 
 ```{r}
+#| label: comp-file
+#| output: false
 
 area_details <- readRDS(here::here("temp_data", "area_details.rds"))
 
@@ -241,16 +248,51 @@ summary(compfile |> filter(active))
 ```
 
 
-```{r}
+## Show results vs. targets (TO COME)
 
-vdoc |>
-  select(-type) |> 
+Units:
+
+-   Amounts are in $ millions (varname==amount for target, wtdvalue, and diff)
+-   Counts are actual numbers
+
+scope:
+
+-   0 = total population
+-   1 = filers
+-   2 = nonfilers (none currently in the table)
+
+fstatus:
+
+-   0 = sum of all statuses
+-   1 = married joint
+-   2 = single
+-   3 = married filing separately (not targeted)
+-   4 = head of household
+
+active:
+
+-  true = item was targeted
+-  false = item was in target file but was commented out (e26270 for DE-00)
+
+
+```{r}
+#| label: show-comps
+#| eval: false
+#| column: page
+
+
+compfile |>
+  # select(-type) |> 
+  mutate(across(c(target, wtdvalue, diff), 
+                \(x) ifelse(vartype=="amount", x / 1e6, x))) |> 
   DT::datatable(rownames = FALSE,
                 options = list(order = list(0, "asc"), # use 1st column (0) for sorting
                                scrollX = TRUE, scrollY = TRUE, paging = TRUE, pageLength = 20,
                                autoWidth = TRUE),
                 filter="top",
-                escape = FALSE)
+                escape = FALSE) |>
+  formatCurrency(columns = c("target", "wtdvalue", "diff"), currency="", digits=1) |> 
+  formatPercentage(columns = c("pdiff"),  digits = 1)
 
 ```
 
