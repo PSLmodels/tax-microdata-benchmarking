@@ -1,0 +1,196 @@
+---
+output: html_document
+editor_options: 
+ chunk_output_type: console
+---
+
+# Parse the Congressional District data
+
+Clean the CD data and save.
+
+## Setup
+
+```{r}
+#| label: setup
+
+source(here::here("R", "libraries.R"))
+source(here::here("R", "constants.R"))
+
+# 334283385.27000004 national pop
+
+```
+
+## Background
+
+> AREA prefix for state areas are the two lower-case character postal codes. AREA prefix for congressional districts are the state prefix followed by two digits (with a leading zero) identifying the district. There are no district files for states with only one congressional district.
+
+Here is an example of the first few rows of a targets file:
+
+![](images/Image 2024-10-20 at 5.23.32 PM.jpeg)
+
+## Create AGI stub information
+
+```{r}
+#| label: agi-bins
+
+# example of targets file
+# varname,count,scope,agilo,agihi,fstatus,target
+# XTOT,       0,    0,-9e99, 9e99,      0,  33e6
+# e00300,     0,    1,-9e99, 9e99,      0,  20e9
+# e00900,     0,    1,-9e99, 9e99,      0,  30e9
+# e00200,     0,    1,-9e99, 9e99,      0,1000e9
+# e02000,     0,    1,-9e99, 9e99,      0,  30e9
+# e02400,     0,    1,-9e99, 9e99,      0,  60e9
+# c00100,     0,    1,-9e99, 9e99,      0,1200e9
+# XTOT,       1,    1,  1e6, 9e99,      0,  10e3
+# e00400,     0,    1,-9e99, 9e99,      0,   2e9
+# e00600,     0,    1,-9e99, 9e99,      0,   8e9
+# e00650,     0,    1,-9e99, 9e99,      0,   7e9
+# e01700,     0,    1,-9e99, 9e99,      0,  12e9
+# e02300,     0,    1,-9e99, 9e99,      0,  10e9
+# e17500,     0,    1,-9e99, 9e99,      0,   5e9
+# e18400,     0,    1,-9e99, 9e99,      0,  10e9
+# e18500,     0,    1,-9e99, 9e99,      0,  10e9
+
+# in_bin = (vardf.c00100 >= row.agilo) & (vardf.c00100 < row.agihi)
+
+# 0 = Total
+# 1 = Under $1
+# 2 = $1 under $10,000
+# 3 = $10,000 under $25,000
+# 4 = $25,000 under $50,000
+# 5 = $50,000 under $75,000
+# 6 = $75,000 under $100,000
+# 7 = $100,000 under $200,000
+# 8 = $200,000 under $500,000
+# 9 = $500,000 or more
+
+agibins <- read_delim(
+delim=";",
+trim_ws = TRUE,
+file="AGI_STUB; agirange; agilo; agihi
+0; Total; -9e99; 9e99
+1; Under $1; -9e99; 1
+2; $1 under $10,000; 1; 10e3
+3; $10,000 under $25,000; 10e3; 25e3
+4; $25,000 under $50,000; 25e3; 50e3
+5; $50,000 under $75,000; 50e3; 75e3
+6; $75,000 under $100,000; 75e3; 100e3
+7; $100,000 under $200,000; 100e3; 200e3
+8; $200,000 under $500,000; 200e3; 500e3
+9; $500,000 or more; 500e3; 9e99
+")
+
+write_csv(agibins, fs::path(CDINTERMEDIATE, "cd_agi_bins.csv"))
+
+# agibins |> kable()
+agibins |> 
+  gt() |> 
+  tab_header(
+    title = html("Congressional District AGI bins"),
+    subtitle = html("in_bin = (vardf.c00100 >= row.agilo) & (vardf.c00100 < row.agihi)")) |>
+  fmt_number(columns=c(agilo, agihi),
+             rows=3:9,
+             # scale=1e-9,
+             decimals=0)
+
+```
+
+## Prepare, clean, and save wide data file
+
+Set eval: to true for these chunks to recreate the data file.
+
+```{r}
+#| label: parse-cddata
+#| eval: true
+
+# read the csv file from the zip archive that contains it
+zpath <-  fs::path(CDRAW, fs::path_file(CDZIPURL))
+con <- unz(zpath, "21incd.csv")
+data <- read_csv(con)
+rm(con)
+
+count(data, STATE) # US, DC, and 50 states
+count(data, CONG_DISTRICT) # max is 53
+
+```
+
+```{r}
+#| label: clean-save-cddata-wide
+#| eval: true
+
+# cleaning and reshaping:
+#  - determine record type
+
+agibins <- read_csv(fs::path(CDINTERMEDIATE, "cd_agi_bins.csv"))
+
+data2 <- data |> 
+  rename_with(toupper) |>  # agi_stub becomes upper case
+  mutate(nstub0 = sum(AGI_STUB == 0),
+         .by = STATE) |> 
+  mutate(rectype = case_when(
+    STATE == "US" ~ "US",
+    STATE == "DC" ~ "DC",
+    nstub0 == 1 ~ "cdstate", # the cd and state record for 8 states with only 1 cd
+    nstub0 > 1 & CONG_DISTRICT == "00" ~ "state",
+    nstub0 > 1 & CONG_DISTRICT != "00" ~ "cd", # cd records for multi-cd states
+    .default = "ERROR"
+  )) |> 
+  mutate(ndist = sum(AGI_STUB ==0 & rectype %in% c("cdstate", "cd")), .by=STATE) |> 
+  left_join(agibins, by = join_by(AGI_STUB)) |> 
+  select(-nstub0) |> 
+  relocate(rectype, ndist) |> 
+  relocate(agirange, agilo, agihi, .after=AGI_STUB)
+
+glimpse(data2)
+count(data2, STATE, ndist)
+
+cdnums <- data2 |> 
+  select(STATE, ndist) |> 
+  distinct() |> 
+  janitor::adorn_totals()
+
+# single-CD states
+cdnums |> 
+  filter(ndist==1)
+
+data2 |> 
+  filter(AGI_STUB == 0) |> 
+  count(rectype)
+
+write_csv(data2, fs::path(CDINTERMEDIATE, "cddata_wide_clean.csv"))
+
+rm(data, data2, cdnums)
+
+```
+
+## Create long SOI data file
+
+```{r}
+#| label: create-save-soi-cddata-long
+#| eval: false
+
+cdwide <- read_csv(fs::path(CDINTERMEDIATE, "cddata_wide_clean.csv"))
+doc <- read_csv(fs::path(CDINTERMEDIATE, "variable_documentation.csv"))
+
+glimpse(cdwide)
+glimpse(doc)
+
+idvars <- c("rectype", "ndist", "STATEFIPS", "STATE", "CONG_DISTRICT", 
+            "AGI_STUB", "agirange", "agilo", "agihi")
+
+# TODO: put amount units in dollars!!
+
+dlong1 <- cdwide |> 
+  pivot_longer(cols = -all_of(idvars),
+               names_to = "vname") |> 
+  left_join(doc |> 
+              select(vname, description, reference, vtype, basevname),
+            by = join_by(vname))
+
+count(dlong1, vname)
+count(dlong1, vtype)
+
+write_csv(dlong1, fs::path(CDINTERMEDIATE, "cddata_long_clean.csv"))
+
+```
