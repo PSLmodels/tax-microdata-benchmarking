@@ -15,3 +15,5 @@ temp_data/
 # Local Netlify folder
 .netlify
 
+
+/.quarto/
