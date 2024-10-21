@@ -4,6 +4,7 @@
 _examine/
 _freeze/
 temp_data/
+.Rproj.user/
 
 # files to ignore
 .Rhistory
