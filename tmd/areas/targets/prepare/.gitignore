@@ -1,9 +1,18 @@
 
+tmd/areas/cache_agi.npy
+
 # folders to ignore
-/.quarto/
+.quarto/
+.Rproj.user/
 _docs/
 _freeze/
+intermediate/
 
 # files to ignore
 .Rhistory
 
+
+/.quarto/
+
+# Local Netlify folder
+.netlify
