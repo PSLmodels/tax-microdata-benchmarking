@@ -1,11 +1,17 @@
 
 # folders to ignore
-/.quarto/
+.Rproj.user/
+.quarto/
 _examine/
 _freeze/
 temp_data/
-.Rproj.user/
 
 # files to ignore
 .Rhistory
+
+# files to ignore
+.Rhistory
+
+# Local Netlify folder
+.netlify
 

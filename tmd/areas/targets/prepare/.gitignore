@@ -11,8 +11,5 @@ intermediate/
 # files to ignore
 .Rhistory
 
-
-/.quarto/
-
 # Local Netlify folder
 .netlify
