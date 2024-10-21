@@ -74,7 +74,9 @@ wts2021 |> summarise(across(-row, \(x) sum(x)))
 
 # prep tmd
 tmd2 <- tmd2021 |> 
-  select(RECID, scope=data_source, fstatus=MARS, s006, all_of(keepvars)) |>
+  select(RECID, data_source, fstatus=MARS, s006, all_of(keepvars)) |>
+  mutate(scope=ifelse(data_source==1, 1, 2)) |> 
+  select(-data_source) |> 
   # define irange and extend it to allow (later) for totals
   mutate(irange=cut(c00100, icuts, right = FALSE, ordered_result = TRUE),
          irange = factor(irange, 
@@ -123,72 +125,55 @@ Summarize microdata, then construct and concatenate totals
 
 ```{r}
 
+details <- tmd_long1 |>
+  summarise(wtdvalue = sum(wtdvalue),
+            .by=c(area, scope, fstatus, varname, vartype, irange)) |> 
+  arrange(area, scope, fstatus, varname, irange)
 
-details <- tmd3 |> 
-  rename(scope = data_source,
-         fstatus = MARS) |> 
-  summarise(wtdn = 1, 
-            across(all_of(targvars),
-                   \(x) sum(weight * x)),
-            .by=c(irange, area, scope, fstatus)) |> 
-  mutate(irange = fct_expand(irange, "total")) |> 
-  mutate(irange = fct_relevel(irange, "total")) |> 
-  arrange(area, irange, scope, fstatus)
-
+glimpse(details)
 count(details, irange)
 count(details, area)
 count(details, scope)
 count(details, fstatus)
+count(details, scope, fstatus)
 
 details |> filter(area=="ak00", scope==1)
 details |> filter(area=="ak00", scope==0)
 
 # calculate a series of subtotals records that drop one or more of the other variables
 
+# totals over all income ranges
 irangesums <- details |> 
-  summarise(across(all_of(targvars),
-                   \(x) sum(x)),
-            .by=c(area, data_source)) |> 
+  summarise(wtdvalue = sum(wtdvalue),
+            .by=c(area, scope, fstatus, varname, vartype)) |> 
   mutate(irange="total",
          irange = factor(irange, levels = levels(details$irange), ordered = TRUE))
 
+details2 <- bind_rows(details, irangesums)
+glimpse(details2)
+count(details2, irange)
 
+# totals over all scopes
+scopesums <- details2 |> 
+  summarise(wtdvalue = sum(wtdvalue),
+            .by=c(area, fstatus, varname, vartype, irange)) |> 
+  mutate(scope=0)
 
-popsums <- details |> 
-  summarise(across(all_of(targvars),
-                   \(x) sum(x)),
-            .by=c(area, data_source)) |> 
-  mutate(irange="total",
-         irange = factor(irange, levels = levels(details$irange), ordered = TRUE))
+details3 <- bind_rows(details2, scopesums)
+glimpse(details3)
+count(details3, scope)
 
+# totals over all filing statuses
+fstatussums <- details3 |> 
+  summarise(wtdvalue = sum(wtdvalue),
+            .by=c(area, scope, varname, vartype, irange)) |> 
+  mutate(fstatus=0)
 
-areasums <- details |> 
-  summarise(across(all_of(targvars),
-                   \(x) sum(x)),
-            .by=c(area, data_source)) |> 
-  mutate(irange="total",
-         irange = factor(irange, levels = levels(details$irange), ordered = TRUE))
-
-fstatus_sums <- details |> 
-  summarise(across(c(wtdn, XTOT, c00100, e00200, e26270, MARS1, MARS2, MARS4),
-                   \(x) sum(x)),
-            .by=c(area)) |> 
-  mutate(irange="total",
-         irange = factor(irange, levels = levels(details$irange), ordered = TRUE))
-
-tmd4 <- bind_rows(details, areasums) |> 
-  arrange(area, irange)
-count(tmd4, irange)
-tmd4
-
-tmd4 |> filter(area=="ak00", data_source==1)
-tmd4 |> filter(area=="ak00", data_source==0)
-
-
+details4 <- bind_rows(details3, fstatussums)
+glimpse(details4)
+count(details4, fstatus)
 
 ```
-
-
 
 
 ### Prepare targets for tables
