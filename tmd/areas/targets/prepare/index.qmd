@@ -48,7 +48,7 @@ Two possible approaches:
 
 ### Estimate targets for 118th Congress district boundaries weighting by population weights
 
--   Use alread-created population crosswalk from Missouri Census Data Center to allocate 117th Congress district targets to 118th Congress districts. See [MSDC site](https://mcdc.missouri.edu/applications/geocorr2022.html).
+-   Use already-created population crosswalk from Missouri Census Data Center to allocate 117th Congress district targets to 118th Congress districts. See [MSDC site](https://mcdc.missouri.edu/applications/geocorr2022.html).
 
 
 ### Add instructions for creating web pages
