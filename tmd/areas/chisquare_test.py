@@ -3,7 +3,15 @@ Conduct chi-square test of the independence of two area weights distributions
 for the same area but generated using different targets.  The two area weights
 files are assumed to be located in the tmd/areas/weights folder and the
 national data files are assumed to be in the tmd/storage/output folder.  
-All test output is written to stdout.
+All test output is written to stdout; error messages are written to stderr.
+
+For background information on the chi-square test that compares two
+categorical (that is, binned) data sets, see Section 14.3: Are Two
+Distributions Different? in Press, et al., Numerical Recipies in C:
+The Art of Scientific Computing, Second Edition (Cambridge University
+Press, 1992).  This script uses the chi2_contingency function in the
+Python scipy package, which is documented at the following URL:
+https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.chi2_contingency.html
 
 USAGE: python chisquare_test.py AREA1 AREA2
 """
