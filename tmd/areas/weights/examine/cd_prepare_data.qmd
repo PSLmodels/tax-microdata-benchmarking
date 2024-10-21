@@ -75,6 +75,7 @@ Get all targets prepared
 
 ```{r}
 #| label: targets-all
+#| eval: false
 #| output: false
 
 # ~/Documents/python_projects/tax-microdata-benchmarking/tmd/areas/weights/examine   # project dir
@@ -86,6 +87,8 @@ CDTARGETSDIR <- fs::path(HERE, "..", "..", "targets", "prepare", "cds", "interme
 targets_data <- read_csv(fs::path(CDTARGETSDIR, "cdbasefile.csv"))
 glimpse(targets_data)
 
+saveRDS(targets_data, here::here("temp_data", "targets_data.rds"))
+
 ```
 
 
@@ -93,6 +96,7 @@ Get targets used in the optimization
 
 ```{r}
 #| label: targets-used
+#| eval: false
 #| output: false
 
 targetfiles <- dir_ls(here::here("temp_data")) |> str_subset("targets.csv")
@@ -103,6 +107,7 @@ targets_used <- vroom(targetfiles, id="src") |>
          varname = ifelse(!active, 
                           varname |> str_remove("#") |> str_trim(),
                           varname))
+saveRDS(targets_used, here::here("temp_data", "targets_used.rds"))
 
 glimpse(targets_used)
 count(targets_used, src)
@@ -120,18 +125,21 @@ targets_used |> filter(src == "de00")
 
 ```{r}
 #| label: get-tmd-2021
+#| eval: false
 #| output: false
 
 fpath <-  fs::path(TMDDIR, "tmd_2021.csv")
 tmd2021 <- read_csv(fpath)
+saveRDS(tmd2021, here::here("temp_data", "tmd2021.rds"))
 
 sum(tmd2021$s006) # 184,024,650 s006 units are numbers of units, not hundreds of units
 
 # con <- unz(zpath, "21incd.csv")
 # data <- read_csv(con)
 
-uswts <- read_csv(fs::path(TMDDIR, "tmd_weights.csv.gz"))
-sum(uswts$WT2021) # 184,024,656.95 # must divide by 100
+us_weights <- read_csv(fs::path(TMDDIR, "tmd_weights.csv.gz"))
+sum(us_weights$WT2021) # 184,024,656.95 # must divide by 100
+saveRDS(us_weights, here::here("temp_data", "us_weights.rds"))
 
 
 ```
@@ -139,6 +147,7 @@ sum(uswts$WT2021) # 184,024,656.95 # must divide by 100
 
 ```{r}
 #| label: prep-weights
+#| eval: false
 #| output: false
 
 # weightfiles <- dir_ls(here::here("temp_data")) |> str_subset("weights.csv.gz")
@@ -147,249 +156,17 @@ wtfiles <- dir_ls(WEIGHTSDIR, glob="*.gz") #  |> path_file()
 df <- read_csv(wtfiles[1])
 sum(df$WT2021)
 
-weights <- vroom(wtfiles, id="src") |> 
+area_weights <- vroom(wtfiles, id="src") |> 
   mutate(src = str_sub(path_file(src), 1, 4),
          across(-src, \(x) x / 100.))
-glimpse(weights)
-count(weights, src)
+glimpse(area_weights)
+count(area_weights, src)
 
-weights |> 
+area_weights |> 
   select(src, WT2021) |> 
   summarise(wtdn=sum(WT2021), .by=src)
 
-```
-
-## Simple summaries
-
-```{r}
-#| label: prepdata-for-tables
-#| output: false
-
-ns(tmd2021)
-
-# 0 = Total
-# 1 = Under $1
-# 2 = $1 under $10,000
-# 3 = $10,000 under $25,000
-# 4 = $25,000 under $50,000
-# 5 = $50,000 under $75,000
-# 6 = $75,000 under $100,000
-# 7 = $100,000 under $200,000
-# 8 = $200,000 under $500,000
-# 9 = $500,000 or more
-
-
-icuts <- c(-Inf, 1, 10e3, 25e3, 50e3, 75e3, 100e3, 200e3, 500e3, Inf)
-
-# prep tmd
-tmd2 <- tmd2021 |> 
-  select(RECID, data_source, s006, c00100, e00200, e26270, iitax) |> 
-  mutate(irange=cut(c00100, icuts, right = FALSE, ordered_result = TRUE),
-         irange = factor(irange, 
-                         levels = levels(irange), # Ensure ordering is maintained
-                         labels = str_replace(levels(irange), ",", ", ")))
-count(tmd2, irange)
-glimpse(tmd2)
-sum(tmd2$s006)
-
-# prep weights
-wts2 <- weights |> 
-  select(src, WT2021) |> 
-  mutate(row = row_number(), .by=src) |> 
-  pivot_wider(names_from = src, values_from = WT2021)
-wts2 |> summarise(across(-row, \(x) sum(x)))
-
-areas <- c("us", unique(weights$src))
-tmd3 <- tmd2 |> 
-  bind_cols(wts2) |> 
-  select(-row) |> 
-  rename(us = s006) |> 
-  pivot_longer(cols=all_of(areas),
-               names_to = "area",
-               values_to = "weight")
-
-details <- tmd3 |> 
-  summarise(n=n(), wtdn = sum(weight), 
-            agi=sum(weight * c00100),
-            wages = sum(weight * e00200),
-            scorppartner = sum(weight * e26270),
-            iitax = sum(weight * iitax),
-            .by=c(irange, area)) |> 
-  mutate(irange = fct_expand(irange, "total")) |> 
-  mutate(irange = fct_relevel(irange, "total")) |> 
-  arrange(area, irange)
-
-count(details, irange)
-
-areasums <- details |> 
-  summarise(across(c(wtdn, agi, wages, scorppartner, iitax),
-                   \(x) sum(x)),
-            .by=area) |> 
-  mutate(irange="total",
-         irange = factor(irange, levels = levels(details$irange), ordered = TRUE))
-
-tmd4 <- bind_rows(details, areasums) |> 
-  arrange(area, irange)
-count(tmd4, irange)
-tmd4
+saveRDS(area_weights, here::here("temp_data", "area_weights.rds"))
 
 ```
-
-## Selected tables
-
-### Number of tax units
-
-```{r}
-#| label: tables-wtdn
-#| output: true
-
-tmd4 |>  
-  select(irange, area, wtdn) |> 
-  pivot_wider(names_from = area,
-              values_from = wtdn) |> 
-  relocate(us, .after = irange) |> 
-  gt() |> 
-  tab_header("Number of tax units, thousands, 2021 tax year",
-             subtitle = "Filers and nonfilers") |> 
-  fmt_number(columns = -c(irange, us),
-             scale=1e-3,
-             decimals = 1) |> 
-    fmt_number(columns = us,
-             scale=1e-3,
-             decimals = 0)
-
-# tmd4 |>  
-#   filter(data_source==1) |> 
-#   select(irange, area, wtdn) |> 
-#   pivot_wider(names_from = area,
-#               values_from = wtdn) |> 
-#   relocate(us, .after = irange) |> 
-#   gt() |> 
-#   tab_header("Number of tax filers, thousands, 2021 tax year",
-#              subtitle = "data_source==1") |> 
-#   fmt_number(columns = -c(irange, us),
-#              scale=1e-3,
-#              decimals = 1) |> 
-#     fmt_number(columns = us,
-#              scale=1e-3,
-#              decimals = 0)
-
-```
-
-
-### Percentage distribution of tax units
-
-```{r}
-#| label: tables-pctdist
-#| output: true
-
-tmd4 |> 
-  mutate(pct=wtdn / wtdn[irange=="total"], 
-         .by=area) |> 
-  select(irange, area, pct) |> 
-  pivot_wider(names_from = area,
-              values_from = pct) |> 
-  relocate(us, .after = irange) |> 
-  gt() |> 
-  tab_header("Number of tax units as % of area total, 2021 tax year",
-             subtitle = "Filers and nonfilers") |> 
-  fmt_percent(columns = -irange,
-             decimals = 1)
-
-```
-
-
-### Average adjusted gross income
-
-```{r}
-#| label: tables-avgagi
-#| output: true
-
-tmd4 |> 
-  select(-n) |> 
-   mutate(across(c(agi, wages, iitax),
-                \(x) x / wtdn)) |> 
-  select(irange, area, value=agi) |> 
-  pivot_wider(names_from = area,
-              values_from = value) |> 
-  relocate(us, .after = irange) |> 
-  gt() |> 
-  tab_header("Average AGI in $, 2021 tax year",
-             subtitle = "Filers and nonfilers") |> 
-  fmt_number(columns = -irange,
-             decimals = 0)
-
-```
-
-### Average wages
-
-```{r}
-#| label: tables-avgwages
-#| output: true
-
-tmd4 |> 
-  select(-n) |> 
-   mutate(across(c(agi, wages, iitax),
-                \(x) x / wtdn)) |> 
-  select(irange, area, value=wages) |> 
-  pivot_wider(names_from = area,
-              values_from = value) |> 
-  relocate(us, .after = irange) |> 
-  gt() |> 
-  tab_header("Average wages in $, 2021 tax year",
-             subtitle = "Filers and nonfilers") |> 
-  fmt_number(columns = -irange,
-             decimals = 0)
-
-
-```
-
-
-### Average S Corporation and partnership income (net)
-
-```{r}
-#| label: tables-scorppartner
-#| output: true
-
-tmd4 |> 
-  select(-n) |> 
-   mutate(across(c(agi, wages, scorppartner, iitax),
-                \(x) x / wtdn)) |> 
-  select(irange, area, value=scorppartner) |> 
-  pivot_wider(names_from = area,
-              values_from = value) |> 
-  relocate(us, .after = irange) |> 
-  gt() |> 
-  tab_header("Average S Corporation and partnership income in $, 2021 tax year",
-             subtitle = "Filers and nonfilers") |> 
-  fmt_number(columns = -irange,
-             decimals = 0)
-
-
-```
-
-
-### Average iitax
-
-```{r}
-#| label: tables-avgiitax
-#| output: true
-
-tmd4 |> 
-  select(-n) |> 
-   mutate(across(c(agi, wages, iitax),
-                \(x) x / wtdn)) |> 
-  select(irange, area, value=iitax) |> 
-  pivot_wider(names_from = area,
-              values_from = value) |> 
-  relocate(us, .after = irange) |> 
-  gt() |> 
-  tab_header("Average iitax, 2021 tax year",
-             subtitle = "Filers and nonfilers") |> 
-  fmt_number(columns = -irange,
-             decimals = 0)
-  
-
-```
-
 

@@ -33,7 +33,8 @@ book:
       chapters:
         # - cd_overall_documentation.qmd
         - cd_prepare_data.qmd
-        - cd_prepare_tables.qmd
+        - cd_simple_tables.qmd
+        - cd_results_vs_targets_tables.qmd
 
         
 format:
