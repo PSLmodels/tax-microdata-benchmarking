@@ -4,7 +4,7 @@ editor_options:
  chunk_output_type: console
 ---
 
-# Results vs. targets tables
+# Compare results to targets
 
 ## Setup
 
@@ -20,4 +20,16 @@ phase4_statecds <- c("AK00", "DE00", "ID01", "ID02", "ME02", "MT00", "ND00", "PA
 ```
 
 
+## Get prepared data
 
+```{r}
+#| label: get-data
+#| output: false
+
+tmd2021 <- readRDS(here::here("temp_data", "tmd2021.rds"))
+targets_data <- readRDS(here::here("temp_data", "targets_data.rds"))
+targets_used <- readRDS(here::here("temp_data", "targets_used.rds"))
+us_weights <- readRDS(here::here("temp_data", "us_weights.rds"))
+area_weights <- readRDS(here::here("temp_data", "area_weights.rds"))
+
+```
