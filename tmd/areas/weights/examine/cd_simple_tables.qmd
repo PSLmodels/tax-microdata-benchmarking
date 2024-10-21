@@ -36,7 +36,7 @@ area_weights <- readRDS(here::here("temp_data", "area_weights.rds"))
 ```
 
 
-## Simple summaries
+## Construct weighted totals
 
 ```{r}
 #| label: prepdata-for-tables
