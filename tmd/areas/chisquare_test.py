@@ -20,14 +20,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 from scipy.stats import chi2_contingency
-import taxcalc as tc
 from tmd.areas import AREAS_FOLDER
 from tmd.storage import STORAGE_FOLDER
-
-INFILE_PATH = STORAGE_FOLDER / "output" / "tmd.csv.gz"
-GFFILE_PATH = STORAGE_FOLDER / "output" / "tmd_growfactors.csv"
-
-TAX_YEAR = 2021
 
 B_N1 = [b * -1e3 for b in range(20, 4, -2)]
 B_N2 = [-4.0e3, -3.5e3, -3.0e3, -2.5e3, -2.0e3, -1.5e3, -1.0e3, -0.5e3]
@@ -36,8 +30,11 @@ B_H1 = [b * 1e3 for b in range(10, 20, 1)]
 B_H2 = [20e3, 25e3] + [b * 1e4 for b in range(3, 29)]
 ITAX_BINS = [-9e99] + B_N1 + B_N2 + B_LO + B_H1 + B_H2 + [9e99]
 
+CACHED_ITAX_PATH = STORAGE_FOLDER / "output" / "cached_iitax.npy"
+
+TAX_YEAR = 2021
+
 DUMP_DETAILS = False
-TWO_VARIABLES_TEST = True
 
 
 def check_command_line_arguments():
@@ -64,10 +61,24 @@ def check_command_line_arguments():
             f"ERROR: WGHT2 {str(wpath2)} file does not exist\n"
         )
         all_ok = False
+    if not CACHED_ITAX_PATH.exists():
+        sys.stderr.write(
+            f"ERROR: {str(CACHED_ITAX_PATH)} file does not exist\n"
+        )
+        all_ok = False
     if not all_ok:
         sys.stderr.write(f"{usage}")
         sys.exit(1)
     return (wpath1, wpath2)
+
+
+def weights_array(wghts_path: Path):
+    """
+    Return array containing TAX_YEAR weights in area weights file with wpath.
+    """
+    wdf = pd.read_csv(wghts_path)
+    warray = wdf[f"WT{TAX_YEAR}"] * 0.01
+    return warray
 
 
 # -- High-level logic of the script:
@@ -83,43 +94,22 @@ def main(wpath1: Path, wpath2: Path):
         for idx, low_edge in enumerate(ITAX_BINS):
             print(idx, low_edge)
 
-    # use Tax-Calculator to generate iitax amounts for each area weights file
-    pol = tc.Policy()
-    rec1 = tc.Records.tmd_constructor(
-        data_path=INFILE_PATH,
-        weights_path=wpath1,
-        growfactors_path=GFFILE_PATH,
-        exact_calculations=True,
-    )
-    calc = tc.Calculator(policy=pol, records=rec1)
-    calc.advance_to_year(TAX_YEAR)
-    calc.calc_all()
-    df1 = calc.dataframe(["iitax", "s006"])
-    del calc
-    rec2 = tc.Records.tmd_constructor(
-        data_path=INFILE_PATH,
-        weights_path=wpath2,
-        growfactors_path=GFFILE_PATH,
-        exact_calculations=True,
-    )
-    calc = tc.Calculator(policy=pol, records=rec2)
-    calc.advance_to_year(TAX_YEAR)
-    calc.calc_all()
-    df2 = calc.dataframe(["iitax", "s006"])
-    del calc
-    assert len(df1) == len(df2)
-    assert np.allclose(df1.iitax, df2.iitax)
-    witax1 = (df1.s006 * df1.iitax).sum() * 1e-9
-    witax2 = (df2.s006 * df2.iitax).sum() * 1e-9
+    # read cached iitax amounts, which are the same for each area weights file
+    iitax = np.load(CACHED_ITAX_PATH)
+    wght1 = weights_array(wpath1)
+    wght2 = weights_array(wpath2)
+    assert len(wght1) == len(wght2) == len(iitax)
+    witax1 = (wght1 * iitax).sum() * 1e-9
+    witax2 = (wght2 * iitax).sum() * 1e-9
     witax_ratio = witax2 / witax1
 
-    # create iitax bin variable in the two dataframes
-    itxbin = pd.cut(df1.iitax, bins=ITAX_BINS, right=False)
-    assert len(itxbin) == len(df1)
-    df1["itxbin"] = itxbin
-    df2["itxbin"] = itxbin
+    # create iitax bin variable called itxbin
+    itxbin = pd.cut(iitax, bins=ITAX_BINS, right=False)
+    assert len(itxbin) == len(wght1)
 
     # compute total weight in each iitax bin
+    df1 = pd.DataFrame({"iitax": iitax, "s006": wght1, "itxbin": itxbin})
+    df2 = pd.DataFrame({"iitax": iitax, "s006": wght2, "itxbin": itxbin})
     wght1_bin = df1.groupby("itxbin", observed=True)["s006"].sum()
     wght2_bin = df2.groupby("itxbin", observed=True)["s006"].sum()
     assert len(wght1_bin) == len(wght2_bin)
