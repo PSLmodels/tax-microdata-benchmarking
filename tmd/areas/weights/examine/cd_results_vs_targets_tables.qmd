@@ -183,7 +183,7 @@ count(details4, fstatus)
 count(details4, agistub, irange)
 
 saveRDS(details4, here::here("temp_data", "area_details.rds"))
-rm(tmd_long, tmd_long1, tmd2, tmd3, tmd4, details, details2, details3, details4)
+# rm(tmd_long, tmd_long1, tmd2, tmd3, tmd4, details, details2, details3, details4)
 
 ```
 
@@ -252,8 +252,8 @@ summary(compfile |> filter(active))
 
 Units:
 
--   Amounts are in $ millions (varname==amount for target, wtdvalue, and diff)
--   Counts are actual numbers
+-   Dollar amounts are in $ millions (varname==amount for target, wtdvalue, and diff)
+-   Counts (including XTOT) are actual numbers
 
 scope:
 
@@ -277,14 +277,14 @@ active:
 
 ```{r}
 #| label: show-comps
-#| eval: false
+#| eval: true
 #| column: page
 
 
 compfile |>
   # select(-type) |> 
   mutate(across(c(target, wtdvalue, diff), 
-                \(x) ifelse(vartype=="amount", x / 1e6, x))) |> 
+                \(x) ifelse(vartype=="amount" & varname != "XTOT", x / 1e6, x))) |> 
   DT::datatable(rownames = FALSE,
                 options = list(order = list(0, "asc"), # use 1st column (0) for sorting
                                scrollX = TRUE, scrollY = TRUE, paging = TRUE, pageLength = 20,
