@@ -115,7 +115,8 @@ tmd_long1 <- tmd3 |>
                names_to = "varname",
                values_to = "amount") |> 
   # flip the variable type (count or amount)
-  mutate(count=ifelse(amount != 0, 1, 0)) |> 
+  # mutate(count=ifelse(amount != 0, 1, 0)) |>  # djb fix this later!!!
+  mutate(count=1) |> # djb TEMPORARY count ALWAYS is ALL returns
   pivot_longer(cols=c(amount, count),
                names_to = "vartype",
                values_to = "value") |> 
