@@ -1,8 +1,7 @@
 """
-Conduct chi-square test of the independence of two area weights distributions
-for the same area but generated using different targets.  The two area weights
-files are assumed to be located in the tmd/areas/weights folder and the
-national data files are assumed to be in the tmd/storage/output folder.  
+Conduct chi-square test of the similarity of two weights distributions
+for the same area that are generated using different targets.  The two area
+weights files are assumed to be located in the tmd/areas/weights folder.
 All test output is written to stdout; error messages are written to stderr.
 
 For background information on the chi-square test that compares two
@@ -13,7 +12,7 @@ Press, 1992).  This script uses the chi2_contingency function in the
 Python scipy package, which is documented at the following URL:
 https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.chi2_contingency.html
 
-USAGE: python chisquare_test.py AREA1 AREA2
+USAGE: python chisquare_test.py WGHT1 WGHT2
 """
 
 import sys
@@ -21,9 +20,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 from scipy.stats import chi2_contingency
+import taxcalc as tc
 from tmd.areas import AREAS_FOLDER
 from tmd.storage import STORAGE_FOLDER
-import taxcalc as tc
 
 INFILE_PATH = STORAGE_FOLDER / "output" / "tmd.csv.gz"
 GFFILE_PATH = STORAGE_FOLDER / "output" / "tmd_growfactors.csv"
@@ -44,38 +43,25 @@ TWO_VARIABLES_TEST = True
 def check_command_line_arguments():
     """
     Check validity of arguments and return (wpath1, wpath2) tuple
-    containing path to AREA1 and AREA2 weights files, respectively.
+    containing path to WGHT1 and WGHT2 weights files, respectively.
     """
-    usage = "USAGE: python chisquare_test.py AREA1 AREA2\n"
+    usage = "USAGE: python chisquare_test.py WGHT1 WGHT2\n"
     if len(sys.argv) != 3:
         sys.stderr.write(
             f"ERROR: two command-line arguments are required\n{usage}"
         )
         sys.exit(1)
     all_ok = True
-    area1 = sys.argv[1]
-    wpath1 = AREAS_FOLDER / "weights" / f"{area1}_tmd_weights.csv.gz"
+    wpath1 = AREAS_FOLDER / "weights" / f"{sys.argv[1]}_tmd_weights.csv.gz"
     if not wpath1.exists():
         sys.stderr.write(
-            f"ERROR: AREA1 {str(wpath1)} file does not exist\n"
+            f"ERROR: WGHT1 {str(wpath1)} file does not exist\n"
         )
         all_ok = False
-    area2 = sys.argv[2]
-    wpath2 = AREAS_FOLDER / "weights" / f"{area2}_tmd_weights.csv.gz"
+    wpath2 = AREAS_FOLDER / "weights" / f"{sys.argv[2]}_tmd_weights.csv.gz"
     if not wpath2.exists():
         sys.stderr.write(
-            f"ERROR: AREA2 {str(wpath2)} file does not exist\n"
-        )
-        all_ok = False
-    # check existence of national input and growfactors files
-    if not INFILE_PATH.exists():
-        sys.stderr.write(
-            f"ERROR: national {str(INFILE_PATH)} file does not exist\n"
-        )
-        all_ok = False
-    if not GFFILE_PATH.exists():
-        sys.stderr.write(
-            f"ERROR: national {str(GFFILE_PATH)} file does not exist\n"
+            f"ERROR: WGHT2 {str(wpath2)} file does not exist\n"
         )
         all_ok = False
     if not all_ok:
@@ -89,9 +75,9 @@ def check_command_line_arguments():
 
 def main(wpath1: Path, wpath2: Path):
     """
-    Conduct chi-square independence test using the AREA1 weights (wpath1)
-    and the AREA2 weights (wpath2), which are weights for the same area
-    generated with different targets.
+    Conduct chi-square two-variable test using the WGHT1 weights (wpath1)
+    and the WGHT2 weights (wpath2), which are weights for the same area
+    generated using different targets.
     """
     if DUMP_DETAILS:
         for idx, low_edge in enumerate(ITAX_BINS):
@@ -123,9 +109,12 @@ def main(wpath1: Path, wpath2: Path):
     del calc
     assert len(df1) == len(df2)
     assert np.allclose(df1.iitax, df2.iitax)
+    witax1 = (df1.s006 * df1.iitax).sum() * 1e-9
+    witax2 = (df2.s006 * df2.iitax).sum() * 1e-9
+    witax_ratio = witax2 / witax1
 
     # create iitax bin variable in the two dataframes
-    itxbin = pd.cut(df1.iitax, bins=ITAX_BINS)
+    itxbin = pd.cut(df1.iitax, bins=ITAX_BINS, right=False)
     assert len(itxbin) == len(df1)
     df1["itxbin"] = itxbin
     df2["itxbin"] = itxbin
@@ -146,13 +135,17 @@ def main(wpath1: Path, wpath2: Path):
     wght1_sum = df1.s006.sum()
     wght2_sum = df2.s006.sum()
     weight_ratio = wght2_sum / wght1_sum
-    print(f"AREA2/AREA1_weight_total_ratio= {weight_ratio:.4f}")
+    print(f"WGHT2/WGHT1_weight_total_ratio= {weight_ratio:.4f}")
+    print(
+        f"WGHT1,WGHT2_weighted_iitax($B)= {witax1:.3f} {witax2:.3f}"
+        f"  ===>  ratio= {witax_ratio:.4f}"
+    )
     freq1 = unweighted_count * wght1_bin / wght1_sum
     freq2 = unweighted_count * wght2_bin / wght2_sum
     assert len(freq1) == len(freq2)
     assert np.allclose([freq1.sum()], [freq2.sum()])
     min_cell_count = min(np.min(freq1), np.min(freq2))
-    print(f"number_of_weight_bins= {num_bins}")
+    print(f"number_of_iitax_bins= {num_bins}")
     print(f"minimum_bin_freqency_count= {min_cell_count:.1f}")
 
     # conduct chi-square test
