@@ -235,7 +235,7 @@ def prepared_data(area: str, vardf: pd.DataFrame):
         if row.count == 0:
             unmasked_varray = vardf[row.varname].astype(float)
         else:
-            unmasked_varray = np.ones(numobs, dtype=float)
+            unmasked_varray = np.ones(numobs, dtype=float) # djb all counts are simply counts of returns, not counts of returns that have a given item
         mask = np.ones(numobs, dtype=int)
         assert (
             row.scope >= 0 and row.scope <= 2
