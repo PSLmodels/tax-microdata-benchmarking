@@ -30,8 +30,8 @@ WTFILE_PATH = STORAGE_FOLDER / "output" / "tmd_weights.csv.gz"
 GFFILE_PATH = STORAGE_FOLDER / "output" / "tmd_growfactors.csv"
 POPFILE_PATH = STORAGE_FOLDER / "input" / "cbo_population_forecast.yaml"
 
-# taxcalc calculated variable cache files:
-TAXCALC_AGI_CACHE = AREAS_FOLDER / "cache_agi.npy"
+# Tax-Calcultor calculated variable cache files:
+TAXCALC_AGI_CACHE = STORAGE_FOLDER / "output" / "cached_c00100.npy"
 
 PARAMS = {}
 
@@ -166,26 +166,12 @@ def valid_area(area: str):
     return all_ok
 
 
-def all_taxcalc_variables(write_cache):
+def all_taxcalc_variables():
     """
     Return all read and needed calc Tax-Calculator variables in pd.DataFrame.
     """
     vdf = pd.read_csv(INFILE_PATH)
-    if TAXCALC_AGI_CACHE.exists():
-        vdf["c00100"] = np.load(TAXCALC_AGI_CACHE)
-    else:
-        input_data = tc.Records.tmd_constructor(
-            data_path=INFILE_PATH,
-            weights_path=WTFILE_PATH,
-            growfactors_path=GFFILE_PATH,
-            exact_calculations=True,
-        )
-        sim = tc.Calculator(records=input_data, policy=tc.Policy())
-        sim.calc_all()
-        agi = sim.array("c00100")
-        vdf["c00100"] = agi
-        if write_cache:
-            np.save(TAXCALC_AGI_CACHE, agi, allow_pickle=False)
+    vdf["c00100"] = np.load(TAXCALC_AGI_CACHE)
     assert np.all(vdf.s006 > 0), "Not all weights are positive"
     return vdf
 
@@ -432,7 +418,6 @@ def create_area_weights_file(
     area: str,
     write_log: bool = True,
     write_file: bool = True,
-    write_cache: bool = True,
 ):
     """
     Create Tax-Calculator-style weights file for FIRST_YEAR through LAST_YEAR
@@ -501,7 +486,7 @@ def create_area_weights_file(
             out.write(f"USING CUSTOMIZED PARAMETERS IN {pfile}\n")
 
     # construct variable matrix and target array and weights_scale
-    vdf = all_taxcalc_variables(write_cache)
+    vdf = all_taxcalc_variables()
     target_matrix, target_array, weights_scale = prepared_data(area, vdf)
     wght_us = np.array(vdf.s006 * weights_scale)
     out.write("INITIAL WEIGHTS STATISTICS:\n")
@@ -672,6 +657,5 @@ if __name__ == "__main__":
         area_code,
         write_log=False,
         write_file=True,
-        write_cache=False,
     )
     sys.exit(RCODE)
