@@ -141,7 +141,6 @@ us_weights <- read_csv(fs::path(TMDDIR, "tmd_weights.csv.gz"))
 sum(us_weights$WT2021) # 184,024,656.95 # must divide by 100
 saveRDS(us_weights, here::here("temp_data", "us_weights.rds"))
 
-
 ```
 
 
