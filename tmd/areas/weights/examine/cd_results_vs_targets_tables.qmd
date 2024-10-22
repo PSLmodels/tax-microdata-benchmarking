@@ -90,6 +90,16 @@ glimpse(tmd2)
 count(tmd2, irange)
 sum(tmd2$s006)
 
+check <- tmd2 |> 
+  select(RECID, scope, fstatus, c00100, s006, irange) |> 
+  mutate(agistub = as.integer(irange) - 1,
+         topagi = c00100 >= 500e3,
+         topbin = agistub == 9,
+         both = topagi & topbin) |> 
+  filter(topagi | topbin)
+check |> filter(!both)
+
+
 tmd3 <- tmd2 |> 
   bind_cols(wts2021) |> 
   select(-row) |> 
@@ -221,9 +231,13 @@ targ1 <- targets_used |>
             by = join_by(agilo, agihi))
 count(targ1, agistub, agirange, agilo, agihi)
 
+targ1 |> filter(area=="ak00", agistub==9, varname=="e00200")
+
 targ2 <- targ1 |> 
   select(area, scope, fstatus, varname, vartype, active, agistub, agirange, target)
 glimpse(targ2)
+
+targ2 |> filter(area=="ak00", agistub==9, varname=="e00200")
 
 ```
 
