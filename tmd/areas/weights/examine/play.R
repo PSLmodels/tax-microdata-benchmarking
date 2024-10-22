@@ -19,6 +19,7 @@ tmp |>
 # c00100n agistub 1 count
 # 8760 target
 # 6420 result
+# 8757 if we just summarize returns
 
 # e00200a agistub 1 amount
 # 40998000 target
