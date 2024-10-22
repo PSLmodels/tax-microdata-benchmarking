@@ -241,7 +241,10 @@ compfile <- targ2 |>
             by = join_by(area, scope, fstatus, varname, vartype, agistub)) |> 
   select(-irange) |> 
   mutate(diff = wtdvalue - target,
-         pdiff = diff / target)
+         pdiff = diff / target) |> 
+  mutate(sort = row_number(), .by=area) |> 
+  mutate(across(c(scope, fstatus, agistub, sort),
+                as.factor))
 
 summary(compfile)
 summary(compfile |> filter(active))
@@ -249,7 +252,7 @@ summary(compfile |> filter(active))
 ```
 
 
-## Show results vs. targets (TO COME)
+## Show results vs. targets (VERY PRELIMINARY)
 
 Units:
 
