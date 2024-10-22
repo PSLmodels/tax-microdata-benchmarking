@@ -9,6 +9,7 @@ tmp <- tmd3 |>
 tmp |> 
   summarise(c00100a = sum(de00 * c00100),
             c00100n = sum(de00 * (c00100 != 0)),
+            nrets = sum(de00),
             e00200a = sum(de00 * e00200))
 
 # c00100a agistub 1 amount
