@@ -130,6 +130,10 @@ targets_used |> filter(src == "de00")
 
 fpath <-  fs::path(TMDDIR, "tmd_2021.csv")
 tmd2021 <- read_csv(fpath)
+ns(tmd2021)
+
+# djbout <- read_csv(here::here("temp_data", "djbout.csv")) # this is tax calc output vdf from create_area_weights.py
+
 saveRDS(tmd2021, here::here("temp_data", "tmd2021.rds"))
 
 sum(tmd2021$s006) # 184,024,650 s006 units are numbers of units, not hundreds of units
@@ -140,6 +144,11 @@ sum(tmd2021$s006) # 184,024,650 s006 units are numbers of units, not hundreds of
 us_weights <- read_csv(fs::path(TMDDIR, "tmd_weights.csv.gz"))
 sum(us_weights$WT2021) # 184,024,656.95 # must divide by 100
 saveRDS(us_weights, here::here("temp_data", "us_weights.rds"))
+
+tmd_base <- read_csv(fs::path(TMDDIR, "tmd.csv.gz")) # for comparison to tmd2021
+ns(tmd_base)
+saveRDS(tmd_base, here::here("temp_data", "tmd_base.rds"))
+
 
 ```
 

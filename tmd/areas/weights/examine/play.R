@@ -46,9 +46,37 @@ tmp |>
 # compare tmd2021 to djbout -----------------------------------------------
 
 tmd2021 <- readRDS(here::here("temp_data", "tmd2021.rds"))
+tmdbase <- readRDS(here::here("temp_data", "tmd_base.rds"))
+usweights <- readRDS(here::here("temp_data", "us_weights.rds"))
+ns(usweights)
 
-djbout <- read_csv(here::here("temp_data", "djbout.csv"))
+djbout <- read_csv(here::here("temp_data", "djbout.csv")) # this is tax calc output vdf from create_area_weights.py
 glimpse(djbout)
+ns(djbout)
+
+setdiff(names(tmd2021), names(djbout))
+
+# simple checks on tmd2021 vs. tmdbase
+sum(tmd2021$s006) # 184,024,650 why not identical to other files?
+sum(tmdbase$s006) # 184,024,657 same as in US weights
+sum(usweights$WT2021) / 100. # 184,024,656.95 
+sum(round(usweights$WT2021 / 100)) # 184,023,729
+sum(djbout$s006) # 184,024,657
+
+sum(tmd2021$e00200) # 126,004,562,344
+sum(tmdbase$e00200) # 126,004,434,333
+sum(djbout$e00200) # 126,004,434,333
+
+checkstub9 <- bind_rows(tmd2021 |> filter(c00100 >= 500e3, c00100 < 9e99) |> mutate(src="tmd"),
+                        djbout |> filter(c00100 >= 500e3, c00100 < 9e99) |> mutate(src="djb")) |> 
+  summarise(n=n(), agisum=sum(c00100), wtsum=sum(s006), wtdagisum=sum(s006 * c00100), .by=src)
+
+checkstub9 |> gt()
+checkstub9 |> 
+  pivot_longer(-src) |> 
+  pivot_wider(names_from = src) |> 
+  mutate(diff = djb - tmd,
+         pdiff = diff / tmd)
 
 baddjb <- djbout |> 
   mutate(n=n(), .by=RECID) |> 
