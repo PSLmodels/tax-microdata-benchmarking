@@ -26,7 +26,10 @@ phase4_statecds <- c("AK00", "DE00", "ID01", "ID02", "ME02", "MT00", "ND00", "PA
 #| label: get-data
 #| output: false
 
-tmd2021 <- readRDS(here::here("temp_data", "tmd2021.rds"))
+# pick one or the other
+# tmd2021 <- readRDS(here::here("temp_data", "tmd2021.rds"))
+tmd2021 <- read_csv(here::here("temp_data", "djbout.csv")) # this is tax calc output vdf from
+
 targets_data <- readRDS(here::here("temp_data", "targets_data.rds"))
 targets_used <- readRDS(here::here("temp_data", "targets_used.rds"))
 us_weights <- readRDS(here::here("temp_data", "us_weights.rds"))
@@ -263,6 +266,17 @@ compfile <- targ2 |>
 summary(compfile)
 summary(compfile |> filter(active))
 
+errors <- compfile |> 
+  mutate(apdiff = abs(pdiff)) |> 
+  filter(apdiff > 0.04)
+
+summary(errors)
+count(errors, agistub)
+errors |> filter(agistub != 9) |> arrange(desc(apdiff))
+errors |> filter(agistub == 9) |> arrange(desc(apdiff))
+errors |> filter(agistub == 9) |> arrange(varname, area)
+
+
 ```
 
 
@@ -292,6 +306,10 @@ active:
 -  true = item was targeted
 -  false = item was in target file but was commented out (e26270 for DE-00)
 
+Dropdown boxes and search fields allow narrowing down the records that are displayed.
+
+**NOTE**: Weighted values for agistub 9 are not within our tolerances although the optimization solver reported that they are for the transformed problem it solved. We will investigate this and resolve it in Phase 5.
+
 
 ```{r}
 #| label: show-comps
@@ -303,6 +321,7 @@ compfile |>
   # select(-type) |> 
   mutate(across(c(target, wtdvalue, diff), 
                 \(x) ifelse(vartype=="amount" & varname != "XTOT", x / 1e6, x))) |> 
+  mutate(varname = as.factor(varname)) |> 
   DT::datatable(rownames = FALSE,
                 options = list(order = list(0, "asc"), # use 1st column (0) for sorting
                                scrollX = TRUE, scrollY = TRUE, paging = TRUE, pageLength = 20,
