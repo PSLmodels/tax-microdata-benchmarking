@@ -11,7 +11,6 @@ from multiprocessing import Pool
 from tmd.areas.create_area_weights import (
     valid_area,
     create_area_weights_file,
-    TAXCALC_AGI_CACHE,
 )
 from tmd.areas import AREAS_FOLDER
 from tmd.storage import STORAGE_FOLDER
@@ -87,7 +86,6 @@ def create_area_weights(area: str):
         area,
         write_log=True,
         write_file=True,
-        write_cache=True,
     )
     time1 = time.time()
     print(f"... {area} exectime(secs)= {(time1 - time0):.1f}")
@@ -101,7 +99,6 @@ def make_all_areas(num_workers):
     Call create_area_weights(area) for each out-of-date or non-existent
     area weights file for which there is an area targets file.
     """
-    TAXCALC_AGI_CACHE.unlink(missing_ok=True)
     todo_areas = to_do_areas()
     # show processing plan
     if todo_areas:
@@ -119,7 +116,6 @@ def make_all_areas(num_workers):
     # process each target file for which the weights file is not up-to-date
     with Pool(num_workers) as pool:
         pool.map(create_area_weights, todo_areas)
-    TAXCALC_AGI_CACHE.unlink(missing_ok=True)
     return 0
 
 
