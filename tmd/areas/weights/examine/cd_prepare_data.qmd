@@ -128,15 +128,15 @@ targets_used |> filter(src == "de00")
 #| eval: false
 #| output: false
 
-fpath <-  fs::path(TMDDIR, "tmd_2021.csv")
+# fpath <-  fs::path(TMDDIR, "tmd_2021.csv") # NO - it is out of sync with tmd.csv
+fpath <- here::here("temp_data", "djbout.csv")
 tmd2021 <- read_csv(fpath)
 ns(tmd2021)
 
 # djbout <- read_csv(here::here("temp_data", "djbout.csv")) # this is tax calc output vdf from create_area_weights.py
-
 saveRDS(tmd2021, here::here("temp_data", "tmd2021.rds"))
 
-sum(tmd2021$s006) # 184,024,650 s006 units are numbers of units, not hundreds of units
+sum(tmd2021$s006) # 184,024,657 with djbout.csv, s006 units are numbers of units, not hundreds of units
 
 # con <- unz(zpath, "21incd.csv")
 # data <- read_csv(con)

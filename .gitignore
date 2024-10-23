@@ -16,3 +16,4 @@ tmd/storage/output/tax_expenditures
 *.DS_STORE
 # Local Netlify folder
 .netlify
+.Rproj.user
