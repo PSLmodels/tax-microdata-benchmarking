@@ -1,5 +1,27 @@
 
 
+# libraries ---------------------------------------------------------------
+
+source(here::here("R", "libraries.R"))
+source(here::here("R", "constants.R"))
+
+phase4_statecds <- c("AK00", "DE00", "ID01", "ID02", "ME02", "MT00", "ND00", "PA08", "SD00", "WY00")
+
+
+# get data ----------------------------------------------------------------
+
+# OLD: djbout <- read_csv(here::here("temp_data", "djbout.csv")) # this is tax calc output vdf from create_area_weights.py
+tmd2021 <- readRDS(here::here("temp_data", "tmd2021.rds")) # now based on djbout.csv
+sum(tmd2021$s006) # is what we want to see
+tmdbase <- readRDS(here::here("temp_data", "tmd_base.rds"))
+usweights <- readRDS(here::here("temp_data", "us_weights.rds"))
+ns(usweights)
+
+
+# analysis ----------------------------------------------------------------
+
+
+
 glimpse(tmd3)
 
 tmp <- tmd3 |> 
@@ -44,15 +66,6 @@ tmp |>
 
 
 # compare tmd2021 to djbout -----------------------------------------------
-
-tmd2021 <- readRDS(here::here("temp_data", "tmd2021.rds"))
-tmdbase <- readRDS(here::here("temp_data", "tmd_base.rds"))
-usweights <- readRDS(here::here("temp_data", "us_weights.rds"))
-ns(usweights)
-
-djbout <- read_csv(here::here("temp_data", "djbout.csv")) # this is tax calc output vdf from create_area_weights.py
-glimpse(djbout)
-ns(djbout)
 
 setdiff(names(tmd2021), names(djbout))
 

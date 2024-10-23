@@ -27,9 +27,9 @@ phase4_statecds <- c("AK00", "DE00", "ID01", "ID02", "ME02", "MT00", "ND00", "PA
 #| output: false
 
 # pick one or the other
-# tmd2021 <- readRDS(here::here("temp_data", "tmd2021.rds"))
-tmd2021 <- read_csv(here::here("temp_data", "djbout.csv")) # this is tax calc output vdf from
+# OLD tmd2021 <- read_csv(here::here("temp_data", "djbout.csv")) # this is tax calc output vdf from
 
+tmd2021 <- readRDS(here::here("temp_data", "tmd2021.rds"))
 targets_data <- readRDS(here::here("temp_data", "targets_data.rds"))
 targets_used <- readRDS(here::here("temp_data", "targets_used.rds"))
 us_weights <- readRDS(here::here("temp_data", "us_weights.rds"))
