@@ -216,12 +216,14 @@ def prepared_data(area: str, vardf: pd.DataFrame):
             initial_weights_scale = row.target / national_population
         # construct variable array for this target
         assert (
-            row.count >= 0 and row.count <= 1
-        ), f"count value {row.count} not in [0,1] range on {line}"
-        if row.count == 0:
+            row.count >= 0 and row.count <= 2
+        ), f"count value {row.count} not in [0,2] range on {line}"
+        if row.count == 0:  # tabulate $ variable amount
             unmasked_varray = vardf[row.varname].astype(float)
-        else:
+        elif row.count == 1:  # count units with any variable amount
             unmasked_varray = np.ones(numobs, dtype=float)
+        else:  # count only units with non-zero variable amount
+            unmasked_varray = (vardf[row.varname] != 0.0).astype(float)
         mask = np.ones(numobs, dtype=int)
         assert (
             row.scope >= 0 and row.scope <= 2
