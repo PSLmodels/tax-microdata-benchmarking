@@ -129,7 +129,7 @@ usoi
 ugeo
 
 setdiff(usoi, ugeo) # none missing
-setdiff(ugeo, usoi)
+setdiff(ugeo, usoi) # none missing
 
 check <- xwalk2 |> 
   filter(stabbr=="NC")
@@ -156,4 +156,71 @@ xwalk_final <- xwalk3 |>
 write_csv(xwalk_final, fs::path(CDINTERMEDIATE, "xwalk_final.csv"))
 
 ```
+
+
+## Create 118th Session Congressional Districts
+```{r}
+#| label: create-cd118
+#| output: false
+
+xwalk <- read_csv(fs::path(CDINTERMEDIATE, "xwalk_final.csv"))
+
+cd118v1 <- xwalk |> 
+  rename(statecd=statecd118,
+         cd=cd118) |> 
+  left_join(cd117 |> 
+              select(-cd) |> 
+              rename(statecd117=statecd),
+            by = join_by(stabbr, statecd117),
+            relationship = "many-to-many")
+
+# collapse the file to statecd
+cd118v2 <- cd118v1 |> 
+  mutate(target=target * share117to118) |> 
+  summarise(target=sum(target),
+            .by=c(stabbr, cd, statecd, src, rectype,
+                     agistub, agilo, agihi, basevname,
+                     scope, fstatus, count, vname, description, agirange))
+
+glimpse(cd118v2)
+summary(cd118v2)
+write_csv(cd118v2, fs::path(CDINTERMEDIATE, "cdbasefile_118.csv"))
+
+
+```
+
+
+```{r}
+
+
+cd117 <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile.csv"))
+cd118 <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile_118.csv"))
+
+stack <- bind_rows(
+  cd117 |> mutate(session="s117"),
+  cd118 |> mutate(session="s118")
+)
+
+glimpse(stack)
+states <- stack |> 
+  summarise(target=sum(target), 
+            .by=c(session, stabbr, src, rectype,
+                     agistub, agilo, agihi, basevname,
+                     scope, fstatus, count, vname, description, agirange))
+  
+states |> 
+  pivot_wider(names_from = session,
+              values_from = target) |> 
+  mutate(diff=s118 - s117,
+         pdiff=diff / s117) |> 
+  arrange(desc(abs(pdiff))) # good all the state sums work
+
+write_csv(stack, fs::path(CDINTERMEDIATE, "cdbasefile_sessions.csv"))
+
+```
+
+
+
+
+
 
