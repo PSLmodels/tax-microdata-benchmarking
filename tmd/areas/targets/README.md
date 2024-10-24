@@ -3,8 +3,7 @@
 Contains sub-national area targets files.
 
 
-Targets File Content
-====================
+# Targets File Content
 
 An areas targets file is a CSV-formatted file with its first row
 containing column names and its second row containing the area
@@ -26,16 +25,16 @@ Here are the column names and their valid values:
                scope==1 implies PUF-derived filing units, and
                scope==2 implies CPS-derived filing units.
 
-- **`agilo`**: float representing lower bound of an AGI range,
-               which is included in the range.
+- **`agilo`**: float representing lower bound of an AGI range (which
+               is included in the range) that is tabulated.
 
-- **`agihi`**: float representing upper bound of an AGI range,
-               which is excluded from the range.
+- **`agihi`**: float representing upper bound of an AGI range (which
+               is excluded from the range) that is tabulated.
 
-- **`fstatus`**: integer in [0,5] range: fstatus=0 implies all
-                 tax units, other fstatus values imply just the
-                 tax units with the Tax-Calculator `MARS` variable
-                 equal to fstatus.
+- **`fstatus`**: integer in [0,5] range: fstatus=0 implies all tax
+                 units are tabulated, other fstatus values imply just
+                 the tax units with the Tax-Calculator `MARS` variable
+                 equal to fstatus are included in the tabulation.
 
 - **`target`**: target amount (dollars if count==0 or number of
                 tax units if count==1 or count==2).
