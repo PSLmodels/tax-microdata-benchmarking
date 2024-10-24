@@ -27,3 +27,39 @@ source(here::here("R", "constants.R"))
 
 ```
 
+
+## Get data
+```{r}
+#| label: get-data
+#| output: false
+
+cd117 <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile.csv"))
+
+df <- read_csv(fs::path(CDRAW, "geocorr2022_2428906586.csv"))
+
+(xwlabs <- unlist(df[1, ], use.names = TRUE))  # variable names and labels
+
+xwalk <- df |> 
+  filter(row_number() != 1) |> 
+  rename_with(str_to_lower) |> 
+  rename(stabbr=stab) |> 
+  mutate(across(pop20:afact, as.numeric),
+         statecd117=paste0(stabbr, cd117),
+         statecd118=paste0(stabbr, cd118))
+
+count(xwalk, stabbr) # 52 including DC and PR
+count(xwalk, stabbr) |> filter(n==1)
+xwalk |> filter(stabbr=="PR")
+
+# check numbers of districts
+cd117codes <- unique(xwalk$statecd117) |> sort() # 438 -- why?
+cd118codes <- unique(xwalk$statecd118) |> sort() # 437 -- why?
+
+cd117codes # DC98 instead of DC00; PR98
+
+cd118codes # DC98 instead of DC00; PR98
+
+
+```
+
+
