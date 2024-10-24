@@ -39,7 +39,9 @@ tmd/storage/output/tmd_weights.csv.gz: \
 tmd/storage/output/cached_files: \
   tmd/storage/output/tmd.csv.gz \
   tmd/storage/output/tmd_growfactors.csv \
-  tmd/storage/output/tmd_weights.csv.gz
+  tmd/storage/output/tmd_weights.csv.gz \
+  tmd/storage/__init__.py \
+  tmd/create_taxcalc_cached_files.py
 	python tmd/create_taxcalc_cached_files.py
 
 .PHONY=tmd_files
