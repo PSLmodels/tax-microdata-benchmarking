@@ -14,16 +14,28 @@ considered comments and are skipped.
 
 Here are the column names and their valid values:
 
-- **`varname`**: ...
+- **`varname`**: any Tax-Calculator variable name.
 
-- **`count`**: ...
+- **`count`**: integer in [0,2] range: count==0 implies dollar total
+               of varname is tabulated, count==1 implies number of
+               tax units with any value of varname is tabulated,
+               count==2 implies number of tax units with non-zero
+               values of varname is tabulated.
 
-- **`scope`**: ...
+- **`scope`**: integer in [0,2] range: scope==0 implies all tax units,
+               scope==1 implies PUF-derived filing units, and
+               scope==2 implies CPS-derived filing units.
 
-- **`agilo`**: ...
+- **`agilo`**: float representing lower bound of an AGI range,
+               which is included in the range.
 
-- **`agihi`**: ...
+- **`agihi`**: float representing upper bound of an AGI range,
+               which is excluded from the range.
 
-- **`fstatus`**: ...
+- **`fstatus`**: integer in [0,5] range: fstatus=0 implies all
+                 tax units, other fstatus values imply just the
+                 tax units with the Tax-Calculator `MARS` variable
+                 equal to fstatus.
 
-- **`target`**: ...
+- **`target`**: target amount (dollars if count==0 or number of
+                tax units if count==1 or count==2).
