@@ -5,6 +5,7 @@ tmd/areas/cache_agi.npy
 .quarto/
 .Rproj.user/
 _docs/
+_targetprep/
 _freeze/
 intermediate/
 
