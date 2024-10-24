@@ -65,8 +65,8 @@ xwalk1 |> filter(stabbr=="PR")
 cd117codes <- unique(xwalk1$statecd117) |> sort() # 438 -- why?
 cd118codes <- unique(xwalk1$statecd118) |> sort() # 437 -- why?
 
-cd117codes # DC98 instead of DC00; PR98
-cd118codes # DC98 instead of DC00; PR98
+cd117codes # DC98 instead of DC00; PR98; NC seems to have bad codes < 10
+cd118codes # DC98 instead of DC00; PR98; NC codes look ok here
 
 # do the shares of statecd117 given to various statecd118s add to 1?
 xwalk1 |> 
@@ -82,7 +82,7 @@ xwalk1 |>
 
 # do the individual shares of af117to118 match what we get with population?
 xwalk1 |> 
-  mutate(share117to118=pop20 / sum(pop20), .by=statecd117) |> 
+  mutate(share117to118=pop2020 / sum(pop2020), .by=statecd117) |> 
   mutate(diff=share117to118 - af117to118) |> 
   relocate(af117to118, .before=share117to118) |> 
   arrange(desc(abs(diff))) # good, they match within small tolerances
@@ -90,7 +90,7 @@ xwalk1 |>
 
 # do the individual shares of af118to117 match what we get with population?
 xwalk1 |> 
-  mutate(share118to117=pop20 / sum(pop20), .by=statecd118) |> 
+  mutate(share118to117=pop2020 / sum(pop2020), .by=statecd118) |> 
   mutate(diff=share118to117 - af118to117) |> 
   relocate(af118to117, .before=share118to117) |> 
   arrange(desc(abs(diff))) # good, they match within small tolerances
@@ -98,7 +98,15 @@ xwalk1 |>
 # how well do the cds match against our 117th cd data?
 xwalk2 <- xwalk1 |> 
   filter(stabbr != "PR") |> 
+  filter(cd117 != "-") |> # not sure what this is and pop2020 is only 13
+  # redo codes
   mutate(
+    oldcd117 = cd117,
+    cd117 = case_when(stabbr=="NC" & nchar(cd117) != 2 ~ 
+                         str_pad(as.integer(cd117), width=2, side="left", pad="0"),
+                       .default = cd117),
+    statecd117=paste0(stabbr, cd117),
+    statecd118=paste0(stabbr, cd118),
     statecd117 = case_when(
       statecd117 == "DC98" ~ "DC00",
       .default = statecd117),
@@ -106,17 +114,46 @@ xwalk2 <- xwalk1 |>
       statecd118 == "DC98" ~ "DC00",
     .default = statecd118))
 
+xwalk2 |> 
+  filter(cd117 != oldcd117) |> 
+  relocate(oldcd117, .after=cd117)
+
+xwalk2 |> 
+  filter(statecd118 == "NC14")
+  
+# how do the 117th CDs match up?
 usoi <- cd117$statecd |> unique()
 ugeo <- xwalk2$statecd117 |> unique()
 
 usoi
 ugeo
 
-setdiff(usoi, ugeo) # "NC01" "NC02" "NC03" "NC04" "NC05" "NC06" "NC07" "NC08" "NC09"
+setdiff(usoi, ugeo) # none missing
+setdiff(ugeo, usoi)
 
 check <- xwalk2 |> 
   filter(stabbr=="NC")
 
+```
+
+
+```{r}
+#| label: make-save-final-xwalk
+#| output: false
+
+# calc pop shares (so we have more precision than in the source data) and save
+xwalk3 <- xwalk2 |> 
+  mutate(share117to118=pop2020 / sum(pop2020), .by=statecd117)
+
+xwalk3 |> 
+  mutate(diff=share117to118 - af117to118) |> 
+  relocate(af117to118, .before=share117to118) |> 
+  arrange(desc(abs(diff))) # good, they match within small tolerances
+
+xwalk_final <- xwalk3 |> 
+  select(stabbr, cd117, cd118, statecd117, statecd118, share117to118)
+
+write_csv(xwalk_final, fs::path(CDINTERMEDIATE, "xwalk_final.csv"))
 
 ```
 
