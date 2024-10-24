@@ -25,10 +25,10 @@ Here are the column names and their valid values:
                scope==1 implies PUF-derived filing units, and
                scope==2 implies CPS-derived filing units.
 
-- **`agilo`**: float representing lower bound of an AGI range (which
+- **`agilo`**: float representing lower bound of the AGI range (which
                is included in the range) that is tabulated.
 
-- **`agihi`**: float representing upper bound of an AGI range (which
+- **`agihi`**: float representing upper bound of the AGI range (which
                is excluded from the range) that is tabulated.
 
 - **`fstatus`**: integer in [0,5] range: fstatus=0 implies all tax
