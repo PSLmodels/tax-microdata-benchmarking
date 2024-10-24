@@ -1,6 +1,6 @@
 project:
   type: book
-  output-dir: _docs
+  output-dir: _targetprep
 
 # https://prerelease.quarto.org/  # quarto documentation at this link
 
@@ -11,10 +11,10 @@ project:
 
 # publishing with netlify cli:
 #  open terminal in prepare
-#  quarto render && netlify deploy --prod --dir=_docs # change to _prepare??
+#  quarto render && netlify deploy --prod --dir=_targetprep # change to _prepare??
 
 #  quarto render # inspect to be sure it is as desired
-#  netlify deploy --prod --dir=_docs
+#  netlify deploy --prod --dir=_targetprep
 
 # or step by step
 #  netlify deploy # to test it, give _examine as publish directory
