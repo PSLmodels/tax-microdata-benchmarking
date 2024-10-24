@@ -36,30 +36,87 @@ source(here::here("R", "constants.R"))
 cd117 <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile.csv"))
 
 df <- read_csv(fs::path(CDRAW, "geocorr2022_2428906586.csv"))
+glimpse(df)
 
 (xwlabs <- unlist(df[1, ], use.names = TRUE))  # variable names and labels
 
-xwalk <- df |> 
+xwalk1 <- df |> 
   filter(row_number() != 1) |> 
   rename_with(str_to_lower) |> 
-  rename(stabbr=stab) |> 
-  mutate(across(pop20:afact, as.numeric),
+  rename(stabbr=stab, pop2020=pop20) |> 
+  mutate(across(pop2020:afact, as.numeric),
          statecd117=paste0(stabbr, cd117),
-         statecd118=paste0(stabbr, cd118))
-
-count(xwalk, stabbr) # 52 including DC and PR
-count(xwalk, stabbr) |> filter(n==1)
-xwalk |> filter(stabbr=="PR")
-
-# check numbers of districts
-cd117codes <- unique(xwalk$statecd117) |> sort() # 438 -- why?
-cd118codes <- unique(xwalk$statecd118) |> sort() # 437 -- why?
-
-cd117codes # DC98 instead of DC00; PR98
-
-cd118codes # DC98 instead of DC00; PR98
-
+         statecd118=paste0(stabbr, cd118)) |> 
+  rename(af118to117=afact2, 
+         af117to118=afact)
 
 ```
 
+
+```{r}
+#| label: data-checks
+#| output: false
+
+count(xwalk1, stabbr) # 52 including DC and PR
+count(xwalk1, stabbr) |> filter(n==1)
+xwalk1 |> filter(stabbr=="PR")
+
+# check numbers of districts
+cd117codes <- unique(xwalk1$statecd117) |> sort() # 438 -- why?
+cd118codes <- unique(xwalk1$statecd118) |> sort() # 437 -- why?
+
+cd117codes # DC98 instead of DC00; PR98
+cd118codes # DC98 instead of DC00; PR98
+
+# do the shares of statecd117 given to various statecd118s add to 1?
+xwalk1 |> 
+  summarise(af117to118=sum(af117to118), .by=statecd117) |> 
+  filter(af117to118 != 1) |> 
+  arrange(desc(abs(af117to118 - 1))) # minimal differences from 1
+
+# do the shares of statecd118 given to various statecd117s add to 1?
+xwalk1 |> 
+  summarise(af118to117=sum(af118to117), .by=statecd118) |> 
+  filter(af118to117 != 1) |> 
+  arrange(desc(abs(af118to117 - 1))) # minimal differences from 1
+
+# do the individual shares of af117to118 match what we get with population?
+xwalk1 |> 
+  mutate(share117to118=pop20 / sum(pop20), .by=statecd117) |> 
+  mutate(diff=share117to118 - af117to118) |> 
+  relocate(af117to118, .before=share117to118) |> 
+  arrange(desc(abs(diff))) # good, they match within small tolerances
+# use our calculated amounts
+
+# do the individual shares of af118to117 match what we get with population?
+xwalk1 |> 
+  mutate(share118to117=pop20 / sum(pop20), .by=statecd118) |> 
+  mutate(diff=share118to117 - af118to117) |> 
+  relocate(af118to117, .before=share118to117) |> 
+  arrange(desc(abs(diff))) # good, they match within small tolerances
+  
+# how well do the cds match against our 117th cd data?
+xwalk2 <- xwalk1 |> 
+  filter(stabbr != "PR") |> 
+  mutate(
+    statecd117 = case_when(
+      statecd117 == "DC98" ~ "DC00",
+      .default = statecd117),
+    statecd118 = case_when(
+      statecd118 == "DC98" ~ "DC00",
+    .default = statecd118))
+
+usoi <- cd117$statecd |> unique()
+ugeo <- xwalk2$statecd117 |> unique()
+
+usoi
+ugeo
+
+setdiff(usoi, ugeo) # "NC01" "NC02" "NC03" "NC04" "NC05" "NC06" "NC07" "NC08" "NC09"
+
+check <- xwalk2 |> 
+  filter(stabbr=="NC")
+
+
+```
 
