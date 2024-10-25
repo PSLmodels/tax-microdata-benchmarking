@@ -19,7 +19,6 @@ from scipy.optimize import minimize, Bounds
 import jax
 import jax.numpy as jnp
 from jax.experimental.sparse import BCOO
-import taxcalc as tc
 from tmd.storage import STORAGE_FOLDER
 from tmd.areas import AREAS_FOLDER
 
@@ -60,6 +59,11 @@ def valid_area(area: str):
     # Table C1. Number of Seats in
     #           U.S. House of Representatives by State: 1910 to 2020
     # https://www.census.gov/data/tables/2020/dec/2020-apportionment-data.html
+    #
+    # Congressional districts based on which Census
+    # ... 2010 implies districts are for the 117th Congress
+    # ... 2020 implies districts are for the 118th Congress
+    CD_CENSUS_YEAR = 2010
     state_info = {
         "AL": {2020: 7, 2010: 7},
         "AK": {2020: 1, 2010: 1},
@@ -116,7 +120,7 @@ def valid_area(area: str):
     # check state_info validity
     assert len(state_info) == 50 + 1
     total = {2010: 0, 2020: 0}
-    for scode, seats in state_info.items():
+    for _, seats in state_info.items():
         total[2010] += seats[2010]
         total[2020] += seats[2020]
     assert total[2010] == 435
@@ -147,8 +151,7 @@ def valid_area(area: str):
         all_ok = False
     # check state congressional district number if appropriate
     if len(area) == 4:
-        # assume CDs are based on 2010 Census (that is, 117th Congress)
-        max_cdn = state_info[scode][2010]
+        max_cdn = state_info[scode][CD_CENSUS_YEAR]
         cdn = int(area[2:4])
         if max_cdn <= 1:
             if cdn != 0:
@@ -216,14 +219,16 @@ def prepared_data(area: str, vardf: pd.DataFrame):
             initial_weights_scale = row.target / national_population
         # construct variable array for this target
         assert (
-            row.count >= 0 and row.count <= 2
-        ), f"count value {row.count} not in [0,2] range on {line}"
+            row.count >= 0 and row.count <= 3
+        ), f"count value {row.count} not in [0,3] range on {line}"
         if row.count == 0:  # tabulate $ variable amount
             unmasked_varray = vardf[row.varname].astype(float)
-        elif row.count == 1:  # count units with any variable amount
-            unmasked_varray = np.ones(numobs, dtype=float)
-        else:  # count only units with non-zero variable amount
+        elif row.count == 1:  # count only units with non-zero variable amount
             unmasked_varray = (vardf[row.varname] != 0.0).astype(float)
+        elif row.count == 2:  # count only units with positive variable amount
+            unmasked_varray = (vardf[row.varname] > 0.0).astype(float)
+        elif row.count == 3:  # count only units with negative variable amount
+            unmasked_varray = (vardf[row.varname] < 0.0).astype(float)
         mask = np.ones(numobs, dtype=int)
         assert (
             row.scope >= 0 and row.scope <= 2
@@ -232,8 +237,8 @@ def prepared_data(area: str, vardf: pd.DataFrame):
             mask *= vardf.data_source == 1  # PUF records
         elif row.scope == 2:
             mask *= vardf.data_source == 0  # CPS records
-        in_bin = (vardf.c00100 >= row.agilo) & (vardf.c00100 < row.agihi)
-        mask *= in_bin
+        in_agi_bin = (vardf.c00100 >= row.agilo) & (vardf.c00100 < row.agihi)
+        mask *= in_agi_bin
         assert (
             row.fstatus >= 0 and row.fstatus <= 5
         ), f"fstatus value {row.fstatus} not in [0,5] range on {line}"
