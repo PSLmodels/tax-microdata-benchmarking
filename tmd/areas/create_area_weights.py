@@ -5,7 +5,8 @@ for FIRST_YEAR through LAST_YEAR for the specified sub-national AREA.
 AREA prefix for state areas are the two lower-case character postal codes.
 AREA prefix for congressional districts are the state prefix followed by
 two digits (with a leading zero) identifying the district.  States with
-only one congressional district have 00 as the two digits.
+only one congressional district have 00 as the two digits to align names
+with IRS data.
 """
 
 import sys
@@ -19,7 +20,6 @@ from scipy.optimize import minimize, Bounds
 import jax
 import jax.numpy as jnp
 from jax.experimental.sparse import BCOO
-import taxcalc as tc
 from tmd.storage import STORAGE_FOLDER
 from tmd.areas import AREAS_FOLDER
 
@@ -49,6 +49,11 @@ OPTIMIZE_GTOL = 1e-9
 OPTIMIZE_MAXITER = 5000
 OPTIMIZE_IPRINT = 0  # 20 is a good diagnostic value; set to 0 for production
 OPTIMIZE_RESULTS = False  # set to True to see complete optimization results
+
+# assumption about which Congress the congressional districts are defined for:
+# ... 2010 implies districts for the 117th Congress
+# ... 2020 implies districts for the 118th Congress
+CD_CENSUS_YEAR = 2010
 
 
 def valid_area(area: str):
@@ -116,54 +121,66 @@ def valid_area(area: str):
     # check state_info validity
     assert len(state_info) == 50 + 1
     total = {2010: 0, 2020: 0}
-    for scode, seats in state_info.items():
+    for _, seats in state_info.items():
         total[2010] += seats[2010]
         total[2020] += seats[2020]
     assert total[2010] == 435
     assert total[2020] == 435
     # conduct series of validity checks on specified area string
-    all_ok = True
-    # check that specified area string has expected length
-    ok_length = len(area) == 2 or len(area) == 4
+    # ... check that specified area string has expected length
+    len_area_str = len(area)
+    ok_length = len_area_str >= 2 and len_area_str <= 5
     if not ok_length:
-        sys.stderr.write(f": area '{area}' length is not two or four\n")
-        all_ok = False
-    # check that specified area string contains valid characters
-    if not re.match(r"^[a-z][a-z](\d\d)*", area):
-        emsg = "begin with two characters and optionally end with two numbers"
-        sys.stderr.write(f": area '{area}' must {emsg}\n")
-        all_ok = False
-    if not all_ok:
+        sys.stderr.write(f": area '{area}' length is not in [2,5] range\n")
         return False
-    # handle faux areas
-    if re.match(r"[x-z][a-z](\d\d)*", area) is not None:
-        # is a faux area
-        return True
-    # if not a faux area
+    # ... check first two characters of area string
     s_c = area[0:2]
-    scode = s_c.upper()
-    if scode not in state_info:
-        sys.stderr.write(f": state '{s_c}' is unknown\n")
-        all_ok = False
-    # check state congressional district number if appropriate
-    if len(area) == 4:
-        # assume CDs are based on 2010 Census (that is, 117th Congress)
-        max_cdn = state_info[scode][2010]
-        cdn = int(area[2:4])
-        if max_cdn <= 1:
-            if cdn != 0:
-                sys.stderr.write(
-                    f": use area '{s_c}00' for this one-district state\n"
-                )
-                all_ok = False
-        else:  # if max_cdn >= 2
-            if cdn < 1:
-                sys.stderr.write(f": cd number '{cdn}' is less than one\n")
-                all_ok = False
-            if cdn > max_cdn:
-                sys.stderr.write(f": cd number '{cdn}' exceeds {max_cdn}\n")
-                all_ok = False
-    return all_ok
+    if not re.match(r"[a-z][a-z]", s_c):
+        emsg = "begin with two lower-case letters"
+        sys.stderr.write(f": area '{area}' must {emsg}\n")
+        return False
+    is_faux_area = re.match(r"[x-z][a-z]", s_c) is not None
+    if not is_faux_area:
+        if s_c.upper() not in state_info:
+            sys.stderr.write(f": state '{s_c}' is unknown\n")
+            return False
+    # ... check state area assumption letter which is optional
+    if len_area_str == 3:
+        assump_char = area[2:3]
+        if not re.match(r"[A-Z]", assump_char):
+            emsg = "assumption character that is not an upper-case letter"
+            sys.stderr.write(f": area '{area}' has {emsg}\n")
+            return False
+    if len_area_str <= 3:
+        return True
+    # ... check Congressional district area string
+    if not re.match(r"\d\d", area[2:4]):
+        emsg = "have two numbers after the state code"
+        sys.stderr.write(f": area '{area}' must {emsg}\n")
+        return False
+    if is_faux_area:
+        max_cdnum = 99
+    else:
+        max_cdnum = state_info[s_c.upper()][CD_CENSUS_YEAR]
+    cdnum = int(area[2:4])
+    if max_cdnum <= 1:
+        if cdnum != 0:
+            sys.stderr.write(
+                f": use area '{s_c}00' for this one-district state\n"
+            )
+            return False
+    else:  # if max_cdnum >= 2
+        if cdnum > max_cdnum:
+            sys.stderr.write(f": cd number '{cdnum}' exceeds {max_cdnum}\n")
+            return False
+    # ... check district area assumption character which is optional
+    if len_area_str == 5:
+        assump_char = area[4:5]
+        if not re.match(r"[A-Z]", assump_char):
+            emsg = "assumption character that is not an upper-case letter"
+            sys.stderr.write(f": area '{area}' has {emsg}\n")
+            return False
+    return True
 
 
 def all_taxcalc_variables():
