@@ -65,6 +65,12 @@ def valid_area(area: str):
     # Table C1. Number of Seats in
     #           U.S. House of Representatives by State: 1910 to 2020
     # https://www.census.gov/data/tables/2020/dec/2020-apportionment-data.html
+    #
+    # Census on which Congressional districts are based:
+    # : CD_CENSUS_YEAR = 2010 implies districts are for the 117th Congress
+    # : CD_CENSUS_YEAR = 2020 implies districts are for the 118th Congress
+    CD_CENSUS_YEAR = 2010
+    # number of Congressional districts per state indexed by CD_CENSUS_YEAR:
     state_info = {
         "AL": {2020: 7, 2010: 7},
         "AK": {2020: 1, 2010: 1},
@@ -129,8 +135,7 @@ def valid_area(area: str):
     # conduct series of validity checks on specified area string
     # ... check that specified area string has expected length
     len_area_str = len(area)
-    ok_length = len_area_str >= 2 and len_area_str <= 5
-    if not ok_length:
+    if not 2 <= len_area_str <= 5:
         sys.stderr.write(f": area '{area}' length is not in [2,5] range\n")
         return False
     # ... check first two characters of area string
@@ -233,12 +238,16 @@ def prepared_data(area: str, vardf: pd.DataFrame):
             initial_weights_scale = row.target / national_population
         # construct variable array for this target
         assert (
-            row.count >= 0 and row.count <= 1
-        ), f"count value {row.count} not in [0,1] range on {line}"
-        if row.count == 0:
+            row.count >= 0 and row.count <= 3
+        ), f"count value {row.count} not in [0,3] range on {line}"
+        if row.count == 0:  # tabulate $ variable amount
             unmasked_varray = vardf[row.varname].astype(float)
-        else:
-            unmasked_varray = np.ones(numobs, dtype=float)
+        elif row.count == 1:  # count only units with non-zero variable amount
+            unmasked_varray = (vardf[row.varname] != 0.0).astype(float)
+        elif row.count == 2:  # count only units with positive variable amount
+            unmasked_varray = (vardf[row.varname] > 0.0).astype(float)
+        elif row.count == 3:  # count only units with negative variable amount
+            unmasked_varray = (vardf[row.varname] < 0.0).astype(float)
         mask = np.ones(numobs, dtype=int)
         assert (
             row.scope >= 0 and row.scope <= 2
@@ -247,8 +256,8 @@ def prepared_data(area: str, vardf: pd.DataFrame):
             mask *= vardf.data_source == 1  # PUF records
         elif row.scope == 2:
             mask *= vardf.data_source == 0  # CPS records
-        in_bin = (vardf.c00100 >= row.agilo) & (vardf.c00100 < row.agihi)
-        mask *= in_bin
+        in_agi_bin = (vardf.c00100 >= row.agilo) & (vardf.c00100 < row.agihi)
+        mask *= in_agi_bin
         assert (
             row.fstatus >= 0 and row.fstatus <= 5
         ), f"fstatus value {row.fstatus} not in [0,5] range on {line}"
