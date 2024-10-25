@@ -3,7 +3,7 @@
 Contains sub-national area targets files.
 
 
-# Targets File Content
+## Targets File Content
 
 An areas targets file is a CSV-formatted file with its first row
 containing column names and its second row containing the area
