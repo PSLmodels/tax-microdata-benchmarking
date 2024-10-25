@@ -60,18 +60,17 @@ def valid_area(area: str):
     """
     Check validity of area string returning a boolean value.
     """
-    # Data in the state_info dictionary is taken from the following document:
-    # 2020 Census Apportionment Results, April 26, 2021,
-    # Table C1. Number of Seats in
-    #           U.S. House of Representatives by State: 1910 to 2020
-    # https://www.census.gov/data/tables/2020/dec/2020-apportionment-data.html
-    #
     # Census on which Congressional districts are based:
-    # : CD_CENSUS_YEAR = 2010 implies districts are for the 117th Congress
-    # : CD_CENSUS_YEAR = 2020 implies districts are for the 118th Congress
-    CD_CENSUS_YEAR = 2010
-    # number of Congressional districts per state indexed by CD_CENSUS_YEAR:
+    # : cd_census_year = 2010 implies districts are for the 117th Congress
+    # : cd_census_year = 2020 implies districts are for the 118th Congress
+    cd_census_year = 2010
+    # data in the state_info dictionary is taken from the following document:
+    #  2020 Census Apportionment Results, April 26, 2021,
+    #  Table C1. Number of Seats in
+    #            U.S. House of Representatives by State: 1910 to 2020
+    #  https://www.census.gov/data/tables/2020/dec/2020-apportionment-data.html
     state_info = {
+        # number of Congressional districts per state indexed by cd_census_year
         "AL": {2020: 7, 2010: 7},
         "AK": {2020: 1, 2010: 1},
         "AZ": {2020: 9, 2010: 9},
@@ -166,7 +165,7 @@ def valid_area(area: str):
     if is_faux_area:
         max_cdnum = 99
     else:
-        max_cdnum = state_info[s_c.upper()][CD_CENSUS_YEAR]
+        max_cdnum = state_info[s_c.upper()][cd_census_year]
     cdnum = int(area[2:4])
     if max_cdnum <= 1:
         if cdnum != 0:
