@@ -39,8 +39,8 @@ DUMP_DETAILS = False
 
 def check_command_line_arguments():
     """
-    Check validity of arguments and return (wpath1, wpath2) tuple
-    containing path to WGHT1 and WGHT2 weights files, respectively.
+    Check validity of arguments and return (wname1, wpath1, wname2, wpath2)
+    tuple containing name of and path to the WGHT1 and WGHT2 weights files.
     """
     usage = "USAGE: python chisquare_test.py WGHT1 WGHT2\n"
     if len(sys.argv) != 3:
@@ -49,17 +49,15 @@ def check_command_line_arguments():
         )
         sys.exit(1)
     all_ok = True
-    wpath1 = AREAS_FOLDER / "weights" / f"{sys.argv[1]}_tmd_weights.csv.gz"
+    wname1 = sys.argv[1]
+    wpath1 = AREAS_FOLDER / "weights" / f"{wname1}_tmd_weights.csv.gz"
     if not wpath1.exists():
-        sys.stderr.write(
-            f"ERROR: WGHT1 {str(wpath1)} file does not exist\n"
-        )
+        sys.stderr.write(f"ERROR: WGHT1 {str(wpath1)} file does not exist\n")
         all_ok = False
-    wpath2 = AREAS_FOLDER / "weights" / f"{sys.argv[2]}_tmd_weights.csv.gz"
+    wname2 = sys.argv[2]
+    wpath2 = AREAS_FOLDER / "weights" / f"{wname2}_tmd_weights.csv.gz"
     if not wpath2.exists():
-        sys.stderr.write(
-            f"ERROR: WGHT2 {str(wpath2)} file does not exist\n"
-        )
+        sys.stderr.write(f"ERROR: WGHT2 {str(wpath2)} file does not exist\n")
         all_ok = False
     if not CACHED_ITAX_PATH.exists():
         sys.stderr.write(
@@ -69,7 +67,7 @@ def check_command_line_arguments():
     if not all_ok:
         sys.stderr.write(f"{usage}")
         sys.exit(1)
-    return (wpath1, wpath2)
+    return (wname1, wpath1, wname2, wpath2)
 
 
 def weights_array(wghts_path: Path):
@@ -84,7 +82,7 @@ def weights_array(wghts_path: Path):
 # -- High-level logic of the script:
 
 
-def main(wpath1: Path, wpath2: Path):
+def main(wname1: str, wpath1: Path, wname2: str, wpath2: Path):
     """
     Conduct chi-square two-variable test using the WGHT1 weights (wpath1)
     and the WGHT2 weights (wpath2), which are weights for the same area
@@ -125,9 +123,9 @@ def main(wpath1: Path, wpath2: Path):
     wght1_sum = df1.s006.sum()
     wght2_sum = df2.s006.sum()
     weight_ratio = wght2_sum / wght1_sum
-    print(f"WGHT2/WGHT1_weight_total_ratio= {weight_ratio:.4f}")
+    print(f"{wname2}/{wname1}_weight_total_ratio= {weight_ratio:.4f}")
     print(
-        f"WGHT1,WGHT2_weighted_iitax($B)= {witax1:.3f} {witax2:.3f}"
+        f"{wname1},{wname2}_weighted_iitax($B)= {witax1:.3f} {witax2:.3f}"
         f"  ===>  ratio= {witax_ratio:.4f}"
     )
     freq1 = unweighted_count * wght1_bin / wght1_sum
@@ -149,6 +147,6 @@ def main(wpath1: Path, wpath2: Path):
 
 
 if __name__ == "__main__":
-    awpath1, awpath2 = check_command_line_arguments()
-    RCODE = main(awpath1, awpath2)
+    awname1, awpath1, awname2, awpath2 = check_command_line_arguments()
+    RCODE = main(awname1, awpath1, awname2, awpath2)
     sys.exit(RCODE)
