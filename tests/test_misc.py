@@ -2,8 +2,6 @@
 Miscellaneous tests of tmd.csv variable weighted totals.
 """
 
-import numpy as np
-
 
 def test_no_negative_weights(tmd_variables):
     assert tmd_variables.s006.min() >= 0, "Negative weights found"

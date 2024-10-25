@@ -29,6 +29,9 @@ def create_tmd_2021():
     print("Combining PUF and CPS nonfilers...")
     combined = pd.concat([tc_puf_21, tc_cps_21], ignore_index=True)
 
+    # ensure RECID values are unique
+    combined["RECID"] = np.arange(1, len(combined) + 1, dtype=int)
+
     trace1("A", combined)
 
     print("Adding Tax-Calculator outputs for 2021...")
@@ -47,6 +50,8 @@ def create_tmd_2021():
     combined = reweight(combined, 2021)
 
     trace1("C", combined)
+
+    combined = combined.reindex(sorted(combined.columns), axis=1)
 
     return combined
 

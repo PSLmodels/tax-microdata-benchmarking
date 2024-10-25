@@ -3,6 +3,6 @@
 # USAGE:
 #   ./execute.sh  DATA_CSV_FILENAME  TAX_YEAR  REFORM_FILENAME
 
-tc $1 $2 --reform $3.json --exact --tables --dump --dvars $3.dvars #--sqldb
+tc $1 $2 --reform $3.json --exact --tables --dump --dvars $3.dvars
 
 exit 0

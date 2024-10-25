@@ -1,13 +1,14 @@
-.PHONY=clean
-clean:
-	rm -f tmd/storage/output/*
-
 .PHONY=install
 install:
 	pip install -e .
 	python tmd/download_prerequisites.py
 
+.PHONY=clean
+clean:
+	rm -f tmd/storage/output/tmd* tmd/storage/output/cached_files
+
 tmd/storage/output/tmd.csv.gz: \
+  setup.py \
   tmd/imputation_assumptions.py \
   tmd/datasets/tmd.py \
   tmd/datasets/puf.py \
@@ -35,10 +36,19 @@ tmd/storage/output/tmd_weights.csv.gz: \
   tmd/create_taxcalc_sampling_weights.py
 	python tmd/create_taxcalc_sampling_weights.py
 
+tmd/storage/output/cached_files: \
+  tmd/storage/output/tmd.csv.gz \
+  tmd/storage/output/tmd_growfactors.csv \
+  tmd/storage/output/tmd_weights.csv.gz \
+  tmd/storage/__init__.py \
+  tmd/create_taxcalc_cached_files.py
+	python tmd/create_taxcalc_cached_files.py
+
 .PHONY=tmd_files
 tmd_files: tmd/storage/output/tmd.csv.gz \
   tmd/storage/output/tmd_growfactors.csv \
-  tmd/storage/output/tmd_weights.csv.gz
+  tmd/storage/output/tmd_weights.csv.gz \
+  tmd/storage/output/cached_files
 
 .PHONY=test
 test: tmd_files
