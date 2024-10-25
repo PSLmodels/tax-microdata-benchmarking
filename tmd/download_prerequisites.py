@@ -5,7 +5,7 @@ from tmd.storage import STORAGE_FOLDER
 def download_prerequisites():
     puf_2015 = download_gh_release_asset(
         repo="nikhilwoodruff/tax-microdata-benchmarking-releases",
-        release_name="tmd-prerequisites",
+        release_name="puf-2015",
         asset_name="puf_2015.csv",
     )
 
