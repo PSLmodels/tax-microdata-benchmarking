@@ -2,6 +2,10 @@
 Miscellaneous tests of tmd.csv variable weighted totals.
 """
 
+import pytest
+import taxcalc as tc
+from tmd.storage import STORAGE_FOLDER
+
 
 def test_no_negative_weights(tmd_variables):
     assert tmd_variables.s006.min() >= 0, "Negative weights found"
@@ -22,3 +26,32 @@ def test_population(tmd_variables):
     assert (
         abs(population / 1e6 / 334.18 - 1) < 0.01
     ), "Population not within 1% of 334.18 million"
+
+
+@pytest.mark.itax
+def test_income_tax():
+
+    def compare(name, act, exp, tol):
+        assert (
+            abs(act / exp - 1) < tol
+        ), f"{name}:act,exp,tol= {act} {exp} {tol}"
+
+    # use national tmd files to compute various 2021 income tax statistics
+    rec = tc.Records.tmd_constructor(
+        data_path=(STORAGE_FOLDER / "output" / "tmd.csv.gz"),
+        weights_path=(STORAGE_FOLDER / "output" / "tmd_weights.csv.gz"),
+        growfactors_path=(STORAGE_FOLDER / "output" / "tmd_growfactors.csv"),
+        exact_calculations=True,
+    )
+    sim = tc.Calculator(policy=tc.Policy(), records=rec)
+    sim.advance_to_year(2021)
+    sim.calc_all()
+    wght = sim.array("s006")
+    agi = sim.array("c00100")
+    itax = sim.array("iitax")
+    # check various income tax statistics
+    compare("wght_sum", wght.sum(), 184e6, 0.01)
+    hiagi = agi >= 1e6
+    compare("wght_sum_hiagi", (wght * hiagi).sum(), 0.875e6, 0.01)
+    compare("wght_itax_sum", (wght * itax).sum(), 1591e9, 0.01)
+    compare("wght_itax_sum_hiagi", ((wght * itax) * hiagi).sum(), 902e9, 0.01)
