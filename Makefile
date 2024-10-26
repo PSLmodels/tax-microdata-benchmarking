@@ -68,9 +68,3 @@ documentation:
 .PHONY=reweighting-visualisation
 reweighting-visualisation:
 	tensorboard --logdir=tmd/storage/output/reweighting
-
-.PHONY=tax-expenditures-report
-tax-expenditures-report: tmd_files
-	-pytest . --disable-warnings -m taxexp
-	diff tmd/storage/output/tax_expenditures \
-             tmd/examination/tax_expenditures
