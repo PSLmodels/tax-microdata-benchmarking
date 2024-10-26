@@ -43,7 +43,7 @@ def test_income_tax():
         growfactors_path=(STORAGE_FOLDER / "output" / "tmd_growfactors.csv"),
         exact_calculations=True,
     )
-    sim = tc.Calculator(policy=tc.Policy(), records=rec)
+    sim = tc.Calculator(records=rec, policy=tc.Policy())
     sim.advance_to_year(2021)
     sim.calc_all()
     wght = sim.array("s006")

@@ -231,16 +231,18 @@ def prepared_data(area: str, vardf: pd.DataFrame):
             initial_weights_scale = row.target / national_population
         # construct variable array for this target
         assert (
-            row.count >= 0 and row.count <= 3
-        ), f"count value {row.count} not in [0,3] range on {line}"
+            row.count >= 0 and row.count <= 4
+        ), f"count value {row.count} not in [0,4] range on {line}"
         if row.count == 0:  # tabulate $ variable amount
             unmasked_varray = vardf[row.varname].astype(float)
-        elif row.count == 1:  # count only units with non-zero variable amount
-            unmasked_varray = (vardf[row.varname] != 0.0).astype(float)
-        elif row.count == 2:  # count only units with positive variable amount
-            unmasked_varray = (vardf[row.varname] > 0.0).astype(float)
-        elif row.count == 3:  # count only units with negative variable amount
-            unmasked_varray = (vardf[row.varname] < 0.0).astype(float)
+        elif row.count == 1:  # count units with any variable amount
+            unmasked_varray = (vardf[row.varname] > -np.inf).astype(float)
+        elif row.count == 2:  # count only units with non-zero variable amount
+            unmasked_varray = (vardf[row.varname] != 0).astype(float)
+        elif row.count == 3:  # count only units with positive variable amount
+            unmasked_varray = (vardf[row.varname] > 0).astype(float)
+        elif row.count == 4:  # count only units with negative variable amount
+            unmasked_varray = (vardf[row.varname] < 0).astype(float)
         mask = np.ones(numobs, dtype=int)
         assert (
             row.scope >= 0 and row.scope <= 2
