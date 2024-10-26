@@ -37,7 +37,7 @@ def test_area_xx(tests_folder):
     vdf = sim.dataframe([], all_vars=True)
     # ... calculate actual results and store in act dictionary
     puf = vdf.data_source == 1
-    wght = vdf.s006[puf]
+    wght = vdf.s006 * puf
     act = {
         "popall": (vdf.s006 * vdf.XTOT).sum() * 1e-6,
         "e00300": (wght * vdf.e00300[puf]).sum() * 1e-9,
@@ -46,7 +46,7 @@ def test_area_xx(tests_folder):
         "e02000": (wght * vdf.e02000[puf]).sum() * 1e-9,
         "e02400": (wght * vdf.e02400[puf]).sum() * 1e-9,
         "c00100": (wght * vdf.c00100[puf]).sum() * 1e-9,
-        "agihic": wght[vdf.c00100[puf] >= 1e6].sum() * 1e-3,
+        "agihic": (wght * (vdf.c00100 >= 1e6)).sum() * 1e-3,
         "e00400": (wght * vdf.e00400[puf]).sum() * 1e-9,
         "e00600": (wght * vdf.e00600[puf]).sum() * 1e-9,
         "e00650": (wght * vdf.e00650[puf]).sum() * 1e-9,
