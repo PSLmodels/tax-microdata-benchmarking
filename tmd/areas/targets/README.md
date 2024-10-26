@@ -19,20 +19,20 @@ Here are the column names and their valid values:
                  file
 
 * __`count`__: integer in [0,4] range:
-               - count==0 implies dollar total of varname is tabulated
-               - count==1 implies number of tax units
+               * count==0 implies dollar total of varname is tabulated
+               * count==1 implies number of tax units
                           with __any__ value of varname is tabulated
-               - count==2 implies number of tax units
+               * count==2 implies number of tax units
                           with a __nonzero__ value of varname is tabulated
-               - count==3 implies number of tax units
+               * count==3 implies number of tax units
                           with a __positive__ value of varname is tabulated
-               - count==4 implies number of tax units
+               * count==4 implies number of tax units
                           with a __negative__ value of varname is tabulated
 
 * __`scope`__: integer in [0,2] range:
-               - scope==0 implies all tax units are tabulated
-               - scope==1 implies only PUF-derived filing units are tabulated
-               - scope==2 implies only CPS-derived filing units are tabulated
+               * scope==0 implies all tax units are tabulated
+               * scope==1 implies only PUF-derived filing units are tabulated
+               * scope==2 implies only CPS-derived filing units are tabulated
 
 * __`agilo`__: float representing lower bound of the AGI range (which
                is included in the range) that is tabulated.
@@ -41,11 +41,11 @@ Here are the column names and their valid values:
                is excluded from the range) that is tabulated.
 
 * __`fstatus`__: integer in [0,5] range:
-                 - fstatus=0 implies all filing statuses are tabulated
-                 - other fstatus values imply just the tax units with
+                 * fstatus=0 implies all filing statuses are tabulated
+                 * other fstatus values imply just the tax units with
                    the Tax-Calculator `MARS` variable equal to fstatus
                    are included in the tabulation
 
 * __`target`__: target amount:
-                - dollars if count==0
-                - number of tax units if count>0
+                * dollars if count==0
+                * number of tax units if count>0
