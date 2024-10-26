@@ -3,7 +3,6 @@ Tests of tmd/areas/create_area_weights.py script.
 """
 
 import yaml
-import pandas as pd
 import taxcalc as tc
 from tmd.storage import STORAGE_FOLDER
 from tmd.areas import AREAS_FOLDER
@@ -18,19 +17,17 @@ def test_area_xx(tests_folder):
     and compare actual Tax-Calculator results with expected results when
     using area weights along with national input data and growfactors.
     """
-    rc = create_area_weights_file("xx", write_log=True, write_file=True)
+    rc = create_area_weights_file("xx", write_log=False, write_file=True)
     assert rc == 0, "create_areas_weights_file has non-zero return code"
     # compare actual vs expected results for faux area xx
     # ... instantiate Tax-Calculator object for {area}
     idpath = STORAGE_FOLDER / "output" / "tmd.csv.gz"
-    gfpath = STORAGE_FOLDER / "output" / "tmd_growfactors.csv"
     wtpath = AREAS_FOLDER / "weights" / "xx_tmd_weights.csv.gz"
-    input_data = tc.Records(
-        data=pd.read_csv(idpath),
-        start_year=YEAR,
-        gfactors=tc.GrowFactors(growfactors_filename=str(gfpath)),
-        weights=str(wtpath),
-        adjust_ratios=None,
+    gfpath = STORAGE_FOLDER / "output" / "tmd_growfactors.csv"
+    input_data = tc.Records.tmd_constructor(
+        data_path=idpath,
+        weights_path=wtpath,
+        growfactors_path=gfpath,
         exact_calculations=True,
     )
     sim = tc.Calculator(records=input_data, policy=tc.Policy())

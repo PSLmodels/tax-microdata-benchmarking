@@ -639,7 +639,7 @@ def create_area_weights_file(
     with open(POPFILE_PATH, "r", encoding="utf-8") as pfile:
         pop = yaml.safe_load(pfile.read())
     # ... set FIRST_YEAR weights
-    weights = wght_area * 100  # scale up weights by 100 for Tax-Calculator
+    weights = wght_area
     # ... construct dictionary of scaled-up weights by year
     wdict = {f"WT{FIRST_YEAR}": weights}
     cum_pop_growth = 1.0
@@ -648,9 +648,9 @@ def create_area_weights_file(
         cum_pop_growth *= annual_pop_growth
         wght = weights.copy() * cum_pop_growth
         wdict[f"WT{year}"] = wght
-    # ... write rounded integer scaled-up weights to CSV-formatted file
+    # ... write weights to CSV-formatted file
     wdf = pd.DataFrame.from_dict(wdict)
-    wdf.to_csv(awpath, index=False, float_format="%.0f", compression="gzip")
+    wdf.to_csv(awpath, index=False, float_format="%.5f", compression="gzip")
 
     return 0
 
