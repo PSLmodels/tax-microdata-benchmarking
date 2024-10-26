@@ -26,24 +26,19 @@ Here are the column names and their valid values:
                  with a __positive__ value of varname is tabulated
       * count==4 implies number of tax units
                  with a __negative__ value of varname is tabulated
-
 3. __`scope`__: integer in [0,2] range:
-       * scope==0 implies all tax units are tabulated
-       * scope==1 implies only PUF-derived filing units are tabulated
-       * scope==2 implies only CPS-derived filing units are tabulated
-
+      * scope==0 implies all tax units are tabulated
+      * scope==1 implies only PUF-derived filing units are tabulated
+      * scope==2 implies only CPS-derived filing units are tabulated
 4. __`agilo`__: float representing lower bound of the AGI range (which
                 is included in the range) that is tabulated.
-
 5. __`agihi`__: float representing upper bound of the AGI range (which
                 is excluded from the range) that is tabulated.
-
 6. __`fstatus`__: integer in [0,5] range:
       * fstatus=0 implies all filing statuses are tabulated
       * other fstatus values imply just the tax units with
               the Tax-Calculator `MARS` variable equal to fstatus
               are included in the tabulation
-
 7. __`target`__: target amount:
       * dollars if count==0
       * number of tax units if count>0
