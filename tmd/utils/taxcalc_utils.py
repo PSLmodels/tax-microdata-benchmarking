@@ -78,6 +78,7 @@ def add_taxcalc_outputs(
         weights=wghts,
         adjust_ratios=None,
         exact_calculations=True,
+        weights_scale=1.0,
     )
     policy = tc.Policy()
     if reform:

@@ -24,9 +24,11 @@ def test_tax_revenue(
     tests_folder, tmd_variables, tmd_weights_path, tmd_growfactors_path
 ):
     # read expected fiscal year revenues and convert to calendar year revenues
-    with open(tests_folder / "expected_itax_revenue.yaml") as f:
+    epath = tests_folder / "expected_itax_revenue.yaml"
+    with open(epath, "r", encoding="utf-8") as f:
         fy_itax = yaml.safe_load(f)
-    with open(tests_folder / "expected_ptax_revenue.yaml") as f:
+    epath = tests_folder / "expected_ptax_revenue.yaml"
+    with open(epath, "r", encoding="utf-8") as f:
         fy_ptax = yaml.safe_load(f)
     exp_itax = {}
     exp_ptax = {}
@@ -43,6 +45,7 @@ def test_tax_revenue(
         gfactors=growf,
         adjust_ratios=None,
         exact_calculations=True,
+        weights_scale=1.0,
     )
     sim = tc.Calculator(records=input_data, policy=tc.Policy())
     act_itax = {}
