@@ -13,33 +13,39 @@ considered comments and are skipped.
 
 Here are the column names and their valid values:
 
-- **`varname`**: any Tax-Calculator input variable name plus any
+* __`varname`__: any Tax-Calculator input variable name plus any
                  Tax-Calculator calculated variable in the list of
                  cached variables in the `tmd/storage/__init__.py`
-                 file.
+                 file
 
-- **`count`**: integer in [0,3] range: count==0 implies dollar total
-               of varname is tabulated, count==1 implies number of tax
-               units with non-zero values of varname is tabulated,
-               count==2 implies number of tax units with positive
-               values of varname is tabulated, count==3 implies number
-               of tax units with negative values of varname is
-               tabulated,
+* __`count`__: integer in [0,4] range:
+               - count==0 implies dollar total of varname is tabulated
+               - count==1 implies number of tax units
+                          with __any__ value of varname is tabulated
+               - count==2 implies number of tax units
+                          with a __nonzero__ value of varname is tabulated
+               - count==3 implies number of tax units
+                          with a __positive__ value of varname is tabulated
+               - count==4 implies number of tax units
+                          with a __negative__ value of varname is tabulated
 
-- **`scope`**: integer in [0,2] range: scope==0 implies all tax units,
-               scope==1 implies PUF-derived filing units, and
-               scope==2 implies CPS-derived filing units.
+* __`scope`__: integer in [0,2] range:
+               - scope==0 implies all tax units are tabulated
+               - scope==1 implies only PUF-derived filing units are tabulated
+               - scope==2 implies only CPS-derived filing units are tabulated
 
-- **`agilo`**: float representing lower bound of the AGI range (which
+* __`agilo`__: float representing lower bound of the AGI range (which
                is included in the range) that is tabulated.
 
-- **`agihi`**: float representing upper bound of the AGI range (which
+* __`agihi`__: float representing upper bound of the AGI range (which
                is excluded from the range) that is tabulated.
 
-- **`fstatus`**: integer in [0,5] range: fstatus=0 implies all tax
-                 units are tabulated, other fstatus values imply just
-                 the tax units with the Tax-Calculator `MARS` variable
-                 equal to fstatus are included in the tabulation.
+* __`fstatus`__: integer in [0,5] range:
+                 - fstatus=0 implies all filing statuses are tabulated
+                 - other fstatus values imply just the tax units with
+                   the Tax-Calculator `MARS` variable equal to fstatus
+                   are included in the tabulation
 
-- **`target`**: target amount (dollars if count==0 or number of
-                tax units if count>0).
+* __`target`__: target amount:
+                - dollars if count==0
+                - number of tax units if count>0
