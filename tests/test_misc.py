@@ -32,8 +32,9 @@ def test_population(tmd_variables):
 def test_income_tax():
 
     def compare(name, act, exp, tol):
-        assert abs(act / exp - 1) < tol, \
-            f"{name}:act,exp,tol= {act} {exp} {tol}"
+        assert (
+            abs(act / exp - 1) < tol
+        ), f"{name}:act,exp,tol= {act} {exp} {tol}"
 
     # use national tmd files to compute various 2021 income tax statistics
     rec = tc.Records.tmd_constructor(
@@ -49,8 +50,8 @@ def test_income_tax():
     agi = sim.array("c00100")
     itax = sim.array("iitax")
     # check various income tax statistics
-    compare("wght_sum", wght.sum()*1e-6, 184.0, 0.01)
+    compare("wght_sum", wght.sum(), 184e6, 0.01)
     hiagi = agi >= 1e6
-    compare("wght_sum_hiagi", (wght*hiagi).sum()*1e-6, 0.875, 0.01)
-    compare("wght_itax_sum", (wght*itax).sum()*1e-9, 1591.0, 0.01)
-    compare("wght_itax_sum_hiagi", ((wght*itax)*hiagi).sum()*1e-9, 902.0, 0.01)
+    compare("wght_sum_hiagi", (wght * hiagi).sum(), 0.875e6, 0.01)
+    compare("wght_itax_sum", (wght * itax).sum(), 1591e9, 0.01)
+    compare("wght_itax_sum_hiagi", ((wght * itax) * hiagi).sum(), 902e9, 0.01)
