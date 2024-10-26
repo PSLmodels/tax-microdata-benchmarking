@@ -236,7 +236,7 @@ def prepared_data(area: str, vardf: pd.DataFrame):
         if row.count == 0:  # tabulate $ variable amount
             unmasked_varray = vardf[row.varname].astype(float)
         elif row.count == 1:  # count units with any variable amount
-            unmasked_varray = (vardf[row.varname] > np.inf).astype(float)
+            unmasked_varray = (vardf[row.varname] > -np.inf).astype(float)
         elif row.count == 2:  # count only units with non-zero variable amount
             unmasked_varray = (vardf[row.varname] != 0).astype(float)
         elif row.count == 3:  # count only units with positive variable amount
