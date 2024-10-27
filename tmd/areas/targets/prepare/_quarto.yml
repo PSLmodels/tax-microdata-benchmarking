@@ -6,8 +6,9 @@ project:
 
 
 # site info:
-  # id: 4d646266-9d1f-4d69-acb4-b9a17b63a5ff
-  # url: https://tmd-area-targets.netlify.app
+  # OLD id: 4d646266-9d1f-4d69-acb4-b9a17b63a5ff
+  # Unique deploy URL:  https://671e13320a7e7cfb68b1ba7d--tmd-areas-prepare-targets.netlify.app
+  # url: https://tmd-areas-targets-prepare.netlify.app
 
 # publishing with netlify cli:
 #  open terminal in prepare
