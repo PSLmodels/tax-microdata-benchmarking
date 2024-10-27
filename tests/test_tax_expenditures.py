@@ -50,7 +50,6 @@ def test_tax_exp_diffs(
     # ... compare all other rows using a smaller relative diff tolerance
     actval = actdf.iloc[:, 3].to_numpy(dtype=np.float64)
     expval = expdf.iloc[:, 3].to_numpy(dtype=np.float64)
-    ####reltol = float(os.getenv("TMD_TAXEXP_DIFF_RTOL", default=0.011))
     reltol = 0.011
     if not np.allclose(actval, expval, atol=0.0, rtol=reltol):
         same = False
