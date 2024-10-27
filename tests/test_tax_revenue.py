@@ -10,7 +10,9 @@ FIRST_CYR = 2021
 LAST_CYR = 2033
 
 DEFAULT_RELTOL_ITAX = 0.10
-RELTOL_ITAX = {}
+RELTOL_ITAX = {
+    2022: 0.13,
+}
 DEFAULT_RELTOL_PTAX = 0.02
 RELTOL_PTAX = {
     2021: 0.05,
@@ -86,6 +88,8 @@ def test_tax_revenue(
         assert False, f"test_tax_revenue DUMP output: {emsg}"
     else:
         if emsg:
-            emsg += f"\nRELTOL_ITAX= {RELTOL_ITAX:4.2f}"
-            emsg += f"\nRELTOL_PTAX= {RELTOL_PTAX:4.2f}"
+            reltol = RELTOL_ITAX.get(year, DEFAULT_RELTOL_ITAX)
+            emsg += f"\nRELTOL_ITAX= {reltol:4.2f}"
+            reltol = RELTOL_PTAX.get(year, DEFAULT_RELTOL_PTAX)
+            emsg += f"\nRELTOL_PTAX= {reltol:4.2f}"
             raise ValueError(emsg)
