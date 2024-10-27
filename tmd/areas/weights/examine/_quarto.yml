@@ -36,7 +36,6 @@ book:
         - cd_simple_tables.qmd
         - cd_results_vs_targets_tables.qmd
 
-        
 format:
   html:
     theme: cosmo
