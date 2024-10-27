@@ -25,8 +25,6 @@ from tmd.areas import AREAS_FOLDER
 FIRST_YEAR = 2021
 LAST_YEAR = 2034
 INFILE_PATH = STORAGE_FOLDER / "output" / "tmd.csv.gz"
-WTFILE_PATH = STORAGE_FOLDER / "output" / "tmd_weights.csv.gz"
-GFFILE_PATH = STORAGE_FOLDER / "output" / "tmd_growfactors.csv"
 POPFILE_PATH = STORAGE_FOLDER / "input" / "cbo_population_forecast.yaml"
 
 # Tax-Calcultor calculated variable cache files:
