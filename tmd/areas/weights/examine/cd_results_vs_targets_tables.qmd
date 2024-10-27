@@ -276,7 +276,6 @@ errors |> filter(agistub != 9) |> arrange(desc(apdiff))
 errors |> filter(agistub == 9) |> arrange(desc(apdiff))
 errors |> filter(agistub == 9) |> arrange(varname, area)
 
-
 ```
 
 
