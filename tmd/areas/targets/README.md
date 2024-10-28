@@ -1,6 +1,6 @@
 # areas / targets
 
-Contains sub-national area targets files.
+Contains sub-national area targets files. word
 
 
 ## Targets File Content
