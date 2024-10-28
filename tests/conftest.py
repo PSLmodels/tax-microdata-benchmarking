@@ -1,5 +1,4 @@
 from pathlib import Path
-import yaml
 import pytest
 import numpy as np
 import pandas as pd

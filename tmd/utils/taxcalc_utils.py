@@ -71,18 +71,19 @@ def add_taxcalc_outputs(
         growf = tc.GrowFactors(growfactors_filename=str(growfactors))
     else:
         growf = growfactors
-    input_data = tc.Records(
+    rec = tc.Records(
         data=flat_file,
         start_year=input_data_year,
         gfactors=growf,
         weights=wghts,
         adjust_ratios=None,
         exact_calculations=True,
+        weights_scale=1.0,
     )
     policy = tc.Policy()
     if reform:
         policy.implement_reform(reform)
-    simulation = tc.Calculator(records=input_data, policy=policy)
+    simulation = tc.Calculator(records=rec, policy=policy)
     simulation.advance_to_year(simulation_year)
     simulation.calc_all()
     output = simulation.dataframe(None, all_vars=True)
