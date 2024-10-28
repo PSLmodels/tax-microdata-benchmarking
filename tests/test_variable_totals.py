@@ -11,9 +11,11 @@ from tmd.storage import STORAGE_FOLDER
 
 @pytest.mark.vartotals
 def test_variable_totals(tests_folder, tmd_variables):
-    with open(STORAGE_FOLDER / "input" / "tc_variable_metadata.yaml") as f:
+    vpath = STORAGE_FOLDER / "input" / "tc_variable_metadata.yaml"
+    with open(vpath, "r", encoding="utf-8") as f:
         tc_variable_metadata = yaml.safe_load(f)
-    with open(tests_folder / "taxdata_variable_totals.yaml") as f:
+    vpath = tests_folder / "taxdata_variable_totals.yaml"
+    with open(vpath, "r", encoding="utf-8") as f:
         td_variable_totals = yaml.safe_load(f)
     test_exempted_variables = [
         "DSI",  # Issue here but deprioritized
