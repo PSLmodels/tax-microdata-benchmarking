@@ -6,11 +6,17 @@ import yaml
 import taxcalc as tc
 
 
-FIRST_CYR = 2023
+FIRST_CYR = 2021
 LAST_CYR = 2033
 
-RELTOL_ITAX = 0.10
-RELTOL_PTAX = 0.02
+DEFAULT_RELTOL_ITAX = 0.10
+RELTOL_ITAX = {
+    2022: 0.13,
+}
+DEFAULT_RELTOL_PTAX = 0.02
+RELTOL_PTAX = {
+    2021: 0.05,
+}
 
 
 DUMP = False  # True implies test always fails with complete output
@@ -24,9 +30,11 @@ def test_tax_revenue(
     tests_folder, tmd_variables, tmd_weights_path, tmd_growfactors_path
 ):
     # read expected fiscal year revenues and convert to calendar year revenues
-    with open(tests_folder / "expected_itax_revenue.yaml") as f:
+    epath = tests_folder / "expected_itax_revenue.yaml"
+    with open(epath, "r", encoding="utf-8") as f:
         fy_itax = yaml.safe_load(f)
-    with open(tests_folder / "expected_ptax_revenue.yaml") as f:
+    epath = tests_folder / "expected_ptax_revenue.yaml"
+    with open(epath, "r", encoding="utf-8") as f:
         fy_ptax = yaml.safe_load(f)
     exp_itax = {}
     exp_ptax = {}
@@ -43,6 +51,7 @@ def test_tax_revenue(
         gfactors=growf,
         adjust_ratios=None,
         exact_calculations=True,
+        weights_scale=1.0,
     )
     sim = tc.Calculator(records=input_data, policy=tc.Policy())
     act_itax = {}
@@ -60,7 +69,7 @@ def test_tax_revenue(
     emsg = ""
     for year in range(FIRST_CYR, LAST_CYR + 1):
         reldiff = act_itax[year] / exp_itax[year] - 1
-        same = abs(reldiff) < RELTOL_ITAX
+        same = abs(reldiff) < RELTOL_ITAX.get(year, DEFAULT_RELTOL_ITAX)
         if not same or DUMP:
             msg = (
                 f"\nITAX:cyr,act,exp,rdiff= {year} "
@@ -68,7 +77,7 @@ def test_tax_revenue(
             )
             emsg += msg
         reldiff = act_ptax[year] / exp_ptax[year] - 1
-        same = abs(reldiff) < RELTOL_PTAX
+        same = abs(reldiff) < RELTOL_PTAX.get(year, DEFAULT_RELTOL_PTAX)
         if not same or DUMP:
             msg = (
                 f"\nPTAX:cyr,act,exp,rdiff= {year} "
@@ -79,6 +88,8 @@ def test_tax_revenue(
         assert False, f"test_tax_revenue DUMP output: {emsg}"
     else:
         if emsg:
-            emsg += f"\nRELTOL_ITAX= {RELTOL_ITAX:4.2f}"
-            emsg += f"\nRELTOL_PTAX= {RELTOL_PTAX:4.2f}"
+            reltol = RELTOL_ITAX.get(year, DEFAULT_RELTOL_ITAX)
+            emsg += f"\nRELTOL_ITAX= {reltol:4.2f}"
+            reltol = RELTOL_PTAX.get(year, DEFAULT_RELTOL_PTAX)
+            emsg += f"\nRELTOL_PTAX= {reltol:4.2f}"
             raise ValueError(emsg)

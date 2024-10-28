@@ -26,9 +26,9 @@ def create_weights_file(pop_file=POPFILE):
 
     # get FIRST_YEAR weights from VARFILE
     vdf = pd.read_csv(VARFILE)
-    weights = vdf.s006 * 100  # scale up weights by 100 for Tax-Calculator
+    weights = vdf.s006
 
-    # construct dictionary of scaled-up weights by year
+    # construct dictionary of weights by year
     wdict = {f"WT{FIRST_YEAR}": weights}
     cum_pop_growth = 1.0
     for year in range(FIRST_YEAR + 1, LAST_YEAR + 1):
@@ -37,9 +37,9 @@ def create_weights_file(pop_file=POPFILE):
         wght = weights.copy() * cum_pop_growth
         wdict[f"WT{year}"] = wght
 
-    # write rounded integer scaled-up weights to CSV-formatted file
+    # write weights to CSV-formatted file
     wdf = pd.DataFrame.from_dict(wdict)
-    wdf.to_csv(WGTFILE, index=False, float_format="%.0f", compression="gzip")
+    wdf.to_csv(WGTFILE, index=False, float_format="%.5f", compression="gzip")
 
 
 if __name__ == "__main__":
