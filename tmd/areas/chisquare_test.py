@@ -23,7 +23,7 @@ For example: Xsq(p=0.05,dof= 100)=  124.34
 
 USAGE: python chisquare_test.py WGHT1 WGHT2 [numbins] [dump]
 
-EXAMPLE using default numbins (equal to 2000) and with no details dump:
+EXAMPLE using default numbins (equal to 100) and with no details dump:
 areas% python chisquare_test.py pa08 pa08A
 """
 
@@ -38,7 +38,7 @@ from tmd.storage import STORAGE_FOLDER
 USAGE = "USAGE: python chisquare_test.py WGHT1 WGHT2 [numbins] [dump]"
 CACHED_ITAX_PATH = STORAGE_FOLDER / "output" / "cached_iitax.npy"
 TAX_YEAR = 2021
-DEFAULT_NUM_BINS = 2000
+DEFAULT_NUM_BINS = 100
 
 
 def check_arguments():
