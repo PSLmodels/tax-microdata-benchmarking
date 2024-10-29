@@ -6,7 +6,6 @@
 _examine/
 _freeze/
 site_libs/
-temp_data/
 
 # files to ignore
 .Rhistory
