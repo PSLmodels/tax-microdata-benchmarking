@@ -14,6 +14,3 @@ tmd/storage/output/tax_expenditures
 **demographics_2015.csv
 **puf_2015.csv
 *.DS_STORE
-# Local Netlify folder
-.netlify
-.Rproj.user
