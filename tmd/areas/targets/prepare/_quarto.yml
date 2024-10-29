@@ -35,6 +35,10 @@ book:
   date-format: long
   chapters:
     - index.qmd
+    - part: "Usage and notes"
+      chapters:
+        - usage.qmd
+        - cd_issues_and_TODOs.qmd
     - part: "IRS Congressional District data"
       chapters:
         - cd_overall_documentation.qmd
