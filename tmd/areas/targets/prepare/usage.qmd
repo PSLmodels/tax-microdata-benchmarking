@@ -10,9 +10,24 @@ editor_options:
 
 ## Prerequisites
 
--   A recent version of R. This project was created with R version 4.4.1.
--   Recent version of R packages used by this project. See "prepare/R/libraries.R"
--   Recent version of quarto, 1.6 or higher. This project was created with quarto version 1.6.24
+-   A recent version of [R](https://www.r-project.org/). This project was created with R version 4.4.1.
+-   Recent version of R packages used by this project. See ".../targets/prepare/R/libraries.R"
+-   Recent pre-release version of [quarto](https://quarto.org/docs/download/prerelease.html), 1.6 or higher. This project was created with quarto version 1.6.24
+-   Be sure that ".../targets/prepare/cds/raw_data/" exists and has the following files:
+
+<!-- 21incddocguide.docx -->
+
+<!-- cd_documentation_extracted_from_21incddocguide.docx.xlsx -->
+
+<!-- cdpop1year_acs.csv -->
+
+<!-- cdpop5year_acs.csv -->
+
+<!-- congressional2021.zip -->
+
+<!-- geocorr2022_2428906586.csv -->
+
+![](images/raw_data.jpeg)
 
 ## To build the web page and create target files
 
@@ -21,11 +36,15 @@ editor_options:
 
 ## After rendering is complete
 
--   target .csv files will be in the "prepare/cds/final/" folder
--   local documentation web page will be in the "prepare/\_targetprep/" folder
+-   target .csv files will be in the ".../targets/prepare/cds/final/" folder
+-   local documentation web page will be in the ".../targets/prepare/\_targetprep/" folder
+
+## To create area weights using the target files in tax-microdata-benchmarking
+
+-   copy desired target .csv files from ".../targets/prepare/cds/final/" folder to the ".../targets/" folder
+-   follow tax-microdata-benchmarking instructions to run `make_all.py` or \`create_area_weights.py'
 
 ## Additional notes
 
 -   It is possible to render each qmd file separately, step by step, to be sure all is working as desired.
-
 -   Each qmd file has its own setup section in which it loads packages and constants. This is unnecessary duplication when rendering the entire project, but it is useful during development because it allows rendering individual qmd files without rendering the entire project.
