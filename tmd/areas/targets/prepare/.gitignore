@@ -6,7 +6,6 @@
 _docs/
 _targetprep/
 _freeze/
-intermediate/
 
 # files to ignore
 !cds/raw_data/*.csv
@@ -14,5 +13,3 @@ intermediate/
 
 # Local Netlify folder
 .netlify
-
-/.quarto/
