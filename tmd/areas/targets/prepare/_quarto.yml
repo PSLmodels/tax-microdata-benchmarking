@@ -1,0 +1,77 @@
+project:
+  type: book
+  output-dir: _targetprep
+
+# https://prerelease.quarto.org/  # quarto documentation at this link
+
+
+# site info:
+  # OLD id: 4d646266-9d1f-4d69-acb4-b9a17b63a5ff
+  # Unique deploy URL:  https://671e13320a7e7cfb68b1ba7d--tmd-areas-prepare-targets.netlify.app
+  # url: https://tmd-areas-targets-prepare.netlify.app
+
+# publishing with netlify cli:
+#  open terminal in prepare
+#  quarto render && netlify deploy --prod --dir=_targetprep
+
+#  quarto render # inspect to be sure it is as desired
+#  netlify deploy --prod --dir=_targetprep
+
+# or step by step
+#  netlify deploy # to test it, give _examine as publish directory
+#  netlify deploy --prod   # to deploy, give _docs as publish directory
+
+execute:
+  eval: true
+  echo: true
+  output: true
+  freeze: auto  # auto: during global project renders, re-render only when source changes
+
+book:
+  title: "Develop targets for subnational areas"
+  subtitle: "Create csv target files for use by area targeting routies"
+  # author: "Don Boyd"
+  date: today
+  date-format: long
+  chapters:
+    - index.qmd
+    - part: "Usage and notes"
+      chapters:
+        - usage.qmd
+        - cd_issues_and_TODOs.qmd
+    - part: "IRS Congressional District data"
+      chapters:
+        - cd_overall_documentation.qmd
+        - cd_get_census_population.qmd
+        - cd_download_soi_data.qmd
+        - cd_construct_variable_documentation.qmd
+        - cd_construct_long_soi_data_file.qmd
+        - cd_create_basefile_for_cd_target_files.qmd
+        - cd_create_crosswalk_from_cd117th_to_cd118th.qmd
+        - cd_map_tcvars_and_extract_target_files.qmd
+        
+format:
+  html:
+    theme: cosmo
+    code-fold: true    
+
+editor_options:
+  chunk_output_type: console
+
+# R packages using old 209 libxml
+#  gt, 
+
+
+# rendering commands
+#   quarto render
+#   quarto publish netlify --no-prompt --no-render --no-browser
+
+# possibly use this at start of each doc
+# ---
+# output: html_document
+# editor_options: 
+#   chunk_output_type: console
+# ---
+
+  
+  

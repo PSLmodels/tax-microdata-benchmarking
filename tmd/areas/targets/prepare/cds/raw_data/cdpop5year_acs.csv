@@ -1,0 +1,441 @@
+GEOID,NAME,variable,estimate,moe
+0101,"Congressional District 1 (116th Congress), Alabama",B01003_001,722794,567
+0102,"Congressional District 2 (116th Congress), Alabama",B01003_001,689681,2726
+0103,"Congressional District 3 (116th Congress), Alabama",B01003_001,731482,2128
+0104,"Congressional District 4 (116th Congress), Alabama",B01003_001,702255,2470
+0105,"Congressional District 5 (116th Congress), Alabama",B01003_001,751690,203
+0106,"Congressional District 6 (116th Congress), Alabama",B01003_001,731505,3564
+0107,"Congressional District 7 (116th Congress), Alabama",B01003_001,668268,4886
+0200,"Congressional District (at Large) (116th Congress), Alaska",B01003_001,735951,NA
+0401,"Congressional District 1 (116th Congress), Arizona",B01003_001,758861,3736
+0402,"Congressional District 2 (116th Congress), Arizona",B01003_001,729613,4064
+0403,"Congressional District 3 (116th Congress), Arizona",B01003_001,780580,6280
+0404,"Congressional District 4 (116th Congress), Arizona",B01003_001,796390,5159
+0405,"Congressional District 5 (116th Congress), Arizona",B01003_001,860467,4661
+0406,"Congressional District 6 (116th Congress), Arizona",B01003_001,769040,7903
+0407,"Congressional District 7 (116th Congress), Arizona",B01003_001,792891,8365
+0408,"Congressional District 8 (116th Congress), Arizona",B01003_001,821009,5254
+0409,"Congressional District 9 (116th Congress), Arizona",B01003_001,770352,5961
+0501,"Congressional District 1 (116th Congress), Arkansas",B01003_001,717868,631
+0502,"Congressional District 2 (116th Congress), Arkansas",B01003_001,767099,NA
+0503,"Congressional District 3 (116th Congress), Arkansas",B01003_001,831156,1818
+0504,"Congressional District 4 (116th Congress), Arkansas",B01003_001,690186,1887
+0601,"Congressional District 1 (116th Congress), California",B01003_001,708366,1724
+0602,"Congressional District 2 (116th Congress), California",B01003_001,722327,2203
+0603,"Congressional District 3 (116th Congress), California",B01003_001,757414,2360
+0604,"Congressional District 4 (116th Congress), California",B01003_001,760658,2633
+0605,"Congressional District 5 (116th Congress), California",B01003_001,728345,3063
+0606,"Congressional District 6 (116th Congress), California",B01003_001,781387,4498
+0607,"Congressional District 7 (116th Congress), California",B01003_001,778765,4109
+0608,"Congressional District 8 (116th Congress), California",B01003_001,749184,4114
+0609,"Congressional District 9 (116th Congress), California",B01003_001,796370,3063
+0610,"Congressional District 10 (116th Congress), California",B01003_001,764549,1684
+0611,"Congressional District 11 (116th Congress), California",B01003_001,767298,3334
+0612,"Congressional District 12 (116th Congress), California",B01003_001,757251,3557
+0613,"Congressional District 13 (116th Congress), California",B01003_001,772203,593
+0614,"Congressional District 14 (116th Congress), California",B01003_001,747495,4573
+0615,"Congressional District 15 (116th Congress), California",B01003_001,796865,2467
+0616,"Congressional District 16 (116th Congress), California",B01003_001,747131,4723
+0617,"Congressional District 17 (116th Congress), California",B01003_001,780242,4732
+0618,"Congressional District 18 (116th Congress), California",B01003_001,744528,4858
+0619,"Congressional District 19 (116th Congress), California",B01003_001,754007,5558
+0620,"Congressional District 20 (116th Congress), California",B01003_001,744111,2094
+0621,"Congressional District 21 (116th Congress), California",B01003_001,710344,4663
+0622,"Congressional District 22 (116th Congress), California",B01003_001,786891,4816
+0623,"Congressional District 23 (116th Congress), California",B01003_001,771198,5508
+0624,"Congressional District 24 (116th Congress), California",B01003_001,739183,836
+0625,"Congressional District 25 (116th Congress), California",B01003_001,745689,5060
+0626,"Congressional District 26 (116th Congress), California",B01003_001,722958,1333
+0627,"Congressional District 27 (116th Congress), California",B01003_001,708388,3575
+0628,"Congressional District 28 (116th Congress), California",B01003_001,704354,4998
+0629,"Congressional District 29 (116th Congress), California",B01003_001,703638,7551
+0630,"Congressional District 30 (116th Congress), California",B01003_001,761222,8598
+0631,"Congressional District 31 (116th Congress), California",B01003_001,754741,4540
+0632,"Congressional District 32 (116th Congress), California",B01003_001,705766,3807
+0633,"Congressional District 33 (116th Congress), California",B01003_001,709488,5730
+0634,"Congressional District 34 (116th Congress), California",B01003_001,716495,8743
+0635,"Congressional District 35 (116th Congress), California",B01003_001,739237,3910
+0636,"Congressional District 36 (116th Congress), California",B01003_001,747370,3742
+0637,"Congressional District 37 (116th Congress), California",B01003_001,712613,7618
+0638,"Congressional District 38 (116th Congress), California",B01003_001,711540,3618
+0639,"Congressional District 39 (116th Congress), California",B01003_001,733331,3953
+0640,"Congressional District 40 (116th Congress), California",B01003_001,700867,6339
+0641,"Congressional District 41 (116th Congress), California",B01003_001,752956,3225
+0642,"Congressional District 42 (116th Congress), California",B01003_001,820055,4995
+0643,"Congressional District 43 (116th Congress), California",B01003_001,733353,5722
+0644,"Congressional District 44 (116th Congress), California",B01003_001,714444,6041
+0645,"Congressional District 45 (116th Congress), California",B01003_001,806990,3354
+0646,"Congressional District 46 (116th Congress), California",B01003_001,710498,4270
+0647,"Congressional District 47 (116th Congress), California",B01003_001,714590,4307
+0648,"Congressional District 48 (116th Congress), California",B01003_001,718069,3479
+0649,"Congressional District 49 (116th Congress), California",B01003_001,735611,5408
+0650,"Congressional District 50 (116th Congress), California",B01003_001,752367,5018
+0651,"Congressional District 51 (116th Congress), California",B01003_001,724859,6265
+0652,"Congressional District 52 (116th Congress), California",B01003_001,757448,5930
+0653,"Congressional District 53 (116th Congress), California",B01003_001,770304,6778
+0801,"Congressional District 1 (116th Congress), Colorado",B01003_001,831812,1953
+0802,"Congressional District 2 (116th Congress), Colorado",B01003_001,822288,2419
+0803,"Congressional District 3 (116th Congress), Colorado",B01003_001,755131,575
+0804,"Congressional District 4 (116th Congress), Colorado",B01003_001,858938,2644
+0805,"Congressional District 5 (116th Congress), Colorado",B01003_001,824439,614
+0806,"Congressional District 6 (116th Congress), Colorado",B01003_001,827989,3357
+0807,"Congressional District 7 (116th Congress), Colorado",B01003_001,802579,3382
+0901,"Congressional District 1 (116th Congress), Connecticut",B01003_001,715324,1306
+0902,"Congressional District 2 (116th Congress), Connecticut",B01003_001,702074,411
+0903,"Congressional District 3 (116th Congress), Connecticut",B01003_001,716576,1947
+0904,"Congressional District 4 (116th Congress), Connecticut",B01003_001,745946,525
+0905,"Congressional District 5 (116th Congress), Connecticut",B01003_001,725410,1840
+09ZZ,"Congressional Districts not defined (116th Congress), Connecticut",B01003_001,0,13
+1000,"Congressional District (at Large) (116th Congress), Delaware",B01003_001,981892,NA
+1198,"Delegate District (at Large) (116th Congress), District of Columbia",B01003_001,683154,NA
+1201,"Congressional District 1 (116th Congress), Florida",B01003_001,797259,711
+1202,"Congressional District 2 (116th Congress), Florida",B01003_001,729598,4174
+1203,"Congressional District 3 (116th Congress), Florida",B01003_001,761626,3548
+1204,"Congressional District 4 (116th Congress), Florida",B01003_001,851023,6207
+1205,"Congressional District 5 (116th Congress), Florida",B01003_001,748057,6837
+1206,"Congressional District 6 (116th Congress), Florida",B01003_001,789744,4121
+1207,"Congressional District 7 (116th Congress), Florida",B01003_001,781734,6189
+1208,"Congressional District 8 (116th Congress), Florida",B01003_001,775458,1883
+1209,"Congressional District 9 (116th Congress), Florida",B01003_001,930697,6735
+1210,"Congressional District 10 (116th Congress), Florida",B01003_001,867042,7820
+1211,"Congressional District 11 (116th Congress), Florida",B01003_001,805200,5172
+1212,"Congressional District 12 (116th Congress), Florida",B01003_001,798316,3456
+1213,"Congressional District 13 (116th Congress), Florida",B01003_001,725783,3068
+1214,"Congressional District 14 (116th Congress), Florida",B01003_001,788149,6875
+1215,"Congressional District 15 (116th Congress), Florida",B01003_001,812631,7420
+1216,"Congressional District 16 (116th Congress), Florida",B01003_001,861259,6055
+1217,"Congressional District 17 (116th Congress), Florida",B01003_001,773890,5280
+1218,"Congressional District 18 (116th Congress), Florida",B01003_001,783441,3474
+1219,"Congressional District 19 (116th Congress), Florida",B01003_001,826628,4764
+1220,"Congressional District 20 (116th Congress), Florida",B01003_001,787098,5466
+1221,"Congressional District 21 (116th Congress), Florida",B01003_001,784165,4488
+1222,"Congressional District 22 (116th Congress), Florida",B01003_001,767612,3752
+1223,"Congressional District 23 (116th Congress), Florida",B01003_001,762612,2803
+1224,"Congressional District 24 (116th Congress), Florida",B01003_001,748479,7630
+1225,"Congressional District 25 (116th Congress), Florida",B01003_001,769234,5151
+1226,"Congressional District 26 (116th Congress), Florida",B01003_001,785278,8717
+1227,"Congressional District 27 (116th Congress), Florida",B01003_001,727749,7287
+1301,"Congressional District 1 (116th Congress), Georgia",B01003_001,752393,1403
+1302,"Congressional District 2 (116th Congress), Georgia",B01003_001,671948,2709
+1303,"Congressional District 3 (116th Congress), Georgia",B01003_001,756277,4276
+1304,"Congressional District 4 (116th Congress), Georgia",B01003_001,768431,6635
+1305,"Congressional District 5 (116th Congress), Georgia",B01003_001,778225,6034
+1306,"Congressional District 6 (116th Congress), Georgia",B01003_001,757644,5087
+1307,"Congressional District 7 (116th Congress), Georgia",B01003_001,854516,6359
+1308,"Congressional District 8 (116th Congress), Georgia",B01003_001,715067,1765
+1309,"Congressional District 9 (116th Congress), Georgia",B01003_001,770045,2541
+1310,"Congressional District 10 (116th Congress), Georgia",B01003_001,765152,5380
+1311,"Congressional District 11 (116th Congress), Georgia",B01003_001,788712,5400
+1312,"Congressional District 12 (116th Congress), Georgia",B01003_001,734110,2250
+1313,"Congressional District 13 (116th Congress), Georgia",B01003_001,788497,7223
+1314,"Congressional District 14 (116th Congress), Georgia",B01003_001,724598,904
+1501,"Congressional District 1 (116th Congress), Hawaii",B01003_001,729555,3794
+1502,"Congressional District 2 (116th Congress), Hawaii",B01003_001,723943,3794
+1601,"Congressional District 1 (116th Congress), Idaho",B01003_001,941417,1938
+1602,"Congressional District 2 (116th Congress), Idaho",B01003_001,870200,1937
+1701,"Congressional District 1 (116th Congress), Illinois",B01003_001,715763,6815
+1702,"Congressional District 2 (116th Congress), Illinois",B01003_001,686546,4396
+1703,"Congressional District 3 (116th Congress), Illinois",B01003_001,724550,6739
+1704,"Congressional District 4 (116th Congress), Illinois",B01003_001,690373,8224
+1705,"Congressional District 5 (116th Congress), Illinois",B01003_001,752522,6581
+1706,"Congressional District 6 (116th Congress), Illinois",B01003_001,732738,4399
+1707,"Congressional District 7 (116th Congress), Illinois",B01003_001,738479,7668
+1708,"Congressional District 8 (116th Congress), Illinois",B01003_001,720276,3769
+1709,"Congressional District 9 (116th Congress), Illinois",B01003_001,745865,6115
+1710,"Congressional District 10 (116th Congress), Illinois",B01003_001,722961,3184
+1711,"Congressional District 11 (116th Congress), Illinois",B01003_001,706594,3587
+1712,"Congressional District 12 (116th Congress), Illinois",B01003_001,679543,73
+1713,"Congressional District 13 (116th Congress), Illinois",B01003_001,697929,2849
+1714,"Congressional District 14 (116th Congress), Illinois",B01003_001,750475,3589
+1715,"Congressional District 15 (116th Congress), Illinois",B01003_001,683592,1138
+1716,"Congressional District 16 (116th Congress), Illinois",B01003_001,693820,1877
+1717,"Congressional District 17 (116th Congress), Illinois",B01003_001,677247,2703
+1718,"Congressional District 18 (116th Congress), Illinois",B01003_001,702540,3482
+17ZZ,"Congressional Districts not defined (116th Congress), Illinois",B01003_001,0,12
+1801,"Congressional District 1 (116th Congress), Indiana",B01003_001,729457,567
+1802,"Congressional District 2 (116th Congress), Indiana",B01003_001,729091,683
+1803,"Congressional District 3 (116th Congress), Indiana",B01003_001,754959,418
+1804,"Congressional District 4 (116th Congress), Indiana",B01003_001,761534,1044
+1805,"Congressional District 5 (116th Congress), Indiana",B01003_001,794485,3733
+1806,"Congressional District 6 (116th Congress), Indiana",B01003_001,721972,467
+1807,"Congressional District 7 (116th Congress), Indiana",B01003_001,782178,3714
+1808,"Congressional District 8 (116th Congress), Indiana",B01003_001,715129,338
+1809,"Congressional District 9 (116th Congress), Indiana",B01003_001,762535,684
+1901,"Congressional District 1 (116th Congress), Iowa",B01003_001,778247,NA
+1902,"Congressional District 2 (116th Congress), Iowa",B01003_001,784135,NA
+1903,"Congressional District 3 (116th Congress), Iowa",B01003_001,852016,NA
+1904,"Congressional District 4 (116th Congress), Iowa",B01003_001,764692,NA
+2001,"Congressional District 1 (116th Congress), Kansas",B01003_001,702619,235
+2002,"Congressional District 2 (116th Congress), Kansas",B01003_001,714255,487
+2003,"Congressional District 3 (116th Congress), Kansas",B01003_001,785916,460
+2004,"Congressional District 4 (116th Congress), Kansas",B01003_001,729309,180
+2101,"Congressional District 1 (116th Congress), Kentucky",B01003_001,719030,177
+2102,"Congressional District 2 (116th Congress), Kentucky",B01003_001,773346,880
+2103,"Congressional District 3 (116th Congress), Kentucky",B01003_001,754909,1868
+2104,"Congressional District 4 (116th Congress), Kentucky",B01003_001,771347,2149
+2105,"Congressional District 5 (116th Congress), Kentucky",B01003_001,694860,770
+2106,"Congressional District 6 (116th Congress), Kentucky",B01003_001,780649,823
+2201,"Congressional District 1 (116th Congress), Louisiana",B01003_001,805369,4760
+2202,"Congressional District 2 (116th Congress), Louisiana",B01003_001,782637,5845
+2203,"Congressional District 3 (116th Congress), Louisiana",B01003_001,784283,756
+2204,"Congressional District 4 (116th Congress), Louisiana",B01003_001,732845,1827
+2205,"Congressional District 5 (116th Congress), Louisiana",B01003_001,741889,2667
+2206,"Congressional District 6 (116th Congress), Louisiana",B01003_001,810282,5616
+2301,"Congressional District 1 (116th Congress), Maine",B01003_001,699795,209
+2302,"Congressional District 2 (116th Congress), Maine",B01003_001,657251,209
+2401,"Congressional District 1 (116th Congress), Maryland",B01003_001,741327,3018
+2402,"Congressional District 2 (116th Congress), Maryland",B01003_001,782892,7289
+2403,"Congressional District 3 (116th Congress), Maryland",B01003_001,762898,8288
+2404,"Congressional District 4 (116th Congress), Maryland",B01003_001,790373,5839
+2405,"Congressional District 5 (116th Congress), Maryland",B01003_001,786660,4621
+2406,"Congressional District 6 (116th Congress), Maryland",B01003_001,784464,4464
+2407,"Congressional District 7 (116th Congress), Maryland",B01003_001,718069,6219
+2408,"Congressional District 8 (116th Congress), Maryland",B01003_001,781862,5696
+2501,"Congressional District 1 (116th Congress), Massachusetts",B01003_001,730273,471
+2502,"Congressional District 2 (116th Congress), Massachusetts",B01003_001,775094,830
+2503,"Congressional District 3 (116th Congress), Massachusetts",B01003_001,791898,932
+2504,"Congressional District 4 (116th Congress), Massachusetts",B01003_001,771803,1792
+2505,"Congressional District 5 (116th Congress), Massachusetts",B01003_001,791364,1550
+2506,"Congressional District 6 (116th Congress), Massachusetts",B01003_001,774573,680
+2507,"Congressional District 7 (116th Congress), Massachusetts",B01003_001,799546,4251
+2508,"Congressional District 8 (116th Congress), Massachusetts",B01003_001,786564,3735
+2509,"Congressional District 9 (116th Congress), Massachusetts",B01003_001,770737,1598
+2601,"Congressional District 1 (116th Congress), Michigan",B01003_001,704864,367
+2602,"Congressional District 2 (116th Congress), Michigan",B01003_001,753783,552
+2603,"Congressional District 3 (116th Congress), Michigan",B01003_001,750350,84
+2604,"Congressional District 4 (116th Congress), Michigan",B01003_001,697813,862
+2605,"Congressional District 5 (116th Congress), Michigan",B01003_001,672455,1056
+2606,"Congressional District 6 (116th Congress), Michigan",B01003_001,720211,440
+2607,"Congressional District 7 (116th Congress), Michigan",B01003_001,714616,612
+2608,"Congressional District 8 (116th Congress), Michigan",B01003_001,739057,593
+2609,"Congressional District 9 (116th Congress), Michigan",B01003_001,721023,1526
+2610,"Congressional District 10 (116th Congress), Michigan",B01003_001,723323,1654
+2611,"Congressional District 11 (116th Congress), Michigan",B01003_001,754129,1343
+2612,"Congressional District 12 (116th Congress), Michigan",B01003_001,742875,1296
+2613,"Congressional District 13 (116th Congress), Michigan",B01003_001,674752,5585
+2614,"Congressional District 14 (116th Congress), Michigan",B01003_001,693261,5251
+26ZZ,"Congressional Districts not defined (116th Congress), Michigan",B01003_001,0,11
+2701,"Congressional District 1 (116th Congress), Minnesota",B01003_001,687886,392
+2702,"Congressional District 2 (116th Congress), Minnesota",B01003_001,725672,487
+2703,"Congressional District 3 (116th Congress), Minnesota",B01003_001,732483,860
+2704,"Congressional District 4 (116th Congress), Minnesota",B01003_001,721898,435
+2705,"Congressional District 5 (116th Congress), Minnesota",B01003_001,728368,842
+2706,"Congressional District 6 (116th Congress), Minnesota",B01003_001,727471,807
+2707,"Congressional District 7 (116th Congress), Minnesota",B01003_001,672622,875
+2708,"Congressional District 8 (116th Congress), Minnesota",B01003_001,674072,514
+2801,"Congressional District 1 (116th Congress), Mississippi",B01003_001,757560,575
+2802,"Congressional District 2 (116th Congress), Mississippi",B01003_001,685584,2051
+2803,"Congressional District 3 (116th Congress), Mississippi",B01003_001,748808,2196
+2804,"Congressional District 4 (116th Congress), Mississippi",B01003_001,775071,442
+2901,"Congressional District 1 (116th Congress), Missouri",B01003_001,720952,3107
+2902,"Congressional District 2 (116th Congress), Missouri",B01003_001,770323,4010
+2903,"Congressional District 3 (116th Congress), Missouri",B01003_001,800026,3786
+2904,"Congressional District 4 (116th Congress), Missouri",B01003_001,775737,1300
+2905,"Congressional District 5 (116th Congress), Missouri",B01003_001,784962,3177
+2906,"Congressional District 6 (116th Congress), Missouri",B01003_001,778899,3287
+2907,"Congressional District 7 (116th Congress), Missouri",B01003_001,788437,589
+2908,"Congressional District 8 (116th Congress), Missouri",B01003_001,722198,2136
+3000,"Congressional District (at Large) (116th Congress), Montana",B01003_001,1077978,NA
+3101,"Congressional District 1 (116th Congress), Nebraska",B01003_001,657029,1230
+3102,"Congressional District 2 (116th Congress), Nebraska",B01003_001,693079,1216
+3103,"Congressional District 3 (116th Congress), Nebraska",B01003_001,601372,97
+3201,"Congressional District 1 (116th Congress), Nevada",B01003_001,688773,7709
+3202,"Congressional District 2 (116th Congress), Nevada",B01003_001,748896,731
+3203,"Congressional District 3 (116th Congress), Nevada",B01003_001,840860,6666
+3204,"Congressional District 4 (116th Congress), Nevada",B01003_001,780709,6334
+3301,"Congressional District 1 (116th Congress), New Hampshire",B01003_001,694723,211
+3302,"Congressional District 2 (116th Congress), New Hampshire",B01003_001,677452,211
+3401,"Congressional District 1 (116th Congress), New Jersey",B01003_001,748305,517
+3402,"Congressional District 2 (116th Congress), New Jersey",B01003_001,732891,1244
+3403,"Congressional District 3 (116th Congress), New Jersey",B01003_001,753485,1155
+3404,"Congressional District 4 (116th Congress), New Jersey",B01003_001,790796,1187
+3405,"Congressional District 5 (116th Congress), New Jersey",B01003_001,747027,1044
+3406,"Congressional District 6 (116th Congress), New Jersey",B01003_001,762161,1875
+3407,"Congressional District 7 (116th Congress), New Jersey",B01003_001,757080,1225
+3408,"Congressional District 8 (116th Congress), New Jersey",B01003_001,806843,5594
+3409,"Congressional District 9 (116th Congress), New Jersey",B01003_001,785894,1456
+3410,"Congressional District 10 (116th Congress), New Jersey",B01003_001,811105,5589
+3411,"Congressional District 11 (116th Congress), New Jersey",B01003_001,757864,1891
+3412,"Congressional District 12 (116th Congress), New Jersey",B01003_001,780573,1617
+3501,"Congressional District 1 (116th Congress), New Mexico",B01003_001,693653,2387
+3502,"Congressional District 2 (116th Congress), New Mexico",B01003_001,711510,1795
+3503,"Congressional District 3 (116th Congress), New Mexico",B01003_001,704203,2560
+3601,"Congressional District 1 (116th Congress), New York",B01003_001,738752,1856
+3602,"Congressional District 2 (116th Congress), New York",B01003_001,730154,3359
+3603,"Congressional District 3 (116th Congress), New York",B01003_001,742196,5273
+3604,"Congressional District 4 (116th Congress), New York",B01003_001,747392,3808
+3605,"Congressional District 5 (116th Congress), New York",B01003_001,813708,8464
+3606,"Congressional District 6 (116th Congress), New York",B01003_001,760652,8494
+3607,"Congressional District 7 (116th Congress), New York",B01003_001,752935,8458
+3608,"Congressional District 8 (116th Congress), New York",B01003_001,818072,7263
+3609,"Congressional District 9 (116th Congress), New York",B01003_001,757933,7510
+3610,"Congressional District 10 (116th Congress), New York",B01003_001,763710,9157
+3611,"Congressional District 11 (116th Congress), New York",B01003_001,761248,4810
+3612,"Congressional District 12 (116th Congress), New York",B01003_001,741461,9564
+3613,"Congressional District 13 (116th Congress), New York",B01003_001,780893,9853
+3614,"Congressional District 14 (116th Congress), New York",B01003_001,717057,8189
+3615,"Congressional District 15 (116th Congress), New York",B01003_001,755887,7476
+3616,"Congressional District 16 (116th Congress), New York",B01003_001,774781,6022
+3617,"Congressional District 17 (116th Congress), New York",B01003_001,761994,975
+3618,"Congressional District 18 (116th Congress), New York",B01003_001,743362,1285
+3619,"Congressional District 19 (116th Congress), New York",B01003_001,701650,1300
+3620,"Congressional District 20 (116th Congress), New York",B01003_001,743851,1129
+3621,"Congressional District 21 (116th Congress), New York",B01003_001,708621,1022
+3622,"Congressional District 22 (116th Congress), New York",B01003_001,697709,844
+3623,"Congressional District 23 (116th Congress), New York",B01003_001,694520,631
+3624,"Congressional District 24 (116th Congress), New York",B01003_001,716288,261
+3625,"Congressional District 25 (116th Congress), New York",B01003_001,730626,232
+3626,"Congressional District 26 (116th Congress), New York",B01003_001,738583,980
+3627,"Congressional District 27 (116th Congress), New York",B01003_001,720710,1033
+3701,"Congressional District 1 (116th Congress), North Carolina",B01003_001,741907,3387
+3702,"Congressional District 2 (116th Congress), North Carolina",B01003_001,892874,4656
+3703,"Congressional District 3 (116th Congress), North Carolina",B01003_001,752206,2102
+3704,"Congressional District 4 (116th Congress), North Carolina",B01003_001,867309,4156
+3705,"Congressional District 5 (116th Congress), North Carolina",B01003_001,756848,1116
+3706,"Congressional District 6 (116th Congress), North Carolina",B01003_001,789755,4077
+3707,"Congressional District 7 (116th Congress), North Carolina",B01003_001,772968,2880
+3708,"Congressional District 8 (116th Congress), North Carolina",B01003_001,805788,2340
+3709,"Congressional District 9 (116th Congress), North Carolina",B01003_001,764664,4168
+3710,"Congressional District 10 (116th Congress), North Carolina",B01003_001,769560,2812
+3711,"Congressional District 11 (116th Congress), North Carolina",B01003_001,766426,2584
+3712,"Congressional District 12 (116th Congress), North Carolina",B01003_001,895417,4056
+3713,"Congressional District 13 (116th Congress), North Carolina",B01003_001,791300,4594
+3800,"Congressional District (at Large) (116th Congress), North Dakota",B01003_001,773344,NA
+3901,"Congressional District 1 (116th Congress), Ohio",B01003_001,763591,2797
+3902,"Congressional District 2 (116th Congress), Ohio",B01003_001,732156,2949
+3903,"Congressional District 3 (116th Congress), Ohio",B01003_001,804631,5426
+3904,"Congressional District 4 (116th Congress), Ohio",B01003_001,715108,1263
+3905,"Congressional District 5 (116th Congress), Ohio",B01003_001,728981,2134
+3906,"Congressional District 6 (116th Congress), Ohio",B01003_001,689093,1106
+3907,"Congressional District 7 (116th Congress), Ohio",B01003_001,737294,2225
+3908,"Congressional District 8 (116th Congress), Ohio",B01003_001,742413,414
+3909,"Congressional District 9 (116th Congress), Ohio",B01003_001,707993,3772
+3910,"Congressional District 10 (116th Congress), Ohio",B01003_001,727632,415
+3911,"Congressional District 11 (116th Congress), Ohio",B01003_001,690420,3865
+3912,"Congressional District 12 (116th Congress), Ohio",B01003_001,801233,3717
+3913,"Congressional District 13 (116th Congress), Ohio",B01003_001,703031,2173
+3914,"Congressional District 14 (116th Congress), Ohio",B01003_001,726849,1407
+3915,"Congressional District 15 (116th Congress), Ohio",B01003_001,764503,4101
+3916,"Congressional District 16 (116th Congress), Ohio",B01003_001,734995,2316
+4001,"Congressional District 1 (116th Congress), Oklahoma",B01003_001,822185,606
+4002,"Congressional District 2 (116th Congress), Oklahoma",B01003_001,726329,540
+4003,"Congressional District 3 (116th Congress), Oklahoma",B01003_001,783317,706
+4004,"Congressional District 4 (116th Congress), Oklahoma",B01003_001,797930,1645
+4005,"Congressional District 5 (116th Congress), Oklahoma",B01003_001,818375,1634
+4101,"Congressional District 1 (116th Congress), Oregon",B01003_001,856074,1880
+4102,"Congressional District 2 (116th Congress), Oregon",B01003_001,843033,1030
+4103,"Congressional District 3 (116th Congress), Oregon",B01003_001,844479,2968
+4104,"Congressional District 4 (116th Congress), Oregon",B01003_001,818485,1030
+4105,"Congressional District 5 (116th Congress), Oregon",B01003_001,845106,2266
+4201,"Congressional District 1 (116th Congress), Pennsylvania",B01003_001,728310,715
+4202,"Congressional District 2 (116th Congress), Pennsylvania",B01003_001,741528,7619
+4203,"Congressional District 3 (116th Congress), Pennsylvania",B01003_001,736685,7256
+4204,"Congressional District 4 (116th Congress), Pennsylvania",B01003_001,750478,1478
+4205,"Congressional District 5 (116th Congress), Pennsylvania",B01003_001,728014,4056
+4206,"Congressional District 6 (116th Congress), Pennsylvania",B01003_001,748941,1223
+4207,"Congressional District 7 (116th Congress), Pennsylvania",B01003_001,742270,671
+4208,"Congressional District 8 (116th Congress), Pennsylvania",B01003_001,711220,988
+4209,"Congressional District 9 (116th Congress), Pennsylvania",B01003_001,706475,1420
+4210,"Congressional District 10 (116th Congress), Pennsylvania",B01003_001,754965,1014
+4211,"Congressional District 11 (116th Congress), Pennsylvania",B01003_001,744465,925
+4212,"Congressional District 12 (116th Congress), Pennsylvania",B01003_001,688872,610
+4213,"Congressional District 13 (116th Congress), Pennsylvania",B01003_001,696156,1207
+4214,"Congressional District 14 (116th Congress), Pennsylvania",B01003_001,690770,821
+4215,"Congressional District 15 (116th Congress), Pennsylvania",B01003_001,677635,987
+4216,"Congressional District 16 (116th Congress), Pennsylvania",B01003_001,688843,850
+4217,"Congressional District 17 (116th Congress), Pennsylvania",B01003_001,733477,1328
+4218,"Congressional District 18 (116th Congress), Pennsylvania",B01003_001,701546,1340
+4401,"Congressional District 1 (116th Congress), Rhode Island",B01003_001,551867,2567
+4402,"Congressional District 2 (116th Congress), Rhode Island",B01003_001,540082,2567
+4501,"Congressional District 1 (116th Congress), South Carolina",B01003_001,802857,3616
+4502,"Congressional District 2 (116th Congress), South Carolina",B01003_001,717963,3478
+4503,"Congressional District 3 (116th Congress), South Carolina",B01003_001,700576,2842
+4504,"Congressional District 4 (116th Congress), South Carolina",B01003_001,752791,3305
+4505,"Congressional District 5 (116th Congress), South Carolina",B01003_001,727226,2269
+4506,"Congressional District 6 (116th Congress), South Carolina",B01003_001,653349,5431
+4507,"Congressional District 7 (116th Congress), South Carolina",B01003_001,724141,829
+4600,"Congressional District (at Large) (116th Congress), South Dakota",B01003_001,881785,NA
+4701,"Congressional District 1 (116th Congress), Tennessee",B01003_001,725183,799
+4702,"Congressional District 2 (116th Congress), Tennessee",B01003_001,767016,942
+4703,"Congressional District 3 (116th Congress), Tennessee",B01003_001,734250,1757
+4704,"Congressional District 4 (116th Congress), Tennessee",B01003_001,821348,2253
+4705,"Congressional District 5 (116th Congress), Tennessee",B01003_001,792617,639
+4706,"Congressional District 6 (116th Congress), Tennessee",B01003_001,800493,699
+4707,"Congressional District 7 (116th Congress), Tennessee",B01003_001,812291,1472
+4708,"Congressional District 8 (116th Congress), Tennessee",B01003_001,712769,3434
+4709,"Congressional District 9 (116th Congress), Tennessee",B01003_001,693530,3412
+4801,"Congressional District 1 (116th Congress), Texas",B01003_001,720481,1217
+4802,"Congressional District 2 (116th Congress), Texas",B01003_001,814155,11569
+4803,"Congressional District 3 (116th Congress), Texas",B01003_001,910097,2479
+4804,"Congressional District 4 (116th Congress), Texas",B01003_001,783941,2353
+4805,"Congressional District 5 (116th Congress), Texas",B01003_001,773738,4908
+4806,"Congressional District 6 (116th Congress), Texas",B01003_001,821592,5681
+4807,"Congressional District 7 (116th Congress), Texas",B01003_001,791353,11056
+4808,"Congressional District 8 (116th Congress), Texas",B01003_001,901501,5725
+4809,"Congressional District 9 (116th Congress), Texas",B01003_001,765963,10633
+4810,"Congressional District 10 (116th Congress), Texas",B01003_001,921341,10756
+4811,"Congressional District 11 (116th Congress), Texas",B01003_001,771174,1463
+4812,"Congressional District 12 (116th Congress), Texas",B01003_001,846301,7416
+4813,"Congressional District 13 (116th Congress), Texas",B01003_001,709295,1341
+4814,"Congressional District 14 (116th Congress), Texas",B01003_001,771651,3308
+4815,"Congressional District 15 (116th Congress), Texas",B01003_001,803835,5382
+4816,"Congressional District 16 (116th Congress), Texas",B01003_001,755415,3104
+4817,"Congressional District 17 (116th Congress), Texas",B01003_001,802448,4943
+4818,"Congressional District 18 (116th Congress), Texas",B01003_001,789886,10929
+4819,"Congressional District 19 (116th Congress), Texas",B01003_001,728159,500
+4820,"Congressional District 20 (116th Congress), Texas",B01003_001,798649,9033
+4821,"Congressional District 21 (116th Congress), Texas",B01003_001,826193,7802
+4822,"Congressional District 22 (116th Congress), Texas",B01003_001,961113,6708
+4823,"Congressional District 23 (116th Congress), Texas",B01003_001,806245,6769
+4824,"Congressional District 24 (116th Congress), Texas",B01003_001,809110,5404
+4825,"Congressional District 25 (116th Congress), Texas",B01003_001,832621,6170
+4826,"Congressional District 26 (116th Congress), Texas",B01003_001,923492,4561
+4827,"Congressional District 27 (116th Congress), Texas",B01003_001,739341,2401
+4828,"Congressional District 28 (116th Congress), Texas",B01003_001,770051,6331
+4829,"Congressional District 29 (116th Congress), Texas",B01003_001,734456,9660
+4830,"Congressional District 30 (116th Congress), Texas",B01003_001,789297,7333
+4831,"Congressional District 31 (116th Congress), Texas",B01003_001,914699,2809
+4832,"Congressional District 32 (116th Congress), Texas",B01003_001,771112,5602
+4833,"Congressional District 33 (116th Congress), Texas",B01003_001,727423,8140
+4834,"Congressional District 34 (116th Congress), Texas",B01003_001,712253,3285
+4835,"Congressional District 35 (116th Congress), Texas",B01003_001,805089,9160
+4836,"Congressional District 36 (116th Congress), Texas",B01003_001,759111,5942
+4901,"Congressional District 1 (116th Congress), Utah",B01003_001,792511,406
+4902,"Congressional District 2 (116th Congress), Utah",B01003_001,792727,3312
+4903,"Congressional District 3 (116th Congress), Utah",B01003_001,778400,2947
+4904,"Congressional District 4 (116th Congress), Utah",B01003_001,867732,4904
+5000,"Congressional District (at Large) (116th Congress), Vermont",B01003_001,641637,NA
+5101,"Congressional District 1 (116th Congress), Virginia",B01003_001,816464,3851
+5102,"Congressional District 2 (116th Congress), Virginia",B01003_001,747365,2992
+5103,"Congressional District 3 (116th Congress), Virginia",B01003_001,752479,4050
+5104,"Congressional District 4 (116th Congress), Virginia",B01003_001,785406,4385
+5105,"Congressional District 5 (116th Congress), Virginia",B01003_001,741491,2031
+5106,"Congressional District 6 (116th Congress), Virginia",B01003_001,759456,1956
+5107,"Congressional District 7 (116th Congress), Virginia",B01003_001,811302,4034
+5108,"Congressional District 8 (116th Congress), Virginia",B01003_001,796645,4679
+5109,"Congressional District 9 (116th Congress), Virginia",B01003_001,698788,1241
+5110,"Congressional District 10 (116th Congress), Virginia",B01003_001,869926,4707
+5111,"Congressional District 11 (116th Congress), Virginia",B01003_001,803157,6090
+5301,"Congressional District 1 (116th Congress), Washington",B01003_001,778963,4715
+5302,"Congressional District 2 (116th Congress), Washington",B01003_001,758640,3812
+5303,"Congressional District 3 (116th Congress), Washington",B01003_001,762407,1574
+5304,"Congressional District 4 (116th Congress), Washington",B01003_001,744547,1066
+5305,"Congressional District 5 (116th Congress), Washington",B01003_001,742007,714
+5306,"Congressional District 6 (116th Congress), Washington",B01003_001,729130,2634
+5307,"Congressional District 7 (116th Congress), Washington",B01003_001,787902,3629
+5308,"Congressional District 8 (116th Congress), Washington",B01003_001,772133,4277
+5309,"Congressional District 9 (116th Congress), Washington",B01003_001,765280,4217
+5310,"Congressional District 10 (116th Congress), Washington",B01003_001,776355,4305
+5401,"Congressional District 1 (116th Congress), West Virginia",B01003_001,604226,NA
+5402,"Congressional District 2 (116th Congress), West Virginia",B01003_001,621999,NA
+5403,"Congressional District 3 (116th Congress), West Virginia",B01003_001,574824,NA
+5501,"Congressional District 1 (116th Congress), Wisconsin",B01003_001,725418,1238
+5502,"Congressional District 2 (116th Congress), Wisconsin",B01003_001,783230,628
+5503,"Congressional District 3 (116th Congress), Wisconsin",B01003_001,731014,882
+5504,"Congressional District 4 (116th Congress), Wisconsin",B01003_001,696075,296
+5505,"Congressional District 5 (116th Congress), Wisconsin",B01003_001,732692,1343
+5506,"Congressional District 6 (116th Congress), Wisconsin",B01003_001,725311,783
+5507,"Congressional District 7 (116th Congress), Wisconsin",B01003_001,729683,848
+5508,"Congressional District 8 (116th Congress), Wisconsin",B01003_001,748238,265
+5600,"Congressional District (at Large) (116th Congress), Wyoming",B01003_001,576641,NA
+7298,"Resident Commissioner District (at Large) (116th Congress), Puerto Rico",B01003_001,3311274,NA
