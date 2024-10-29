@@ -258,31 +258,10 @@ def prepared_data(area: str, vardf: pd.DataFrame):
             mask *= vardf.MARS == row.fstatus
         scaled_masked_varray = mask * unmasked_varray * scale
         tm_tuple = tm_tuple + (scaled_masked_varray,)
-        # print(f"row_num {row_num}")
-        # print(f"mask.shape {mask.shape}")
-        # print(f"scaled_masked_varray.shape {scaled_masked_varray.shape}")
-        if row_num == 11:
-            print(f"...row_num {row_num}")
-            print(f"...row.target {row.target}")
-            print(f"...unscaled_target {unscaled_target}")
-            print(f"...national_population {national_population}")
-            print(f"...scale {scale}")
-            print(f"...scaled_target {scaled_target}")
-            print("...Examine masking info...")
-            print("...unmasked_varray:...")
-            np.savetxt(AREAS_FOLDER / 'unmasked_varray.csv', unmasked_varray, delimiter=',')
-            print("...mask:...")
-            np.savetxt(AREAS_FOLDER / 'mask.csv', mask, delimiter=',')
-            print("...second, scaled_masked_varray...")
-            np.savetxt(AREAS_FOLDER / 'scaled_masked_varray.csv', scaled_masked_varray, delimiter=',')    
     # construct target matrix and target array and return as tuple
     scale_factor = 1.0  # as high as 1e9 works just fine
-    # for i, element in enumerate(tm_tuple):
-    #     print(f"Element {i}: len = {len(element)}")
     target_matrix = np.vstack(tm_tuple).T * scale_factor
     target_array = np.array(ta_list) * scale_factor
-    print(f"target_matrix.shape {target_matrix.shape}")
-    print(f"target_array.shape {target_array.shape}")
     return (
         target_matrix,
         target_array,
@@ -649,8 +628,6 @@ def create_area_weights_file(
     rmse = target_rmse(wght_area, target_matrix, target_array, out, delta)
     out.write(f"AREA-OPTIMIZED_TARGET_RMSE= {rmse:.9e}\n")
     weight_ratio_distribution(res.x, delta, out)
-    print("...writing weight ratios...")
-    np.savetxt(AREAS_FOLDER / 'xvalues.csv', res.x, delimiter=',')
 
     if write_log:
         out.close()
