@@ -2,4 +2,5 @@
 
 Contains code and data used in sub-national area weights quality examination.
 
-Creates a [web page](https://tmd-areas-examine.netlify.app/) with examination results.
+Evolving examination documentation is available at [this
+website](https://tmd-areas-examine-results.netlify.app).
