@@ -1,0 +1,17 @@
+# prepare
+
+# folders to ignore
+.quarto/
+.Rproj.user/
+_docs/
+_targetprep/
+_freeze/
+intermediate/
+
+# files to ignore
+.Rhistory
+
+# Local Netlify folder
+.netlify
+
+/.quarto/
