@@ -19,15 +19,12 @@ from scipy.optimize import minimize, Bounds
 import jax
 import jax.numpy as jnp
 from jax.experimental.sparse import BCOO
-import taxcalc as tc
 from tmd.storage import STORAGE_FOLDER
 from tmd.areas import AREAS_FOLDER
 
 FIRST_YEAR = 2021
 LAST_YEAR = 2034
 INFILE_PATH = STORAGE_FOLDER / "output" / "tmd.csv.gz"
-WTFILE_PATH = STORAGE_FOLDER / "output" / "tmd_weights.csv.gz"
-GFFILE_PATH = STORAGE_FOLDER / "output" / "tmd_growfactors.csv"
 POPFILE_PATH = STORAGE_FOLDER / "input" / "cbo_population_forecast.yaml"
 
 # Tax-Calcultor calculated variable cache files:
@@ -55,12 +52,17 @@ def valid_area(area: str):
     """
     Check validity of area string returning a boolean value.
     """
-    # Data in the state_info dictionary is taken from the following document:
-    # 2020 Census Apportionment Results, April 26, 2021,
-    # Table C1. Number of Seats in
-    #           U.S. House of Representatives by State: 1910 to 2020
-    # https://www.census.gov/data/tables/2020/dec/2020-apportionment-data.html
+    # Census on which Congressional districts are based:
+    # : cd_census_year = 2010 implies districts are for the 117th Congress
+    # : cd_census_year = 2020 implies districts are for the 118th Congress
+    cd_census_year = 2010
+    # data in the state_info dictionary is taken from the following document:
+    #  2020 Census Apportionment Results, April 26, 2021,
+    #  Table C1. Number of Seats in
+    #            U.S. House of Representatives by State: 1910 to 2020
+    #  https://www.census.gov/data/tables/2020/dec/2020-apportionment-data.html
     state_info = {
+        # number of Congressional districts per state indexed by cd_census_year
         "AL": {2020: 7, 2010: 7},
         "AK": {2020: 1, 2010: 1},
         "AZ": {2020: 9, 2010: 9},
@@ -116,54 +118,65 @@ def valid_area(area: str):
     # check state_info validity
     assert len(state_info) == 50 + 1
     total = {2010: 0, 2020: 0}
-    for scode, seats in state_info.items():
+    for _, seats in state_info.items():
         total[2010] += seats[2010]
         total[2020] += seats[2020]
     assert total[2010] == 435
     assert total[2020] == 435
     # conduct series of validity checks on specified area string
-    all_ok = True
-    # check that specified area string has expected length
-    ok_length = len(area) == 2 or len(area) == 4
-    if not ok_length:
-        sys.stderr.write(f": area '{area}' length is not two or four\n")
-        all_ok = False
-    # check that specified area string contains valid characters
-    if not re.match(r"^[a-z][a-z](\d\d)*", area):
-        emsg = "begin with two characters and optionally end with two numbers"
-        sys.stderr.write(f": area '{area}' must {emsg}\n")
-        all_ok = False
-    if not all_ok:
+    # ... check that specified area string has expected length
+    len_area_str = len(area)
+    if not 2 <= len_area_str <= 5:
+        sys.stderr.write(f": area '{area}' length is not in [2,5] range\n")
         return False
-    # handle faux areas
-    if re.match(r"[x-z][a-z](\d\d)*", area) is not None:
-        # is a faux area
-        return True
-    # if not a faux area
+    # ... check first two characters of area string
     s_c = area[0:2]
-    scode = s_c.upper()
-    if scode not in state_info:
-        sys.stderr.write(f": state '{s_c}' is unknown\n")
-        all_ok = False
-    # check state congressional district number if appropriate
-    if len(area) == 4:
-        # assume CDs are based on 2010 Census (that is, 117th Congress)
-        max_cdn = state_info[scode][2010]
-        cdn = int(area[2:4])
-        if max_cdn <= 1:
-            if cdn != 0:
-                sys.stderr.write(
-                    f": use area '{s_c}00' for this one-district state\n"
-                )
-                all_ok = False
-        else:  # if max_cdn >= 2
-            if cdn < 1:
-                sys.stderr.write(f": cd number '{cdn}' is less than one\n")
-                all_ok = False
-            if cdn > max_cdn:
-                sys.stderr.write(f": cd number '{cdn}' exceeds {max_cdn}\n")
-                all_ok = False
-    return all_ok
+    if not re.match(r"[a-z][a-z]", s_c):
+        emsg = "begin with two lower-case letters"
+        sys.stderr.write(f": area '{area}' must {emsg}\n")
+        return False
+    is_faux_area = re.match(r"[x-z][a-z]", s_c) is not None
+    if not is_faux_area:
+        if s_c.upper() not in state_info:
+            sys.stderr.write(f": state '{s_c}' is unknown\n")
+            return False
+    # ... check state area assumption letter which is optional
+    if len_area_str == 3:
+        assump_char = area[2:3]
+        if not re.match(r"[A-Z]", assump_char):
+            emsg = "assumption character that is not an upper-case letter"
+            sys.stderr.write(f": area '{area}' has {emsg}\n")
+            return False
+    if len_area_str <= 3:
+        return True
+    # ... check Congressional district area string
+    if not re.match(r"\d\d", area[2:4]):
+        emsg = "have two numbers after the state code"
+        sys.stderr.write(f": area '{area}' must {emsg}\n")
+        return False
+    if is_faux_area:
+        max_cdnum = 99
+    else:
+        max_cdnum = state_info[s_c.upper()][cd_census_year]
+    cdnum = int(area[2:4])
+    if max_cdnum <= 1:
+        if cdnum != 0:
+            sys.stderr.write(
+                f": use area '{s_c}00' for this one-district state\n"
+            )
+            return False
+    else:  # if max_cdnum >= 2
+        if cdnum > max_cdnum:
+            sys.stderr.write(f": cd number '{cdnum}' exceeds {max_cdnum}\n")
+            return False
+    # ... check district area assumption character which is optional
+    if len_area_str == 5:
+        assump_char = area[4:5]
+        if not re.match(r"[A-Z]", assump_char):
+            emsg = "assumption character that is not an upper-case letter"
+            sys.stderr.write(f": area '{area}' has {emsg}\n")
+            return False
+    return True
 
 
 def all_taxcalc_variables():
@@ -216,12 +229,18 @@ def prepared_data(area: str, vardf: pd.DataFrame):
             initial_weights_scale = row.target / national_population
         # construct variable array for this target
         assert (
-            row.count >= 0 and row.count <= 1
-        ), f"count value {row.count} not in [0,1] range on {line}"
-        if row.count == 0:
+            row.count >= 0 and row.count <= 4
+        ), f"count value {row.count} not in [0,4] range on {line}"
+        if row.count == 0:  # tabulate $ variable amount
             unmasked_varray = vardf[row.varname].astype(float)
-        else:
-            unmasked_varray = np.ones(numobs, dtype=float) # djb all counts are simply counts of returns, not counts of returns that have a given item
+        elif row.count == 1:  # count units with any variable amount
+            unmasked_varray = (vardf[row.varname] > -np.inf).astype(float)
+        elif row.count == 2:  # count only units with non-zero variable amount
+            unmasked_varray = (vardf[row.varname] != 0).astype(float)
+        elif row.count == 3:  # count only units with positive variable amount
+            unmasked_varray = (vardf[row.varname] > 0).astype(float)
+        elif row.count == 4:  # count only units with negative variable amount
+            unmasked_varray = (vardf[row.varname] < 0).astype(float)
         mask = np.ones(numobs, dtype=int)
         assert (
             row.scope >= 0 and row.scope <= 2
@@ -230,8 +249,8 @@ def prepared_data(area: str, vardf: pd.DataFrame):
             mask *= vardf.data_source == 1  # PUF records
         elif row.scope == 2:
             mask *= vardf.data_source == 0  # CPS records
-        in_bin = (vardf.c00100 >= row.agilo) & (vardf.c00100 < row.agihi)
-        mask *= in_bin
+        in_agi_bin = (vardf.c00100 >= row.agilo) & (vardf.c00100 < row.agihi)
+        mask *= in_agi_bin
         assert (
             row.fstatus >= 0 and row.fstatus <= 5
         ), f"fstatus value {row.fstatus} not in [0,5] range on {line}"
@@ -643,7 +662,7 @@ def create_area_weights_file(
     with open(POPFILE_PATH, "r", encoding="utf-8") as pfile:
         pop = yaml.safe_load(pfile.read())
     # ... set FIRST_YEAR weights
-    weights = wght_area * 100  # scale up weights by 100 for Tax-Calculator
+    weights = wght_area
     # ... construct dictionary of scaled-up weights by year
     wdict = {f"WT{FIRST_YEAR}": weights}
     cum_pop_growth = 1.0
@@ -652,9 +671,9 @@ def create_area_weights_file(
         cum_pop_growth *= annual_pop_growth
         wght = weights.copy() * cum_pop_growth
         wdict[f"WT{year}"] = wght
-    # ... write rounded integer scaled-up weights to CSV-formatted file
+    # ... write weights to CSV-formatted file
     wdf = pd.DataFrame.from_dict(wdict)
-    wdf.to_csv(awpath, index=False, float_format="%.0f", compression="gzip")
+    wdf.to_csv(awpath, index=False, float_format="%.5f", compression="gzip")
 
     return 0
 
