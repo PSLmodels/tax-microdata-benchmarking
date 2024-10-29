@@ -1,0 +1,338 @@
+---
+output: html_document
+editor_options: 
+ chunk_output_type: console
+---
+
+# Compare results to targets
+
+## Setup
+
+```{r}
+#| label: setup
+#| output: false
+
+source(here::here("R", "libraries.R"))
+source(here::here("R", "constants.R"))
+
+phase4_statecds <- c("AK00", "DE00", "ID01", "ID02", "ME02", "MT00", "ND00", "PA08", "SD00", "WY00")
+
+```
+
+
+## Get saved data
+
+```{r}
+#| label: get-data
+#| output: false
+
+# pick one or the other
+# OLD tmd2021 <- read_csv(here::here("temp_data", "djbout.csv")) # this is tax calc output vdf from
+
+tmd2021 <- readRDS(here::here("temp_data", "tmd2021.rds"))
+targets_data <- readRDS(here::here("temp_data", "targets_data.rds"))
+targets_used <- readRDS(here::here("temp_data", "targets_used.rds"))
+us_weights <- readRDS(here::here("temp_data", "us_weights.rds"))
+area_weights <- readRDS(here::here("temp_data", "area_weights.rds"))
+
+```
+
+
+
+## Prepare data
+
+## Prepare weighted and summarized microdata
+
+Add weights and make long file
+
+```{r}
+#| label: prepdata-microdata-for-tables
+#| eval: false
+#| output: false
+
+# ns(tmd2021)
+
+# 0 = Total
+# 1 = Under $1
+# 2 = $1 under $10,000
+# 3 = $10,000 under $25,000
+# 4 = $25,000 under $50,000
+# 5 = $50,000 under $75,000
+# 6 = $75,000 under $100,000
+# 7 = $100,000 under $200,000
+# 8 = $200,000 under $500,000
+# 9 = $500,000 or more
+
+icuts <- c(-Inf, 1, 10e3, 25e3, 50e3, 75e3, 100e3, 200e3, 500e3, Inf)
+areas <- c("us", unique(area_weights$src))
+keepvars <- c("XTOT", "c00100", "e00200", "e26270")
+targvars <- c("wtdn", keepvars)
+
+# prep weights
+wts2021 <- area_weights |> 
+  select(src, WT2021) |> 
+  mutate(row = row_number(), .by=src) |> 
+  pivot_wider(names_from = src, values_from = WT2021)
+
+wts2021 |> summarise(across(-row, \(x) sum(x)))
+
+# prep tmd
+tmd2 <- tmd2021 |> 
+  select(RECID, data_source, fstatus=MARS, s006, all_of(keepvars)) |>
+  mutate(scope=ifelse(data_source==1, 1, 2)) |> 
+  select(-data_source) |> 
+  # define irange and extend it to allow (later) for totals
+  mutate(irange=cut(c00100, icuts, right = FALSE, ordered_result = TRUE),
+         irange = factor(irange, 
+                         levels = levels(irange), # Ensure ordering is maintained
+                         labels = str_replace(levels(irange), ",", ", ")),
+         irange = fct_expand(irange, "total"),
+         irange = fct_relevel(irange, "total"))
+
+glimpse(tmd2)
+count(tmd2, irange)
+sum(tmd2$s006)
+
+check <- tmd2 |> 
+  select(RECID, scope, fstatus, c00100, s006, irange) |> 
+  mutate(agistub = as.integer(irange) - 1,
+         topagi = c00100 >= 500e3,
+         topbin = agistub == 9,
+         both = topagi & topbin) |> 
+  filter(topagi | topbin)
+check |> filter(!both)
+
+
+tmd3 <- tmd2 |> 
+  bind_cols(wts2021) |> 
+  select(-row) |> 
+  rename(us = s006)
+
+```
+
+Make long file
+
+```{r}
+#| label: long-file
+#| eval: false
+#| output: false
+
+tmd_long1 <- tmd3 |> 
+  # flip the areas
+  pivot_longer(cols=all_of(areas),
+               names_to = "area",
+               values_to = "weight") |> 
+  # flip the variables
+  mutate(wtdn = 1) |> 
+  pivot_longer(cols=all_of(targvars),
+               names_to = "varname",
+               values_to = "amount") |> 
+  # flip the variable type (count or amount)
+  # mutate(count=ifelse(amount != 0, 1, 0)) |>  # djb fix this later!!!
+  mutate(count=1) |> # djb TEMPORARY count ALWAYS is ALL returns
+  pivot_longer(cols=c(amount, count),
+               names_to = "vartype",
+               values_to = "value") |> 
+  mutate(wtdvalue=weight * value)
+  
+# now we are ready to summarize
+
+```
+
+Summarize microdata, then construct and concatenate totals
+
+```{r}
+#| label: summarise-save
+#| eval: false
+#| output: false
+
+details <- tmd_long1 |>
+  summarise(wtdvalue = sum(wtdvalue),
+            .by=c(area, scope, fstatus, varname, vartype, irange)) |> 
+  arrange(area, scope, fstatus, varname, irange)
+
+glimpse(details)
+count(details, irange)
+count(details, area)
+count(details, scope)
+count(details, fstatus)
+count(details, scope, fstatus)
+
+details |> filter(area=="ak00", scope==1)
+details |> filter(area=="ak00", scope==0)
+
+# calculate a series of subtotals records that drop one or more of the other variables
+
+# totals over all income ranges
+irangesums <- details |> 
+  summarise(wtdvalue = sum(wtdvalue),
+            .by=c(area, scope, fstatus, varname, vartype)) |> 
+  mutate(irange="total",
+         irange = factor(irange, levels = levels(details$irange), ordered = TRUE))
+
+details2 <- bind_rows(details, irangesums)
+glimpse(details2)
+count(details2, irange)
+
+# totals over all scopes
+scopesums <- details2 |> 
+  summarise(wtdvalue = sum(wtdvalue),
+            .by=c(area, fstatus, varname, vartype, irange)) |> 
+  mutate(scope=0)
+
+details3 <- bind_rows(details2, scopesums)
+glimpse(details3)
+count(details3, scope)
+
+# totals over all filing statuses
+fstatussums <- details3 |> 
+  summarise(wtdvalue = sum(wtdvalue),
+            .by=c(area, scope, varname, vartype, irange)) |> 
+  mutate(fstatus=0)
+
+details4 <- bind_rows(details3, fstatussums) |> 
+  mutate(agistub=as.integer(irange) - 1)
+glimpse(details4)
+count(details4, fstatus)
+count(details4, agistub, irange)
+
+saveRDS(details4, here::here("temp_data", "area_details.rds"))
+# rm(tmd_long, tmd_long1, tmd2, tmd3, tmd4, details, details2, details3, details4)
+
+```
+
+
+### Prepare targets for tables
+
+```{r}
+#| label: prepdata-targets-for-tables
+#| output: false
+
+agibins <- read_delim(
+delim=";",
+trim_ws = TRUE,
+file="agistub; agirange; agilo; agihi
+0; Total; -9e99; 9e99
+1; Under $1; -9e99; 1
+2; $1 under $10,000; 1; 10e3
+3; $10,000 under $25,000; 10e3; 25e3
+4; $25,000 under $50,000; 25e3; 50e3
+5; $50,000 under $75,000; 50e3; 75e3
+6; $75,000 under $100,000; 75e3; 100e3
+7; $100,000 under $200,000; 100e3; 200e3
+8; $200,000 under $500,000; 200e3; 500e3
+9; $500,000 or more; 500e3; 9e99
+")
+
+# area  scope fstatus varname vartype irange              wtdvalue
+
+targ1 <- targets_used |> 
+  rename(area=src) |> 
+  mutate(vartype=ifelse(count==0, "amount", "count")) |> 
+  select(-count) |> 
+  left_join(agibins,
+            by = join_by(agilo, agihi))
+count(targ1, agistub, agirange, agilo, agihi)
+
+targ1 |> filter(area=="ak00", agistub==9, varname=="e00200")
+
+targ2 <- targ1 |> 
+  select(area, scope, fstatus, varname, vartype, active, agistub, agirange, target)
+glimpse(targ2)
+
+targ2 |> filter(area=="ak00", agistub==9, varname=="e00200")
+
+```
+
+
+Comparison file
+
+```{r}
+#| label: comp-file
+#| output: false
+
+area_details <- readRDS(here::here("temp_data", "area_details.rds"))
+
+compfile <- targ2 |> 
+  left_join(area_details,
+            by = join_by(area, scope, fstatus, varname, vartype, agistub)) |> 
+  select(-irange) |> 
+  mutate(diff = wtdvalue - target,
+         pdiff = diff / target) |> 
+  mutate(sort = row_number(), .by=area) |> 
+  mutate(across(c(scope, fstatus, agistub, sort),
+                as.factor))
+
+summary(compfile)
+summary(compfile |> filter(active))
+
+errors <- compfile |> 
+  mutate(apdiff = abs(pdiff)) |> 
+  filter(apdiff > 0.04)
+
+summary(errors)
+count(errors, agistub)
+errors |> filter(agistub != 9) |> arrange(desc(apdiff))
+errors |> filter(agistub == 9) |> arrange(desc(apdiff))
+errors |> filter(agistub == 9) |> arrange(varname, area)
+
+```
+
+
+## Show results vs. targets (VERY PRELIMINARY)
+
+Units:
+
+-   Dollar amounts are in $ millions (varname==amount for target, wtdvalue, and diff)
+-   Counts (including XTOT) are actual numbers
+
+scope:
+
+-   0 = total population
+-   1 = filers
+-   2 = nonfilers (none currently in the table)
+
+fstatus:
+
+-   0 = sum of all statuses
+-   1 = married joint
+-   2 = single
+-   3 = married filing separately (not targeted)
+-   4 = head of household
+
+active:
+
+-  true = item was targeted
+-  false = item was in target file but was commented out (e26270 for DE-00)
+
+Dropdown boxes and search fields allow narrowing down the records that are displayed.
+
+**NOTE**: Weighted values for agistub 9 are not within our tolerances although the optimization solver reported that they are for the transformed problem it solved. We will investigate this and resolve it in Phase 5.
+
+
+```{r}
+#| label: show-comps
+#| eval: true
+#| column: page
+
+
+compfile |>
+  # select(-type) |> 
+  mutate(across(c(target, wtdvalue, diff), 
+                \(x) ifelse(vartype=="amount" & varname != "XTOT", x / 1e6, x))) |> 
+  mutate(varname = as.factor(varname)) |> 
+  DT::datatable(rownames = FALSE,
+                options = list(order = list(0, "asc"), # use 1st column (0) for sorting
+                               scrollX = TRUE, scrollY = TRUE, paging = TRUE, pageLength = 20,
+                               autoWidth = TRUE),
+                filter="top",
+                escape = FALSE) |>
+  formatCurrency(columns = c("target", "wtdvalue", "diff"), currency="", digits=1) |> 
+  formatPercentage(columns = c("pdiff"),  digits = 1)
+
+```
+
+
+
+
+
