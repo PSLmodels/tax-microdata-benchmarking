@@ -1,0 +1,19 @@
+# examine
+
+# folders to ignore
+.Rproj.user/
+.quarto/
+_examine/
+_freeze/
+site_libs/
+temp_data/
+
+# files to ignore
+.Rhistory
+*.html
+
+# Local Netlify folder
+.netlify
+
+
+/.quarto/

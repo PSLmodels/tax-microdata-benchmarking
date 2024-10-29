@@ -1,0 +1,273 @@
+---
+output: html_document
+editor_options: 
+ chunk_output_type: console
+---
+
+# Simple summary tables
+
+
+## Setup
+
+```{r}
+#| label: setup
+#| output: false
+
+source(here::here("R", "libraries.R"))
+source(here::here("R", "constants.R"))
+
+phase4_statecds <- c("AK00", "DE00", "ID01", "ID02", "ME02", "MT00", "ND00", "PA08", "SD00", "WY00")
+
+```
+
+
+## Get prepared data
+
+```{r}
+#| label: get-data
+#| output: false
+
+tmd2021 <- readRDS(here::here("temp_data", "tmd2021.rds"))
+targets_data <- readRDS(here::here("temp_data", "targets_data.rds"))
+targets_used <- readRDS(here::here("temp_data", "targets_used.rds"))
+us_weights <- readRDS(here::here("temp_data", "us_weights.rds"))
+area_weights <- readRDS(here::here("temp_data", "area_weights.rds"))
+
+```
+
+
+## Construct weighted totals
+
+```{r}
+#| label: prepdata-for-tables
+#| output: false
+
+# ns(tmd2021)
+
+# 0 = Total
+# 1 = Under $1
+# 2 = $1 under $10,000
+# 3 = $10,000 under $25,000
+# 4 = $25,000 under $50,000
+# 5 = $50,000 under $75,000
+# 6 = $75,000 under $100,000
+# 7 = $100,000 under $200,000
+# 8 = $200,000 under $500,000
+# 9 = $500,000 or more
+
+
+icuts <- c(-Inf, 1, 10e3, 25e3, 50e3, 75e3, 100e3, 200e3, 500e3, Inf)
+
+# prep tmd
+tmd2 <- tmd2021 |> 
+  select(RECID, data_source, s006, c00100, e00200, e26270, iitax) |> 
+  mutate(irange=cut(c00100, icuts, right = FALSE, ordered_result = TRUE),
+         irange = factor(irange, 
+                         levels = levels(irange), # Ensure ordering is maintained
+                         labels = str_replace(levels(irange), ",", ", ")))
+count(tmd2, irange)
+glimpse(tmd2)
+sum(tmd2$s006)
+
+# prep weights
+wts2 <- area_weights |> 
+  select(src, WT2021) |> 
+  mutate(row = row_number(), .by=src) |> 
+  pivot_wider(names_from = src, values_from = WT2021)
+wts2 |> summarise(across(-row, \(x) sum(x)))
+
+areas <- c("us", unique(area_weights$src))
+tmd3 <- tmd2 |> 
+  bind_cols(wts2) |> 
+  select(-row) |> 
+  rename(us = s006) |> 
+  pivot_longer(cols=all_of(areas),
+               names_to = "area",
+               values_to = "weight")
+
+details <- tmd3 |> 
+  summarise(n=n(), wtdn = sum(weight), 
+            agi=sum(weight * c00100),
+            wages = sum(weight * e00200),
+            scorppartner = sum(weight * e26270),
+            iitax = sum(weight * iitax),
+            .by=c(irange, area)) |> 
+  mutate(irange = fct_expand(irange, "total")) |> 
+  mutate(irange = fct_relevel(irange, "total")) |> 
+  arrange(area, irange)
+
+count(details, irange)
+
+areasums <- details |> 
+  summarise(across(c(wtdn, agi, wages, scorppartner, iitax),
+                   \(x) sum(x)),
+            .by=area) |> 
+  mutate(irange="total",
+         irange = factor(irange, levels = levels(details$irange), ordered = TRUE))
+
+tmd4 <- bind_rows(details, areasums) |> 
+  arrange(area, irange)
+count(tmd4, irange)
+tmd4
+
+```
+
+
+## Selected tables
+
+### Number of tax units
+
+```{r}
+#| label: tables-wtdn
+#| output: true
+
+tmd4 |>  
+  select(irange, area, wtdn) |> 
+  pivot_wider(names_from = area,
+              values_from = wtdn) |> 
+  relocate(us, .after = irange) |> 
+  gt() |> 
+  tab_header("Number of tax units, thousands, 2021 tax year",
+             subtitle = "Filers and nonfilers") |> 
+  fmt_number(columns = -c(irange, us),
+             scale=1e-3,
+             decimals = 1) |> 
+    fmt_number(columns = us,
+             scale=1e-3,
+             decimals = 0)
+
+# tmd4 |>  
+#   filter(data_source==1) |> 
+#   select(irange, area, wtdn) |> 
+#   pivot_wider(names_from = area,
+#               values_from = wtdn) |> 
+#   relocate(us, .after = irange) |> 
+#   gt() |> 
+#   tab_header("Number of tax filers, thousands, 2021 tax year",
+#              subtitle = "data_source==1") |> 
+#   fmt_number(columns = -c(irange, us),
+#              scale=1e-3,
+#              decimals = 1) |> 
+#     fmt_number(columns = us,
+#              scale=1e-3,
+#              decimals = 0)
+
+```
+
+
+### Percentage distribution of tax units
+
+```{r}
+#| label: tables-pctdist
+#| output: true
+
+tmd4 |> 
+  mutate(pct=wtdn / wtdn[irange=="total"], 
+         .by=area) |> 
+  select(irange, area, pct) |> 
+  pivot_wider(names_from = area,
+              values_from = pct) |> 
+  relocate(us, .after = irange) |> 
+  gt() |> 
+  tab_header("Number of tax units as % of area total, 2021 tax year",
+             subtitle = "Filers and nonfilers") |> 
+  fmt_percent(columns = -irange,
+             decimals = 1)
+
+```
+
+
+### Average adjusted gross income
+
+```{r}
+#| label: tables-avgagi
+#| output: true
+
+tmd4 |> 
+  select(-n) |> 
+   mutate(across(c(agi, wages, iitax),
+                \(x) x / wtdn)) |> 
+  select(irange, area, value=agi) |> 
+  pivot_wider(names_from = area,
+              values_from = value) |> 
+  relocate(us, .after = irange) |> 
+  gt() |> 
+  tab_header("Average AGI in $, 2021 tax year",
+             subtitle = "Filers and nonfilers") |> 
+  fmt_number(columns = -irange,
+             decimals = 0)
+
+```
+
+### Average wages
+
+```{r}
+#| label: tables-avgwages
+#| output: true
+
+tmd4 |> 
+  select(-n) |> 
+   mutate(across(c(agi, wages, iitax),
+                \(x) x / wtdn)) |> 
+  select(irange, area, value=wages) |> 
+  pivot_wider(names_from = area,
+              values_from = value) |> 
+  relocate(us, .after = irange) |> 
+  gt() |> 
+  tab_header("Average wages in $, 2021 tax year",
+             subtitle = "Filers and nonfilers") |> 
+  fmt_number(columns = -irange,
+             decimals = 0)
+
+
+```
+
+
+### Average S Corporation and partnership income (net)
+
+```{r}
+#| label: tables-scorppartner
+#| output: true
+
+tmd4 |> 
+  select(-n) |> 
+   mutate(across(c(agi, wages, scorppartner, iitax),
+                \(x) x / wtdn)) |> 
+  select(irange, area, value=scorppartner) |> 
+  pivot_wider(names_from = area,
+              values_from = value) |> 
+  relocate(us, .after = irange) |> 
+  gt() |> 
+  tab_header("Average S Corporation and partnership income in $, 2021 tax year",
+             subtitle = "Filers and nonfilers") |> 
+  fmt_number(columns = -irange,
+             decimals = 0)
+
+
+```
+
+
+### Average iitax
+
+```{r}
+#| label: tables-avgiitax
+#| output: true
+
+tmd4 |> 
+  select(-n) |> 
+   mutate(across(c(agi, wages, iitax),
+                \(x) x / wtdn)) |> 
+  select(irange, area, value=iitax) |> 
+  pivot_wider(names_from = area,
+              values_from = value) |> 
+  relocate(us, .after = irange) |> 
+  gt() |> 
+  tab_header("Average iitax, 2021 tax year",
+             subtitle = "Filers and nonfilers") |> 
+  fmt_number(columns = -irange,
+             decimals = 0)
+  
+
+```
+
+
