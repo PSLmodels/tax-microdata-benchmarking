@@ -130,12 +130,12 @@ def sorted_vdf_with_itxbin(vdf: pd.DataFrame, numbins: int):
 
 
 def main(
-        wname1: str,
-        wpath1: Path,
-        wname2: str,
-        wpath2: Path,
-        numbins: int,
-        dump: bool,
+    wname1: str,
+    wpath1: Path,
+    wname2: str,
+    wpath2: Path,
+    numbins: int,
+    dump: bool,
 ):
     """
     Conduct chi-square two-variable test using the WGHT1 weights (wpath1)
