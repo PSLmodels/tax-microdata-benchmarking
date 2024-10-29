@@ -1,0 +1,15 @@
+# prepare
+
+# folders to ignore
+.quarto/
+.Rproj.user/
+_docs/
+_targetprep/
+_freeze/
+
+# files to ignore
+!cds/raw_data/*.csv
+.Rhistory
+
+# Local Netlify folder
+.netlify
