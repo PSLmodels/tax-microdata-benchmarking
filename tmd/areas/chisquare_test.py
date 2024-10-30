@@ -80,7 +80,8 @@ def check_arguments():
         numbins = int(sys.argv[3])
         if numbins < MINIMUM_NUM_BINS:
             sys.stderr.write(
-                f"ERROR: numbins must be no less than {MINIMUM_NUM_BINS}\n")
+                f"ERROR: numbins must be no less than {MINIMUM_NUM_BINS}\n"
+            )
             all_ok = False
     dump = False
     if numargs >= 4:
