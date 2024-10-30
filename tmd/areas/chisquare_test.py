@@ -18,6 +18,7 @@ degrees-of-freedom values (which equals numbins-1 in this test)
 are available from the following online calculator:
 https://www.danielsoper.com/statcalc/calculator.aspx?id=12
 For example: Xsq(p=0.05,dof= 100)=  124.34
+             Xsq(p=0.05,dof= 200)=  233.99
              Xsq(p=0.05,dof=1000)= 1074.68
              Xsq(p=0.05,dof=2000)= 2105.15
 
@@ -40,7 +41,7 @@ USAGE = "USAGE: python chisquare_test.py WGHT1 WGHT2 [numbins] [dump]"
 CACHED_ITAX_PATH = STORAGE_FOLDER / "output" / "cached_iitax.npy"
 TAX_YEAR = 2021
 MINIMUM_NUM_BINS = 50
-DEFAULT_NUM_BINS = 100
+DEFAULT_NUM_BINS = 200
 ITXBINS_DEFINED_USING_AREA_WEIGHTS = False  # default is using national weights
 
 
