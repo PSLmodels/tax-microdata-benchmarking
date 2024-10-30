@@ -27,6 +27,7 @@ EXAMPLE using default numbins (equal to 100) and with no details dump:
 areas% python chisquare_test.py pa08 pa08A
 """
 
+import os
 import sys
 from pathlib import Path
 import numpy as np
@@ -38,7 +39,9 @@ from tmd.storage import STORAGE_FOLDER
 USAGE = "USAGE: python chisquare_test.py WGHT1 WGHT2 [numbins] [dump]"
 CACHED_ITAX_PATH = STORAGE_FOLDER / "output" / "cached_iitax.npy"
 TAX_YEAR = 2021
+MINIMUM_NUM_BINS = 50
 DEFAULT_NUM_BINS = 100
+ITXBINS_DEFINED_USING_AREA_WEIGHTS = False  # default is using national weights
 
 
 def check_arguments():
@@ -74,8 +77,9 @@ def check_arguments():
     numbins = DEFAULT_NUM_BINS
     if numargs >= 3:
         numbins = int(sys.argv[3])
-        if numbins < 100:
-            sys.stderr.write("ERROR: numbins must be no less than 100\n")
+        if numbins < MINIMUM_NUM_BINS:
+            sys.stderr.write(
+                f"ERROR: numbins must be no less than {MINIMUM_NUM_BINS}\n")
             all_ok = False
     dump = False
     if numargs >= 4:
@@ -119,8 +123,11 @@ def sorted_vdf_with_itxbin(vdf: pd.DataFrame, numbins: int):
     assert "wght2" in vdf, "wght2 variable not in vdf"
     assert "itax" in vdf, "itax variable not in vdf"
     # add itxbin variable to vdf
-    avg_wght = 0.5 * (vdf.wght1 + vdf.wght2)
-    vdf["itxbin"] = weighted_qcut_variable(vdf.itax, avg_wght, numbins)
+    if ITXBINS_DEFINED_USING_AREA_WEIGHTS:
+        wght = 0.5 * (vdf.wght1 + vdf.wght2)
+    else:  # using national weights
+        wght = weights_array(STORAGE_FOLDER / "output" / "tmd_weights.csv.gz")
+    vdf["itxbin"] = weighted_qcut_variable(vdf.itax, wght, numbins)
     # return sorted vdf
     vdf.sort_values("itax", inplace=True)
     return vdf
@@ -187,8 +194,12 @@ def main(
     min_bin_cnt = min(np.min(freq1), np.min(freq2))
     print(f"numbins,minimum_bin_freqency_count= {numbins} {min_bin_cnt:.1f}")
     if min_bin_cnt < 5:
-        print("WARNING: reduce value of numbins command-line argument")
-        print("         to get minimum_bin_fredquency_count above five")
+        if numbins > MINIMUM_NUM_BINS:
+            print("WARNING: reduce value of numbins command-line argument")
+            print("         to get minimum_bin_fredquency_count above five")
+        else:
+            print("WARNING: minimum_bin_fredquency_count is below five")
+            print("         so use TMD_AREA_ITXBINS=1 environment variable")
         print(USAGE)
         return 1
 
@@ -207,6 +218,8 @@ def main(
 
 
 if __name__ == "__main__":
+    if "TMD_AREA_ITXBINS" in os.environ:
+        ITXBINS_DEFINED_USING_AREA_WEIGHTS = True
     awname1, awpath1, awname2, awpath2, num_bins, dump_ = check_arguments()
     RCODE = main(awname1, awpath1, awname2, awpath2, num_bins, dump_)
     sys.exit(RCODE)
