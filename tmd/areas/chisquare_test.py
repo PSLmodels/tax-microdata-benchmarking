@@ -213,6 +213,7 @@ def main(
     print(f"Xsq_test_pval= {res.pvalue:.3f}   where dof= {res.dof}")
     if dump:
         print("***** Xsq(pval=0.05,dof= 100)=  124.34")
+        print("***** Xsq(pval=0.05,dof= 200)=  233.99")
         print("***** Xsq(pval=0.05,dof=1000)= 1074.68")
         print("***** Xsq(pval=0.05,dof=2000)= 2105.15")
 
