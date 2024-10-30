@@ -48,11 +48,6 @@ OPTIMIZE_MAXITER = 5000
 OPTIMIZE_IPRINT = 0  # 20 is a good diagnostic value; set to 0 for production
 OPTIMIZE_RESULTS = False  # set to True to see complete optimization results
 
-# assumption about which Congress the congressional districts are defined for:
-# ... 2010 implies districts for the 117th Congress
-# ... 2020 implies districts for the 118th Congress
-CD_CENSUS_YEAR = 2010
-
 
 def valid_area(area: str):
     """
