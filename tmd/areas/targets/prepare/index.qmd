@@ -4,7 +4,7 @@ editor_options:
  chunk_output_type: console
 ---
 
-# Introduction
+# Introduction {.unnumbered}
 
 This R project constructs subnational area targets for:
 
