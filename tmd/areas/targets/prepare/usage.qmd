@@ -6,22 +6,18 @@ editor_options:
 
 # Usage: How to create Congressional District target files and the associated local web page
 
-To Come: Use of `renv` to define versions of packages.
-
 ## Prerequisites
 
 -   Recent version of [R](https://www.r-project.org/). This project was created with R version 4.4.1.
--   Recent versions of R packages used by this project. See ".../targets/prepare/R/libraries.R"
+-   Recent release of [RStudio](https://posit.co/products/open-source/rstudio/). Other IDEs may work well, but RStudio has been used in this project (RStudio 2024.09.0 Build 375).
 -   Recent pre-release version of [quarto](https://quarto.org/docs/download/prerelease.html), 1.6 or higher. This project was created with quarto version 1.6.24
--   Be sure that ".../targets/prepare/cds/raw_data/" exists and has the files shown in the screenshot below. The GitHub repo includes these files:
-
-<!-- 21incddocguide.docx -->
-<!-- cd_documentation_extracted_from_21incddocguide.docx.xlsx -->
-<!-- cdpop1year_acs.csv -->
-<!-- congressional2021.zip -->
-<!-- geocorr2022_2428906586.csv -->
-
-![](images/raw_data.jpeg)
+-   Be sure that ".../targets/prepare/cds/raw_data/" exists and has the files shown below. The GitHub repo includes these files:
+    -   21incddocguide.docx
+    -   cd_documentation_extracted_from_21incddocguide.docx.xlsx
+    -   cdpop1year_acs.csv
+    -   congressional2021.zip
+    -   geocorr2022_2428906586.csv
+-   After checking the above and starting RStudio, in the console run `renv::restore()`. `renv` is, in essence, a package manager for R designed to set up a private environment that is the same across multile machines. It should ensure that your environment includes appropriate versions of R packages used in this project (generally loaded in ".../targets/prepare/R/libraries.R").
 
 ## To create target files and build the web page
 
