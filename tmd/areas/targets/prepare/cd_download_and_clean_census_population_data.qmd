@@ -20,9 +20,9 @@ source(here::here("R", "constants.R"))
 
 ## Get Congressional District population
 
-The quarto chunk `cdpop-download` will, if a user sets the chunk `eval` option to `eval: true`, download and save Congressional District population data from the American Community Survey (ACS) for 2021 and for the 5-year period ending in 2021, based on the 116th Congress.
+The quarto chunk `cdpop-download` will, if a user sets the chunk `eval` option to `eval: true`, download and save Congressional District population data, based on the 116th Congress, from the American Community Survey (ACS) for 2021.
 
-Ordinarlily this will not be necessary because previously downloaded files are included with the project in the "../cds/raw_data" folder. Thus, the default chunk option is `eval: false` and the chunk will not be run when this project is rendered.
+Ordinarily this will not be necessary because previously downloaded files are included with the project in the "../cds/raw_data" folder. Thus, the default chunk option is `eval: false` and the chunk will not be run when this project is rendered.
 
 ```{r}
 #| label: cdpop-download
@@ -30,21 +30,24 @@ Ordinarlily this will not be necessary because previously downloaded files are i
 
 # Note that 2021 gets data from the 116th Congress and 2022 gets the 218th Congress
 
-cdpop5year <- get_acs(
-  geography = "congressional district",
-  variables = "B01003_001",  # Total population variable
-  year = 2021,
-  survey = "acs5"  # Use 5-year estimates for better coverage, especially in smaller areas
-)
-write_csv(cdpop5year, fs::path(CDRAW, "cdpop5year_acs.csv"))
-
 cdpop1year <- get_acs(
   geography = "congressional district",
   variables = "B01003_001",  # Total population variable
   year = 2021,
-  survey = "acs1"  # Use 5-year estimates for better coverage, especially in smaller areas
+  survey = "acs1"  # Consider using 5-year estimates for better coverage, especially in smaller areas
 )
 write_csv(cdpop1year, fs::path(CDRAW, "cdpop1year_acs.csv"))
+
+
+# Optionally get 5-year ACS data - possibly useful in the future.
+# cdpop5year <- get_acs(
+#   geography = "congressional district",
+#   variables = "B01003_001",  # Total population variable
+#   year = 2021,
+#   survey = "acs5"  # Use 5-year estimates for better coverage, especially in smaller areas
+# )
+# write_csv(cdpop5year, fs::path(CDRAW, "cdpop5year_acs.csv"))
+
 
 ```
 
