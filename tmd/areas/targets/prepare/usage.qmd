@@ -17,7 +17,12 @@ editor_options:
     -   cdpop1year_acs.csv
     -   congressional2021.zip
     -   geocorr2022_2428906586.csv
--   After checking the above and starting RStudio, in the console run `renv::restore()`. `renv` is, in essence, a package manager for R designed to set up a private environment that is the same across multile machines. It should ensure that your environment includes appropriate versions of R packages used in this project (generally loaded in ".../targets/prepare/R/libraries.R").
+    
+## Setting up the environment
+
+-   After checking the above and starting RStudio, in the console run `renv::restore()` and answer y when asked whether to install packages. This will take a while.
+
+`renv` is a kind of package manager for R that can set up a project-specific environment that is the same across multile machines. It should ensure that your environment includes needed versions of R packages used in this project. (Most packages are loaded in ".../targets/prepare/R/libraries.R".)
 
 ## To create target files and build the web page
 
