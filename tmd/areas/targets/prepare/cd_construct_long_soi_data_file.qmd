@@ -127,9 +127,16 @@ count(data, CONG_DISTRICT) # max is 53
 
 ```
 
+Clean SOI CD data:
+
+-   create record-type variable
+-   add agi bin labels and bounds
+- 
+
 ```{r}
 #| label: clean-save-cddata-wide
 #| eval: true
+#| output: false
 
 # cleaning and reshaping:
 #  - determine record type
