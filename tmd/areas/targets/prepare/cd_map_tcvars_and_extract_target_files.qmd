@@ -18,12 +18,34 @@ source(here::here("R", "constants.R"))
 
 ```
 
-## Get needed data
+## Combine cd117 and cd118 into a stacked cd file
 
 ```{r}
 #| label: get-cdbasefile
 
-cdbase <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile.csv"))
+cd117 <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile_117.csv"))
+cd118 <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile_118.csv"))
+
+stack <- bind_rows(
+  cd117 |> mutate(session="s117"),
+  cd118 |> mutate(session="s118")
+)
+
+glimpse(stack)
+states <- stack |> 
+  summarise(target=sum(target), 
+            .by=c(session, stabbr, src, rectype,
+                     agistub, agilo, agihi, basevname,
+                     scope, fstatus, count, vname, description, agirange))
+  
+states |> 
+  pivot_wider(names_from = session,
+              values_from = target) |> 
+  mutate(diff=s118 - s117,
+         pdiff=diff / s117) |> 
+  arrange(desc(abs(pdiff))) # good all the state sums work
+
+write_csv(stack, fs::path(CDINTERMEDIATE, "cdbasefile_sessions.csv"))
 
 ```
 
@@ -32,7 +54,7 @@ cdbase <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile.csv"))
 ```{r}
 #| label: tc-soi-variablemap
 
-soivars <- count(cdbase, basevname)
+soivars <- count(stack, basevname)
 soivars$basevname
 
 # the MARS mappings let us get counts by filing status by agi range
@@ -54,7 +76,7 @@ e26270, v26270
 ```{r}
 #| label: mapped-file
 
-mapped <- cdbase |> 
+mapped <- stack |> 
   filter(basevname %in% vmap$soivar) |> 
   mutate(varname=factor(basevname, levels=vmap$soivar, labels=vmap$tcvar))
 
@@ -76,9 +98,11 @@ phase4cds <- c("AK00", "DE00", "ID01", "ID02", "ME02", "MT00", "ND00", "PA08", "
 # statecds <- "NY21"
 
 statecds <- phase4cds
+session_number <- 117
 
 extracted <- mapped |> 
   filter(statecd %in% statecds) |> 
+  filter(session==paste0("s", session_number)) |> 
   arrange(statecd, src, scope, fstatus, basevname, count, agistub) # to be safe
 
 count(extracted, statecd)
