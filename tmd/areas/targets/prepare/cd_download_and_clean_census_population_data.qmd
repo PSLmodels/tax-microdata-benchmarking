@@ -56,11 +56,10 @@ This chunk gets previously saved Congressional District population data, does mi
 #| label: cdpop-clean
 
 cdpop1year <- read_csv(fs::path(CDRAW, "cdpop1year_acs.csv"))
-# cdpop5year <- read_csv(fs::path(CDRAW, "cdpop5year_acs.csv"))
-
 cdpop1year |> summarise(estimate=sum(estimate)) # 335157329
-cdpop5year |> summarise(estimate=sum(estimate)) # 333036755
 
+# cdpop5year <- read_csv(fs::path(CDRAW, "cdpop5year_acs.csv"))
+# cdpop5year |> summarise(estimate=sum(estimate)) # 333036755
 
 stcodes <- tigris::states() |> 
   as.data.frame() |> 
