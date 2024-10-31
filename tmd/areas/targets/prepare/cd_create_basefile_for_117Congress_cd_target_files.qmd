@@ -263,7 +263,7 @@ cdbasefile |> count(basevname)
 cdbasefile |> filter(statecd=="WY00", agistub==0, basevname=="v00100")
 cdbasefile |> filter(statecd=="WY00", agistub==0, basevname=="v00101")
 
-write_csv(cdbasefile, fs::path(CDINTERMEDIATE, "cdbasefile.csv"))
+write_csv(cdbasefile, fs::path(CDINTERMEDIATE, "cdbasefile_117.csv"))
 
 ```
 
