@@ -35,7 +35,7 @@ book:
   date-format: long
   chapters:
     - index.qmd
-    - part: "Usage and notes"
+    - part: "Usage"
       chapters:
         - usage.qmd
     - part: "IRS SOI Congressional District data"
