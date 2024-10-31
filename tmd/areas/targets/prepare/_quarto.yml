@@ -42,7 +42,7 @@ book:
     - part: "IRS Congressional District data"
       chapters:
         - cd_overall_documentation.qmd
-        - cd_get_census_population.qmd
+        - cd_download_and_clean_census_population_data.qmd
         - cd_download_soi_data.qmd
         - cd_construct_variable_documentation.qmd
         - cd_construct_long_soi_data_file.qmd
