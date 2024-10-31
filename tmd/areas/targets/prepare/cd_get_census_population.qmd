@@ -18,8 +18,11 @@ source(here::here("R", "constants.R"))
 
 ```
 
-
 ## Get Congressional District population
+
+The quarto chunk `cdpop-download` will, if a user sets the chunk `eval` option to `eval: true`, download and save Congressional District population data from the American Community Survey (ACS) for 2021 and for the 5-year period ending in 2021, based on the 116th Congress.
+
+Ordinarlily this will not be necessary because previously downloaded files are included with the project in the "../cds/raw_data" folder. Thus, the default chunk option is `eval: false` and the chunk will not be run when this project is rendered.
 
 ```{r}
 #| label: cdpop-download
@@ -47,11 +50,13 @@ write_csv(cdpop1year, fs::path(CDRAW, "cdpop1year_acs.csv"))
 
 ## Clean Congressional District population
 
+This chunk gets previously saved Congressional District population data, does minor cleaning, and saves the cleaned file to the "../cds/intermediate" folder
+
 ```{r}
 #| label: cdpop-clean
 
 cdpop1year <- read_csv(fs::path(CDRAW, "cdpop1year_acs.csv"))
-cdpop5year <- read_csv(fs::path(CDRAW, "cdpop5year_acs.csv"))
+# cdpop5year <- read_csv(fs::path(CDRAW, "cdpop5year_acs.csv"))
 
 cdpop1year |> summarise(estimate=sum(estimate)) # 335157329
 cdpop5year |> summarise(estimate=sum(estimate)) # 333036755
@@ -89,6 +94,3 @@ write_csv(cdpop1, fs::path(CDINTERMEDIATE, "cdpop1year.csv"))
   
 
 ```
-
-
-
