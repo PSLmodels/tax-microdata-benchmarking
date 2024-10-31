@@ -5,7 +5,8 @@ for FIRST_YEAR through LAST_YEAR for the specified sub-national AREA.
 AREA prefix for state areas are the two lower-case character postal codes.
 AREA prefix for congressional districts are the state prefix followed by
 two digits (with a leading zero) identifying the district.  States with
-only one congressional district have 00 as the two digits.
+only one congressional district have 00 as the two digits to align names
+with IRS data.
 """
 
 import sys
