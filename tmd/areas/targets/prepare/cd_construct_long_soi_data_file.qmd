@@ -6,7 +6,7 @@ editor_options:
 
 # Parse the Congressional District data
 
-Clean the CD data and save.
+Clean the SOI Congressional District data and save.
 
 ## Setup
 
@@ -29,6 +29,8 @@ Here is an example of the first few rows of a targets file:
 ![](images/Image 2024-10-20 at 5.23.32 PM.jpeg)
 
 ## Create AGI stub information
+
+Create AGI bin labels that map to the AGI bins that SOI uses.
 
 ```{r}
 #| label: agi-bins
@@ -168,7 +170,7 @@ rm(data, data2, cdnums)
 
 ```{r}
 #| label: create-save-soi-cddata-long
-#| eval: false
+#| eval: true
 
 cdwide <- read_csv(fs::path(CDINTERMEDIATE, "cddata_wide_clean.csv"))
 doc <- read_csv(fs::path(CDINTERMEDIATE, "variable_documentation.csv"))
