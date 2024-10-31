@@ -13,3 +13,5 @@ _freeze/
 
 # Local Netlify folder
 .netlify
+
+/.quarto/

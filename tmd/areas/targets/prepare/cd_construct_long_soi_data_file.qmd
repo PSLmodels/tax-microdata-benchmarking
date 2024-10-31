@@ -6,7 +6,9 @@ editor_options:
 
 # Parse the Congressional District data
 
-Clean the CD data and save.
+Goal: create a 117th CD data file that is almost in the form needed for targets files. 
+
+This involves cleaning the SOI Congressional District data, adding agi bin information, adding variable documentation, and saving as a long file.
 
 ## Setup
 
@@ -28,10 +30,13 @@ Here is an example of the first few rows of a targets file:
 
 ![](images/Image 2024-10-20 at 5.23.32 PM.jpeg)
 
-## Create AGI stub information
+## Create and save AGI bin labels, and show bins
+
+Create and map AGI bin labels to the AGI bins that SOI uses, and save in ".../cds/intermediate".
 
 ```{r}
 #| label: agi-bins
+#| output: false
 
 # example of targets file
 # varname,count,scope,agilo,agihi,fstatus,target
@@ -83,6 +88,13 @@ file="AGI_STUB; agirange; agilo; agihi
 
 write_csv(agibins, fs::path(CDINTERMEDIATE, "cd_agi_bins.csv"))
 
+```
+
+Show AGI bins.
+
+```{r}
+#| label: show-agi-bins
+
 # agibins |> kable()
 agibins |> 
   gt() |> 
@@ -96,13 +108,15 @@ agibins |>
 
 ```
 
-## Prepare, clean, and save wide data file
 
-Set eval: to true for these chunks to recreate the data file.
+## Prepare, clean, and save SOI Congressional District wide data file
+
+Get previously downloaded IRS SOI data with aggregate information for individual Congressional Districts.
 
 ```{r}
 #| label: parse-cddata
 #| eval: true
+#| output: false
 
 # read the csv file from the zip archive that contains it
 zpath <-  fs::path(CDRAW, fs::path_file(CDZIPURL))
@@ -115,9 +129,16 @@ count(data, CONG_DISTRICT) # max is 53
 
 ```
 
+Clean SOI CD data:
+
+-   create record-type variable
+-   add agi bin labels and bounds
+- 
+
 ```{r}
 #| label: clean-save-cddata-wide
 #| eval: true
+#| output: false
 
 # cleaning and reshaping:
 #  - determine record type
@@ -166,9 +187,13 @@ rm(data, data2, cdnums)
 
 ## Create long SOI data file
 
+-   convert to a long file
+-   merge with variable documenttion file
+-   save as "cddata_long_clean.csv" in intermediate file directory
+
 ```{r}
 #| label: create-save-soi-cddata-long
-#| eval: false
+#| eval: true
 
 cdwide <- read_csv(fs::path(CDINTERMEDIATE, "cddata_wide_clean.csv"))
 doc <- read_csv(fs::path(CDINTERMEDIATE, "variable_documentation.csv"))
@@ -179,8 +204,6 @@ glimpse(doc)
 idvars <- c("rectype", "ndist", "STATEFIPS", "STATE", "CONG_DISTRICT", 
             "AGI_STUB", "agirange", "agilo", "agihi")
 
-# TODO: put amount units in dollars!!
-
 dlong1 <- cdwide |> 
   pivot_longer(cols = -all_of(idvars),
                names_to = "vname") |> 
@@ -188,6 +211,7 @@ dlong1 <- cdwide |>
               select(vname, description, reference, vtype, basevname),
             by = join_by(vname))
 
+glimpse(dlong1)
 count(dlong1, vname)
 count(dlong1, vtype)
 

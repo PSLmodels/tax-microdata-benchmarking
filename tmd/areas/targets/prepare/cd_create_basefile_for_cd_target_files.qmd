@@ -4,9 +4,9 @@ editor_options:
  chunk_output_type: console
 ---
 
-# Create base file for final CD target files
+# Create base file for 117th Congressional District target files
 
-This section creates one long file that is a superset of what we need for individual CD target files. This long file has everything needed to extract and save a target file for any CD. It also has additional convenience variables that will not be included in individual CD target files such as variable descriptions, human-friendly AGI-range labels, state fips codes, and a sort code for ordering records within a CD.
+This section creates one long file that is a superset of what we need for individual 117th Congressional District target files. This long file has everything needed to extract and save a target file for any CD . It also has additional convenience variables that will not be included in individual CD target files such as variable descriptions, human-friendly AGI-range labels, state fips codes, and a sort code for ordering records within a CD. These variables are excluded when target files are written.
 
 ## Documentation for target files for individual CDs
 

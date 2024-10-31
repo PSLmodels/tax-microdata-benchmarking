@@ -4,19 +4,7 @@ editor_options:
  chunk_output_type: console
 ---
 
-
-# Parse and show Congressional District data documentation
-
-Note that we do not have number of exemptions, but we do have:
-
--   N1 -- number of returns
-
--   N2 -- number of individuals
-
-Footnote 5 in the IRS documentation file (21incddocguide.docx), pertaining to N2, says:
-
-> Beginning in 2018, personal exemption deductions were suspended for the primary, secondary, and dependent taxpayers. However, the data used to create the “Number of individuals”—filing status, dependent status indicator, and identifying dependent information—are still available on the Form 1040. This field is based on these data.
-
+# Parse and show SOI Congressional District data documentation
 
 ## Setup
 
@@ -31,12 +19,18 @@ source(here::here("R", "constants.R"))
 
 ## Parse and save variable documentation
 
+This section gets and cleans SOI variable documentation from an Excel file we created, "cd_documentation_extracted_from_21incddocguide.docx.xlsx" that is based on a table in SOI's Word documentation (21incddocguide.docx).
+
+We put the cleaned data in "variable_documentation.csv" in the "../cds/intermediate" folder.
+
+
 ```{r}
 #| label: parse-save-doc
 #| output: false
 
 doc1 <- read_excel(fs::path(CDRAW, CDDOCEXTRACT), sheet = "cleaned", range = "A2:D169")
 
+# clean SOI documentation and 
 doc2 <- doc1 |> 
   mutate(
     across(everything(),
@@ -83,6 +77,7 @@ rm(doc1, doc2, doc3)
 
 ```
 
+Project team members run this next chunk interactively to do some checks on the variable documentation. It has option `eval: false` and will not be run when the project is rendered.
 
 ```{r}
 #| label: check-doc
@@ -115,9 +110,9 @@ rm(amountvars, countvars)
 ```
 
 
-## Show variable documentation
+## Show variable documentation in a datatable
 
-Show documentation table for variables in the Congressional District csv data.
+Show documentation table for variables in the Congressional District csv data. The table can be filtered and sorted interactively using column headers.
 
 ```{r}
 #| label: show-doc
@@ -136,3 +131,22 @@ vdoc |>
 rm(vdoc)
 
 ```
+
+## Issues and notes
+
+Notes below are primarily intended for the project team but could be of interest to users.
+
+### Number of returns and number of individuals
+
+Note that we do not have number of exemptions, but we do have:
+
+-   N1 -- number of returns
+
+-   N2 -- number of individuals
+
+Footnote 5 in the IRS documentation file (21incddocguide.docx), pertaining to N2, says:
+
+> Beginning in 2018, personal exemption deductions were suspended for the primary, secondary, and dependent taxpayers. However, the data used to create the “Number of individuals”—filing status, dependent status indicator, and identifying dependent information—are still available on the Form 1040. This field is based on these data.
+
+
+
