@@ -4,16 +4,16 @@ editor_options:
  chunk_output_type: console
 ---
 
-# Usage: Creating target files and the local web page
+# Usage: How to create Congressional District target files and the associated local web page
 
-**More complete instructions to come, plus use of `renv` to define versions of packages. At present you may need considerable familiarity with R to create target files.**
+To Come: Use of `renv` to define versions of packages.
 
 ## Prerequisites
 
--   A recent version of [R](https://www.r-project.org/). This project was created with R version 4.4.1.
--   Recent version of R packages used by this project. See ".../targets/prepare/R/libraries.R"
+-   Recent version of [R](https://www.r-project.org/). This project was created with R version 4.4.1.
+-   Recent versions of R packages used by this project. See ".../targets/prepare/R/libraries.R"
 -   Recent pre-release version of [quarto](https://quarto.org/docs/download/prerelease.html), 1.6 or higher. This project was created with quarto version 1.6.24
--   Be sure that ".../targets/prepare/cds/raw_data/" exists and has the following files:
+-   Be sure that ".../targets/prepare/cds/raw_data/" exists and has the files shown in the screenshot below. The GitHub repo includes these files:
 
 <!-- 21incddocguide.docx -->
 <!-- cd_documentation_extracted_from_21incddocguide.docx.xlsx -->
@@ -28,6 +28,12 @@ editor_options:
 
 -   Open a terminal in the "prepare" folder.
 -   Enter "quarto render"
+
+The first time the project is rendered, it will create needed intermediates files and put them in the "../cds/intermediate" folder.
+
+Note that the _quarto.yml file sets the `freeze` execution option to `auto`, which means .qmd files will not be rerendered if they have not changed. For a full re-rendering, set `freeze: false`, which will rerender everything regardless of whether code has changed (except that it will not re-render chunks with the option `eval: false`).
+
+At present the code prepares target files with targets we believe are useful and practical. Users who want different targets will have to modify code to do so. However, as described in overall repo documentation, users can comment-out individual targets.
 
 ## After rendering is complete
 
