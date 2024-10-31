@@ -14,4 +14,4 @@ This R project constructs subnational area targets for:
 
 In addition, it creates a local web page that a user can upload to a web service if desired. An in-progress version can be viewed on the web [here](https://tmd-areas-prepare-targets.netlify.app/). During development, it may not be identical to what your clone creates.
 
-It is part of the larger tax-microdata-benchmarking project, and is in the subfolder "tmd/areas/targets/prepare/".
+This R project is part of the larger tax-microdata-benchmarking project, and is in the subfolder "tmd/areas/targets/prepare/".
