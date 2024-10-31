@@ -29,7 +29,7 @@ execute:
 
 book:
   title: "Develop targets for subnational areas"
-  subtitle: "Create csv target files for use by area targeting routies"
+  subtitle: "Create csv target files for use by area targeting routines"
   # author: "Don Boyd"
   date: today
   date-format: long
