@@ -38,7 +38,6 @@ book:
     - part: "Usage and notes"
       chapters:
         - usage.qmd
-        - cd_issues_and_TODOs.qmd
     - part: "IRS SOI Congressional District data"
       chapters:
         - cd_download_and_clean_census_population_data.qmd
@@ -49,6 +48,7 @@ book:
         - cd_create_crosswalk_from_cd117th_to_cd118th.qmd
         - cd_map_tcvars_and_extract_target_files.qmd
   appendices:
+    - cd_issues_and_TODOs.qmd  
     - cd_overall_documentation.qmd
         
 format:
