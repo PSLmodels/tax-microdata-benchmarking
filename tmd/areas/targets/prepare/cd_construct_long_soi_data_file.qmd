@@ -6,7 +6,7 @@ editor_options:
 
 # Parse the Congressional District data
 
-Clean the SOI Congressional District data and save.
+Clean the SOI Congressional District data and save as a long file.
 
 ## Setup
 
@@ -28,12 +28,13 @@ Here is an example of the first few rows of a targets file:
 
 ![](images/Image 2024-10-20 at 5.23.32 PM.jpeg)
 
-## Create AGI stub information
+## Create and save AGI bin labels, and show bins
 
-Create AGI bin labels that map to the AGI bins that SOI uses.
+Create and map AGI bin labels to the AGI bins that SOI uses, and save in ".../cds/intermediate".
 
 ```{r}
 #| label: agi-bins
+#| output: false
 
 # example of targets file
 # varname,count,scope,agilo,agihi,fstatus,target
@@ -85,6 +86,13 @@ file="AGI_STUB; agirange; agilo; agihi
 
 write_csv(agibins, fs::path(CDINTERMEDIATE, "cd_agi_bins.csv"))
 
+```
+
+Show AGI bins.
+
+```{r}
+#| label: show-agi-bins
+
 # agibins |> kable()
 agibins |> 
   gt() |> 
@@ -98,13 +106,15 @@ agibins |>
 
 ```
 
-## Prepare, clean, and save wide data file
 
-Set eval: to true for these chunks to recreate the data file.
+## Prepare, clean, and save SOI Congressional District wide data file
+
+Get previously downloaded IRS SOI data with aggregate information for individual Congressional Districts.
 
 ```{r}
 #| label: parse-cddata
 #| eval: true
+#| output: false
 
 # read the csv file from the zip archive that contains it
 zpath <-  fs::path(CDRAW, fs::path_file(CDZIPURL))
