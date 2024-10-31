@@ -4,7 +4,7 @@ editor_options:
  chunk_output_type: console
 ---
 
-# Usage: How to create Congressional District target files and the associated local web page
+# How to create Congressional District target files and the associated local web page
 
 ## Prerequisites
 
