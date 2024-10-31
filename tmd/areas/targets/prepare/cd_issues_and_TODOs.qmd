@@ -4,17 +4,17 @@ editor_options:
  chunk_output_type: console
 ---
 
-# Issues and TODOs
+# Congressional District data issues and TODOs
 
-### Investigate collapsed AGI ranges in the SOI data
+## Investigate collapsed AGI ranges in the SOI data
 
 -   Per IRS documentation: "Income and tax items with less than 20 returns for a particular AGI class were combined with another AGI class within the same congressional district. Collapsed AGI classes are identified with a double asterisk (dropped) in the Excel files." **This will require attention soon.**
 
-### Defining number of returns with AGI
+## Defining number of returns with AGI
 
 -   We have an issue with AGI: for Congressional Districts IRS does NOT report the number of returns with AGI. They report two variables that should be close in concept: N1 (Number of returns), and N02650 (Number of returns with total income). For all CDs in the U.S. N1 was 157,375,370 in 2021 and N02650 was 155,283,590. Since N1 is larger and is probably a better indicator of total number of filers, we'll use that as the number-of-returns counterpart to AGI (c00100). We address this late in the process because for most of the data development we try to keep the data faithful to what IRS reports and because the solution chosen here may be suboptimal and we may want to change it later.
 
-### Census population
+## Census population
 
 Used to create the row 0 "XTOT" (population) target as a way to develop an initial scaling ratio:  `initial_weights_scale = row.target / national_population`.
 
@@ -22,11 +22,11 @@ Used to create the row 0 "XTOT" (population) target as a way to develop an initi
 
 -   2021 was a strange year for population data because of Covid. It might be better to use the 5-year ACS ending in 2021 for more stable and representative data.
 
-### Estimate targets for 118th Congress district boundaries weighting by population weights
+## Estimate targets for 118th Congress district boundaries weighting by population weights
 
 -   Use already-created population crosswalk from Missouri Census Data Center to allocate 117th Congress district targets to 118th Congress districts. See [MCDC site](https://mcdc.missouri.edu/applications/geocorr2022.html).
 
-### Address SALT deductions
+## Address SALT deductions
 
 Two possible approaches:
 
@@ -34,3 +34,32 @@ Two possible approaches:
 
 -   Add TMD 2021 "c" variables to the optimization cache. Map these variables to SOI variables based on their share of corresponding SOI amounts among all CDs. Requires modifying the cache in create_area_weights.py.
 
+
+## Determining which records are Congressional District records
+
+-   Calculate nstub0 -- number of records by state where AGI_STUB == 0 (the totals record)
+-   Note that CONG_DISTRICT == "00" is a totals record for the state. There are 8 states that only have 1 CD (see IRS documentation above), and for those states this record doubles as a CD record and as the state record.
+-   Determine type of record:
+    -   US -- STATE == "US"
+    -   DC -- STATE == "DC"
+    -   state -- nstub0 \> 1 & CONG_DISTRICT == "00"
+    -   cdstate -- nstub0 == 1 (this is both a state record and a CD record, for 8 states)
+    -   cd -- nstub0 \> 1 & CONG_DISTRICT != "00"
+
+The cd and cdstate records have data for Congressional Districts. There are 435 of these for AGI_STUB == 0 - one for each voting Congressional District (not including the District of Columbia). SOI data also have records for the nonvoting DC district. It is not included in the 435 Congressional Districts .
+
+The state and cdstate records have data for states. There are 51 of these (4)
+
+![](images/clipboard-719051713.png)
+
+To verify that this produces a proper calculation of the number of districts by state, I asked ChatGPT (4o) the following question, and compared the results by state to the calculation above. They are the same.
+
+> Please give me a table of the number of congressional districts by state (plus the District of Columbia), based on the 117th Congress, ideally as a google sheet or exportable to a spreadsheet. It should have 3 columns: state postal abbreviation, state name, and number of districts. It should add to 435 districts, I believe.
+
+## Exemptions
+
+Note that there are no data on exemptions but we do have total number of individuals (N2).
+
+When run on 2024-10-12 tmd national population was 334,283,385 (\`national_population = (vardf.s006 \* vardf.XTOT).sum()\`). By contrast, the sum of N2 for the U.S. was 289,054,220, or 13.5% less, according to 21incdall.xlsx.
+
+FWIW, IRS total number of returns in was 160,824,340 per 21in14ar.xls. When run on 2024-10-12 tmd sum of s006 was 184,024,657, or 14.4% more. By contrast, the sum of N1 for the U.S. was 157,375,370, or 2.1% less, according to 21incdall.xlsx.
