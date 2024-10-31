@@ -4,23 +4,15 @@ editor_options:
  chunk_output_type: console
 ---
 
-# About the data
+# About the SOI Congressional District data
 
-This chapter has two sections:
+All text in this section is copied verbatim from the IRS SOI data documentation (21incddocguide.docx), with no substantive edits and no commentary.
 
--   IRS documentation: Copied verbatim from the IRS SOI data documentation (21incddocguide.docx), with no substantive edits and no commentary.
-
--   Comments on the data: Notes about selected issues, quirks, and pitfalls in the data discovered from working with the data.
-
-## IRS documentation
-
-All text in this section is a direct quote from IRS documentation.
-
-### Time period
+## Time period
 
 The Statistics of Income (SOI) Division’s Congressional district data is tabulated using individual income tax returns (Forms 1040) filed with the Internal Revenue Service (IRS) during the 12-month period, January 1, 2022 to December 31, 2022. While the bulk of returns filed during this 12-month period are primarily for Tax Year 2021, the IRS received a limited number of returns for tax years before 2021. These prior-year returns are used as a proxy for returns that are typically filed beyond the 12-month period and have been included within the congressional district data.
 
-### Population Definitions and Tax Return Addresses
+## Population Definitions and Tax Return Addresses
 
 -   Congressional data are based on the population of individual income tax returns processed by the IRS during the 2022 calendar year.
 
@@ -38,7 +30,7 @@ The Statistics of Income (SOI) Division’s Congressional district data is tabul
 
 -   Tax returns filed using Army Post Office (APO) and Fleet Post Office addresses, foreign addresses, and addresses in Puerto Rico, Guam, Virgin Islands, American Samoa, Marshall Islands, Northern Marianas, and Palau were excluded.
 
-### Congressional District and ZIP Code Matching Procedures
+## Congressional District and ZIP Code Matching Procedures
 
 SOI uses a commercial file to match ZIP codes to congressional districts. Congressional districts cover the 435 congressional districts in the 50 states and the District of Columbia. District boundaries are based on the 117th Congress.
 
@@ -46,7 +38,7 @@ The matching process first utilizes the 9-digit ZIP code, if present on the retu
 
 Eight states (AK, DC, DE, MT, ND, SD, VT, and WY) have only one congressional district, therefore the matching procedures are not performed on these states. Returns with only one congressional district represent 2 percent of the total number of returns.
 
-### Disclosure Protection Procedures
+## Disclosure Protection Procedures
 
 SOI did not attempt to correct any ZIP codes listed on the tax returns; however, it did take the following precautions to avoid disclosing information about specific taxpayers:
 
@@ -56,7 +48,7 @@ SOI did not attempt to correct any ZIP codes listed on the tax returns; however,
 
 -   If an income or tax item from one return constitutes more than a specified percentage of the total of any particular cell, the specific data item for that return is excluded from that cell. For example, if the amount for wages from one return represents 75 percent of the value of the total for that cell, the data item will be suppressed. The actual threshold percentage used cannot be released.
 
-### IRS Endnotes
+## IRS Endnotes
 
 [1] The use of prior-year returns as a proxy for returns that are filed beyond the current processing year is consistent with SOI’s national, state, county, and ZIP code tabulations. A description of SOI’s sample, which is used as an input for the geographic data, and the use of prior-year returns, can be found at https://www.irs.gov/statistics/soi-tax-stats-individual-income-tax-returns-publication-1304-complete-report#_sec2. 
 
@@ -106,34 +98,3 @@ An advance refund of the 2021 recovery rebate credit made under section 6428B of
 
 [21] The amount of overpayments the tax filer requested to have refunded.
 
-
-## Comments on the data
-
-### Determining which records are Congressional District records
-
--   Calculate nstub0 -- number of records by state where AGI_STUB == 0 (the totals record)
--   Note that CONG_DISTRICT == "00" is a totals record for the state. There are 8 states that only have 1 CD (see IRS documentation above), and for those states this record doubles as a CD record and as the state record.
--   Determine type of record:
-    -   US -- STATE == "US"
-    -   DC -- STATE == "DC"
-    -   state -- nstub0 \> 1 & CONG_DISTRICT == "00"
-    -   cdstate -- nstub0 == 1 (this is both a state record and a CD record, for 8 states)
-    -   cd -- nstub0 \> 1 & CONG_DISTRICT != "00"
-
-The cd and cdstate records have data for Congressional Districts. There are 435 of these for AGI_STUB == 0 - one for each voting Congressional District (not including the District of Columbia). SOI data also have records for the nonvoting DC district. It is not included in the 435 Congressional Districts .
-
-The state and cdstate records have data for states. There are 51 of these (4)
-
-![](images/clipboard-719051713.png)
-
-To verify that this produces a proper calculation of the number of districts by state, I asked ChatGPT (4o) the following question, and compared the results by state to the calculation above. They are the same.
-
-> Please give me a table of the number of congressional districts by state (plus the District of Columbia), based on the 117th Congress, ideally as a google sheet or exportable to a spreadsheet. It should have 3 columns: state postal abbreviation, state name, and number of districts. It should add to 435 districts, I believe.
-
-### Exemptions
-
-Note that there are no data on exemptions but we do have total number of individuals (N2).
-
-When run on 2024-10-12 tmd national population was 334,283,385 (\`national_population = (vardf.s006 \* vardf.XTOT).sum()\`). By contrast, the sum of N2 for the U.S. was 289,054,220, or 13.5% less, according to 21incdall.xlsx.
-
-FWIW, IRS total number of returns in was 160,824,340 per 21in14ar.xls. When run on 2024-10-12 tmd sum of s006 was 184,024,657, or 14.4% more. By contrast, the sum of N1 for the U.S. was 157,375,370, or 2.1% less, according to 21incdall.xlsx.
