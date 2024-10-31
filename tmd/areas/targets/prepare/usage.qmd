@@ -26,7 +26,7 @@ editor_options:
 
 The first time the project is rendered, it will create needed intermediates files and put them in the "../cds/intermediate" folder.
 
-Note that the \_quarto.yml file sets the `freeze` execution option to `auto`, which means .qmd files will not be rerendered if they have not changed. For a full re-rendering, set `freeze: false`, which will rerender everything regardless of whether code has changed (except that it will not re-render chunks with the option `eval: false`).
+Note that the \_quarto.yml file sets the `freeze` execution option to `false`, which means .qmd files will be rerendered even if they have not changed (except that quarto will not re-render chunks with the option `eval: false`). For incremental re-rendering of changed files only, set `freeze: auto`. This should be used cautiously to avoid unintended consequences.
 
 At present the code prepares target files with targets we believe are useful and practical. Users who want different targets will have to modify code to do so. However, as described in overall repo documentation, users can comment-out individual targets.
 
