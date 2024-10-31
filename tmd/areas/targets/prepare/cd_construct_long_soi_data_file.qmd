@@ -6,7 +6,9 @@ editor_options:
 
 # Parse the Congressional District data
 
-Clean the SOI Congressional District data and save as a long file.
+Goal: create a 117th CD data file that is almost in the form needed for targets files. 
+
+This involves cleaning the SOI Congressional District data, adding agi bin information, adding variable documentation, and saving as a long file.
 
 ## Setup
 
@@ -185,6 +187,10 @@ rm(data, data2, cdnums)
 
 ## Create long SOI data file
 
+-   convert to a long file
+-   merge with variable documenttion file
+-   save as "cddata_long_clean.csv" in intermediate file directory
+
 ```{r}
 #| label: create-save-soi-cddata-long
 #| eval: true
@@ -198,8 +204,6 @@ glimpse(doc)
 idvars <- c("rectype", "ndist", "STATEFIPS", "STATE", "CONG_DISTRICT", 
             "AGI_STUB", "agirange", "agilo", "agihi")
 
-# TODO: put amount units in dollars!!
-
 dlong1 <- cdwide |> 
   pivot_longer(cols = -all_of(idvars),
                names_to = "vname") |> 
@@ -207,6 +211,7 @@ dlong1 <- cdwide |>
               select(vname, description, reference, vtype, basevname),
             by = join_by(vname))
 
+glimpse(dlong1)
 count(dlong1, vname)
 count(dlong1, vtype)
 
