@@ -18,7 +18,6 @@ To Come: Use of `renv` to define versions of packages.
 <!-- 21incddocguide.docx -->
 <!-- cd_documentation_extracted_from_21incddocguide.docx.xlsx -->
 <!-- cdpop1year_acs.csv -->
-<!-- cdpop5year_acs.csv -->
 <!-- congressional2021.zip -->
 <!-- geocorr2022_2428906586.csv -->
 
@@ -31,19 +30,19 @@ To Come: Use of `renv` to define versions of packages.
 
 The first time the project is rendered, it will create needed intermediates files and put them in the "../cds/intermediate" folder.
 
-Note that the _quarto.yml file sets the `freeze` execution option to `auto`, which means .qmd files will not be rerendered if they have not changed. For a full re-rendering, set `freeze: false`, which will rerender everything regardless of whether code has changed (except that it will not re-render chunks with the option `eval: false`).
+Note that the \_quarto.yml file sets the `freeze` execution option to `auto`, which means .qmd files will not be rerendered if they have not changed. For a full re-rendering, set `freeze: false`, which will rerender everything regardless of whether code has changed (except that it will not re-render chunks with the option `eval: false`).
 
 At present the code prepares target files with targets we believe are useful and practical. Users who want different targets will have to modify code to do so. However, as described in overall repo documentation, users can comment-out individual targets.
 
 ## After rendering is complete
 
 -   target .csv files will be in the ".../targets/prepare/cds/final/" folder
--   local documentation web page will be in the ".../targets/prepare/_targetprep/" folder
+-   local documentation web page will be in the ".../targets/prepare/\_targetprep/" folder
 
 ## To create area weights using the target files in tax-microdata-benchmarking
 
 -   copy desired target .csv files from ".../targets/prepare/cds/final/" folder to the ".../targets/" folder
--   follow tax-microdata-benchmarking instructions to run `make_all.py` or `create_area_weights.py'
+-   follow tax-microdata-benchmarking instructions to run `make_all.py` or \`create_area_weights.py'
 
 ## Additional notes
 
