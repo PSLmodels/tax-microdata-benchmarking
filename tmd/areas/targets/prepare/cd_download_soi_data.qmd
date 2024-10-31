@@ -4,9 +4,19 @@ editor_options:
  chunk_output_type: console
 ---
 
-# Download Congressional District data and documentation files
+# Download SOI Congressional District data and documentation files
 
-NOTE: To download data, change eval: to true in the header of the downloads chunk. Otherwise, this program assumes data already have been downloaded.
+SOI Congressional District data and documentation files are included with the project in the "../cds/raw_data" folder and by default, rendering the project will NOT re-download the data.
+
+To re-download data and save to the "../cds/raw_data" folder, set option `eval: true` in the `downloads` chunk below
+
+## File locations on the web
+
+-   [SOI Congressional Districts landing page](https://www.irs.gov/statistics/soi-tax-stats-data-by-congressional-district)
+
+    -   [2021 folder](https://www.irs.gov/statistics/soi-tax-stats-data-by-congressional-district-2021)
+        -   [zip archive with all data files](https://www.irs.gov/pub/irs-soi/congressional2021.zip)
+        -   [Word documentation](https://www.irs.gov/pub/irs-soi/21incddocguide.docx)
 
 ## Setup
 
@@ -19,12 +29,9 @@ source(here::here("R", "constants.R"))
 ```
 
 
-## Download CD data and documentation if not already downloaded
+## (Optionally) Download SOI CD data and documentation
 
--   [SOI Congressional Districts landing page](https://www.irs.gov/statistics/soi-tax-stats-data-by-congressional-district)
-
-    -   [2021 folder](https://www.irs.gov/statistics/soi-tax-stats-data-by-congressional-district-2021)
-
+As noted, by default, the files will NOT be downloaded when the project is rendered.
 
 ```{r}
 #| label: downloads
