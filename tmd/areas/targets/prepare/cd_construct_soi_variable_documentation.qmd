@@ -132,21 +132,3 @@ rm(vdoc)
 
 ```
 
-## Issues and notes
-
-Notes below are primarily intended for the project team but could be of interest to users.
-
-### Number of returns and number of individuals
-
-Note that we do not have number of exemptions, but we do have:
-
--   N1 -- number of returns
-
--   N2 -- number of individuals
-
-Footnote 5 in the IRS documentation file (21incddocguide.docx), pertaining to N2, says:
-
-> Beginning in 2018, personal exemption deductions were suspended for the primary, secondary, and dependent taxpayers. However, the data used to create the “Number of individuals”—filing status, dependent status indicator, and identifying dependent information—are still available on the Form 1040. This field is based on these data.
-
-
-
