@@ -20,18 +20,18 @@ editor_options:
     
 ## Setting up the environment
 
--   After checking the above and starting RStudio, in the console run `renv::restore()` and answer y when asked whether to install packages. This will take a while.
+-   After checking the above and starting RStudio, in the console run `renv::restore()` and answer y when asked whether to proceed installing packages. This may take a while the first time you set your environment up.
 
-`renv` is a kind of package manager for R that can set up a project-specific environment that is the same across multile machines. It should ensure that your environment includes needed versions of R packages used in this project. (Most packages are loaded in ".../targets/prepare/R/libraries.R".)
+`renv` is an environment manager for R that can set up a project-specific environment that is the same across multile machines. It should ensure that your environment includes the versions of R packages used in this project. (Most packages are loaded in ".../targets/prepare/R/libraries.R".)
 
 ## To create target files and build the web page
 
 -   Open a terminal in the "prepare" folder.
 -   Enter "quarto render"
 
-The first time the project is rendered, it will create needed intermediates files and put them in the "../cds/intermediate" folder.
+The first time the project is rendered, it will create needed intermediate files and put them in the "../cds/intermediate" folder.
 
-Note that the \_quarto.yml file sets the `freeze` execution option to `false`, which means .qmd files will be rerendered even if they have not changed (except that quarto will not re-render chunks with the option `eval: false`). For incremental re-rendering of changed files only, set `freeze: auto`. This should be used cautiously to avoid unintended consequences.
+Note that the \_quarto.yml file sets the `freeze` execution option to `false`, which means .qmd files will be rerendered even if they have not changed (except that quarto will not re-render chunks with the option `eval: false`). For incremental re-rendering of changed files only, set `freeze: auto`, which will avoid recreating intermediate files. This should be used cautiously to avoid unintended consequences.
 
 At present the code prepares target files with targets we believe are useful and practical. Users who want different targets will have to modify code to do so. However, as described in overall repo documentation, users can comment-out individual targets.
 
