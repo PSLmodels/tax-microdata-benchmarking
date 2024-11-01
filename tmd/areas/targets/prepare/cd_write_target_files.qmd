@@ -12,12 +12,25 @@ editor_options:
 source(here::here("R", "libraries.R"))
 source(here::here("R", "constants.R"))
 
+library(jsonlite)
+
 ```
 
-## Get targets recipes
 
 ```{r}
-#| label: json
+#| label: constants
+#| output: false
+
+phase4cds <- c("AK00", "DE00", "ID01", "ID02", "ME02", "MT00", "ND00", "PA08", "SD00", "WY00")
+
+```
+
+
+
+```{r}
+#| label: json-rules
+#| eval: false
+#| output: false
 
 # Data is in name/value pairs
 # Data is separated by commas
@@ -42,26 +55,12 @@ source(here::here("R", "constants.R"))
 # }
 
 # https://r4ds.hadley.nz/rectangling.html#json
-library(jsonlite)
-
-fpath <- fs::path(CDFINAL, "cdrecipe.json")
-cdrecipe <- read_json(fpath) 
-# str(cdrecipe)
-names(cdrecipe)
-cdrecipe$session
-cdrecipe$cdtype # all, phase4, cdlist
-cdrecipe$targets[[1]]
-
-
-cdrecipe$targets
-
-cdrecipe$targets[[3]]$varname
 
 ```
 
 
 ```{r}
-#| label: rules
+#| label: target-file-rules
 #| eval: false
 #| output: false
 
@@ -77,24 +76,46 @@ cdrecipe$targets[[3]]$varname
 # scope==1 implies only PUF-derived filing units are tabulated
 # scope==2 implies only CPS-derived filing units are tabulated
 
-
 ```
 
 
-```{r}
-#| label: constants
-#| output: false
-
-phase4cds <- c("AK00", "DE00", "ID01", "ID02", "ME02", "MT00", "ND00", "PA08", "SD00", "WY00")
-
-```
-
-
-## Create variable mapping
+## Get target base data
 
 ```{r}
 #| label: tc-soi-variablemap
 #| output: false
+
+stack <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile_sessions.csv"))
+
+soivars <- count(stack, basevname)
+# soivars$basevname
+
+# the MARS mappings let us get counts by filing status by agi range
+vmap <- read_csv(file="
+varname, basevname
+XTOT, XTOT
+c00100, v00100
+e00200, v00200
+e00300, v00300
+e01700, v01700
+e26270, v26270
+")
+
+# c00100, MARS1
+# c00100, MARS2
+# c00100, MARS4
+
+```
+
+
+## Get targets recipes
+
+```{r}
+#| label: get-recipe-json
+#| eval: true
+#| output: false
+
+# create a csv file that we will left-join with
 
 fpath <- fs::path(CDFINAL, "cdrecipe.json")
 cdrecipe <- read_json(fpath) 
@@ -105,53 +126,53 @@ if(cdrecipe$cdtype == "phase4"){
 }
 cdlist
 
-varnames <- cdrecipe$targets|> 
-  map_chr("varname")
-varnames
-
-targets_tibble <- cdrecipe$targets |> 
-  purrr::map(tibble::as_tibble) |> 
-  purrr::list_rbind()
-
-
-stack <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile_sessions.csv"))
-
-soivars <- count(stack, basevname)
-# soivars$basevname
-
-# the MARS mappings let us get counts by filing status by agi range
-vmap <- read_csv(file="
-tcvar, soivar
-XTOT, XTOT
-c00100, MARS1
-c00100, MARS2
-c00100, MARS4
-c00100, v00100
-e00200, v00200
-e00300, v00300
-e01700, v01700
-e26270, v26270
-")
+# varnames <- cdrecipe$targets|> 
+#   map_chr("varname")
+# varnames
 
 ```
 
+
 ```{r}
-#| label: mapped-file
-#| output: false
 
-varnames
-intersect(vmap$tcvar)
+f <- function(target){
+  # for later -- a first step in adding income ranges as a possibility
+  # if(!"agilo" %in% names(target)) target$agilo <- -9e99
+  # if(!"agihi" %in% names(target)) target$agihi <- 9e99
+  as_tibble(target)
+}
 
-varsubset <- vmap |> 
-  filter(tcvar %in% varnames)
+cdrecipe$targets[[1]]
 
-mapped <- stack |> 
-  filter(session==paste0("s", cdrecipe$session),
-         statecd %in% cdlist,
-         basevname %in% varsubset$soivar) |> 
-  mutate(varname=factor(basevname, levels=vmap$soivar, labels=vmap$tcvar))
+names(stack) |> sort()
+tmp <- count(stack, basevname, vname, varname)
 
-# count(mapped, varname, vname)
+targets_tibble <- cdrecipe$targets |> 
+  purrr::map(f) |> 
+  purrr::list_rbind() |> 
+  left_join(vmap,
+         by = join_by(varname)) |> 
+  mutate(basevname = case_when(fstatus == 1 ~ "MARS1",
+                               fstatus == 2 ~ "MARS2",
+                               fstatus == 4 ~ "MARS4",
+                               .default = basevname))
+
+targets_tibble
+
+stack |> 
+  filter(statecd=="AK00", session==118, basevname=="XTOT")
+count(stack, fstatus)
+
+mapped <- targets_tibble |> 
+  left_join(stack |> 
+              filter(statecd %in% cdlist,
+                     session %in% cdrecipe$session,
+                     !(agistub == 0 & basevname !="XTOT")),
+            by = join_by(basevname, scope, count, fstatus),
+            relationship = "many-to-many")
+
+tmp <- mapped |> 
+  filter(statecd=="AK00")
 
 ```
 
