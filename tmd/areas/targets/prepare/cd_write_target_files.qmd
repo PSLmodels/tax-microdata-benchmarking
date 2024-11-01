@@ -169,7 +169,12 @@ mapped <- targets_tibble |>
                      session %in% cdrecipe$session,
                      !(agistub == 0 & basevname !="XTOT")),
             by = join_by(basevname, scope, count, fstatus),
-            relationship = "many-to-many")
+            relationship = "many-to-many") |> 
+  mutate(group = case_when(basevname=="XTOT" & scope==0 & count==0 & fstatus==0 ~ 1,
+                           .default = 2)) |> 
+  arrange(statecd, group, varname, scope, count, fstatus, agistub) |> 
+  mutate(sort=row_number(), .by=group)
+           
 
 tmp <- mapped |> 
   filter(statecd=="AK00")
@@ -177,37 +182,12 @@ tmp <- mapped |>
 ```
 
 ```{r}
-#| label: extracts
+#| label: write-targets
 #| output: false
 
 # varname,count,scope,agilo,agihi,fstatus,target
 # XTOT,       0,    0,-9e99, 9e99,      0,  33e6
 # e00300,     0,    1,-9e99, 9e99,      0,  20e9
-
-# define extracts we want
-
-
-# statecds <- "NY21"
-
-statecds <- phase4cds
-session_number <- 117
-
-extracted <- mapped |> 
-  filter(statecd %in% statecds) |> 
-  filter(session==paste0("s", session_number)) |> 
-  arrange(statecd, src, scope, fstatus, basevname, count, agistub) # to be safe
-
-count(extracted, statecd)
-count(extracted, basevname, varname)
-
-targets <- extracted |> 
-  filter(varname %in% c("XTOT", "c00100", "e00200", "e26270")) |> 
-  filter(varname == "XTOT" | (agistub != 0)) |> 
-  filter(!(count == 1 & (varname != "c00100"))) |> 
-  select(statecd, varname, count, scope, agilo, agihi, fstatus, target)
-
-check <- targets |> 
-  filter(statecd == "AK00")
 
 f <- function(data, group){
   cd <- group$statecd |> 
@@ -218,7 +198,8 @@ f <- function(data, group){
   write_csv(data, fpath)
 }
 
-targets |> 
+mapped |> 
+  select(statecd, varname, count, scope, agilo, agihi, fstatus, target) |> 
   group_by(statecd) |> 
   group_walk(~f(.x, .y))
 
