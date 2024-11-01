@@ -6,10 +6,12 @@
 _docs/
 _targetprep/
 _freeze/
+libs/
 
 # files to ignore
 !cds/raw_data/*.csv
 .Rhistory
+*.html
 
 # Local Netlify folder
 .netlify

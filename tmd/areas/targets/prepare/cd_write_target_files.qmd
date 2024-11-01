@@ -1,0 +1,266 @@
+---
+output: html_document
+editor_options: 
+ chunk_output_type: console
+---
+
+# Map tax calculator vars to soi vars and extract targets
+
+```{r}
+#| label: setup
+
+source(here::here("R", "libraries.R"))
+source(here::here("R", "constants.R"))
+
+```
+
+## Get targets recipes
+
+```{r}
+#| label: json
+
+# Data is in name/value pairs
+# Data is separated by commas
+# Curly braces hold objects
+# Square brackets hold arrays
+
+# In JSON, values must be one of the following data types:
+# a string
+# a number
+# an object
+# an array
+# a boolean
+# null
+
+# {
+#   "key": "String",
+#   "Number": 1,
+#   "array": [1,2,3],	
+#   "nested": {
+# 	"literals": true
+#   }	
+# }
+
+# https://r4ds.hadley.nz/rectangling.html#json
+library(jsonlite)
+
+fpath <- fs::path(CDFINAL, "cdrecipe.json")
+cdrecipe <- read_json(fpath) 
+# str(cdrecipe)
+names(cdrecipe)
+cdrecipe$session
+cdrecipe$cdtype # all, phase4, cdlist
+cdrecipe$targets[[1]]
+
+
+cdrecipe$targets
+
+cdrecipe$targets[[3]]$varname
+
+```
+
+
+```{r}
+#| label: rules
+#| eval: false
+#| output: false
+
+# count: integer in [0,4] range:
+# count==0 implies dollar total of varname is tabulated
+# count==1 implies number of tax units with any value of varname is tabulated
+# count==2 implies number of tax units with a nonzero value of varname is tabulated
+# count==3 implies number of tax units with a positive value of varname is tabulated
+# count==4 implies number of tax units with a negative value of varname is tabulated
+
+# scope: integer in [0,2] range:
+# scope==0 implies all tax units are tabulated
+# scope==1 implies only PUF-derived filing units are tabulated
+# scope==2 implies only CPS-derived filing units are tabulated
+
+
+```
+
+
+```{r}
+#| label: constants
+#| output: false
+
+phase4cds <- c("AK00", "DE00", "ID01", "ID02", "ME02", "MT00", "ND00", "PA08", "SD00", "WY00")
+
+```
+
+
+## Create variable mapping
+
+```{r}
+#| label: tc-soi-variablemap
+#| output: false
+
+fpath <- fs::path(CDFINAL, "cdrecipe.json")
+cdrecipe <- read_json(fpath) 
+names(cdrecipe)
+
+if(cdrecipe$cdtype == "phase4"){
+  cdlist <- phase4cds
+}
+cdlist
+
+varnames <- cdrecipe$targets|> 
+  map_chr("varname")
+varnames
+
+targets_tibble <- cdrecipe$targets |> 
+  purrr::map(tibble::as_tibble) |> 
+  purrr::list_rbind()
+
+
+stack <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile_sessions.csv"))
+
+soivars <- count(stack, basevname)
+# soivars$basevname
+
+# the MARS mappings let us get counts by filing status by agi range
+vmap <- read_csv(file="
+tcvar, soivar
+XTOT, XTOT
+c00100, MARS1
+c00100, MARS2
+c00100, MARS4
+c00100, v00100
+e00200, v00200
+e00300, v00300
+e01700, v01700
+e26270, v26270
+")
+
+```
+
+```{r}
+#| label: mapped-file
+#| output: false
+
+varnames
+intersect(vmap$tcvar)
+
+varsubset <- vmap |> 
+  filter(tcvar %in% varnames)
+
+mapped <- stack |> 
+  filter(session==paste0("s", cdrecipe$session),
+         statecd %in% cdlist,
+         basevname %in% varsubset$soivar) |> 
+  mutate(varname=factor(basevname, levels=vmap$soivar, labels=vmap$tcvar))
+
+# count(mapped, varname, vname)
+
+```
+
+```{r}
+#| label: extracts
+#| output: false
+
+# varname,count,scope,agilo,agihi,fstatus,target
+# XTOT,       0,    0,-9e99, 9e99,      0,  33e6
+# e00300,     0,    1,-9e99, 9e99,      0,  20e9
+
+# define extracts we want
+
+
+# statecds <- "NY21"
+
+statecds <- phase4cds
+session_number <- 117
+
+extracted <- mapped |> 
+  filter(statecd %in% statecds) |> 
+  filter(session==paste0("s", session_number)) |> 
+  arrange(statecd, src, scope, fstatus, basevname, count, agistub) # to be safe
+
+count(extracted, statecd)
+count(extracted, basevname, varname)
+
+targets <- extracted |> 
+  filter(varname %in% c("XTOT", "c00100", "e00200", "e26270")) |> 
+  filter(varname == "XTOT" | (agistub != 0)) |> 
+  filter(!(count == 1 & (varname != "c00100"))) |> 
+  select(statecd, varname, count, scope, agilo, agihi, fstatus, target)
+
+check <- targets |> 
+  filter(statecd == "AK00")
+
+f <- function(data, group){
+  cd <- group$statecd |> 
+    str_to_lower()
+  fname <- paste0(cd, "_targets.csv")
+  fpath <- fs::path(CDFINAL, fname)
+  print(fpath)
+  write_csv(data, fpath)
+}
+
+targets |> 
+  group_by(statecd) |> 
+  group_walk(~f(.x, .y))
+
+
+# write_csv(targets, fs::path(CDFINAL, "ny21_targets.csv"))
+
+
+```
+
+## Documentation for target files for individual CDs
+
+### Target file name
+
+Congressional District target files follow the naming convention **xxxx_targets.csv**, where **xxxx** is a 4 character CD identifier.
+
+-   The first two characters are the state postal abbreviation or, in the case of the District of Columbia, "DC". (DC does not have a voting representative but does have a non-voting member. The SOI data have information for DC and so it is in the data. Thus, we have data for 435 voting districts, plus data for DC.)
+
+-   The next 2 characters identify the Congressional District within the state, with a leading zero. For states that have more than one district, these range from 01 to the number of districts (for example, 53 in the case of California). For the 7 states and DC that have only one CD, these 2 characters are 00, following the SOI convention.
+
+-   Thus, the filename for California's 3rd Congressional District would be CA03_targets.csv and allowable file names would range from CA01_targets.csv to CA53_targets.csv. There is no CA00_targets.csv. The filename for any of the 7 states (or DC) that have only one CD would be WY00_targets.csv.
+
+### Target file variables
+
+### The special first data row of a CD target file
+
+The area targeting software needs a value for total population in the area. It uses this to scale initial weights prior to optimization so that they sum to the area population. To assist in this, the target file must contain in its first data row a value for the total area population. This special row must have the following values:
+
+-   **varname**: XTOT
+-   **count**: 0
+-   **scope**: 0
+-   **agilo**: must be \< -8e99
+-   **agihi**: must be \> 8e99
+-   **fstatus**: 0
+-   **target**: area population
+
+For example, here is the first data row of an area that has population of 33 million:
+
+varname,count,scope,agilo,agihi,fstatus,target
+
+XTOT, 0, 0,-9e99, 9e99, 0, 33e6
+
+For up-to-date documentation of target files, see the associated [README](https://github.com/PSLmodels/tax-microdata-benchmarking/blob/master/tmd/areas/targets/README.md). The following is from the version that was current as of 2024-11-01:
+
+> An areas targets file is a CSV-formatted file with its first row containing column names and its second row containing the area population target. Each subsequent row contains another target. Rows after the first two that start with a `#` character are considered comments and are skipped.
+>
+> Here are the column names and their valid values:
+>
+> 1.  **`varname`**: any Tax-Calculator input variable name plus any Tax-Calculator calculated variable in the list of cached variables in the `tmd/storage/__init__.py` file
+> 2.  **`count`**: integer in \[0,4\] range:
+>     -   count==0 implies dollar total of varname is tabulated
+>     -   count==1 implies number of tax units with **any** value of varname is tabulated
+>     -   count==2 implies number of tax units with a **nonzero** value of varname is tabulated
+>     -   count==3 implies number of tax units with a **positive** value of varname is tabulated
+>     -   count==4 implies number of tax units with a **negative** value of varname is tabulated
+> 3.  **`scope`**: integer in \[0,2\] range:
+>     -   scope==0 implies all tax units are tabulated
+>     -   scope==1 implies only PUF-derived filing units are tabulated
+>     -   scope==2 implies only CPS-derived filing units are tabulated
+> 4.  **`agilo`**: float representing lower bound of the AGI range (which is included in the range) that is tabulated.
+> 5.  **`agihi`**: float representing upper bound of the AGI range (which is excluded from the range) that is tabulated.
+> 6.  **`fstatus`**: integer in \[0,5\] range:
+>     -   fstatus=0 implies all filing statuses are tabulated
+>     -   other fstatus values imply just the tax units with the Tax-Calculator `MARS` variable equal to fstatus are included in the tabulation
+> 7.  **`target`**: target amount:
+>     -   dollars if count==0
+>     -   number of tax units if count\>0
