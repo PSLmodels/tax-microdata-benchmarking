@@ -138,7 +138,37 @@ targets |>
 
 ```
 
-## Documentation for target files
+## Documentation for target files for individual CDs
+
+### Target file name
+
+Congressional District target files follow the naming convention **xxxx_targets.csv**, where **xxxx** is a 4 character CD identifier.
+
+-   The first two characters are the state postal abbreviation or, in the case of the District of Columbia, "DC". (DC does not have a voting representative but does have a non-voting member. The SOI data have information for DC and so it is in the data. Thus, we have data for 435 voting districts, plus data for DC.)
+
+-   The next 2 characters identify the Congressional District within the state, with a leading zero. For states that have more than one district, these range from 01 to the number of districts (for example, 53 in the case of California). For the 7 states and DC that have only one CD, these 2 characters are 00, following the SOI convention.
+
+-   Thus, the filename for California's 3rd Congressional District would be CA03_targets.csv and allowable file names would range from CA01_targets.csv to CA53_targets.csv. There is no CA00_targets.csv. The filename for any of the 7 states (or DC) that have only one CD would be WY00_targets.csv.
+
+### Target file variables
+
+### The special first data row of a CD target file
+
+The area targeting software needs a value for total population in the area. It uses this to scale initial weights prior to optimization so that they sum to the area population. To assist in this, the target file must contain in its first data row a value for the total area population. This special row must have the following values:
+
+-   **varname**: XTOT
+-   **count**: 0
+-   **scope**: 0
+-   **agilo**: must be \< -8e99
+-   **agihi**: must be \> 8e99
+-   **fstatus**: 0
+-   **target**: area population
+
+For example, here is the first data row of an area that has population of 33 million:
+
+varname,count,scope,agilo,agihi,fstatus,target
+
+XTOT, 0, 0,-9e99, 9e99, 0, 33e6
 
 For up-to-date documentation of target files, see the associated [README](https://github.com/PSLmodels/tax-microdata-benchmarking/blob/master/tmd/areas/targets/README.md). The following is from the version that was current as of 2024-11-01:
 
