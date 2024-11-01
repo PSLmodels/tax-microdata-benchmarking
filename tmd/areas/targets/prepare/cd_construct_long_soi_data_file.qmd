@@ -194,6 +194,7 @@ rm(data, data2, cdnums)
 ```{r}
 #| label: create-save-soi-cddata-long
 #| eval: true
+#| output: false
 
 cdwide <- read_csv(fs::path(CDINTERMEDIATE, "cddata_wide_clean.csv"))
 doc <- read_csv(fs::path(CDINTERMEDIATE, "variable_documentation.csv"))

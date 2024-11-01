@@ -10,9 +10,22 @@ editor_options:
 
 -   Per IRS documentation: "Income and tax items with less than 20 returns for a particular AGI class were combined with another AGI class within the same congressional district. Collapsed AGI classes are identified with a double asterisk (dropped) in the Excel files." **This will require attention soon.**
 
-## Defining number of returns with AGI
+## Defining number of returns, and number of returns with AGI
 
 -   We have an issue with AGI: for Congressional Districts IRS does NOT report the number of returns with AGI. They report two variables that should be close in concept: N1 (Number of returns), and N02650 (Number of returns with total income). For all CDs in the U.S. N1 was 157,375,370 in 2021 and N02650 was 155,283,590. Since N1 is larger and is probably a better indicator of total number of filers, we'll use that as the number-of-returns counterpart to AGI (c00100). We address this late in the process because for most of the data development we try to keep the data faithful to what IRS reports and because the solution chosen here may be suboptimal and we may want to change it later.
+
+Note that we do not have number of exemptions, but we do have:
+
+-   N1 -- number of returns
+
+-   N2 -- number of individuals
+
+Footnote 5 in the IRS documentation file (21incddocguide.docx), pertaining to N2, says:
+
+> Beginning in 2018, personal exemption deductions were suspended for the primary, secondary, and dependent taxpayers. However, the data used to create the “Number of individuals”—filing status, dependent status indicator, and identifying dependent information—are still available on the Form 1040. This field is based on these data.
+
+
+
 
 ## Census population
 

@@ -57,6 +57,7 @@ This chunk gets previously saved Congressional District population data, does mi
 
 ```{r}
 #| label: cdpop-clean
+#| output: false
 
 cdpop1year <- read_csv(fs::path(CDRAW, "cdpop1year_acs.csv"))
 cdpop1year |> summarise(estimate=sum(estimate)) # 335157329
