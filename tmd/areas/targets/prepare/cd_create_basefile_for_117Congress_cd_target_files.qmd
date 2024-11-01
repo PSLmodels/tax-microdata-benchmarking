@@ -94,6 +94,7 @@ cdlong <- read_csv(fs::path(CDINTERMEDIATE, "cddata_long_clean.csv"))
 
 ```{r}
 #| label: drop-records-and-variables
+#| output: false
 
 cdlong1 <- cdlong |> 
   filter(rectype %in% c("cd", "cdstate", "DC"))
@@ -130,6 +131,7 @@ We are going to create new rows for N00100 (Number of returns with AGI (estimate
 
 ```{r}
 #| label: address-agi
+#| output: false
 
 nagi <- cdlong2 |> 
   filter(vname == "N1") |> 
@@ -156,6 +158,7 @@ rm(nagi, check)
 
 ```{r}
 #| label: fstatus-misc
+#| output: false
 
 cdlong4 <- cdlong3 |> 
     mutate(
@@ -176,11 +179,11 @@ cdlong4 <- cdlong3 |>
                      value)
       )
   
-summary(cdlong4)
+# summary(cdlong4)
 # skim(cdlong4)
-count(cdlong4, fstatus)
-count(cdlong4, count, vtype)
-count(cdlong4, scope)
+# count(cdlong4, fstatus)
+# count(cdlong4, count, vtype)
+# count(cdlong4, scope)
 
 ```
 
@@ -190,6 +193,7 @@ Prepare the Census population data.
 
 ```{r}
 #| label: prepare-census-pop
+#| output: false
 
 # -   **varname**: XTOT
 # -   **count**: 0
@@ -239,6 +243,7 @@ rm(soistubs, fmatch)
 
 ```{r}
 #| label: create-cdbasefile
+#| output: false
 
 cdbasefile <- bind_rows(cdlong4 |> 
                           rename(target=value) |> 
@@ -254,9 +259,9 @@ cdbasefile <- bind_rows(cdlong4 |>
          vname, description, agirange) |> 
   arrange(statecd, src, scope, fstatus, basevname, count, agistub)
   
-glimpse(cdbasefile)
-summary(cdbasefile)
-skim(cdbasefile)
+# glimpse(cdbasefile)
+# summary(cdbasefile)
+# skim(cdbasefile)
 
 cdbasefile |> count(basevname)
 
