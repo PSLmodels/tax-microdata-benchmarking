@@ -22,6 +22,7 @@ source(here::here("R", "constants.R"))
 
 ```{r}
 #| label: get-cdbasefile
+#| output: false
 
 cd117 <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile_117.csv"))
 cd118 <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile_118.csv"))
@@ -55,7 +56,7 @@ write_csv(stack, fs::path(CDINTERMEDIATE, "cdbasefile_sessions.csv"))
 #| label: tc-soi-variablemap
 
 soivars <- count(stack, basevname)
-soivars$basevname
+# soivars$basevname
 
 # the MARS mappings let us get counts by filing status by agi range
 vmap <- read_csv(file="
@@ -80,7 +81,7 @@ mapped <- stack |>
   filter(basevname %in% vmap$soivar) |> 
   mutate(varname=factor(basevname, levels=vmap$soivar, labels=vmap$tcvar))
 
-count(mapped, varname, vname)
+# count(mapped, varname, vname)
 
 ```
 
