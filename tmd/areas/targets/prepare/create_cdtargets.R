@@ -62,12 +62,8 @@ stack <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile_sessions.csv"), show_col_
 # get target recipes ------------------------------------------------------
 
 fpath <- here::here(CDRECIPES, fnrecipe)
-print(fpath)
 
 cdrecipe <- read_json(fpath) 
-# if(cdrecipe$cdtype == "phase4"){
-#   cdlist <- phase4cds
-# }
 
 cdlist <- unlist(cdrecipe$cdlist)
 # quit(save="no", status=1, runLast=FALSE)
