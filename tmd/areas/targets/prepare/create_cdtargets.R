@@ -6,6 +6,8 @@
 
 # startup -----------------------------------------------------------------
 # Get command-line arguments
+print("checking arguments and getting data needed for target files...")
+
 args <- commandArgs(trailingOnly = TRUE)
 
 if (length(args) > 0) {
