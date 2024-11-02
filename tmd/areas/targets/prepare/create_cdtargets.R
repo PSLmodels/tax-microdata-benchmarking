@@ -1,14 +1,8 @@
 
-# source(here::here("R", "libraries.R"))
-# source(here::here("R", "constants.R"))
-
-# library(tidyverse)
-# library(dplyr)
-# library(purrr)
-# library(jsonlite)
+# run with:
+#   Rscript create_cdtargets.R phase5.json
 
 # Rscript test.r > output.log 2>&1
-
 
 # startup -----------------------------------------------------------------
 # Get command-line arguments
