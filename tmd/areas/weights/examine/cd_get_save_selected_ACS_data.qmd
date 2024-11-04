@@ -1,0 +1,67 @@
+---
+output: html_document
+editor_options: 
+ chunk_output_type: console
+---
+
+# Get and save selected ACS data
+
+Get median household income for each 118th-session Congressional District in 2022. The original source is the 2022 Census 1-year American Community Survey (ACS).
+
+This only needs to be done once so set `eval: false` in the `get-save-acs` chunk after getting the data.
+
+## Setup
+
+```{r}
+#| label: setup
+#| output: false
+
+source(here::here("R", "libraries.R"))
+source(here::here("R", "constants.R"))
+
+```
+
+
+## ONETIME download of data
+
+```{r}
+#| label: get-save-acs
+#| eval: false
+#| output: false
+
+mhhi2022 <- get_acs(
+  geography = "congressional district",
+  variables = "S1903_C03_001",  # Median household income variable S1903_C03_001E
+  year = 2022,
+  survey = "acs1"  # Consider using 5-year estimates for better coverage, especially in smaller areas
+) # 118th Congress
+
+# mhhi2021 <- get_acs(
+#   geography = "congressional district",
+#   variables = "S1903_C03_001",  # Median household income variable S1903_C03_001E
+#   year = 2021,
+#   survey = "acs1"  # Consider using 5-year estimates for better coverage, especially in smaller areas
+# ) # 116th Congress
+
+stcodes <- tigris::states() |> 
+  as_tibble() |> 
+  select(stfips=GEOID, stabbr=STUSPS, stname=NAME) |> 
+  arrange(stfips)
+
+# add our codes
+mhhi2022a <- mhhi2022 |> 
+  mutate(stfips=str_sub(GEOID, 1, 2),
+         cd=str_sub(GEOID, 3, 4)) |> 
+  left_join(stcodes, by = join_by(stfips)) |> 
+  mutate(statecd=paste0(str_to_lower(stabbr), cd),
+         session=118)
+
+count(mhhi2022a, stfips, stabbr, stname) |> 
+  janitor::adorn_totals() # 435 CDs + DC + PR = 437 records
+
+mhhi2022b <- mhhi2022a |> 
+  select(session, stname, statecd, mhhi=estimate)
+
+write_csv(mhhi2022b, here::here("raw_data", "mhhi2022.csv"))
+
+```

@@ -1,0 +1,58 @@
+---
+output: html_document
+editor_options: 
+ chunk_output_type: console
+---
+
+# Get and save Congressional District weights
+
+Get a wide tibble (data frame) with one row per tmd record and a column for the 2021 weight of each of the 435 Congressional districts plus DC (column names are ak00, ..., wy00). Save it in the `intermediate` folder of this project. The file is approximately 380 mb.
+
+This needs to be done each time new CD weights are created. The weights files need to be copied into the `temp_data` folder of this R project from the folder in which they were created.
+
+This program is time consuming (~2+ minutes) when weights for all 436 districts are read, so set `eval: false` in the `get-save-weights` chunk after an initial run that gets the data.
+
+## Setup
+
+```{r}
+#| label: setup
+#| output: false
+
+source(here::here("R", "libraries.R"))
+source(here::here("R", "constants.R"))
+
+```
+
+## Get and save weights
+
+Get and save weights each time new weights are produced. Set `eval: false` in the `get-save-weights` chunk after weights are updated.
+
+```{r}
+#| label: get-save-weights
+#| eval: false
+#| output: false
+
+weightfiles <- dir_ls(here::here("temp_data")) |> str_subset("tmd_weights.csv.gz")
+
+f <- function(fpath){
+  cd <- str_sub(fs::path_file(fpath), 1, 4)
+  print(cd)
+  vroom(fpath, col_select = "WT2021") |> 
+    rename(!!cd := WT2021)
+}
+
+a <- proc.time()
+weights <- test <- purrr::map(weightfiles, f) |> 
+  list_cbind() |> 
+  mutate(row=row_number()) |> 
+  relocate(row)
+b <- proc.time()
+b - a # 79 seconds
+
+system.time(saveRDS(weights, here::here("intermediate", "weights.rds"))) # 23 seconds
+
+# system.time(cdweights <- readRDS(here::here("intermediate", "weights.rds"))) # 4.5 secs, 390 mb
+
+```
+
+

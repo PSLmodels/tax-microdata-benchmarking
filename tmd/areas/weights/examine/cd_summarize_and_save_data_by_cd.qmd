@@ -1,0 +1,55 @@
+---
+output: html_document
+editor_options: 
+ chunk_output_type: console
+---
+
+# Summarize and save data by Congressional District
+
+Merge selected variables from tmd2021_cache.csv (the tmd data used in area-weights creation) with the previosly created wide weights file.
+
+Summarize by Congressional District, data_source, agistub, and (??) marital status.
+
+## Setup
+
+```{r}
+#| label: setup
+#| output: false
+
+source(here::here("R", "libraries.R"))
+source(here::here("R", "constants.R"))
+
+```
+
+## Get data
+
+```{r}
+#| label: get-tmd
+#| output: false
+
+TMDDIR <- here::here("..", "..", "..", "storage", "output")
+fpath <-  fs::path(TMDDIR, "tmd2021_cache.csv")
+# tmd2021 <- read_csv(fpath)
+tmd2021 <- vroom(fpath)
+ns(tmd2021)
+tmd2021 |> filter(row_number() < 20) |> select(RECID, s006, c00100)
+
+
+
+```
+
+
+
+## Merge data
+
+```{r}
+#| label: merge-data
+#| output: false
+
+
+
+
+```
+
+
+
