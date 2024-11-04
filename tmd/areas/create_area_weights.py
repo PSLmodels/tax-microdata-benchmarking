@@ -56,7 +56,7 @@ def valid_area(area: str):
     # Census on which Congressional districts are based:
     # : cd_census_year = 2010 implies districts are for the 117th Congress
     # : cd_census_year = 2020 implies districts are for the 118th Congress
-    cd_census_year = 2010
+    cd_census_year = 2020
     # data in the state_info dictionary is taken from the following document:
     #  2020 Census Apportionment Results, April 26, 2021,
     #  Table C1. Number of Seats in
@@ -124,6 +124,13 @@ def valid_area(area: str):
         total[2020] += seats[2020]
     assert total[2010] == 435
     assert total[2020] == 435
+    compare_new_vs_old = False
+    if compare_new_vs_old:
+        text = "state,2010cds,2020cds"
+        for state, seats in state_info.items():
+            if seats[2020] != seats[2010]:
+                print(f"{text}= {state} {seats[2010]:2d} {seats[2020]:2d}")
+        sys.exit(1)
     # conduct series of validity checks on specified area string
     # ... check that specified area string has expected length
     len_area_str = len(area)
