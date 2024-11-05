@@ -30,9 +30,7 @@ def create_cached_files():
     calc.advance_to_year(TAX_YEAR)
     calc.calc_all()
     
-    if TAX_YEAR==2021:
-        print("writing tax year 2021...")
-        calc.dataframe(variable_list=None, all_vars=True).to_csv(STORAGE_FOLDER / "output" / "tmd2021_cache.csv", index=None)
+    calc.dataframe(variable_list=None, all_vars=True).to_csv(STORAGE_FOLDER / "output" / "cached_allvars.csv", index=None)
 
     # write each variable in CACHED_TAXCALC_VARIABLES list to a binary file
     for vname in CACHED_TAXCALC_VARIABLES:
