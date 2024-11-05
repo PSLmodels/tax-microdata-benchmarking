@@ -124,6 +124,13 @@ def valid_area(area: str):
         total[2020] += seats[2020]
     assert total[2010] == 435
     assert total[2020] == 435
+    compare_new_vs_old = False
+    if compare_new_vs_old:
+        text = "state,2010cds,2020cds"
+        for state, seats in state_info.items():
+            if seats[2020] != seats[2010]:
+                print(f"{text}= {state} {seats[2010]:2d} {seats[2020]:2d}")
+        sys.exit(1)
     # conduct series of validity checks on specified area string
     # ... check that specified area string has expected length
     len_area_str = len(area)
