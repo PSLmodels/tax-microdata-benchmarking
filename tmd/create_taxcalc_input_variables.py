@@ -16,6 +16,7 @@ from tmd.storage import STORAGE_FOLDER
 
 
 TAXYEAR = 2021
+DUMP_ALL_UNROUNDED_VARIABLES = False
 
 
 def create_variable_file(write_file=True):
@@ -33,6 +34,11 @@ def create_variable_file(write_file=True):
     vdf = create_tmd_2021()
     vdf.FLPDYR = TAXYEAR
     vdf.agi_bin = 0
+    # optionally dump all input and output variables unrounded
+    if write_file and DUMP_ALL_UNROUNDED_VARIABLES:
+        fname = STORAGE_FOLDER / "allvars_unrounded_2021.csv"
+        print(f"Writing PUF+CPS file... [{fname}]")
+        vdf.to_csv(fname, index=False)
     # streamline dataframe so that it includes only input variables
     print("Removing output variables from PUF+CPS DataFrame...")
     rec = tc.Records(

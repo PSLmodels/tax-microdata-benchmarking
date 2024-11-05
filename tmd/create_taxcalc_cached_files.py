@@ -40,9 +40,11 @@ def create_cached_files():
         varray = calc.array(vname)
         fpath = STORAGE_FOLDER / "output" / f"cached_{vname}.npy"
         np.save(fpath, varray, allow_pickle=False)
+
+    # provide timestamp for Makefile
     fpath = STORAGE_FOLDER / "output" / "cached_files"
     with open(fpath, "w", encoding="utf-8") as cfiles:
-        cfiles.write("  ")  # provides timestamp for Makefile
+        cfiles.write("  ")
 
     return 0
 
