@@ -18,6 +18,7 @@ This only needs to be done once so set `eval: false` in the `get-save-acs` chunk
 
 source(here::here("R", "libraries.R"))
 source(here::here("R", "constants.R"))
+source(here::here("R", "functions.R"))
 
 ```
 
