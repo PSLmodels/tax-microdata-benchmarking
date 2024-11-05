@@ -6,7 +6,7 @@ editor_options:
 
 # Get and save Congressional District weights
 
-Get a wide tibble (data frame) with one row per tmd record and a column for the 2021 weight of each of the 435 Congressional districts plus DC (column names are ak00, ..., wy00). Save it in the `intermediate` folder of this project. The file is approximately 380 mb.
+Get a wide tibble (data frame) with one row per tmd record and a column for the 2021 weight of each of the 435 Congressional districts plus DC (column names are ak00, ..., wy00). Save it as `cdweights.rds` in the `intermediate` folder of this project. The file is approximately 380 mb.
 
 This needs to be done each time new CD weights are created. The weights files need to be copied into the `temp_data` folder of this R project from the folder in which they were created.
 
@@ -35,7 +35,7 @@ Steps:
 -   Read the 2021 weights column from each area weights `_tmd_weights.csv.gz` file in the `temp_data` folder
 -   Concatenate
 -   Add a `row` (row number) column to make sorting and merging safer when the file is used
--   Save as `weights.rds` in the `intermediate`folder
+-   Save as `cdweights.rds` in the `intermediate`folder
 
 The resulting .rds file is about 390 mb.
 
@@ -54,7 +54,7 @@ f <- function(fpath){
   cd <- str_sub(fs::path_file(fpath), 1, 4)
   print(cd)
   vroom(fpath, col_select = "WT2021") |> 
-    rename(!!cd := WT2021)
+    rename(!!cd := WT2021) # create a column named for the cd, with its 2021 as its value
 }
 
 a <- proc.time()
@@ -65,9 +65,9 @@ weights <- test <- purrr::map(weightfiles, f) |>
 b <- proc.time()
 b - a # 79 seconds
 
-system.time(saveRDS(weights, here::here("intermediate", "weights.rds"))) # 23 seconds
+system.time(saveRDS(weights, here::here("intermediate", "cdweights.rds"))) # 23 seconds
 
-# system.time(cdweights <- readRDS(here::here("intermediate", "weights.rds"))) 
+# system.time(cdweights <- readRDS(here::here("intermediate", "cdweights.rds"))) 
 
 ```
 

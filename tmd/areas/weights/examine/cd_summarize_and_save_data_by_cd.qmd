@@ -6,9 +6,23 @@ editor_options:
 
 # Summarize and save data by Congressional District
 
-Merge selected variables from tmd2021_cache.csv (the tmd data used in area-weights creation) with the previosly created wide weights file.
+** ONLY run the code below when tmd data have changed **
 
-Summarize by Congressional District, data_source, agistub, and (??) marital status.
+Get data and merge: 
+
+-   area targets
+-   tmd2021 data used when creating area weights (tmd2021_cache.csv)
+-   weights
+-   merge tmd2021 with weights
+
+Summarize and save:
+
+-   calculate weighted values for tmd2021 data using area weights
+-   get sums by groups: area x data_source x agi range
+-   supplement with sums across agi ranges - area x data source
+-   and again with sums across data_source
+-   calculate averages (sums / weighted ns)
+-   stack files and save
 
 ## Setup
 
@@ -18,10 +32,17 @@ Summarize by Congressional District, data_source, agistub, and (??) marital stat
 
 source(here::here("R", "libraries.R"))
 source(here::here("R", "constants.R"))
+source(here::here("R", "functions.R"))
 
 ```
 
-## Get data
+## Get data and merge
+
+## Get tmd2021 file
+
+Get `tmd2021_cache.csv`, a saved version of data from an object constructed during creation of area weights, in the file `create_taxcalc_cached_files.py`. `tmd2021_cache.csv` is the then-current tmd file with 2021 values, run through Tax-Calculator with 2021 law, written as csv. It includes all Tax-Calculator input and output variables.
+
+The master branch of tax-microdata-benchmarking does not write `tmd2021_cache.csv` (it saves a few key variables in a cache), but it is written in Don Boyd's fork, branch xprep2, (see commit fe0c687433217ef455e359d3f2450c9e3e18cc06).
 
 ```{r}
 #| label: get-tmd
@@ -29,24 +50,129 @@ source(here::here("R", "constants.R"))
 
 TMDDIR <- here::here("..", "..", "..", "storage", "output")
 fpath <-  fs::path(TMDDIR, "tmd2021_cache.csv")
-# tmd2021 <- read_csv(fpath)
 tmd2021 <- vroom(fpath)
 ns(tmd2021)
-tmd2021 |> filter(row_number() < 20) |> select(RECID, s006, c00100)
+# tmd2021 |> filter(row_number() < 20) |> select(RECID, s006, c00100)
 
+```
 
+## Get previously saved area weights
+
+```{r}
+#| label: get-weights
+#| eval: false
+#| output: false
+
+cdweights <- readRDS(here::here("intermediate", "cdweights.rds"))
+
+```
+
+## Supplement the weights file with selected tmd variables
+
+```{r}
+#| label: agibins
+#| output: false
+
+# 0 = Total
+# 1 = Under $1
+# 2 = $1 under $10,000
+# 3 = $10,000 under $25,000
+# 4 = $25,000 under $50,000
+# 5 = $50,000 under $75,000
+# 6 = $75,000 under $100,000
+# 7 = $100,000 under $200,000
+# 8 = $200,000 under $500,000
+# 9 = $500,000 or more
+
+icuts <- c(-Inf, 1, 10e3, 25e3, 50e3, 75e3, 100e3, 200e3, 500e3, Inf)
 
 ```
 
 
+```{r}
 
-## Merge data
+# create vector of all tax-calculator variables for which we might want summaries
+taxcalc_vars <- c("c00100", "e00200", "e00300", "e26270", "iitax")
+
+tmdplusweights <- tmd2021 |> 
+  select(RECID, data_source, us=s006, all_of(taxcalc_vars)) |> 
+  mutate(row=row_number(), wtdn=1) |> 
+  # put agibin on the file
+  mutate(irange=cut(c00100, icuts, right = FALSE, ordered_result = TRUE),
+         irange = factor(irange, 
+                         levels = levels(irange), # Ensure ordering is maintained
+                         labels = str_replace(levels(irange), ",", ", ")), # make more-readable labels
+         # add a total to the factor because down the road we will have totals ??
+         irange = fct_expand(irange, "total"),
+         irange = fct_relevel(irange, "total")) |> 
+  left_join(cdweights, by = join_by(row)) |> 
+  relocate(row, wtdn, irange, .after = RECID) |> 
+  relocate(us, .before = ak00)
+  
+glimpse(tmdplusweights)
+tmdplusweights[1:5, c(1:12, ncol(tmdplusweights))]
+
+```
+
+## Calculate sums and save
+
+Calculate sums by area, data_source, and AGI range. The 
+
+Making this step efficient is crucial. If we have 10 variables of interest 400+ area weights, 9 AGI categories, and 2 data_source categories, giving a large number of potential sums.
+
+The approach taken here is to make a longer tmd file that has one row for each tax-calculator variable of interest for each tax unit, while maintaining the 400+ columns for areas, multiplying each variable's value by all of the weights (400+ weighted values) and summing by groups of interest. This is the second-fastest of the approaches investigated, and the easiest and least-error-prone to maintain as we add variables of interest.
+
+The resulting dataframe with sums of interest is small, and easy to manipulate.
+
 
 ```{r}
-#| label: merge-data
+#| label: calcsums
 #| output: false
 
+a <- proc.time()
+long1 <- tmdplusweights |> 
+  pivot_longer(cols = c(wtdn, all_of(taxcalc_vars)),
+               names_to = "variable")
 
+wtdsums <- long1 |> 
+  summarise(across(us:wy00,
+                \(x) sum(x * value)),
+            .by=c(irange, data_source, variable)) |> 
+  pivot_longer(-c(irange, data_source, variable),
+               names_to = "statecd",
+               values_to = "sum")
+
+rm(long1)
+b <- proc.time()
+b - a # about 5-10 secs
+# wtdsums
+
+# wide approach - harder to maintain because a new sum calculation must be created for each variable added
+# a <- proc.time()
+# sums1 <- tmdplusweights |> 
+#   summarise(across(c(us, ak00:wy00),
+#                    list(wtdn = \(x) sum(x * wtdn),
+#                         c00100 = \(x) sum(x * c00100),
+#                         e00200 = \(x) sum(x * e00200),
+#                         e00300 = \(x) sum(x * e00300),
+#                         e26270 = \(x) sum(x * e26270),
+#                         iitax = \(x) sum(x * iitax))),
+#             .by=data_source) |>  
+#   pivot_longer(-data_source, values_to = "sum") |> 
+#   separate(name, into=c("statecd", "variable"))
+# b <- proc.time()
+# b - a # about 2.4 secs
+# sums1
+
+# check that the two approaches produce the same result
+# count(sums1, data_source); count(sums2, data_source)
+# count(sums1, variable); count(sums2, variable)
+# 
+# bind_rows(sums1 |> mutate(src="sums1"),
+#                    sums2 |> mutate(src="sums2")) |> 
+#   pivot_wider(names_from = src, values_from = sum) |> 
+#   mutate(diff=sums2 - sums1) |> 
+#   arrange(desc(abs(diff)))
 
 
 ```
