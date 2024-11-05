@@ -22,7 +22,7 @@ execute:
   freeze: auto  # auto: during global project renders, re-render only when source changes
 
 book:
-  title: "Examine area weights creation results"
+  title: "Examine results using area weights"
   subtitle: "Create csv file"
   # author: "Don Boyd"
   date: today
