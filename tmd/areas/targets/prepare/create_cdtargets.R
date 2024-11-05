@@ -37,12 +37,13 @@ CDTARGETS <- fs::path("cdtargets") # output files go here
 # phase4cds <- c("AK00", "DE00", "ID01", "ID02", "ME02", "MT00", "ND00", "PA08", "SD00", "WY00")
 
 # MARS mappings let us get counts by filing status by agi range
+
 vmap <- read_csv(file="
-varname, basevname
-XTOT, XTOT
-c00100, v00100
-e00200, v00200
-e00300, v00300
+varname, basevname, description
+XTOT, XTOT, population
+c00100, v00100, agi
+e00200, v00200, wages
+e00300, v00300, interest income
 e01700, v01700
 e26270, v26270
 ", show_col_types = FALSE)
