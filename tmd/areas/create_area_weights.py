@@ -42,7 +42,7 @@ DELTA_INIT_VALUE = 1.0e-9
 DELTA_MAX_LOOPS = 1
 
 # default optimization parameters:
-OPTIMIZE_FTOL = 1e-6 # 1e-9 default
+OPTIMIZE_FTOL = 1e-9  # 1e-9 default
 OPTIMIZE_GTOL = 1e-9
 OPTIMIZE_MAXITER = 5000
 OPTIMIZE_IPRINT = 50  # 20 is a good diagnostic value; set to 0 for production
@@ -514,8 +514,8 @@ def create_area_weights_file(
                 PARAMS = {}
         if PARAMS:
             out.write(f"USING CUSTOMIZED PARAMETERS IN {pfile}\n")
-            if 'ftol' in PARAMS:
-                PARAMS['ftol'] = float(PARAMS['ftol'])
+            if "ftol" in PARAMS:
+                PARAMS["ftol"] = float(PARAMS["ftol"])
 
     # construct variable matrix and target array and weights_scale
     vdf = all_taxcalc_variables()
@@ -589,7 +589,7 @@ def create_area_weights_file(
             args=(A, b, delta),  # fixed arguments of objective function
             method="L-BFGS-B",  # use L-BFGS-B algorithm
             bounds=Bounds(0.0, np.inf),  # consider only non-negative weights
-             # ftol --> OPTIMIZE_FTOL 
+            # ftol --> OPTIMIZE_FTOL
             options={
                 "maxiter": OPTIMIZE_MAXITER,
                 "ftol": ftol,
@@ -698,7 +698,7 @@ if __name__ == "__main__":
         sys.exit(1)
     RCODE = create_area_weights_file(
         area_code,
-        write_log=True, # was false
+        write_log=True,  # was false
         write_file=True,
     )
     sys.exit(RCODE)
