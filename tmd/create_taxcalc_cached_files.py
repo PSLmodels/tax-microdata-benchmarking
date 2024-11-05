@@ -29,9 +29,11 @@ def create_cached_files():
     calc = tc.Calculator(policy=pol, records=rec)
     calc.advance_to_year(TAX_YEAR)
     calc.calc_all()
-    
+
     # cache all variables to aid in areas examination
-    calc.dataframe(variable_list=None, all_vars=True).to_csv(STORAGE_FOLDER / "output" / "cached_allvars.csv", index=None)
+    calc.dataframe(variable_list=None, all_vars=True).to_csv(
+        STORAGE_FOLDER / "output" / "cached_allvars.csv", index=None
+    )
 
     # write each variable in CACHED_TAXCALC_VARIABLES list to a binary file
     for vname in CACHED_TAXCALC_VARIABLES:
