@@ -73,6 +73,8 @@ stack |>
 #  tmd2021_cache.csv data_source==1:
 #    e18400: 445,295,833,890
 #    e18400_capped: 445,295,833,890
+#  Note: IRS national 2021 capped amount (per my notes) was $258.640 billion, not too far from the national CD N18425 amount of $249.3 billion
+#    see google doc https://docs.google.com/document/d/1IjbEe5MjHoAwlXQ4dhI5J13FopJSU2nIaeEg_H0UB_o/edit?tab=t.0
 
 # e18500 Real estate tax deductions
 # IRS values in 2015 per PUF documentation
@@ -90,7 +92,6 @@ stack |>
 #  note that IRS SOI does NOT have a SALT income AND sales tax amount.
 #  I've put US total $ amounts from 21incdall.xlsx, below.
 #  They are 2021 amounts, and much smaller than the 2021 amounts on the PUF2015-->2021
-
 
 # N18300	Number of returns with Total taxes paid	  Schedule A:7	 Num
 # A18300	Total taxes paid amount	  Schedule A:7	 Num  119,457,090,000; calc 119,457,090,000
@@ -112,7 +113,7 @@ stack |>
 
 # my thinking - target the following puf variables (by agi range) according to the CD's share of the associated CD variable
 # e18400 State and local taxes (income OR sales) 445,295,833,890; by share of A18425 State and local income  249,262,218,000
-# e18500 Real estate tax deductions 226,186,527,940; by share of A18500	Real estate taxes 4,252,671,000
+# e18500 Real estate tax deductions 226,186,527,940; by share of A18500	Real estate taxes 99,961,071,000
 
 ```
 
