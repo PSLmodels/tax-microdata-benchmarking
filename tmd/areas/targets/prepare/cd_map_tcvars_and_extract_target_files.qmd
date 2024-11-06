@@ -47,37 +47,31 @@ write_csv(stack, fs::path(CDINTERMEDIATE, "cdbasefile_sessions.csv"))
 #| output: false
 
 # check whether state totals are good
-=======
+stack <- bind_rows(
   cd117 |> mutate(session="s117"),
   cd118 |> mutate(session="s118")
-)
-
-glimpse(stack)
-
-states <- stack |> 
-  summarise(target=sum(target), 
-            .by=c(session, stabbr, src, rectype,
-                     agistub, agilo, agihi, basevname,
-                     scope, fstatus, count, vname, description, agirange))
-  
-states |> 
-  pivot_wider(names_from = session,
-
-              values_from = target,
-              names_prefix="s") |> 
-  mutate(diff=s118 - s117,
-         pdiff=diff / s117) |> 
-  arrange(desc(abs(pdiff))) # good all the state sums work
-```
-
-              values_from = target) |> 
-  mutate(diff=s118 - s117,
-         pdiff=diff / s117) |> 
-  arrange(desc(abs(pdiff))) # good all the state sums work
+) 
 
 write_csv(stack, fs::path(CDINTERMEDIATE, "cdbasefile_sessions.csv"))
 
+glimpse(stack)
+
+# states <- stack |> 
+#   summarise(target=sum(target), 
+#             .by=c(session, stabbr, src, rectype,
+#                      agistub, agilo, agihi, basevname,
+#                      scope, fstatus, count, vname, description, agirange))
+#   
+# states |> 
+#   pivot_wider(names_from = session,
+# 
+#               values_from = target,
+#               names_prefix="s") |> 
+#   mutate(diff=s118 - s117,
+#          pdiff=diff / s117) |> 
+#   arrange(desc(abs(pdiff))) # good all the state sums work
 ```
+
 
 
 ## Create variable mapping
@@ -168,11 +162,6 @@ targets |>
 
 ```
 
-
-# write_csv(targets, fs::path(CDFINAL, "ny21_targets.csv"))
-
-
-```
 
 ## Documentation for target files for individual CDs
 
