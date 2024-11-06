@@ -1,0 +1,113 @@
+---
+output: html_document
+editor_options: 
+ chunk_output_type: console
+---
+
+# Parse the Congressional District data
+
+Goal: create a 117th CD data file that is almost in the form needed for targets files. 
+
+This involves cleaning the SOI Congressional District data, adding agi bin information, adding variable documentation, and saving as a long file.
+
+## Setup
+
+```{r}
+#| label: setup
+
+source(here::here("R", "libraries.R"))
+source(here::here("R", "constants.R"))
+source(here::here("R", "functions.R"))
+
+# 334283385.27000004 national pop
+
+```
+
+
+```{r}
+
+stack <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile_sessions.csv"))
+
+TMDDIR <- here::here("..", "..", "..", "storage", "output")
+fpath <-  fs::path(TMDDIR, "tmd2021_cache.csv")
+tmd2021 <- vroom(fpath)
+ns(tmd2021)
+
+```
+
+
+```{r}
+#| label: salt-explore
+
+glimpse(stack)
+count(stack, stabbr)
+count(stack, basevname, vname, description)
+count(stack, basevname, vname, description) |> filter(str_detect(vname, "18500"))
+
+# IRS SOI items
+#  note that IRS SOI does NOT have a SALT income AND sales tax amount.
+#  I've put US total $ amounts from 21incdall.xlsx, below.
+#  They are 2021 amounts, and much smaller than the 2021 amounts on the PUF2015-->2021
+# N18425	Number of returns with State and local income taxes	  Schedule A:5a	 Num
+# A18425	State and local income taxes amount	  Schedule A:5a	 Num  $249,262,218,000
+
+# N18450	Number of returns with State and local general sales tax	  Schedule A:5a	 Num
+# A18450	State and local general sales tax amount	  Schedule A:5a	 Num
+
+# N18500	Number of returns with real estate taxes	  Schedule A:5b	 Num
+# A18500	Real estate taxes amount	  Schedule A:5b	 Num
+# N18800	Number of returns with Personal property taxes	  Schedule A:5c	 Num
+# A18800	Personal property taxes amount	  Schedule A:5c	 Num
+# N18460	Number of returns with Limited state and local taxes	  Schedule A:5e	 Num
+# A18460	Limited state and local taxes	  Schedule A:5e	 Num
+# N18300	Number of returns with Total taxes paid	  Schedule A:7	 Num
+# A18300	Total taxes paid amount	  Schedule A:7	 Num
+
+
+
+tmd2021 |> 
+  mutate(wtdn=1) |> 
+  summarize(across(c(wtdn, e18400, e18500, e18400_capped, e18500_capped),
+                   \(x) sum(x * s006)), .by=data_source) |> 
+  pivot_longer(-data_source) |> 
+  gt() |> 
+  fmt_number(decimals=0)
+
+# e18400 State and local taxes
+#  -- income OR sales taxes
+#  IRS 2015: 35,270,132,000
+#  PUF 2015: 35,280,959,000
+#  tmd2021_cache.csv data_source==1:
+#    e18400: 445,295,833,890
+#    e18400_capped: 445,295,833,890
+
+# e18500 Real estate tax deductions
+#  IRS 2015: 18,860,584,000
+#  PUF 2015: 18,885,310,000
+#  tmd2021_cache.csv data_source==1:
+#    e18500: 226,186,527,940
+#    e18500_capped: 226,186,527,940
+
+```
+
+
+## SALT deductions
+
+
+```{r}
+
+glimpse(stack)
+
+tmp <- count(stack, basevname, vname, description)
+
+# puf variables
+# E18400 State and local taxes
+# E18500 Real estate tax deductions
+
+
+
+```
+
+
+
+
