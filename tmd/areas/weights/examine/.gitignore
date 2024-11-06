@@ -10,7 +10,9 @@ site_libs/
 # files to ignore
 .Rhistory
 *.html
+
 *.rds
+
 
 # Local Netlify folder
 .netlify
