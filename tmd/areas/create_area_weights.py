@@ -42,10 +42,10 @@ DELTA_INIT_VALUE = 1.0e-9
 DELTA_MAX_LOOPS = 1
 
 # default optimization parameters:
-OPTIMIZE_FTOL = 1e-9  # 1e-9 default
+OPTIMIZE_FTOL = 1e-9
 OPTIMIZE_GTOL = 1e-9
 OPTIMIZE_MAXITER = 5000
-OPTIMIZE_IPRINT = 50  # 20 is a good diagnostic value; set to 0 for production
+OPTIMIZE_IPRINT = 0  # 20 is a good diagnostic value; set to 0 for production
 OPTIMIZE_RESULTS = False  # set to True to see complete optimization results
 
 
@@ -452,8 +452,6 @@ def create_area_weights_file(
     Write log file if write_log=True, otherwise log is written to stdout.
     Write weights file if write_file=True, otherwise just do calculations.
     """
-    time_init = time.time()
-    print(f": area '{area}'\n")
     # remove any existing log or weights files
     awpath = AREAS_FOLDER / "weights" / f"{area}_tmd_weights.csv.gz"
     awpath.unlink(missing_ok=True)
@@ -484,7 +482,6 @@ def create_area_weights_file(
             PARAMS = yaml.safe_load(paramfile.read())
         exp_params = [
             "target_ratio_tolerance",
-            "ftol",
             "iprint",
             "dump_all_target_deviations",
             "delta_init_value",
@@ -514,8 +511,6 @@ def create_area_weights_file(
                 PARAMS = {}
         if PARAMS:
             out.write(f"USING CUSTOMIZED PARAMETERS IN {pfile}\n")
-            if "ftol" in PARAMS:
-                PARAMS["ftol"] = float(PARAMS["ftol"])
 
     # construct variable matrix and target array and weights_scale
     vdf = all_taxcalc_variables()
@@ -530,8 +525,6 @@ def create_area_weights_file(
     tolstr = "ASSUMING TARGET_RATIO_TOLERANCE"
     tol = PARAMS.get("target_ratio_tolerance", TARGET_RATIO_TOLERANCE)
     out.write(f"{tolstr} = {tol:.6f}\n")
-    ftol = PARAMS.get("ftol", OPTIMIZE_FTOL)
-    out.write(f"param OPTIMIZE_FTOL = {ftol:.6f}\n")
     rmse = target_rmse(wght_us, target_matrix, target_array, out)
     out.write(f"US_PROPORTIONALLY_SCALED_TARGET_RMSE= {rmse:.9e}\n")
     density = np.count_nonzero(target_matrix) / target_matrix.size
@@ -570,12 +563,9 @@ def create_area_weights_file(
     out.write(f"  and where target_matrix.shape= {target_matrix.shape}\n")
     # ... specify possibly customized value of iprint
     if write_log:
-        # iprint = OPTIMIZE_IPRINT
-        iprint = PARAMS.get("iprint", OPTIMIZE_IPRINT)
-        ftol = PARAMS.get("ftol", OPTIMIZE_FTOL)
+        iprint = OPTIMIZE_IPRINT
     else:
         iprint = PARAMS.get("iprint", OPTIMIZE_IPRINT)
-        ftol = PARAMS.get("ftol", OPTIMIZE_FTOL)
     # ... reduce value of regularization delta if not all targets are hit
     loop = 1
     delta = DELTA_INIT_VALUE
@@ -589,10 +579,9 @@ def create_area_weights_file(
             args=(A, b, delta),  # fixed arguments of objective function
             method="L-BFGS-B",  # use L-BFGS-B algorithm
             bounds=Bounds(0.0, np.inf),  # consider only non-negative weights
-            # ftol --> OPTIMIZE_FTOL
             options={
                 "maxiter": OPTIMIZE_MAXITER,
-                "ftol": ftol,
+                "ftol": OPTIMIZE_FTOL,
                 "gtol": OPTIMIZE_GTOL,
                 "iprint": iprint,
                 "disp": False if iprint == 0 else None,
@@ -603,9 +592,7 @@ def create_area_weights_file(
         misses, minfo = target_misses(wght_area, target_matrix, target_array)
         if write_log:
             out.write(
-                # f"  ::loop,delta,misses:   {loop}" f"   {delta:e}   {misses}\n"
-                f"  ::loop,delta,misses,exectime(secs):   {loop}"
-                f"   {delta:e}   {misses}   {(time1 - time0):.1f}\n"
+                f"  ::loop,delta,misses:   {loop}" f"   {delta:e}   {misses}\n"
             )
         else:
             out.write(
@@ -624,9 +611,7 @@ def create_area_weights_file(
     # ... show regularization/optimization results
     if write_log:
         res_summary = (
-            # f">>> final delta loop"
-            f">>> final delta loop exectime= {(time1-time0):.1f} secs"
-            f"  total time  {(time1 - time_init):.1f}\n"
+            f">>> final delta loop"
             f" iterations={res.nit}  success={res.success}\n"
             f">>> message: {res.message}\n"
             f">>> L-BFGS-B optimized objective function value: {res.fun:.9e}\n"
@@ -634,7 +619,6 @@ def create_area_weights_file(
     else:
         res_summary = (
             f">>> final delta loop exectime= {(time1-time0):.1f} secs"
-            f"  total time  {(time1 - time_init):.1f}\n"
             f"  iterations={res.nit}  success={res.success}\n"
             f">>> message: {res.message}\n"
             f">>> L-BFGS-B optimized objective function value: {res.fun:.9e}\n"
@@ -698,7 +682,7 @@ if __name__ == "__main__":
         sys.exit(1)
     RCODE = create_area_weights_file(
         area_code,
-        write_log=True,  # was false
+        write_log=False,
         write_file=True,
     )
     sys.exit(RCODE)
