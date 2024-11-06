@@ -60,7 +60,6 @@ ns(tmd2021)
 
 ```{r}
 #| label: get-weights
-#| eval: false
 #| output: false
 
 cdweights <- readRDS(here::here("intermediate", "cdweights.rds"))
@@ -88,8 +87,11 @@ icuts <- c(-Inf, 1, 10e3, 25e3, 50e3, 75e3, 100e3, 200e3, 500e3, Inf)
 
 ```
 
+## Bind selected Tax-Calculator variables to area weights data frame
 
 ```{r}
+#| label: bind-taxcalc-variables
+#| output: false
 
 # create vector of all tax-calculator variables for which we might want summaries
 taxcalc_vars <- c("c00100", "e00200", "e00300", "e26270", "iitax")
