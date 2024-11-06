@@ -9,8 +9,8 @@ site_libs/
 
 # files to ignore
 .Rhistory
+~*
 *.html
-
 *.rds
 
 

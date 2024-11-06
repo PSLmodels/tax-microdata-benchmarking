@@ -11,6 +11,7 @@ libs/
 # files to ignore
 !cds/raw_data/*.csv
 .Rhistory
+~*
 *.html
 *.rds
 
