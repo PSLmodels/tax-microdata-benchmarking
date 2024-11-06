@@ -27,6 +27,7 @@ cd117 <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile_117.csv"))
 cd118 <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile_118.csv"))
 
 stack <- bind_rows(
+
   cd117 |> mutate(session=117),
   cd118 |> mutate(session=118)
 )
@@ -46,6 +47,13 @@ write_csv(stack, fs::path(CDINTERMEDIATE, "cdbasefile_sessions.csv"))
 #| output: false
 
 # check whether state totals are good
+=======
+  cd117 |> mutate(session="s117"),
+  cd118 |> mutate(session="s118")
+)
+
+glimpse(stack)
+
 states <- stack |> 
   summarise(target=sum(target), 
             .by=c(session, stabbr, src, rectype,
@@ -54,11 +62,21 @@ states <- stack |>
   
 states |> 
   pivot_wider(names_from = session,
+
               values_from = target,
               names_prefix="s") |> 
   mutate(diff=s118 - s117,
          pdiff=diff / s117) |> 
   arrange(desc(abs(pdiff))) # good all the state sums work
+```
+
+              values_from = target) |> 
+  mutate(diff=s118 - s117,
+         pdiff=diff / s117) |> 
+  arrange(desc(abs(pdiff))) # good all the state sums work
+
+write_csv(stack, fs::path(CDINTERMEDIATE, "cdbasefile_sessions.csv"))
+
 ```
 
 
@@ -145,6 +163,72 @@ targets |>
   group_by(statecd) |> 
   group_walk(~f(.x, .y))
 
+
 # write_csv(targets, fs::path(CDFINAL, "ny21_targets.csv"))
 
 ```
+
+
+# write_csv(targets, fs::path(CDFINAL, "ny21_targets.csv"))
+
+
+```
+
+## Documentation for target files for individual CDs
+
+### Target file name
+
+Congressional District target files follow the naming convention **xxxx_targets.csv**, where **xxxx** is a 4 character CD identifier.
+
+-   The first two characters are the state postal abbreviation or, in the case of the District of Columbia, "DC". (DC does not have a voting representative but does have a non-voting member. The SOI data have information for DC and so it is in the data. Thus, we have data for 435 voting districts, plus data for DC.)
+
+-   The next 2 characters identify the Congressional District within the state, with a leading zero. For states that have more than one district, these range from 01 to the number of districts (for example, 53 in the case of California). For the 7 states and DC that have only one CD, these 2 characters are 00, following the SOI convention.
+
+-   Thus, the filename for California's 3rd Congressional District would be CA03_targets.csv and allowable file names would range from CA01_targets.csv to CA53_targets.csv. There is no CA00_targets.csv. The filename for any of the 7 states (or DC) that have only one CD would be WY00_targets.csv.
+
+### Target file variables
+
+### The special first data row of a CD target file
+
+The area targeting software needs a value for total population in the area. It uses this to scale initial weights prior to optimization so that they sum to the area population. To assist in this, the target file must contain in its first data row a value for the total area population. This special row must have the following values:
+
+-   **varname**: XTOT
+-   **count**: 0
+-   **scope**: 0
+-   **agilo**: must be \< -8e99
+-   **agihi**: must be \> 8e99
+-   **fstatus**: 0
+-   **target**: area population
+
+For example, here is the first data row of an area that has population of 33 million:
+
+varname,count,scope,agilo,agihi,fstatus,target
+
+XTOT, 0, 0,-9e99, 9e99, 0, 33e6
+
+For up-to-date documentation of target files, see the associated [README](https://github.com/PSLmodels/tax-microdata-benchmarking/blob/master/tmd/areas/targets/README.md). The following is from the version that was current as of 2024-11-01:
+
+> An areas targets file is a CSV-formatted file with its first row containing column names and its second row containing the area population target. Each subsequent row contains another target. Rows after the first two that start with a `#` character are considered comments and are skipped.
+>
+> Here are the column names and their valid values:
+>
+> 1.  **`varname`**: any Tax-Calculator input variable name plus any Tax-Calculator calculated variable in the list of cached variables in the `tmd/storage/__init__.py` file
+> 2.  **`count`**: integer in \[0,4\] range:
+>     -   count==0 implies dollar total of varname is tabulated
+>     -   count==1 implies number of tax units with **any** value of varname is tabulated
+>     -   count==2 implies number of tax units with a **nonzero** value of varname is tabulated
+>     -   count==3 implies number of tax units with a **positive** value of varname is tabulated
+>     -   count==4 implies number of tax units with a **negative** value of varname is tabulated
+> 3.  **`scope`**: integer in \[0,2\] range:
+>     -   scope==0 implies all tax units are tabulated
+>     -   scope==1 implies only PUF-derived filing units are tabulated
+>     -   scope==2 implies only CPS-derived filing units are tabulated
+> 4.  **`agilo`**: float representing lower bound of the AGI range (which is included in the range) that is tabulated.
+> 5.  **`agihi`**: float representing upper bound of the AGI range (which is excluded from the range) that is tabulated.
+> 6.  **`fstatus`**: integer in \[0,5\] range:
+>     -   fstatus=0 implies all filing statuses are tabulated
+>     -   other fstatus values imply just the tax units with the Tax-Calculator `MARS` variable equal to fstatus are included in the tabulation
+> 7.  **`target`**: target amount:
+>     -   dollars if count==0
+>     -   number of tax units if count\>0
+
