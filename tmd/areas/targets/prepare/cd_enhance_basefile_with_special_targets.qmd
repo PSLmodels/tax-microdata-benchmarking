@@ -45,16 +45,24 @@ count(stack, basevname, vname, description)
 count(stack, basevname, vname, description) |> filter(str_detect(vname, "18500"))
 
 
-
-
-
+# summarize SALT-related values in tmd2021
 tmd2021 |> 
   mutate(wtdn=1) |> 
-  summarize(across(c(wtdn, e18400, e18500, e18400_capped, e18500_capped),
+  summarize(across(c(wtdn, e18400, e18500, e18400_capped, e18500_capped, c18300),
                    \(x) sum(x * s006)), .by=data_source) |> 
-  pivot_longer(-data_source) |> 
+  pivot_longer(-data_source) |>
+  pivot_wider(names_from = data_source, names_prefix = "ds") |> 
   gt() |> 
   fmt_number(decimals=0)
+
+# summarize SALT-related variables in IRS SOI Congressional District data
+stack |> 
+  filter(vname %in% c("A18300", "A18425", "A18450", "A18500", "A18800", "A18460")) |> 
+  filter(agistub==0, count==0, fstatus==0, session==117) |> 
+  summarise(target=sum(target), .by=vname) |> 
+  gt() |> 
+  fmt_number(decimals=0)
+
 
 # SALT-related items in different sources
 # e18400 State and local taxes
@@ -78,29 +86,33 @@ tmd2021 |>
 # e18400_capped: Sch A: State and local income taxes deductible, capped as a decimal fraction of AGI
 # e18500_capped: Sch A: State and local real estate taxes deductible, capped as a decimal fraction of AGI
 
-
 # IRS SOI items Congressional Districts
 #  note that IRS SOI does NOT have a SALT income AND sales tax amount.
 #  I've put US total $ amounts from 21incdall.xlsx, below.
 #  They are 2021 amounts, and much smaller than the 2021 amounts on the PUF2015-->2021
-# N18425	Number of returns with State and local INCOME taxes	  Schedule A:5a	 Num
-# A18425	State and local income taxes amount	  Schedule A:5a	 Num  249,262,218,000
 
-# N18450	Number of returns with State and local general sales tax	  Schedule A:5a	 Num
-# A18450	State and local general sales tax amount	  Schedule A:5a	 Num  7,275,269,000
-
-# N18500	Number of returns with real estate taxes	  Schedule A:5b	 Num
-# A18500	Real estate taxes amount	  Schedule A:5b	 Num   99,961,071,000
-
-# N18800	Number of returns with Personal property taxes	  Schedule A:5c	 Num
-# A18800	Personal property taxes amount	  Schedule A:5c	 Num   4,252,671,000
-
-# N18460	Number of returns with Limited state and local taxes	  Schedule A:5e	 Num
-# A18460	Limited state and local taxes	  Schedule A:5e	 Num   117,595,758,000
 
 # N18300	Number of returns with Total taxes paid	  Schedule A:7	 Num
-# A18300	Total taxes paid amount	  Schedule A:7	 Num  119,457,090,000
+# A18300	Total taxes paid amount	  Schedule A:7	 Num  119,457,090,000; calc 119,457,090,000
 
+# N18425	Number of returns with State and local INCOME taxes	  Schedule A:5a	 Num
+# A18425	State and local income taxes amount	  Schedule A:5a	 Num  249,262,218,000; calc 249,262,218,000
+
+# N18450	Number of returns with State and local general sales tax	  Schedule A:5a	 Num
+# A18450	State and local general sales tax amount	  Schedule A:5a	 Num  7,275,269,000; calc 7,275,269,000
+
+# N18460	Number of returns with Limited state and local taxes	  Schedule A:5e	 Num
+# A18460	Limited state and local taxes	  Schedule A:5e	 Num   117,595,758,000; calc 117,595,758,000
+
+# N18500	Number of returns with real estate taxes	  Schedule A:5b	 Num
+# A18500	Real estate taxes amount	  Schedule A:5b	 Num   99,961,071,000; calc 99,961,071,000
+
+# N18800	Number of returns with Personal property taxes	  Schedule A:5c	 Num
+# A18800	Personal property taxes amount	  Schedule A:5c	 Num   4,252,671,000; calc 4,252,671,000
+
+# my thinking - target the following puf variables (by agi range) according to the CD's share of the associated CD variable
+# e18400 State and local taxes (income OR sales) 445,295,833,890; by share of A18425 State and local income  249,262,218,000
+# e18500 Real estate tax deductions 226,186,527,940; by share of A18500	Real estate taxes 4,252,671,000
 
 ```
 
