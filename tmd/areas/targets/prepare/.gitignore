@@ -12,6 +12,7 @@ libs/
 !cds/raw_data/*.csv
 .Rhistory
 *.html
+*.rds
 
 # Local Netlify folder
 .netlify
