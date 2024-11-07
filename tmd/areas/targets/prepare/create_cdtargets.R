@@ -16,6 +16,10 @@ if (length(args) > 0) {
   fnrecipe <- "cdrecipe.json"
 }
 
+# for testing:
+fnrecipe <- "phase5_salt.json"
+fnrecipe <- "phase4_118.json"
+
 suppressPackageStartupMessages({
   library(rlang)
   library(tidyverse)
@@ -110,9 +114,10 @@ mapped <- targets_tibble |>
 
 # write targets -----------------------------------------------------------
 
-f <- function(data, group){
+f <- function(data, group, suffix=""){
   cd <- group$statecd |> 
-    str_to_lower()
+    str_to_lower() |> 
+    paste0(suffix)
   fname <- paste0(cd, "_targets.csv")
   fpath <- fs::path(CDTARGETS, fname)
   print(fpath)
@@ -120,9 +125,11 @@ f <- function(data, group){
 }
 
 print("writing targets files...")
+suffix <- "A"
+# suffix <- ""
 mapped |> 
   select(statecd, varname, count, scope, agilo, agihi, fstatus, target) |> 
   group_by(statecd) |> 
-  group_walk(~f(.x, .y))
+  group_walk(~f(.x, .y, suffix))
 
 print("all done!")
