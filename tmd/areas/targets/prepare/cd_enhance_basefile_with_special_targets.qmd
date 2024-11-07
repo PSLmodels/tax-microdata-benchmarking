@@ -60,7 +60,7 @@ source(here::here("R", "functions.R"))
 ```
 
 
-## SALT deducations
+## SALT deductions
 
 ```{r}
 #| label: get-salt-related-data

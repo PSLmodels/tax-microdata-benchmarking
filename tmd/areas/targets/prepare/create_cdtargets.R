@@ -16,6 +16,8 @@ if (length(args) > 0) {
   fnrecipe <- "cdrecipe.json"
 }
 
+# fnrecipe <- "phase5_salt.json" # for testing
+
 suppressPackageStartupMessages({
   library(rlang)
   library(tidyverse)
@@ -32,8 +34,6 @@ CDFINAL <- fs::path(CDDIR, "final")
 
 CDRECIPES <- fs::path("cdrecipes") 
 CDTARGETS <- fs::path("cdtargets") # output files go here
-
-# phase4cds <- c("AK00", "DE00", "ID01", "ID02", "ME02", "MT00", "ND00", "PA08", "SD00", "WY00")
 
 # MARS mappings let us get counts by filing status by agi range
 
@@ -59,17 +59,15 @@ stack <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile_enhanced.csv"), show_col_
 
 
 # get target recipes ------------------------------------------------------
-
-# for testing:
+fnrecipe <- "temp.json"
 fnrecipe <- "phase5_salt.json"
-# fnrecipe <- "phase4_118.json"
 
 fpath <- here::here(CDRECIPES, fnrecipe)
 
 cdrecipe <- read_json(fpath) 
 
 # check recipe
-names(cdrecipe)
+# names(cdrecipe)
 
 # check session
 session <- ifelse(is.null(cdrecipe$session), 118, cdrecipe$session)
@@ -79,20 +77,26 @@ cdlist <- unlist(cdrecipe$cdlist)
 
 target_rules <- cdrecipe$targets |> 
   purrr::map(as_tibble) |> 
-  purrr::list_rbind() 
+  purrr::list_rbind()
 
-# target_rules |> 
-#   unnest(agi_exclude)
+target_stubs <- target_rules |> 
+  select(varname, scope, count, fstatus) |> 
+  distinct() |> 
+  cross_join(tibble(agistub=1:9))
 
-targets_matchframe <- target_rules |> 
-  select(-agi_exclude) |> 
-  cross_join(tibble(agistub=1:9)) |> 
-  left_join(target_rules |> 
-              unnest(agi_exclude),
-            by = join_by(varname, scope, count, fstatus)) |> 
-  mutate(agi_exclude=ifelse(!is.na(agi_exclude) & agi_exclude==agistub, TRUE, FALSE)) |> 
-  filter(!agi_exclude) |> 
-  select(-agi_exclude) |> 
+if("agi_exclude" %in% names(target_rules)){
+  target_drops <- target_rules |> 
+    unnest(cols=agi_exclude)
+  
+  target_stubs <- target_stubs |> 
+    anti_join(target_drops |> 
+                rename(agistub=agi_exclude),
+              join_by(varname, scope, count, fstatus, agistub))
+}
+
+target_stubs
+  
+targets_matchframe <- target_stubs |>
   mutate(sort=row_number() + 1) |> 
   rows_insert(tibble(varname="XTOT", scope=0, count=0, fstatus=0, agistub=0, sort=1),
               by="varname") |> 
@@ -105,20 +109,6 @@ targets_matchframe <- target_rules |>
   arrange(sort)
 
 # quit(save="no", status=1, runLast=FALSE)
-
-# create targets "recipe" tibble to merge against targets data-----------------
-
-
-targets_tibble <- cdrecipe$targets |> 
-  purrr::map(f) |> 
-  purrr::list_rbind() |> 
-  left_join(vmap,
-            by = join_by(varname)) |> 
-  mutate(basevname = case_when(fstatus == 1 ~ "MARS1",
-                               fstatus == 2 ~ "MARS2",
-                               fstatus == 4 ~ "MARS4",
-                               .default = basevname))
-
 
 # create mapped targets tibble --------------------------------------------
 
@@ -137,9 +127,9 @@ mapped <- targets_matchframe |>
             relationship = "many-to-many") |> 
   arrange(statecd, sort)
 
-summary(mapped)
-skim(mapped)
-count(mapped, statecd)
+# summary(mapped)
+# skim(mapped)
+# count(mapped, statecd)
 
 # write targets -----------------------------------------------------------
 
