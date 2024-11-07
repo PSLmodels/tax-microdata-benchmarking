@@ -44,8 +44,10 @@ XTOT, XTOT, population
 c00100, v00100, agi
 e00200, v00200, wages
 e00300, v00300, interest income
-e01700, v01700
-e26270, v26270
+e01700, v01700, pensions and annuities (taxable amount)
+e26270, v26270, partnership and S corporation net income
+e18400, v18425, state and local income or sales taxes allocated by S and L income taxes
+e18500, v18500, state and local real estate taxes
 ", show_col_types = FALSE)
 
 
@@ -53,7 +55,8 @@ e26270, v26270
 # saveRDS(stack, fs::path(CDINTERMEDIATE, "cdbasefile_sessions.rds"))
 # system.time(stack <- readRDS(fs::path(CDINTERMEDIATE, "cdbasefile_sessions.rds")))
 
-stack <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile_sessions.csv"), show_col_types = FALSE)
+# stack <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile_sessions.csv"), show_col_types = FALSE)
+stack <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile_enhanced.csv"), show_col_types = FALSE)
 
 
 # get target recipes ------------------------------------------------------

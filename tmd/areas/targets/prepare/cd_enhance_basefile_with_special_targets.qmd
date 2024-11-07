@@ -4,11 +4,47 @@ editor_options:
  chunk_output_type: console
 ---
 
-# Parse the Congressional District data
+# Develop targets for special variables
 
-Goal: create a 117th CD data file that is almost in the form needed for targets files. 
+Goal: Construct targets for variables that don't have appropriate targets in the SOI Congressional District data
 
-This involves cleaning the SOI Congressional District data, adding agi bin information, adding variable documentation, and saving as a long file.
+## Overview
+
+### State and Local Tax (SALT) deductions
+
+An important goal of the project is to have data that are useful for analysis of SALT policy options.
+
+The SOI Congressional District data include several SALT-related variables, including:
+
+-   A18300	Total taxes paid amount, Schedule A:7
+-   A18425  State and local *income* taxes, Schedule A:5a
+-   A18450	State and local general sales tax, Schedule A:5a
+-   A18460	Limited state and local taxes, Schedule A:5e	
+-   A18500	Real estate taxes, Schedule A:5b
+-   A18800	Personal property taxes, Schedule A:5c
+
+These variables are at 2021 levels and reflect potential deductions of taxpayers who itemized in 2021. Because 2021 is in the post-TCJA era, it reflects the TCJA higher standard deviation and the \$10,000 SALT cap.
+
+The tax-microdata-benchmarking (tmd) file is based on the PUF for 2015, extrapolated to 2021. This before the TCJA SALT cap and higher standard deduction went into effect. The tmd file has several SALT-related variables, including:
+
+*Tax-Calculator input variables:*
+-   e18400 State and local taxes (the income OR sales tax deduction)
+-   e18500 Real estate tax deductions
+
+*Tax-Calculator output variables:*
+-   e18400_capped: Sch A: State and local *income* taxes deductible, capped as a decimal fraction of AGI
+-   e18500_capped: Sch A: State and local real estate taxes deductible, capped as a decimal fraction of AGI
+-   c18300 Sch A: State and local taxes plus real estate taxes deducted (component of pre-limitation c21060 total [i.e., total itemized deductions])
+
+In concept, we would like to target variables measuring *potential* tax deductions of taxpayers, whether they itemize or not, before any caps that may be imposed by the tax law. This would give us the greatest flexibility to examine changes in tax policy. However, we don't have exactly that. The closest we have are e18400 and e18500, which generally represent potential tax deductions of people who itemized their taxes in 2015 (a much larger group than in 2021) at 2021 levels (grown roughly at the rate of state and local tax growth between 2015 and 2021). Thus, these are the variables we want to target.
+
+The SOI Congressional district data do not correspond to the PUF variables properly. A18425 reflects uncapped state and local *income* taxes of people who itemized in 2021. There are two differences - it applies to a smaller group of taxpayers, and it only applies to income taxes. The latter difference seems quite trivial: according to the Congressional district data, in 2021 for the Unites States the sales-tax-only deduction was only 2.9% of the income-tax-only deduction. We can't just add income and sales taxes together because the deduction item is for the larger of income or sales taxes, calculated taxpayer by taxpayer. A18500 and e18500 both reflect real estate taxes, but the taxpayer groups are different as noted above.
+
+To develop targets, we do the following:
+
+-   Using the tmd microdata for 2021 (our adjusted and grown 2015 PUF), calculate national totals of e18400 and e18500 by the 9 AGI ranges used in the SOI Congressional District district summary data, by `data_source`. This gives us 18 national 2021 targets -- actual national levels in the tmd data.
+-   Using the SOI 2021 summary data for Congressional districts calculate factors that can be used to allocate the national targets to the 436 districts (435 Congressional districts plus DC): for each district and AGI range calculate A18425 as a share of the sum over all districts of A18425 by AGI range. Do the same for A18500. This gives us, for each districts 9 shares for each of the two variables -- one for each AGI range.
+-   Use the A18425 shares to construct 9 targets for e18400 for each district, one for each AGI range, by allocating the national target to each district. For example, if district CA-11 has 12.7% of the SOI-reported national Congressional district total of state and local *income* tax deductions for 2021 itemizers (A18425) in the $100,000 to $200,000 AGI range, our estimated target for e18400, state and local income *or sales* taxes available to 2015 itemizers, in the CA-11 $100,000 to $200,000 AGI range, would be 12.7% of our tmd national total for e18400 in that range. Our national total for e18500 is allocated to districts, by AGI range, using A18500 in the same way.
 
 ## Setup
 
@@ -24,7 +60,11 @@ source(here::here("R", "functions.R"))
 ```
 
 
+## SALT deducations
+
 ```{r}
+#| label: get-salt-related-data
+#| output: false
 
 stack <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile_sessions.csv"))
 
@@ -36,8 +76,12 @@ ns(tmd2021)
 ```
 
 
+### Explore SALT-related data
+
 ```{r}
 #| label: salt-explore
+#| output: false
+#| eval: false
 
 glimpse(stack)
 count(stack, stabbr)
@@ -118,18 +162,148 @@ stack |>
 ```
 
 
-## SALT deductions
+### Get national SALT targets and allocate to Congressional districts
 
 
 ```{r}
+#| label: salt-prelim
+#| output: false
 
-glimpse(stack)
+icuts <- c(-Inf, 1, 10e3, 25e3, 50e3, 75e3, 100e3, 200e3, 500e3, Inf)
 
-tmp <- count(stack, basevname, vname, description)
+saltus <- tmd2021 |> 
+  select(RECID, data_source, s006, c00100, e18400, e18500) |> 
+  mutate(irange=cut(c00100, icuts, right = FALSE, ordered_result = TRUE),
+         irange = factor(irange, 
+                         levels = levels(irange), # Ensure ordering is maintained
+                         labels = str_replace(levels(irange), ",", ", ")), # more-readable labels
+         agistub=as.numeric(irange)) |> 
+  summarise(e18400=sum(e18400 * s006),
+            e18500=sum(e18500 * s006),
+            .by=c(data_source, agistub, irange)) |> 
+  arrange(data_source, agistub)
+saltus
 
+saltus_long <- saltus |> 
+  pivot_longer(cols=c(e18400, e18500),
+               names_to = "tmdvname",
+               values_to = "saltus") |> 
+  mutate(vname=case_when(tmdvname=="e18400" ~ "A18425",
+                         tmdvname=="e18500" ~ "A18500",
+                         .default = "ERROR"))
+count(saltus_long, tmdvname, vname)  
+
+
+# now cd-level targets
+saltcd1 <- stack |> 
+  filter(vname %in% c("A18425", "A18500"),
+         agistub != 0) |> 
+  rename(soivalue=target)
+  
+checksums <- saltcd1 |> 
+  summarise(soivalue=sum(soivalue),
+            .by=c(session, vname)) # values are correct
+
+# TODO: investigate whether to give a nonzero share to agirinage 1
+saltcd2 <- saltcd1 |> 
+  mutate(soisum=sum(soivalue),
+         soishare=ifelse(soisum == 0,  # U.S. agirange 1; < $1, both variables
+                         0,
+                         soivalue / soisum),
+         .by=c(session, vname, agistub, agirange))
+
+# data checks
+summary(saltcd2)
+skim(saltcd2)
+stsums <- saltcd2 |> 
+  filter(session==117) |> 
+  select(agistub, agirange, vname, stabbr, soivalue, soisum) |> 
+  summarise(stsum=sum(soivalue),
+            soisum=first(soisum),
+            .by=c(vname, stabbr, agistub, agirange)) |> 
+  pivot_wider(names_from = vname, values_from = msoishare)
+
+saltcd2 |> 
+  filter(str_detect(vname, "18425"), statecd=="NY01", agistub==2, session==117)
+
+# ca from spreadsheet A18425 is 82008216, A18500 is 23310286 
+saltcd2 |> 
+  filter(stabbr=="CA", session==117) |> 
+  summarise(stsum=sum(soivalue), .by=vname)
+#   vname        stsum
+#   <chr>        <dbl>
+# 1 A18425 82008216000
+# 2 A18500 23310286000
+
+saltcd3 <- saltcd2 |> 
+  right_join(saltus_long |> 
+               filter(data_source==1), # only use filers!
+             by = join_by(agistub, vname),
+             relationship = "many-to-many") |> 
+  mutate(target=saltus *  soishare)
+head(saltcd3)
+
+saltcd3 |> 
+  filter(str_detect(vname, "18425"), statecd=="NY01", agistub==2, session==117)
+
+# compare totals
+# sums are a little low because we have nothing in agirange 1
+saltcd3 |> summarise(target=sum(target), .by=c(vname, session))
+saltus_long |> filter(data_source==1) |> summarise(saltus=sum(saltus), .by=c(vname, tmdvname))
+
+saltcd3 |> 
+  summarise(target=sum(target), .by=c(vname, session, agistub, agirange)) |> 
+  filter(session==117)
+
+saltus
 
 ```
 
 
+Make final SALT targets and save
+
+```{r}
+#| label: salt-final
+#| output: false
+
+glimpse(stack)
+names(stack) # we want this
+
+stack |> 
+  filter(vname %in% c("A18425", "A18500")) 
+
+glimpse(saltcd3)
+count(saltcd3, vname, basevname, description)
+
+
+saltcd3
+setdiff(names(saltcd3), names(stack))
+
+f <- function(vname, var){
+  ifelse(vname %in% c("A18425", "A18500"),
+         paste0(var, "_original"),
+         var)
+}
+stack_enhanced <- stack |> 
+  mutate(basevname=f(vname, basevname),
+         description=f(vname, description),
+         vname=f(vname, vname) # do vname last!
+         ) |> 
+  bind_rows(saltcd3 |> select(all_of(names(stack))))
+
+check <- stack_enhanced |> 
+  filter(str_detect(vname, "18425"), statecd=="NY01", agistub %in% 1:2)
+check
+
+check |> 
+  # arrange() |>
+  filter(count==0, agistub==2, session==117)
+
+saltcd3 |> 
+  filter(str_detect(vname, "18425"), statecd=="NY01", agistub==2, session==117)
+
+write_csv(stack_enhanced, fs::path(CDINTERMEDIATE, "cdbasefile_enhanced.csv"))
+
+```
 
 
