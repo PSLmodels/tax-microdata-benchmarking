@@ -1,5 +1,5 @@
 
-# run with:
+# run from terminal with:
 #   Rscript create_cdtargets.R phase5.json
 
 # Rscript test.r > output.log 2>&1
@@ -16,10 +16,6 @@ if (length(args) > 0) {
   fnrecipe <- "cdrecipe.json"
 }
 
-# for testing:
-fnrecipe <- "phase5_salt.json"
-fnrecipe <- "phase4_118.json"
-
 suppressPackageStartupMessages({
   library(rlang)
   library(tidyverse)
@@ -27,7 +23,6 @@ suppressPackageStartupMessages({
   library(fs)
   library(jsonlite)
 })
-
 
 # constants ---------------------------------------------------------------
 
@@ -65,21 +60,54 @@ stack <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile_enhanced.csv"), show_col_
 
 # get target recipes ------------------------------------------------------
 
+# for testing:
+fnrecipe <- "phase5_salt.json"
+# fnrecipe <- "phase4_118.json"
+
 fpath <- here::here(CDRECIPES, fnrecipe)
 
 cdrecipe <- read_json(fpath) 
 
+# check recipe
+names(cdrecipe)
+
+# check session
+session <- ifelse(is.null(cdrecipe$session), 118, cdrecipe$session)
+suffix <- ifelse(is.null(cdrecipe$suffix), "", cdrecipe$suffix)
+
 cdlist <- unlist(cdrecipe$cdlist)
+
+target_rules <- cdrecipe$targets |> 
+  purrr::map(as_tibble) |> 
+  purrr::list_rbind() 
+
+# target_rules |> 
+#   unnest(agi_exclude)
+
+targets_matchframe <- target_rules |> 
+  select(-agi_exclude) |> 
+  cross_join(tibble(agistub=1:9)) |> 
+  left_join(target_rules |> 
+              unnest(agi_exclude),
+            by = join_by(varname, scope, count, fstatus)) |> 
+  mutate(agi_exclude=ifelse(!is.na(agi_exclude) & agi_exclude==agistub, TRUE, FALSE)) |> 
+  filter(!agi_exclude) |> 
+  select(-agi_exclude) |> 
+  mutate(sort=row_number() + 1) |> 
+  rows_insert(tibble(varname="XTOT", scope=0, count=0, fstatus=0, agistub=0, sort=1),
+              by="varname") |> 
+  left_join(vmap, by = join_by(varname)) |> 
+  mutate(basevname = case_when(fstatus == 1 ~ "MARS1",
+                               fstatus == 2 ~ "MARS2",
+                               fstatus == 4 ~ "MARS4",
+                               .default = basevname)) |> 
+  relocate(sort) |> 
+  arrange(sort)
+
 # quit(save="no", status=1, runLast=FALSE)
 
 # create targets "recipe" tibble to merge against targets data-----------------
 
-f <- function(target){
-  # for later -- a first step in adding income ranges as a possibility
-  # if(!"agilo" %in% names(target)) target$agilo <- -9e99
-  # if(!"agihi" %in% names(target)) target$agihi <- 9e99
-  as_tibble(target)
-}
 
 targets_tibble <- cdrecipe$targets |> 
   purrr::map(f) |> 
@@ -100,17 +128,18 @@ if(length(cdlist) > 1){
   cdfilter <- TRUE
 } else stop('cdlist must be "all" or a list of valid cd codes')
 
-mapped <- targets_tibble |> 
+mapped <- targets_matchframe |>
   left_join(stack |>
               filter(!!cdfilter,
-                     session %in% cdrecipe$session,
-                     !(agistub == 0 & basevname !="XTOT")),
-            by = join_by(basevname, scope, count, fstatus),
+                     session %in% cdrecipe$session) |> 
+              rename(label=description),
+            by = join_by(basevname, scope, count, fstatus, agistub),
             relationship = "many-to-many") |> 
-  mutate(group = case_when(basevname=="XTOT" & scope==0 & count==0 & fstatus==0 ~ 1,
-                           .default = 2)) |> 
-  arrange(statecd, group, scope, fstatus, varname, count, agistub) |> 
-  mutate(sort=row_number(), .by=group)
+  arrange(statecd, sort)
+
+summary(mapped)
+skim(mapped)
+count(mapped, statecd)
 
 # write targets -----------------------------------------------------------
 
@@ -125,11 +154,17 @@ f <- function(data, group, suffix=""){
 }
 
 print("writing targets files...")
-suffix <- "A"
-# suffix <- ""
 mapped |> 
   select(statecd, varname, count, scope, agilo, agihi, fstatus, target) |> 
   group_by(statecd) |> 
   group_walk(~f(.x, .y, suffix))
 
 print("all done!")
+
+
+# f <- function(target){
+#   # for later -- a first step in adding income ranges as a possibility
+#   # if(!"agilo" %in% names(target)) target$agilo <- -9e99
+#   # if(!"agihi" %in% names(target)) target$agihi <- 9e99
+#   as_tibble(target)
+# }
