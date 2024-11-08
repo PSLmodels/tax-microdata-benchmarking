@@ -201,7 +201,7 @@ print("writing targets files...")
 mapped |> 
   select(statecd, varname, count, scope, agilo, agihi, fstatus, target) |> 
   group_by(statecd) |> 
-  group_walk(~f(.x, .y, suffix))
+  group_walk(~f(.x, .y, cdrecipe$suffix))
 
 print("all done!")
 
