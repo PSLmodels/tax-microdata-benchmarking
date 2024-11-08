@@ -1,7 +1,11 @@
 # prepare
 
 # folders to ignore (anywhere in project since not preceded by root /)
+# I am not sure why I need 2 quarto items but if I leave /.quarto/ out
+# it will put it in
 .quarto/
+/.quarto/
+
 .Rproj.user/
 _docs/
 _targetprep/
@@ -9,6 +13,9 @@ _freeze/
 libs/
 # Local Netlify folder
 .netlify
+# Ignore the renv library directory and staging area
+renv/library/
+renv/staging/
 
 # file types to ignore (unless not ignored elsewhere)
 ~*
