@@ -21,4 +21,6 @@ libs/
 
 # Do not ignore anything in raw data folder, including files or folders nested within
 !cds/raw_data/**
+# but continue to ignore Word temp files
+cds/raw_data/~*
 
