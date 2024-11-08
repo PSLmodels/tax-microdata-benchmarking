@@ -172,9 +172,7 @@ mapped <- targets_matchframe |>
             relationship = "many-to-many") |> 
   arrange(statecd, sort)
 
-ntargets <- count(mapped, statecd)
-deframe(ntargets)
-print(ntargets)
+
 
 # checks
 # mapped |> filter(target == 0)
@@ -203,7 +201,13 @@ mapped |>
   group_by(statecd) |> 
   group_walk(~f(.x, .y, cdrecipe$suffix))
 
+ntargets <- count(mapped, statecd)
+print("number of targets per Congressional district")
+deframe(ntargets)
+
 print("all done!")
+
+
 
 
 # f <- function(target){
