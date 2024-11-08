@@ -14,17 +14,6 @@ suppressPackageStartupMessages({
   library(jsonlite)
 })
 
-# Check command-line arguments --------------------------------------------
-print("checking arguments and getting data needed for target files...")
-
-args <- commandArgs(trailingOnly = TRUE)
-
-# check filename
-if (length(args) > 0) {
-  fnrecipe <- args[1]
-} else {
-  fnrecipe <- "cdrecipe.json"
-}
 
 # constants ---------------------------------------------------------------
 
@@ -35,9 +24,59 @@ CDFINAL <- fs::path(CDDIR, "final")
 CDRECIPES <- fs::path("cdrecipes") 
 CDTARGETS <- fs::path("cdtargets") # output files go here
 
+# Check command-line arguments --------------------------------------------
+print("checking arguments and getting data needed for target files...")
+
+args <- commandArgs(trailingOnly = TRUE)
+
+# Check if the correct number of arguments is provided
+if (length(args) < 1) {
+  stop("Error: No JSON file specified. Please provide the name of a JSON file in cdrecipes as an argument.")
+}
+
+# Assign the first argument as the file path
+fnrecipe <- args[1]
+
+# ALTERNATIVE for testing: hardcode a file name -------------------------------------------
+# uncomment a line below for interactive testing
+# fnrecipe <- "temp.json"
+# fnrecipe <- "phase5_salt.json"
+
+# Check if the specified file exists
+fpath <- here::here(CDRECIPES, fnrecipe)
+if (!file.exists(fpath)) {
+  stop("Error: The specified file does not exist: ", fpath)
+}
+
+# get target recipes and validate ------------------------------------------------------
+
+cdrecipe <- read_json(fpath) 
+# names(cdrecipe)
+
+# Check and set defaults for suffix
+if (is.null(cdrecipe$suffix)) {
+  message("Suffix value is missing. Defaulting to an empty string.")
+  cdrecipe$suffix <- ""
+} else if (!cdrecipe$suffix %in% c("", LETTERS)) {
+  stop("Invalid suffix value: ", cdrecipe$suffix, ". Valid values are an empty string or a single capital letter (A-Z).")
+}
+
+# Check and set defaults for session
+if (is.null(cdrecipe$session)) {
+  message("Session value is missing. Defaulting to 118.")
+  cdrecipe$session <- 118
+} else if (!(cdrecipe$session %in% c(117, 118))) {
+  stop("Invalid session value: ", cdrecipe$session, ". Valid values are 117, 118.")
+}
+
+cdlist <- unlist(cdrecipe$cdlist)
+
+# Print updated cdrecipe list
+print(cdrecipe)
+
 
 # define variable mappings ------------------------------------------------
-
+# allowable target variables are those maped below
 # MARS mappings let us get counts by filing status by agi range
 
 vmap <- read_csv(file="
@@ -52,38 +91,23 @@ e18400, v18425, state and local income or sales taxes allocated by S and L incom
 e18500, v18500, state and local real estate taxes
 ", show_col_types = FALSE)
 
+# TODO: check whether target names are in vmap
 
-# load targets data -------------------------------------------------------
-stack <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile_enhanced.csv"), show_col_types = FALSE)
 
-stop("done with check")
+# prepare target rules ----------------------------------------------------
 
-# get target recipes ------------------------------------------------------
-# fnrecipe <- "temp.json"
-# fnrecipe <- "phase5_salt.json"
-
-fpath <- here::here(CDRECIPES, fnrecipe)
-
-cdrecipe <- read_json(fpath) 
-
-# check recipe
-# names(cdrecipe)
-
-# check session
-session <- ifelse(is.null(cdrecipe$session), 118, cdrecipe$session)
-suffix <- ifelse(is.null(cdrecipe$suffix), "", cdrecipe$suffix)
-
-cdlist <- unlist(cdrecipe$cdlist)
-
+# general rules, before exceptions
 target_rules <- cdrecipe$targets |> 
   purrr::map(as_tibble) |> 
   purrr::list_rbind()
 
+# combine with agi ranges, before excluding any ranges
 target_stubs <- target_rules |> 
   select(varname, scope, count, fstatus) |> 
   distinct() |> 
   cross_join(tibble(agistub=1:9))
 
+# update target_stubs to drop any agi ranges that are named for exclusion
 if("agi_exclude" %in% names(target_rules)){
   target_drops <- target_rules |> 
     unnest(cols=agi_exclude)
@@ -93,9 +117,9 @@ if("agi_exclude" %in% names(target_rules)){
                 rename(agistub=agi_exclude),
               join_by(varname, scope, count, fstatus, agistub))
 }
-
-target_stubs
+# target_stubs
   
+# create a dataframe to match against the stack data for targets
 targets_matchframe <- target_stubs |>
   mutate(sort=row_number() + 1) |> 
   rows_insert(tibble(varname="XTOT", scope=0, count=0, fstatus=0, agistub=0, sort=1),
@@ -108,7 +132,9 @@ targets_matchframe <- target_stubs |>
   relocate(sort) |> 
   arrange(sort)
 
-# quit(save="no", status=1, runLast=FALSE)
+
+# load targets data -------------------------------------------------------
+stack <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile_enhanced.csv"), show_col_types = FALSE)
 
 # create mapped targets tibble --------------------------------------------
 
@@ -130,6 +156,7 @@ mapped <- targets_matchframe |>
 # summary(mapped)
 # skim(mapped)
 # count(mapped, statecd)
+stop("done with check")
 
 # write targets -----------------------------------------------------------
 
