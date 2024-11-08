@@ -4,19 +4,7 @@
 
 # Rscript test.r > output.log 2>&1
 
-# startup -----------------------------------------------------------------
-# Get command-line arguments
-print("checking arguments and getting data needed for target files...")
-
-args <- commandArgs(trailingOnly = TRUE)
-
-if (length(args) > 0) {
-  fnrecipe <- args[1]
-} else {
-  fnrecipe <- "cdrecipe.json"
-}
-
-# fnrecipe <- "phase5_salt.json" # for testing
+# load packages quietly -----------------------------------------------------------------
 
 suppressPackageStartupMessages({
   library(rlang)
@@ -26,6 +14,18 @@ suppressPackageStartupMessages({
   library(jsonlite)
 })
 
+# Check command-line arguments --------------------------------------------
+print("checking arguments and getting data needed for target files...")
+
+args <- commandArgs(trailingOnly = TRUE)
+
+# check filename
+if (length(args) > 0) {
+  fnrecipe <- args[1]
+} else {
+  fnrecipe <- "cdrecipe.json"
+}
+
 # constants ---------------------------------------------------------------
 
 CDDIR <- here::here("cds")
@@ -34,6 +34,9 @@ CDFINAL <- fs::path(CDDIR, "final")
 
 CDRECIPES <- fs::path("cdrecipes") 
 CDTARGETS <- fs::path("cdtargets") # output files go here
+
+
+# define variable mappings ------------------------------------------------
 
 # MARS mappings let us get counts by filing status by agi range
 
@@ -51,12 +54,9 @@ e18500, v18500, state and local real estate taxes
 
 
 # load targets data -------------------------------------------------------
-# saveRDS(stack, fs::path(CDINTERMEDIATE, "cdbasefile_sessions.rds"))
-# system.time(stack <- readRDS(fs::path(CDINTERMEDIATE, "cdbasefile_sessions.rds")))
-
-# stack <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile_sessions.csv"), show_col_types = FALSE)
 stack <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile_enhanced.csv"), show_col_types = FALSE)
 
+stop("done with check")
 
 # get target recipes ------------------------------------------------------
 # fnrecipe <- "temp.json"
