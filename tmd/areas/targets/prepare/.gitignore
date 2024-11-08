@@ -1,11 +1,9 @@
 # prepare
 
-# folders to ignore (anywhere in project since not preceded by root /)
-# I am not sure why I need 2 quarto items but if I leave /.quarto/ out
-# it will put it in
-.quarto/
+# ignore quarto at the root level
 /.quarto/
 
+# folders to ignore (anywhere in project since not preceded by root /)
 .Rproj.user/
 _docs/
 _targetprep/
