@@ -43,7 +43,7 @@ The SOI Congressional district data do not correspond to the PUF variables prope
 To develop targets, we do the following:
 
 -   Using the tmd microdata for 2021 (our adjusted and grown 2015 PUF), calculate national totals of e18400 and e18500 by the 9 AGI ranges used in the SOI Congressional District district summary data, by `data_source`. This gives us 18 national 2021 targets -- actual national levels in the tmd data.
--   Using the SOI 2021 summary data for Congressional districts calculate factors that can be used to allocate the national targets to the 436 districts (435 Congressional districts plus DC): for each district and AGI range calculate A18425 as a share of the sum over all districts of A18425 by AGI range. Do the same for A18500. This gives us, for each districts 9 shares for each of the two variables -- one for each AGI range.
+-   Using the SOI 2021 summary data for Congressional districts calculate factors that can be used to allocate the national targets to the 436 districts (435 Congressional districts plus DC): for each district and AGI range calculate A18425 as a share of the sum over all districts of A18425 by AGI range. Do the same for A18500. This gives us, for each district, 9 shares for each of the two variables -- one for each AGI range.
 -   Use the A18425 shares to construct 9 targets for e18400 for each district, one for each AGI range, by allocating the national target to each district. For example, if district CA-11 has 12.7% of the SOI-reported national Congressional district total of state and local *income* tax deductions for 2021 itemizers (A18425) in the $100,000 to $200,000 AGI range, our estimated target for e18400, state and local income *or sales* taxes available to 2015 itemizers, in the CA-11 $100,000 to $200,000 AGI range, would be 12.7% of our tmd national total for e18400 in that range. Our national total for e18500 is allocated to districts, by AGI range, using A18500 in the same way.
 
 ## Setup
@@ -215,13 +215,13 @@ saltcd2 <- saltcd1 |>
 # data checks
 summary(saltcd2)
 skim(saltcd2)
-stsums <- saltcd2 |> 
-  filter(session==117) |> 
-  select(agistub, agirange, vname, stabbr, soivalue, soisum) |> 
-  summarise(stsum=sum(soivalue),
-            soisum=first(soisum),
-            .by=c(vname, stabbr, agistub, agirange)) |> 
-  pivot_wider(names_from = vname, values_from = msoishare)
+# stsums <- saltcd2 |> 
+#   filter(session==117) |> 
+#   select(agistub, agirange, vname, stabbr, soivalue, soisum) |> 
+#   summarise(stsum=sum(soivalue),
+#             soisum=first(soisum),
+#             .by=c(vname, stabbr, agistub, agirange)) |> 
+#   pivot_wider(names_from = vname, values_from = msoishare)
 
 saltcd2 |> 
   filter(str_detect(vname, "18425"), statecd=="NY01", agistub==2, session==117)
