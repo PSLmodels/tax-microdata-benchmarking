@@ -69,7 +69,7 @@ if (is.null(cdrecipe$session)) {
   stop("Invalid session value: ", cdrecipe$session, ". Valid values are 117, 118.")
 }
 
-cdlist <- unlist(cdrecipe$cdlist)
+# TODO: error checking on cdlist
 
 # Print updated cdrecipe list
 print(cdrecipe)
@@ -133,30 +133,57 @@ targets_matchframe <- target_stubs |>
   arrange(sort)
 
 
+# set up filters for CDs, zero targets, and negative targets --------------------
+
+##.. filtering Congressional districts ----
+cdlist <- unlist(cdrecipe$cdlist)
+if(length(cdlist) > 1){
+  cd_filter <- expr(statecd %in% cdlist)
+} else if(length(cdlist) == 1 & cdlist == "all") {
+  cd_filter <- TRUE
+} else stop('cdlist must be "all" or a list of valid cd codes')
+
+##.. filtering out targets with zero values --------
+if(cdrecipe$notzero) {
+  zero_filter <- expr(target != 0)
+} else zero_filter <- TRUE
+
+#.. filtering out targets with negative values ----------
+if(cdrecipe$notnegative) {
+  negative_filter <- expr(!(target < 0))
+} else negative_filter <- TRUE
+
+
 # load targets data -------------------------------------------------------
 stack <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile_enhanced.csv"), show_col_types = FALSE)
 
+
 # create mapped targets tibble --------------------------------------------
 
-if(length(cdlist) > 1){
-  cdfilter <- expr(statecd %in% cdlist)
-} else if(length(cdlist) == 1 & cdlist == "all") {
-  cdfilter <- TRUE
-} else stop('cdlist must be "all" or a list of valid cd codes')
-
 mapped <- targets_matchframe |>
-  left_join(stack |>
-              filter(!!cdfilter,
+  # inner_join -- must be in both the targets and the filtered stack
+  inner_join(stack |>
+              filter(!!cd_filter,
+                     !!zero_filter,
+                     !!negative_filter,
                      session %in% cdrecipe$session) |> 
               rename(label=description),
             by = join_by(basevname, scope, count, fstatus, agistub),
             relationship = "many-to-many") |> 
   arrange(statecd, sort)
 
+ntargets <- count(mapped, statecd)
+deframe(ntargets)
+print(ntargets)
+
+# checks
+# mapped |> filter(target == 0)
+# mapped |> filter(target < 0)
+
 # summary(mapped)
 # skim(mapped)
 # count(mapped, statecd)
-stop("done with check")
+# stop("done with check")
 
 # write targets -----------------------------------------------------------
 
