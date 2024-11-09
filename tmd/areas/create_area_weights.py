@@ -42,10 +42,10 @@ DELTA_INIT_VALUE = 1.0e-9
 DELTA_MAX_LOOPS = 1
 
 # default optimization parameters:
-OPTIMIZE_FTOL = 1e-7
+OPTIMIZE_FTOL = 1e-9
 OPTIMIZE_GTOL = 1e-9
-OPTIMIZE_MAXITER = 2000
-OPTIMIZE_IPRINT = 20  # 20 is a good diagnostic value; set to 0 for production
+OPTIMIZE_MAXITER = 5000
+OPTIMIZE_IPRINT = 0  # 20 is a good diagnostic value; set to 0 for production
 OPTIMIZE_RESULTS = False  # set to True to see complete optimization results
 
 
@@ -566,12 +566,6 @@ def create_area_weights_file(
         iprint = OPTIMIZE_IPRINT
     else:
         iprint = PARAMS.get("iprint", OPTIMIZE_IPRINT)
-        
-    # djb
-    misses, minfo = target_misses(wght_us, target_matrix, target_array)       
-    out.write(minfo)
-    # end djb
-        
     # ... reduce value of regularization delta if not all targets are hit
     loop = 1
     delta = DELTA_INIT_VALUE
