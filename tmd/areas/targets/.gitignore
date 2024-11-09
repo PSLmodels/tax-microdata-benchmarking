@@ -3,3 +3,7 @@
 
 # Allow the .gitignore file itself
 !.gitignore
+
+# Allow all targets and yaml files
+!*_targets.csv
+!*.yaml
