@@ -30,6 +30,8 @@ Summarize and save:
 #| label: setup
 #| output: false
 
+source(here::here("R", "system_specific_constants.R"))
+
 source(here::here("R", "libraries.R"))
 source(here::here("R", "constants.R"))
 source(here::here("R", "functions.R"))
@@ -94,7 +96,7 @@ icuts <- c(-Inf, 1, 10e3, 25e3, 50e3, 75e3, 100e3, 200e3, 500e3, Inf)
 #| output: false
 
 # create vector of all tax-calculator variables for which we might want summaries
-taxcalc_vars <- c("c00100", "e00200", "e00300", "e26270", "iitax")
+taxcalc_vars <- c("c00100", "e00200", "e00300", "e26270", "e18400", "e18500", "iitax")
 
 tmdplusweights <- tmd2021 |> 
   select(RECID, data_source, MARS, us=s006, all_of(taxcalc_vars)) |> 
@@ -146,8 +148,23 @@ wtdsums <- long1 |>
 
 rm(long1)
 b <- proc.time()
-b - a # about 5-10 secs
+b - a # about 10 secs
 # wtdsums
+
+```
+
+## Extend weighted sums to include other subgroup sums
+
+```{r}
+
+```
+
+
+```{r}
+#| label: wide-approach
+#| eval: false
+#| output: false
+
 
 # wide approach - harder to maintain because a new sum calculation must be created for each variable added
 # a <- proc.time()
@@ -175,16 +192,7 @@ b - a # about 5-10 secs
 #   pivot_wider(names_from = src, values_from = sum) |> 
 #   mutate(diff=sums2 - sums1) |> 
 #   arrange(desc(abs(diff)))
-
-
 ```
 
-## Extend weighted sums to include other subgroup sums
-
-```{r}
-
-
-
-```
 
 
