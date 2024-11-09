@@ -30,10 +30,11 @@ Summarize and save:
 #| label: setup
 #| output: false
 
-source(here::here("R", "system_specific_constants.R"))
-
 source(here::here("R", "libraries.R"))
+
+source(here::here("R", "system_specific_constants.R"))
 source(here::here("R", "constants.R"))
+
 source(here::here("R", "functions.R"))
 
 ```
