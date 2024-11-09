@@ -6,7 +6,7 @@ editor_options:
 
 # Get and save selected ACS data
 
-Get median household income for each 118th-session Congressional District in 2022. The original source is the 2022 Census 1-year American Community Survey (ACS).
+Get median household income for each 118th-session Congressional District in 2022. The original source is the 2022 Census 1-year American Community Survey (ACS). May be useful in understanding some differences across CDs.
 
 This only needs to be done once so set `eval: false` in the `get-save-acs` chunk after getting the data.
 
