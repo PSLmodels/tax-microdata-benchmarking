@@ -22,6 +22,8 @@ source(here::here("R", "libraries.R"))
 source(here::here("R", "constants.R"))
 source(here::here("R", "functions.R"))
 
+WEIGHTSDIR <- fs::path(path_home(), "Documents/python_project/scratch/phase5_salt")
+
 ```
 
 ## Get and save weights

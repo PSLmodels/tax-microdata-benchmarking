@@ -4,7 +4,7 @@ TMDDIR <- here::here("..", "..", "..", "storage", "output")
 # list.files(TMDDIR)
 
 TARGETSDIR <- here::here("..", "..", "targets")
-WEIGHTSDIR <- here::here("..")
+# WEIGHTSDIR <- here::here("..")
 # list.files(TARGETSDIR)
 # list.files(WEIGHTSDIR)
 
