@@ -1,17 +1,31 @@
 # prepare
 
-# folders to ignore
-.quarto/
+# ignore quarto at the root level
+/.quarto/
+
+# folders to ignore (anywhere in project since not preceded by root /)
 .Rproj.user/
 _docs/
 _targetprep/
 _freeze/
-
-# files to ignore
-!cds/raw_data/*.csv
-.Rhistory
-
+libs/
 # Local Netlify folder
 .netlify
+# Ignore the renv library directory and staging area
+renv/library/
+renv/staging/
 
-/.quarto/
+# file types to ignore (unless not ignored elsewhere)
+~*
+*.csv
+*.html
+*.rds
+
+# specific files to ignore regardless of how file types are treated
+.Rhistory
+
+# Do not ignore anything in raw data folder, including files or folders nested within
+!cds/raw_data/**
+# but continue to ignore Word temp files
+cds/raw_data/~*
+

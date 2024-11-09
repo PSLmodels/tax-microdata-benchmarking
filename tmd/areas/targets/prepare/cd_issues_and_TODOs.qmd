@@ -6,6 +6,12 @@ editor_options:
 
 # Congressional District data issues and TODOs
 
+## Missing targets
+
+-   When targets are missed, usually target 1 -- total population -- is missed by the most
+-   Idea: either gross down national population or gross up CD population targets so that the population amounts sum to the national pop, and then compute ratio. It does mean that CD population sums won't match national population in the data (334283385.27000004 national pop)
+-   Investigate: total national population of CDs -- look at raw data from Census, compare to our national pop number
+
 ## Investigate collapsed AGI ranges in the SOI data
 
 -   Per IRS documentation: "Income and tax items with less than 20 returns for a particular AGI class were combined with another AGI class within the same congressional district. Collapsed AGI classes are identified with a double asterisk (dropped) in the Excel files." **This will require attention soon.**

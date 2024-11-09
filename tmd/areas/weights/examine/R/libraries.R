@@ -1,5 +1,7 @@
 # libraries ---------------------------------------------------------------
 
+library(renv)
+
 library(DT)
 library(fs)
 library(gt)
