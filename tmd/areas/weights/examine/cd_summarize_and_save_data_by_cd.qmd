@@ -150,6 +150,7 @@ rm(long1)
 b <- proc.time()
 b - a # about 10 secs
 
+
 # wtdsums
 write_csv(wtdsums, here::here("intermediate", "wtdsums.csv"))
 
