@@ -8,7 +8,6 @@ project:
 #  open terminal in examine
 # quarto render && netlify deploy --prod --dir=_examine
 
-
 #  quarto render # inspect to be sure it is as desired
 #  netlify deploy --prod --dir=_examine
 
