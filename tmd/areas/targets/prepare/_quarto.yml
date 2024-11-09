@@ -25,30 +25,32 @@ execute:
   eval: true
   echo: true
   output: true
-  freeze: auto  # auto: during global project renders, re-render only when source changes
+  freeze: false  # auto: during global project renders, re-render only when source changes
 
 book:
   title: "Develop targets for subnational areas"
-  subtitle: "Create csv target files for use by area targeting routies"
+  subtitle: "Create csv target files for use by area targeting routines"
   # author: "Don Boyd"
   date: today
   date-format: long
   chapters:
     - index.qmd
-    - part: "Usage and notes"
+    - part: "Usage"
       chapters:
         - usage.qmd
-        - cd_issues_and_TODOs.qmd
-    - part: "IRS Congressional District data"
+    - part: "IRS SOI Congressional District data"
       chapters:
-        - cd_overall_documentation.qmd
-        - cd_get_census_population.qmd
+        - cd_download_and_clean_census_population_data.qmd
         - cd_download_soi_data.qmd
-        - cd_construct_variable_documentation.qmd
+        - cd_construct_soi_variable_documentation.qmd
         - cd_construct_long_soi_data_file.qmd
-        - cd_create_basefile_for_cd_target_files.qmd
-        - cd_create_crosswalk_from_cd117th_to_cd118th.qmd
+        - cd_create_basefile_for_117Congress_cd_target_files.qmd
+        - cd_create_cd_117_118_crosswalk_and_cdbasefile_118.qmd
+        - cd_enhance_basefile_with_special_targets.qmd
         - cd_map_tcvars_and_extract_target_files.qmd
+  appendices:
+    - cd_issues_and_TODOs.qmd  
+    - cd_IRS_documentation.qmd
         
 format:
   html:

@@ -30,14 +30,21 @@ def create_cached_files():
     calc.advance_to_year(TAX_YEAR)
     calc.calc_all()
 
+    # cache all variables to aid in areas examination
+    calc.dataframe(variable_list=None, all_vars=True).to_csv(
+        STORAGE_FOLDER / "output" / "cached_allvars.csv", index=None
+    )
+
     # write each variable in CACHED_TAXCALC_VARIABLES list to a binary file
     for vname in CACHED_TAXCALC_VARIABLES:
         varray = calc.array(vname)
         fpath = STORAGE_FOLDER / "output" / f"cached_{vname}.npy"
         np.save(fpath, varray, allow_pickle=False)
+
+    # provide timestamp for Makefile
     fpath = STORAGE_FOLDER / "output" / "cached_files"
     with open(fpath, "w", encoding="utf-8") as cfiles:
-        cfiles.write("  ")  # provides timestamp for Makefile
+        cfiles.write("  ")
 
     return 0
 

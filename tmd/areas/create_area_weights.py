@@ -5,7 +5,8 @@ for FIRST_YEAR through LAST_YEAR for the specified sub-national AREA.
 AREA prefix for state areas are the two lower-case character postal codes.
 AREA prefix for congressional districts are the state prefix followed by
 two digits (with a leading zero) identifying the district.  States with
-only one congressional district have 00 as the two digits.
+only one congressional district have 00 as the two digits to align names
+with IRS data.
 """
 
 import sys
@@ -41,10 +42,10 @@ DELTA_INIT_VALUE = 1.0e-9
 DELTA_MAX_LOOPS = 1
 
 # default optimization parameters:
-OPTIMIZE_FTOL = 1e-9
+OPTIMIZE_FTOL = 1e-7
 OPTIMIZE_GTOL = 1e-9
-OPTIMIZE_MAXITER = 5000
-OPTIMIZE_IPRINT = 0  # 20 is a good diagnostic value; set to 0 for production
+OPTIMIZE_MAXITER = 2000
+OPTIMIZE_IPRINT = 20  # 20 is a good diagnostic value; set to 0 for production
 OPTIMIZE_RESULTS = False  # set to True to see complete optimization results
 
 
@@ -55,7 +56,7 @@ def valid_area(area: str):
     # Census on which Congressional districts are based:
     # : cd_census_year = 2010 implies districts are for the 117th Congress
     # : cd_census_year = 2020 implies districts are for the 118th Congress
-    cd_census_year = 2010
+    cd_census_year = 2020
     # data in the state_info dictionary is taken from the following document:
     #  2020 Census Apportionment Results, April 26, 2021,
     #  Table C1. Number of Seats in
@@ -123,6 +124,13 @@ def valid_area(area: str):
         total[2020] += seats[2020]
     assert total[2010] == 435
     assert total[2020] == 435
+    compare_new_vs_old = False
+    if compare_new_vs_old:
+        text = "state,2010cds,2020cds"
+        for state, seats in state_info.items():
+            if seats[2020] != seats[2010]:
+                print(f"{text}= {state} {seats[2010]:2d} {seats[2020]:2d}")
+        sys.exit(1)
     # conduct series of validity checks on specified area string
     # ... check that specified area string has expected length
     len_area_str = len(area)
@@ -558,6 +566,12 @@ def create_area_weights_file(
         iprint = OPTIMIZE_IPRINT
     else:
         iprint = PARAMS.get("iprint", OPTIMIZE_IPRINT)
+        
+    # djb
+    misses, minfo = target_misses(wght_us, target_matrix, target_array)       
+    out.write(minfo)
+    # end djb
+        
     # ... reduce value of regularization delta if not all targets are hit
     loop = 1
     delta = DELTA_INIT_VALUE

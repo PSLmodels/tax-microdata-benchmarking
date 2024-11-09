@@ -1,0 +1,134 @@
+---
+output: html_document
+editor_options: 
+ chunk_output_type: console
+---
+
+# Parse and show SOI Congressional District data documentation
+
+## Setup
+
+```{r}
+#| label: setup
+
+source(here::here("R", "libraries.R"))
+source(here::here("R", "constants.R"))
+
+```
+
+
+## Parse and save variable documentation
+
+This section gets and cleans SOI variable documentation from an Excel file we created, "cd_documentation_extracted_from_21incddocguide.docx.xlsx" that is based on a table in SOI's Word documentation (21incddocguide.docx).
+
+We put the cleaned data in "variable_documentation.csv" in the "../cds/intermediate" folder.
+
+
+```{r}
+#| label: parse-save-doc
+#| output: false
+
+doc1 <- read_excel(fs::path(CDRAW, CDDOCEXTRACT), sheet = "cleaned", range = "A2:D169")
+
+# clean SOI documentation and 
+doc2 <- doc1 |> 
+  mutate(
+    across(everything(),
+           \(x) str_trim(x)),
+    # clean reference field so that we can show line breaks in datatable
+    reference = str_replace_all(reference,
+                                coll("\r\n"),
+                                 "<br>"
+                                 )) |> 
+  # determine whether variable is count, amount, or other
+  mutate(vtype = case_when(
+    vname %in% c("STATEFIPS", "STATE", "CONG_DISTRICT", "AGI_STUB") ~ "other",
+    str_detect(description,
+               coll("number of", ignore_case = TRUE)) ~ "count",
+    str_detect(description, coll("amount", ignore_case = TRUE)) ~ "amount",
+    # dollar amounts where description does not contain "amount"
+    vname %in% c("A00100", "A02910", "A04475", "A11520", "A11530", "A18460") ~ "amount",
+    .default = "ERROR")) |> 
+  mutate(description = ifelse(vname == "A00100",
+                              str_replace(description, "Adjust gross", "Adjusted gross"),
+                              description),
+         row = row_number()) |> 
+  relocate(row)
+
+# determine which variable names are part of a count-amount pair and get the base variable name
+doc3 <- doc2 |> 
+  mutate(suffix = ifelse(nchar(vname) == 6,
+                         str_sub(vname, 2, -1),
+                         NA_character_),
+         suffix = ifelse(!is.na(as.integer(suffix)),
+                         suffix,
+                         NA_character_)) |> 
+  arrange(suffix, vname) |> 
+  mutate(nvars = n(), .by=suffix) |> 
+  mutate(basevname= ifelse(nvars==2,
+                           paste0("v", suffix),
+                           NA_character_)) |> 
+  select(-c(nvars, suffix)) |> 
+  arrange(row)
+
+write_csv(doc3, fs::path(CDINTERMEDIATE, "variable_documentation.csv"))
+
+rm(doc1, doc2, doc3)
+
+```
+
+Project team members run this next chunk interactively to do some checks on the variable documentation. It has option `eval: false` and will not be run when the project is rendered.
+
+```{r}
+#| label: check-doc
+#| eval: false
+#| output: false
+
+# run some checks on the data interactively
+
+doc2 <- read_csv(fs::path(CDINTERMEDIATE, "variable_documentation.csv"))
+doc2 |> 
+  filter(type != "Num")
+
+count(doc2, vtype)
+
+doc2 |> 
+  filter(vtype=="ERROR")
+
+doc2 |> 
+  filter(vtype=="other")
+
+# check these next 2 to be sure they are appropriate
+countvars <- doc2 |> 
+  filter(vtype=="count")
+
+amountvars <- doc2 |> 
+  filter(vtype=="amount")
+
+rm(amountvars, countvars)
+
+```
+
+
+## Show variable documentation in a datatable
+
+Show documentation table for variables in the Congressional District csv data. The table can be filtered and sorted interactively using column headers.
+
+```{r}
+#| label: show-doc
+
+vdoc <- read_csv(fs::path(CDINTERMEDIATE, "variable_documentation.csv"))
+
+vdoc |>
+  select(-type) |> 
+  DT::datatable(rownames = FALSE,
+                options = list(order = list(0, "asc"), # use 1st column (0) for sorting
+                               scrollX = TRUE, scrollY = TRUE, paging = TRUE, pageLength = 20,
+                               autoWidth = TRUE),
+                filter="top",
+                escape = FALSE)
+
+rm(vdoc)
+
+```
+

@@ -6,11 +6,13 @@
 _examine/
 _freeze/
 site_libs/
-temp_data/
 
 # files to ignore
 .Rhistory
+~*
 *.html
+*.rds
+
 
 # Local Netlify folder
 .netlify

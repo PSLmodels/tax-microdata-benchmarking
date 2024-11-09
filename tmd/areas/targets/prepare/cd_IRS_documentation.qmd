@@ -1,0 +1,100 @@
+---
+output: html_document
+editor_options: 
+ chunk_output_type: console
+---
+
+# About the SOI Congressional District data
+
+All text in this section is copied verbatim from the IRS SOI data documentation (21incddocguide.docx), with no substantive edits and no commentary.
+
+## Time period
+
+The Statistics of Income (SOI) Division’s Congressional district data is tabulated using individual income tax returns (Forms 1040) filed with the Internal Revenue Service (IRS) during the 12-month period, January 1, 2022 to December 31, 2022. While the bulk of returns filed during this 12-month period are primarily for Tax Year 2021, the IRS received a limited number of returns for tax years before 2021. These prior-year returns are used as a proxy for returns that are typically filed beyond the 12-month period and have been included within the congressional district data.
+
+## Population Definitions and Tax Return Addresses
+
+-   Congressional data are based on the population of individual income tax returns processed by the IRS during the 2022 calendar year.
+
+-   Returns filed for the purpose of receiving an Economic Impact Payment, due to COVID-19, were excluded from the data.
+
+-   State totals within the Congressional data may not be comparable to State totals published elsewhere by SOI because of disclosure protection procedures or the exclusion of returns that did not match based on the ZIP code. See footnote for complete State totals. \[2\]
+
+-   Data do not represent the full U.S. population because many individuals are not required to file an individual income tax return.
+
+-   The address shown on the tax return may differ from the taxpayer’s actual residence.
+
+-   Congressional districts were based on the ZIP code shown on the return.
+
+-   Tax returns filed without a ZIP code and returns filed with a ZIP code that did not match the State code shown on the return were excluded.
+
+-   Tax returns filed using Army Post Office (APO) and Fleet Post Office addresses, foreign addresses, and addresses in Puerto Rico, Guam, Virgin Islands, American Samoa, Marshall Islands, Northern Marianas, and Palau were excluded.
+
+## Congressional District and ZIP Code Matching Procedures
+
+SOI uses a commercial file to match ZIP codes to congressional districts. Congressional districts cover the 435 congressional districts in the 50 states and the District of Columbia. District boundaries are based on the 117th Congress.
+
+The matching process first utilizes the 9-digit ZIP code, if present on the return, to determine the proper congressional district for that return. Nearly 97 percent of the returns match on the 9-digit ZIP code. When the 9-digit ZIP code is not available, the matching process uses the 5-digit ZIP code to determine the proper congressional district. Returns that do not match on ZIP code, or where a ZIP code is not present, are excluded from the data.
+
+Eight states (AK, DC, DE, MT, ND, SD, VT, and WY) have only one congressional district, therefore the matching procedures are not performed on these states. Returns with only one congressional district represent 2 percent of the total number of returns.
+
+## Disclosure Protection Procedures
+
+SOI did not attempt to correct any ZIP codes listed on the tax returns; however, it did take the following precautions to avoid disclosing information about specific taxpayers:
+
+-   Income and tax items with less than 20 returns for a particular AGI class were combined with another AGI class within the same congressional district. Collapsed AGI classes are identified with a double asterisk (\*\*) in the Excel files.
+
+-   Income and tax items with less than 20 returns for a congressional district were excluded.
+
+-   If an income or tax item from one return constitutes more than a specified percentage of the total of any particular cell, the specific data item for that return is excluded from that cell. For example, if the amount for wages from one return represents 75 percent of the value of the total for that cell, the data item will be suppressed. The actual threshold percentage used cannot be released.
+
+## IRS Endnotes
+
+[1] The use of prior-year returns as a proxy for returns that are filed beyond the current processing year is consistent with SOI’s national, state, county, and ZIP code tabulations. A description of SOI’s sample, which is used as an input for the geographic data, and the use of prior-year returns, can be found at https://www.irs.gov/statistics/soi-tax-stats-individual-income-tax-returns-publication-1304-complete-report#_sec2. 
+
+[2] For complete individual income tax tabulations at the State level, see the historic table posted to Tax Stats at http://www.irs.gov/uac/SOI-Tax-Stats---Historic-Table-2.
+
+[3] The State Federal Information Processing System (FIPS) codes used for these statistics were derived from the U.S. Census Bureau.  A complete list of codes can be obtained from https://www.census.gov/geo/reference/codes/cou.html. 
+
+[4] "Number," here, and elsewhere represents number of returns, unless otherwise specified. The number of returns have been rounded to the nearest ten.
+
+[5] Beginning in 2018, personal exemption deductions were suspended for the primary, secondary, and dependent taxpayers. However, the data used to create the “Number of individuals”—filing status, dependent status indicator, and identifying dependent information—are still available on the Form 1040. This field is based on these data.
+
+[6] The "Number of volunteer prepared returns" shows counts of returns prepared by IRS-certified volunteers to taxpayers with limited income, persons with disabilities, limited English speaking taxpayers, current and former members of the military, and taxpayers who are 60 years of age and older.
+
+[7] These data do not distinguish between refund anticipation loans and refund advances.
+
+[8] Includes primary taxpayers 60 years of age and older.
+
+[9] Less deficit.
+
+[10] “Qualified dividends” are ordinary dividends received in tax years beginning after 2002 that meet certain conditions and receive preferential tax rates.
+	
+[11] Includes the Alaskan permanent fund, reported by residents of Alaska on Forms 1040A and 1040EZ's.  
+This fund only applies to statistics in the totals, and the state of Alaska.
+
+[12] “Total tax credits" represent the summation of taxpayer reported credit items made up in the calculation of the total credits line of Form 1040. It does not include the "earned income credit" and "refundable education credit," which are shown separately below in the table.
+
+[13] Earned income credit includes both the refundable and non-refundable portions. The non-refundable portion could reduce income tax and certain related taxes to zero. The earned income credit amounts in excess of total tax liability, or amounts when there was no tax liability at all, were refundable. See footnote 14 below for explanation of the refundable portion of the earned income credit.
+
+[14] The refundable portion of the earned income credit equals total income tax minus the earned income credit. If the result is negative, this amount is considered the refundable portion. No other refundable credits were taken into account for this calculation.
+
+[15] The "refundable education credit" can partially or totally offset tax liability as well as be totally refundable.
+
+[16] The 2021 recovery rebate credit was created by the American Rescue Plan Act of 2021, Public Law 117-2, 135 Stat. 4 (March 11, 2021). The recovery rebate credit was a credit against income tax for tax year 2021, but the American Rescue Plan Act of 2021 directed the IRS to make advance refunds of the recovery rebate credit “as rapidly as possible,” using information from tax year 2020 returns. 
+
+An advance refund of the 2021 recovery rebate credit made under section 6428B of the Internal Revenue Code (Code), which was added by the American Rescue Plan Act of 2021, is referred to as a third round Economic Impact Payment (EIP). The dollar amount of the 2021 recovery rebate credit received by the taxpayer when they file their 2021 return is equal to a tentative amount, calculated based on the taxpayer’s 2021 return information, which is then reduced (but not below zero) by the amount of the third round EIP received by the taxpayer. The number of returns reported here for the 2021 recovery rebate credit is the number of returns that claimed some portion of the recovery rebate credit on their tax year 2021 return. 
+(A taxpayer would want to claim the recovery rebate credit if they did not receive the full amount of the credit as an EIP, which could happen, for example, if their income or number of dependent children on their 2021 return was different than on the 2020 return used as the basis for determining their EIP amounts). The amount reported here for the 2021 recovery rebate credit is the amount of the recovery rebate credit claimed by taxpayers on 2021 returns, which does not include the amount received as EIPs.
+
+[17] This table includes only payments issued to taxpayers who filed tax year 2021 returns. Individuals who received a third round Economic Impact Payment but did not file a 2021 return are excluded from these tabulations. For tabulations that include all recipients of third round EIPs, see: https://www.irs.gov/statistics/soi-tax-stats-coronavirus-aid-relief-and-economic-security-act-cares-act-statistics
+ 
+
+[18] Section 6428B of the Internal Revenue Code (Code) directed the IRS to use information from tax year 2020 returns to determine eligibility for and the amount of the third round EIP. In contrast, this table is based primarily on information from tax year 2021 returns. Income, location, and household composition may have changed between the 2020 return used for the third round EIP and the 2021 return used for this table. Many taxpayers who would have been ineligible to claim the 2021 recovery rebate credit on their 
+2021 return because their 2021 income exceeded the phaseout region for the credit were, nevertheless, eligible for a third round EIP on the basis of their 2020 income. Section 6428B of the Code did not include any provisions for otherwise eligible taxpayers who had income in the eligible range in 2020 but whose income exceeded the eligible range in 2021 to pay back any of the third round EIP. For details on eligibility criteria, amount, and phaseout structure of the third round EIP, see: https://www.irs.gov/statistics/soi-tax-stats-coronavirus-aid-relief-and-economic-security-act-cares-act-statistics
+
+[19] “Total tax liability” differs from “Income tax”, in that “Total tax liability” includes the taxes from recapture of certain prior-year credits, tax applicable to individual retirement arrangements (IRA's), social security taxes on self-employment income and on certain tip income, advanced earned income payments, household employment taxes, and certain other taxes listed in the Form 1040 instructions.
+
+[20] Reflects payments to or withholdings made to "Total tax liability". This is the amount the tax filer owes when the income tax return is filed.
+
+[21] The amount of overpayments the tax filer requested to have refunded.
+
