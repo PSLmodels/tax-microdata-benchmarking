@@ -93,6 +93,16 @@ cdweights <- readRDS(here::here("intermediate", "cdweights.rds"))
 # icuts <- c(-Inf, 1, 10e3, 25e3, 50e3, 75e3, 100e3, 200e3, 500e3, Inf)
 icuts <- CDICUTS
 
+# irange=cut(c00100, icuts, right = FALSE, ordered_result = TRUE),
+#          irange = factor(irange, 
+#                          levels = levels(irange), # Ensure ordering is maintained
+#                          labels = str_replace(levels(irange), ",", ", ")), # make more-readable labels
+#          # add a total to the factor because down the road we will have totals ??
+#          irange = fct_expand(irange, "total"),
+#          irange = fct_relevel(irange, "total")
+
+# irange="total", irange = factor(irange, levels = levels(wtdsums$irange), ordered = TRUE)
+
 ```
 
 ## Bind selected Tax-Calculator variables to area weights data frame
@@ -109,17 +119,11 @@ taxcalc_vars <- c("c00100", "e00200", "e00300", "e01700", "e26270", "e18400", "e
 
 tmdplusweights <- tmd2021 |> 
   select(RECID, data_source, MARS, us=s006, all_of(taxcalc_vars)) |> 
-  mutate(row=row_number(), wtdn=1) |> 
-  # put agibin on the file
-  mutate(irange=cut(c00100, icuts, right = FALSE, ordered_result = TRUE),
-         irange = factor(irange, 
-                         levels = levels(irange), # Ensure ordering is maintained
-                         labels = str_replace(levels(irange), ",", ", ")), # make more-readable labels
-         # add a total to the factor because down the road we will have totals ??
-         irange = fct_expand(irange, "total"),
-         irange = fct_relevel(irange, "total")) |> 
+  mutate(row=row_number(), wtdn=1,
+         agistub=cut(c00100, CDICUTS, right = FALSE, ordered_result = TRUE) |> 
+           as.integer()) |>
   left_join(cdweights, by = join_by(row)) |> 
-  relocate(row, wtdn, irange, .after = RECID) |> 
+  relocate(row, wtdn, agistub, .after = RECID) |> 
   relocate(us, .before = ak00)
   
 glimpse(tmdplusweights)
@@ -150,8 +154,8 @@ long1 <- tmdplusweights |>
 wtdsums <- long1 |> 
   summarise(across(us:wy00,
                 \(x) sum(x * value)),
-            .by=c(MARS, irange, data_source, variable)) |> 
-  pivot_longer(-c(MARS, irange, data_source, variable),
+            .by=c(MARS, agistub, data_source, variable)) |> 
+  pivot_longer(-c(MARS, agistub, data_source, variable),
                names_to = "statecd",
                values_to = "sum")
 
@@ -161,7 +165,7 @@ b - a # about 10 secs
 
 # do some checking
 count(wtdsums, MARS)
-count(wtdsums, irange)
+count(wtdsums, agistub)
 count(wtdsums, variable)
 count(wtdsums,  data_source)
 count(wtdsums, data_source, MARS)
@@ -201,26 +205,25 @@ Create and save an enhanced weighted sums file from this.
 # sums across all marital status
 sums_plus_marstot <- wtdsums |> 
   summarise(sum=sum(sum), 
-            .by=c(statecd, irange, data_source, variable)) |> 
+            .by=c(statecd, agistub, data_source, variable)) |> 
   mutate(MARS=0) |> 
   bind_rows(wtdsums)
 
 # quick checks
 count(sums_plus_marstot, MARS)
-count(sums_plus_marstot, irange)
+count(sums_plus_marstot, agistub)
 skim(sums_plus_marstot)
   
 # sum across all income ranges
 sums_plus_irangetot <- sums_plus_marstot |> 
   summarise(sum=sum(sum), 
             .by=c(statecd, MARS, data_source, variable)) |> 
-  mutate(irange="total",
-         irange = factor(irange, levels = levels(wtdsums$irange), ordered = TRUE)) |> 
+  mutate(agistub=0) |> 
   bind_rows(sums_plus_marstot)
 
 # quick checks
 count(sums_plus_irangetot, MARS)
-count(sums_plus_irangetot, irange)
+count(sums_plus_irangetot, agistub)
 count(sums_plus_irangetot, variable)
 count(sums_plus_irangetot, MARS, variable)
 skim(sums_plus_irangetot)

@@ -27,7 +27,7 @@ source(here::here("R", "functions.R"))
 #| label: get-data
 #| output: false
 
-agibins <- read_csv(fs::path(CDINTERMEDIATE, "cd_agi_bins.csv"))
+# agibins <- read_csv(fs::path(CDINTERMEDIATE, "cd_agi_bins.csv"))
 wtdsums <- read_csv(here::here("intermediate", "wtdsums_enhanced.csv"))
 targets_data <- readRDS(here::here("temp_data", "targets_data.rds"))
 targets_used <- readRDS(here::here("temp_data", "targets_used.rds"))
@@ -53,24 +53,31 @@ count(wtdsums, MARS)
 
 # prep wtdsums
 wtdsums1 <- wtdsums |> 
-  rename(fstatus=MARS) |> 
-  mutate(variable=ifelse(variable=="wtdn", "XTOT", variable),
-         scope=case_when(variable=="XTOT" ~ 0,
+  rename(fstatus=MARS,
+         varname=variable) |> 
+  mutate(varname=ifelse(varname=="wtdn", "XTOT", varname),
+         scope=case_when(varname=="XTOT" ~ 0,
                          data_source==1 ~ 1,
                          data_source==0 ~ 2,
                          .default=-999999),
-         count=0,
-         agistub=as.integer(irange))
-count(wtdsums1, irange, agistub) |> 
+         count=0)
+glimpse(wtdsums1)
+count(wtdsums1, agistub) |> 
   arrange(irange)
 count(wtdsums1, scope)
 
-# TODO: agistub
-
-combo <- targets_used |> 
-  rename(statecd=src) |> 
+temp <- targets_used |> 
   left_join(wtdsums1,
-            by = join_by(statecd, count, scope, fstatus))
+            by = join_by(statecd, count, scope, fstatus, varname, agistub))
+
+temp |> 
+  filter(statecd=="ak00")
+
+temp |> 
+  filter(statecd=="ny21")
+
+wtdsums1 |> 
+  filter(statecd=="ak00")
 
 
 ```
