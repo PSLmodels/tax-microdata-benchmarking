@@ -196,6 +196,8 @@ This should be enough, but we could want additional subtotal categories
 Create and save an enhanced weighted sums file from this.
 
 ```{r}
+#| label: calcsums-extended
+#| output: false
 
 # sums across all marital status
 sums_plus_marstot <- wtdsums |> 
