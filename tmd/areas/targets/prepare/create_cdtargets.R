@@ -79,17 +79,21 @@ print(cdrecipe)
 # allowable target variables are those maped below
 # MARS mappings let us get counts by filing status by agi range
 
-vmap <- read_csv(file="
-varname, basevname, description
-XTOT, XTOT, population
-c00100, v00100, agi
-e00200, v00200, wages
-e00300, v00300, interest income
-e01700, v01700, pensions and annuities (taxable amount)
-e26270, v26270, partnership and S corporation net income
-e18400, v18425, state and local income or sales taxes allocated by S and L income taxes
-e18500, v18500, state and local real estate taxes
-", show_col_types = FALSE)
+# vmap <- read_csv(file="
+# varname, basevname, description
+# XTOT, XTOT, population
+# c00100, v00100, agi
+# e00200, v00200, wages
+# e00300, v00300, interest income
+# e01700, v01700, pensions and annuities (taxable amount)
+# e26270, v26270, partnership and S corporation net income
+# e18400, v18425, state and local income or sales taxes allocated by S and L income taxes
+# e18500, v18500, state and local real estate taxes
+# ", show_col_types = FALSE)
+
+# check this!!
+vmap <- read_csv(fs::path(CDINTERMEDIATE, "cd_variable_mapping.csv"))
+# vmap
 
 # TODO: check whether target names are in vmap
 
