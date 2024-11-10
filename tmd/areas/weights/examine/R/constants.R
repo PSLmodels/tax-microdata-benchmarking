@@ -6,6 +6,13 @@ TMDDIR <- here::here("..", "..", "..", "storage", "output")
 # list.files(TMDDIR)
 
 TARGETSDIR <- here::here("..", "..", "targets")
+TARGETSPREPDIR <- here::here(TARGETSDIR, "prepare")
+CDDIR <- fs::path(TARGETSPREPDIR, "cds")
+CDINTERMEDIATE <- fs::path(CDDIR, "intermediate")
+# dir_ls(CDINTERMEDIATE)
+
+
+# older stuff below ----
 # WEIGHTSDIR <- here::here("..")
 # list.files(TARGETSDIR)
 # list.files(WEIGHTSDIR)
