@@ -10,7 +10,6 @@ editor_options:
 
 Get data and merge: 
 
--   area targets
 -   tmd2021 data used when creating area weights (tmd2021_cache.csv)
 -   weights
 -   merge tmd2021 with weights
