@@ -177,6 +177,24 @@ write_csv(wtdsums, here::here("intermediate", "wtdsums.csv"))
 
 ## Extend weighted sums to include other subgroup sums
 
+We just created weighted sums of tmd data by the following combination:
+
+-   Selected tmd variables, by
+-   Congressional district, by
+-   data_source, by
+-   Marital status, by
+-   AGI range
+
+Now we want to create additional derivative summaries and add them to our summary data:
+
+-   total across all marital statuses, and then add it to existing totals
+
+-   then total across all agi ranges, within the other categories, and add it to new existing totals
+
+This should be enough, but we could want additional subtotal categories
+
+Create and save an enhanced weighted sums file from this.
+
 ```{r}
 
 ```
