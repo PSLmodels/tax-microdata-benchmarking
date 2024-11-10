@@ -67,6 +67,11 @@ ns(tmd2021)
 
 cdweights <- readRDS(here::here("intermediate", "cdweights.rds"))
 
+# fpath <- here::here("intermediate", "cdweights.rds")
+# ns(file_info(fpath))
+# file_info(fpath)$change_time # The time of last file status change - as a POSIXct datetime.
+# file_info(fpath)$modification_time # The time of last data modification, as a POSIXct datetime.
+
 ```
 
 ## Supplement the weights file with selected tmd variables
