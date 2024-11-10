@@ -197,6 +197,35 @@ Create and save an enhanced weighted sums file from this.
 
 ```{r}
 
+# sums across all marital status
+sums_plus_marstot <- wtdsums |> 
+  summarise(sum=sum(sum), 
+            .by=c(statecd, irange, data_source, variable)) |> 
+  mutate(MARS=0) |> 
+  bind_rows(wtdsums)
+
+# quick checks
+count(sums_plus_marstot, MARS)
+count(sums_plus_marstot, irange)
+skim(sums_plus_marstot)
+  
+# sum across all income ranges
+sums_plus_irangetot <- sums_plus_marstot |> 
+  summarise(sum=sum(sum), 
+            .by=c(statecd, MARS, data_source, variable)) |> 
+  mutate(irange="total",
+         irange = factor(irange, levels = levels(wtdsums$irange), ordered = TRUE)) |> 
+  bind_rows(sums_plus_marstot)
+
+# quick checks
+count(sums_plus_irangetot, MARS)
+count(sums_plus_irangetot, irange)
+count(sums_plus_irangetot, variable)
+count(sums_plus_irangetot, MARS, variable)
+skim(sums_plus_irangetot)
+
+write_csv(sums_plus_irangetot, here::here("intermediate", "wtdsums_enhanced.csv"))
+
 ```
 
 
