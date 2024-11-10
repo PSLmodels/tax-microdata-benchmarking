@@ -91,7 +91,8 @@ cdweights <- readRDS(here::here("intermediate", "cdweights.rds"))
 # 8 = $200,000 under $500,000
 # 9 = $500,000 or more
 
-icuts <- c(-Inf, 1, 10e3, 25e3, 50e3, 75e3, 100e3, 200e3, 500e3, Inf)
+# icuts <- c(-Inf, 1, 10e3, 25e3, 50e3, 75e3, 100e3, 200e3, 500e3, Inf)
+icuts <- CDICUTS
 
 ```
 

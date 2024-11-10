@@ -1,4 +1,6 @@
 
+CDICUTS <- c(-Inf, 1, 10e3, 25e3, 50e3, 75e3, 100e3, 200e3, 500e3, Inf)
+
 # \\wsl.localhost\Ubuntu\home\donboyd5\Documents\python_projects\tax-microdata-benchmarking\tmd\storage\output
 TMDDIR <- here::here("..", "..", "..", "storage", "output")
 # list.files(TMDDIR)
