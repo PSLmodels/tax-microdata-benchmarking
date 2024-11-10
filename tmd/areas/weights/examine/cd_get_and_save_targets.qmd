@@ -1,0 +1,75 @@
+---
+output: html_document
+editor_options: 
+ chunk_output_type: console
+---
+
+# Get and save area targets data
+
+## Setup
+
+```{r}
+#| label: setup
+#| output: false
+
+source(here::here("R", "libraries.R"))
+
+source(here::here("R", "system_specific_constants.R"))
+source(here::here("R", "constants.R"))
+
+source(here::here("R", "functions.R"))
+
+phase4_statecds <- c("AK00", "DE00", "ID01", "ID02", "ME02", "MT00", "ND00", "PA08", "SD00", "WY00")
+
+```
+
+
+## Prepare target files
+
+Get all targets prepared
+
+```{r}
+#| label: targets-all
+#| eval: false
+#| output: false
+
+# WEIGHTSDIR
+# dir_ls(WEIGHTSDIR)
+dir_ls(CDINTERMEDIATE) # we want cdbasefile_enhanced.csv
+
+targets_data <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile_enhanced.csv"))
+glimpse(targets_data)
+
+saveRDS(targets_data, here::here("temp_data", "targets_data.rds")) # about 9 mb
+
+```
+
+
+Get targets used in the optimization
+
+```{r}
+#| label: targets-used
+#| eval: false
+#| output: false
+
+targetfiles <- dir_ls(WEIGHTSDIR) |> str_subset("targets.csv")
+
+targets_used <- vroom(targetfiles, id="src") |> 
+  mutate(src=path_file(src) |> str_sub(1, 4)) |> 
+  mutate(active=!(str_sub(varname, 1, 1) == "#"),
+         varname = ifelse(!active, 
+                          varname |> str_remove("#") |> str_trim(),
+                          varname))
+saveRDS(targets_used, here::here("temp_data", "targets_used.rds"))
+
+glimpse(targets_used)
+count(targets_used, src)
+count(targets_used, active)
+count(targets_used, varname)
+count(targets_used, varname, active)
+
+targets_used |> filter(src == "ak00")
+targets_used |> filter(src == "de00")
+
+```
+
