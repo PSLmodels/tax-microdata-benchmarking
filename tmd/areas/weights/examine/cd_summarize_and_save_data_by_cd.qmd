@@ -37,6 +37,9 @@ source(here::here("R", "constants.R"))
 
 source(here::here("R", "functions.R"))
 
+# maybe: get variable mapping
+# vmap <- read_csv(fs::path(CDINTERMEDIATE, "cd_variable_mapping.csv"))
+
 ```
 
 ## Get data and merge
