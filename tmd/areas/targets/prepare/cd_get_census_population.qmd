@@ -1,0 +1,94 @@
+---
+output: html_document
+editor_options: 
+ chunk_output_type: console
+---
+
+# Get Congressional District Census population data
+
+## Setup
+
+```{r}
+#| label: setup
+
+source(here::here("R", "libraries.R"))
+source(here::here("R", "constants.R"))
+
+# 334283385.27000004 national pop
+
+```
+
+
+## Get Congressional District population
+
+```{r}
+#| label: cdpop-download
+#| eval: false
+
+# Note that 2021 gets data from the 116th Congress and 2022 gets the 218th Congress
+
+cdpop5year <- get_acs(
+  geography = "congressional district",
+  variables = "B01003_001",  # Total population variable
+  year = 2021,
+  survey = "acs5"  # Use 5-year estimates for better coverage, especially in smaller areas
+)
+write_csv(cdpop5year, fs::path(CDRAW, "cdpop5year_acs.csv"))
+
+cdpop1year <- get_acs(
+  geography = "congressional district",
+  variables = "B01003_001",  # Total population variable
+  year = 2021,
+  survey = "acs1"  # Use 5-year estimates for better coverage, especially in smaller areas
+)
+write_csv(cdpop1year, fs::path(CDRAW, "cdpop1year_acs.csv"))
+
+```
+
+## Clean Congressional District population
+
+```{r}
+#| label: cdpop-clean
+
+cdpop1year <- read_csv(fs::path(CDRAW, "cdpop1year_acs.csv"))
+cdpop5year <- read_csv(fs::path(CDRAW, "cdpop5year_acs.csv"))
+
+cdpop1year |> summarise(estimate=sum(estimate)) # 335157329
+cdpop5year |> summarise(estimate=sum(estimate)) # 333036755
+
+
+stcodes <- tigris::states() |> 
+  as.data.frame() |> 
+  select(STATEFIPS=STATEFP, STATE=STUSPS)
+
+cdpop1 <- cdpop1year |> 
+  mutate(STATEFIPS = str_sub(GEOID, 1, 2),
+         CONG_DISTRICT = str_sub(GEOID, 3, 4)) |> 
+  left_join(stcodes, by = join_by(STATEFIPS)) |> 
+  filter(STATE != "PR") |>  # we're not using Puerto Rico
+  mutate(CONG_DISTRICT = ifelse(STATE == "DC",
+                                "00", # Census data has 98 for DC
+                                CONG_DISTRICT)) |> 
+  select(STATEFIPS, STATE, CONG_DISTRICT, cdname=NAME, pop2021=estimate)
+
+count(cdpop1, STATEFIPS, STATE)
+
+cdpop1 |> filter(STATE=="NY")
+
+cdpop1 |> filter(STATE=="AK")
+cdpop1 |> filter(STATE=="DC")
+cdpop1 |> filter(STATE=="WY")
+
+count(cdpop1, CONG_DISTRICT)
+count(cdpop1, STATEFIPS, STATE)
+
+glimpse(cdpop1)
+sum(cdpop1$pop2021) # 331,893,745 compared to Martin's 334,283,385
+
+write_csv(cdpop1, fs::path(CDINTERMEDIATE, "cdpop1year.csv"))
+  
+
+```
+
+
+

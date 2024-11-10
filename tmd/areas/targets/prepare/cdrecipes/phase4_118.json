@@ -1,0 +1,55 @@
+// comment
+{
+  "session": 118, // 117 or 118
+	"cdlist": ["AK00", "DE00", "ID01", "ID02", "ME02", "MT00", "ND00", "PA08", "SD00", "WY00"],
+  "targets": [
+    {
+      "varname": "XTOT",
+      "scope": 0,
+      "count": 0,
+      "fstatus": 0
+    },    
+    {
+      "varname": "c00100",
+      "scope": 1,
+      "count": 1,
+      "fstatus": 0
+    },
+    {
+      "varname": "c00100",
+      "scope": 1,
+      "count": 0,
+      "fstatus": 0
+    },  
+    {
+      "varname": "c00100",
+      "scope": 1,
+      "count": 1,
+      "fstatus": 1
+    },      
+    {
+      "varname": "c00100",
+      "scope": 1,
+      "count": 1,
+      "fstatus": 2
+    },      
+    {
+      "varname": "c00100",
+      "scope": 1,
+      "count": 1,
+      "fstatus": 4
+    },          
+    {
+      "varname": "e00200",
+      "scope": 1,
+      "count": 0,
+      "fstatus": 0
+    },
+    {
+      "varname": "e26270",
+      "scope": 1,
+      "count": 0,
+      "fstatus": 0
+    }
+  ]
+}

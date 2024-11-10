@@ -1,0 +1,226 @@
+---
+output: html_document
+editor_options: 
+ chunk_output_type: console
+---
+
+# Prepare crosswalk from Congressional district boundaries for the 117th Congressional session to those for the 118th session
+
+IRS SOI data currently available for Congressional districts is based on 117th Congressional session boundaries, which were drawn using information from the 2010 decennial census. These sometimes differ signficantly from current district boundaries, for the 118th Congressional session, which were drawn based on data from the 2020 decennial census.
+
+To address this, we develop estimates for 118th session districts by allocating targets for 117th session districts to 118th session districts based on the fraction of each 117th district's 2020 population that is present in different 118th session districts.
+
+For example, California Congressional district 13 (CA-13) as defined in the 118th session includes 3.6% of the 2020 population of 117th session CA-09, 30.2% of the 2020 population of 117th session CA-10, 54.5% of the population of CA-16, and 13.7% of CA-21. To construct estimated targets for 118th session CA-13, we allocate these percentages of each target of the four 117th session districts (CA-09, CA-10, CA-16, and CA-21) to 118th session CA-13. We repeat this process for every 118th session Congressional district, for all potential targets.
+
+Doing this requires a crosswalk that shows what fraction of the 2020 population of each 117th district appears in each 118th session district. Fortunately, the Missouri Census Data Center (MCDC) has an online tool, [*Geocorr 2022: Geographic Correspondence Engine*](https://mcdc.missouri.edu/applications/geocorr2022.html), that can create such a crosswalk. On October 15, 2024 we used *Geocorr 2022* to create the crosswalk file "geocorr2022_2428906586.csv", in the cds/raw_data folder of this project. We use this file to construct population-weighted targets for 118th session Congressional districts from the 117th session targets.
+
+## Setup
+
+```{r}
+#| label: setup
+#| output: false
+
+source(here::here("R", "libraries.R"))
+source(here::here("R", "constants.R"))
+
+# phase4_statecds <- c("AK00", "DE00", "ID01", "ID02", "ME02", "MT00", "ND00", "PA08", "SD00", "WY00")
+
+```
+
+
+## Get data
+```{r}
+#| label: get-data
+#| output: false
+
+cd117 <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile.csv"))
+
+df <- read_csv(fs::path(CDRAW, "geocorr2022_2428906586.csv"))
+glimpse(df)
+
+(xwlabs <- unlist(df[1, ], use.names = TRUE))  # variable names and labels
+
+xwalk1 <- df |> 
+  filter(row_number() != 1) |> 
+  rename_with(str_to_lower) |> 
+  rename(stabbr=stab, pop2020=pop20) |> 
+  mutate(across(pop2020:afact, as.numeric),
+         statecd117=paste0(stabbr, cd117),
+         statecd118=paste0(stabbr, cd118)) |> 
+  rename(af118to117=afact2, 
+         af117to118=afact)
+
+```
+
+
+```{r}
+#| label: data-checks
+#| output: false
+
+count(xwalk1, stabbr) # 52 including DC and PR
+count(xwalk1, stabbr) |> filter(n==1)
+xwalk1 |> filter(stabbr=="PR")
+
+# check numbers of districts
+cd117codes <- unique(xwalk1$statecd117) |> sort() # 438 -- why?
+cd118codes <- unique(xwalk1$statecd118) |> sort() # 437 -- why?
+
+cd117codes # DC98 instead of DC00; PR98; NC seems to have bad codes < 10
+cd118codes # DC98 instead of DC00; PR98; NC codes look ok here
+
+# do the shares of statecd117 given to various statecd118s add to 1?
+xwalk1 |> 
+  summarise(af117to118=sum(af117to118), .by=statecd117) |> 
+  filter(af117to118 != 1) |> 
+  arrange(desc(abs(af117to118 - 1))) # minimal differences from 1
+
+# do the shares of statecd118 given to various statecd117s add to 1?
+xwalk1 |> 
+  summarise(af118to117=sum(af118to117), .by=statecd118) |> 
+  filter(af118to117 != 1) |> 
+  arrange(desc(abs(af118to117 - 1))) # minimal differences from 1
+
+# do the individual shares of af117to118 match what we get with population?
+xwalk1 |> 
+  mutate(share117to118=pop2020 / sum(pop2020), .by=statecd117) |> 
+  mutate(diff=share117to118 - af117to118) |> 
+  relocate(af117to118, .before=share117to118) |> 
+  arrange(desc(abs(diff))) # good, they match within small tolerances
+# use our calculated amounts
+
+# do the individual shares of af118to117 match what we get with population?
+xwalk1 |> 
+  mutate(share118to117=pop2020 / sum(pop2020), .by=statecd118) |> 
+  mutate(diff=share118to117 - af118to117) |> 
+  relocate(af118to117, .before=share118to117) |> 
+  arrange(desc(abs(diff))) # good, they match within small tolerances
+  
+# how well do the cds match against our 117th cd data?
+xwalk2 <- xwalk1 |> 
+  filter(stabbr != "PR") |> 
+  filter(cd117 != "-") |> # not sure what this is and pop2020 is only 13
+  # redo codes
+  mutate(
+    oldcd117 = cd117,
+    cd117 = case_when(stabbr=="NC" & nchar(cd117) != 2 ~ 
+                         str_pad(as.integer(cd117), width=2, side="left", pad="0"),
+                       .default = cd117),
+    statecd117=paste0(stabbr, cd117),
+    statecd118=paste0(stabbr, cd118),
+    statecd117 = case_when(
+      statecd117 == "DC98" ~ "DC00",
+      .default = statecd117),
+    statecd118 = case_when(
+      statecd118 == "DC98" ~ "DC00",
+    .default = statecd118))
+
+xwalk2 |> 
+  filter(cd117 != oldcd117) |> 
+  relocate(oldcd117, .after=cd117)
+
+xwalk2 |> 
+  filter(statecd118 == "NC14")
+  
+# how do the 117th CDs match up?
+usoi <- cd117$statecd |> unique()
+ugeo <- xwalk2$statecd117 |> unique()
+
+usoi
+ugeo
+
+setdiff(usoi, ugeo) # none missing
+setdiff(ugeo, usoi) # none missing
+
+check <- xwalk2 |> 
+  filter(stabbr=="NC")
+
+```
+
+
+```{r}
+#| label: make-save-final-xwalk
+#| output: false
+
+# calc pop shares (so we have more precision than in the source data) and save
+xwalk3 <- xwalk2 |> 
+  mutate(share117to118=pop2020 / sum(pop2020), .by=statecd117)
+
+xwalk3 |> 
+  mutate(diff=share117to118 - af117to118) |> 
+  relocate(af117to118, .before=share117to118) |> 
+  arrange(desc(abs(diff))) # good, they match within small tolerances
+
+xwalk_final <- xwalk3 |> 
+  select(stabbr, cd117, cd118, statecd117, statecd118, share117to118)
+
+write_csv(xwalk_final, fs::path(CDINTERMEDIATE, "xwalk_final.csv"))
+
+```
+
+
+## Create 118th Session Congressional Districts
+```{r}
+#| label: create-cd118
+#| output: false
+
+xwalk <- read_csv(fs::path(CDINTERMEDIATE, "xwalk_final.csv"))
+
+cd118v1 <- xwalk |> 
+  rename(statecd=statecd118,
+         cd=cd118) |> 
+  left_join(cd117 |> 
+              select(-cd) |> 
+              rename(statecd117=statecd),
+            by = join_by(stabbr, statecd117),
+            relationship = "many-to-many")
+
+# collapse the file to statecd
+cd118v2 <- cd118v1 |> 
+  mutate(target=target * share117to118) |> 
+  summarise(target=sum(target),
+            .by=c(stabbr, cd, statecd, src, rectype,
+                     agistub, agilo, agihi, basevname,
+                     scope, fstatus, count, vname, description, agirange))
+
+glimpse(cd118v2)
+summary(cd118v2)
+write_csv(cd118v2, fs::path(CDINTERMEDIATE, "cdbasefile_118.csv"))
+
+
+```
+
+
+```{r}
+
+
+cd117 <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile.csv"))
+cd118 <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile_118.csv"))
+
+stack <- bind_rows(
+  cd117 |> mutate(session="s117"),
+  cd118 |> mutate(session="s118")
+)
+
+glimpse(stack)
+states <- stack |> 
+  summarise(target=sum(target), 
+            .by=c(session, stabbr, src, rectype,
+                     agistub, agilo, agihi, basevname,
+                     scope, fstatus, count, vname, description, agirange))
+  
+states |> 
+  pivot_wider(names_from = session,
+              values_from = target) |> 
+  mutate(diff=s118 - s117,
+         pdiff=diff / s117) |> 
+  arrange(desc(abs(pdiff))) # good all the state sums work
+
+write_csv(stack, fs::path(CDINTERMEDIATE, "cdbasefile_sessions.csv"))
+
+```
+
+
+
+
+
+

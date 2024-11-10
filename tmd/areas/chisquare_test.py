@@ -24,7 +24,7 @@ For example: Xsq(p=0.05,dof= 100)=  124.34
 
 USAGE: python chisquare_test.py WGHT1 WGHT2 [numbins] [dump]
 
-EXAMPLE using default numbins (equal to 100) and with no details dump:
+EXAMPLE using default numbins (equal to 200) and with no details dump:
 areas% python chisquare_test.py pa08 pa08A
 """
 
