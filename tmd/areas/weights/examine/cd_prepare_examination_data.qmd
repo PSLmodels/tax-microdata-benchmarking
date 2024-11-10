@@ -1,0 +1,181 @@
+---
+output: html_document
+editor_options: 
+ chunk_output_type: console
+---
+
+# Read tmd 2021, area targets, area weights and prepare data
+
+
+## Setup
+
+```{r}
+#| label: setup
+#| output: false
+
+source(here::here("R", "libraries.R"))
+source(here::here("R", "constants.R"))
+
+phase4_statecds <- c("AK00", "DE00", "ID01", "ID02", "ME02", "MT00", "ND00", "PA08", "SD00", "WY00")
+
+```
+
+
+```{r}
+#| label: functions
+#| output: false
+
+ns <- function(obj){
+  sort(names(obj))
+}
+
+```
+
+## Download files from google drive
+
+Only do this when target files and results have changed. Otherwise, necessary data should be in the temp_data folder.
+
+```{r}
+#| label: hookup-googledrive
+#| eval: false
+
+library(googledrive)
+drive_auth() # authenticate
+
+```
+
+
+```{r}
+#| label: download-files
+#| eval: false
+
+# /AFPI_2024/Phase 4
+# folder_id <- "1pEdofaxeQgEeDLM8NOpo0vOGL1jT8Qa1" # AFPI folder
+# folder_id <- "1Z7ZWYTbldfuQCFbpqKi4Z8FYxkbwmhnu" # Phase 4 folder
+folder_id <- "1RtKK2-Mrrx9aZdxO8u0QQdrcna1xEl90"  # Phase 5 with Phase 4 targets folder
+
+files <- drive_ls(as_id(folder_id))
+files
+
+f <- function(gdfname){
+  fpath <- here::here("temp_data", gdfname)
+  print(fpath)
+  drive_download(gdfname, path = fpath, overwrite = TRUE)
+}
+# f(files$name[[1]])
+
+files |> 
+  pull(name) |> 
+  walk(\(gdfname) f(gdfname))
+
+```
+
+## Prepare target files
+
+Get all targets prepared
+
+```{r}
+#| label: targets-all
+#| eval: false
+#| output: false
+
+# ~/Documents/python_projects/tax-microdata-benchmarking/tmd/areas/weights/examine   # project dir
+# ~/Documents/python_projects/tax-microdata-benchmarking/tmd/areas/targets/prepare/cds/intermediate  # cdbasefile
+HERE <- here::here()
+CDTARGETSDIR <- fs::path(HERE, "..", "..", "targets", "prepare", "cds", "intermediate")
+# list.files(CDTARGETSDIR)
+
+targets_data <- read_csv(fs::path(CDTARGETSDIR, "cdbasefile.csv"))
+glimpse(targets_data)
+
+saveRDS(targets_data, here::here("temp_data", "targets_data.rds"))
+
+```
+
+
+Get targets used in the optimization
+
+```{r}
+#| label: targets-used
+#| eval: false
+#| output: false
+
+targetfiles <- dir_ls(here::here("temp_data")) |> str_subset("targets.csv")
+
+targets_used <- vroom(targetfiles, id="src") |> 
+  mutate(src=path_file(src) |> str_sub(1, 4)) |> 
+  mutate(active=!(str_sub(varname, 1, 1) == "#"),
+         varname = ifelse(!active, 
+                          varname |> str_remove("#") |> str_trim(),
+                          varname))
+saveRDS(targets_used, here::here("temp_data", "targets_used.rds"))
+
+glimpse(targets_used)
+count(targets_used, src)
+count(targets_used, active)
+count(targets_used, varname)
+count(targets_used, varname, active)
+
+targets_used |> filter(src == "ak00")
+targets_used |> filter(src == "de00")
+
+```
+
+
+## Get and prepare tmd data and area weights
+
+```{r}
+#| label: get-tmd-2021
+#| eval: false
+#| output: false
+
+# fpath <-  fs::path(TMDDIR, "tmd_2021.csv") # NO - it is out of sync with tmd.csv
+fpath <- here::here("temp_data", "djbout.csv")
+tmd2021 <- read_csv(fpath)
+ns(tmd2021)
+
+# djbout <- read_csv(here::here("temp_data", "djbout.csv")) # this is tax calc output vdf from create_area_weights.py
+saveRDS(tmd2021, here::here("temp_data", "tmd2021.rds"))
+
+sum(tmd2021$s006) # 184,024,657 with djbout.csv, s006 units are numbers of units, not hundreds of units
+
+# con <- unz(zpath, "21incd.csv")
+# data <- read_csv(con)
+
+us_weights <- read_csv(fs::path(TMDDIR, "tmd_weights.csv.gz"))
+sum(us_weights$WT2021) # 184,024,656.95 # must divide by 100
+saveRDS(us_weights, here::here("temp_data", "us_weights.rds"))
+
+tmd_base <- read_csv(fs::path(TMDDIR, "tmd.csv.gz")) # for comparison to tmd2021
+ns(tmd_base)
+saveRDS(tmd_base, here::here("temp_data", "tmd_base.rds"))
+
+
+```
+
+
+```{r}
+#| label: prep-weights
+#| eval: false
+#| output: false
+
+# weightfiles <- dir_ls(here::here("temp_data")) |> str_subset("weights.csv.gz")
+wtfiles <- dir_ls(WEIGHTSDIR, glob="*.gz") #  |> path_file()
+
+df <- read_csv(wtfiles[1])
+sum(df$WT2021)
+
+area_weights <- vroom(wtfiles, id="src") |> 
+  mutate(src = str_sub(path_file(src), 1, 4),
+         across(-src, \(x) x / 100.))
+glimpse(area_weights)
+count(area_weights, src)
+
+area_weights |> 
+  select(src, WT2021) |> 
+  summarise(wtdn=sum(WT2021), .by=src)
+
+saveRDS(area_weights, here::here("temp_data", "area_weights.rds"))
+
+```
+
