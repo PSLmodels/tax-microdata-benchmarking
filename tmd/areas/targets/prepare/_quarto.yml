@@ -48,7 +48,7 @@ book:
         - cd_create_cd_117_118_crosswalk_and_cdbasefile_118.qmd
         - cd_enhance_basefile_with_special_targets.qmd
         - cd_create_variable_mapping.qmd
-        - cd_map_tcvars_and_extract_target_files.qmd
+        # - cd_map_tcvars_and_extract_target_files.qmd
   appendices:
     - cd_issues_and_TODOs.qmd  
     - cd_IRS_documentation.qmd
