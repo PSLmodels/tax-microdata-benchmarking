@@ -37,9 +37,6 @@ source(here::here("R", "constants.R"))
 
 source(here::here("R", "functions.R"))
 
-# maybe: get variable mapping
-# vmap <- read_csv(fs::path(CDINTERMEDIATE, "cd_variable_mapping.csv"))
-
 ```
 
 ## Get data and merge
@@ -105,8 +102,11 @@ icuts <- CDICUTS
 #| label: bind-taxcalc-variables
 #| output: false
 
+# see what variables are mapped
+# vmap <- read_csv(fs::path(CDINTERMEDIATE, "cd_variable_mapping.csv"))
+
 # create vector of all tax-calculator variables for which we might want summaries
-taxcalc_vars <- c("c00100", "e00200", "e00300", "e26270", "e18400", "e18500", "iitax")
+taxcalc_vars <- c("c00100", "e00200", "e00300", "e01700", "e26270", "e18400", "e18500", "iitax")
 
 tmdplusweights <- tmd2021 |> 
   select(RECID, data_source, MARS, us=s006, all_of(taxcalc_vars)) |> 
@@ -160,6 +160,15 @@ rm(long1)
 b <- proc.time()
 b - a # about 10 secs
 
+# do some checking
+count(wtdsums, MARS)
+count(wtdsums, irange)
+count(wtdsums, variable)
+count(wtdsums,  data_source)
+count(wtdsums, data_source, MARS)
+
+wtdsums$statecd |> unique() |> length()
+wtdsums$statecd |> unique() # 436 + us
 
 # wtdsums
 write_csv(wtdsums, here::here("intermediate", "wtdsums.csv"))
