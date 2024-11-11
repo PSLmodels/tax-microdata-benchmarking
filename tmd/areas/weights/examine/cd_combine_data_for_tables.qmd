@@ -28,7 +28,7 @@ source(here::here("R", "functions.R"))
 #| output: false
 
 # agibins <- read_csv(fs::path(CDINTERMEDIATE, "cd_agi_bins.csv"))
-wtdsums <- read_csv(here::here("intermediate", "wtdsums_enhanced.csv"))
+wtditems <- read_csv(here::here("intermediate", "wtditems_enhanced.csv"))
 targets_data <- readRDS(here::here("temp_data", "targets_data.rds"))
 targets_used <- readRDS(here::here("temp_data", "targets_used.rds"))
 
@@ -75,30 +75,52 @@ targets_used <- readRDS(here::here("temp_data", "targets_used.rds"))
 #| label: combine
 #| output: false
 
+# documentation on target files
+# https://github.com/PSLmodels/tax-microdata-benchmarking/tree/master/tmd/areas/targets
+
 glimpse(targets_used)
-glimpse(wtdsums)
-count(wtdsums, MARS)
+glimpse(wtditems)
+count(wtditems, MARS)
+count(wtditems, data_source)
 
 # conform weighted sums to targets file definitions ----
+# names(targets_used)
+# "statecd"  "varname"  "count"    "scope"    "agilo"    "agihi"    "fstatus"  "target"   "active"   "agistub"  "agirange"
+
+# names(wtditems)
+# "statecd"     "MARS"        "data_source" "variable"    "valtype"     "value"       "agistub"    
+# wtditems$variable |> unique()
+# "wtdn"   "c00100" "e00200" "e00300" "e01700" "e26270" "e18400" "e18500" "iitax" 
+# wtditems$valtype |> unique() # sum, nzcount
 
 # prep wtdsums
-wtdsums1 <- wtdsums |> 
+wtditems1 <- wtditems |> 
   rename(fstatus=MARS,
          varname=variable) |> 
-  mutate(varname=ifelse(varname=="wtdn", "XTOT", varname),
-         scope=case_when(varname=="XTOT" ~ 0,
-                         data_source==1 ~ 1,
-                         data_source==0 ~ 2,
-                         .default=-999999),
-         count=0)
-glimpse(wtdsums1)
-count(wtdsums1, agistub) |> 
-  arrange(irange)
-count(wtdsums1, scope)
+  mutate(count=case_when(valtype=="sum" ~ 0,
+                         valtype=="nzcount" ~ 2,
+                         .default = -9e9),
+         scope=case_when(data_source==9 ~ 0, # all tax units
+                         data_source==1 ~ 1, # filers
+                         data_source==0 ~ 2, # nonfilers
+                         .default=-9e9))
+glimpse(wtditems1)
+count(wtditems1, agistub)
+count(wtditems1, scope)
+
+wtditems1 |> 
+  filter(varname=="XTOT", scope==0, count==0, fstatus==0, agistub==0) |> 
+  filter(statecd=="ak00")
+
+# TEMPORARY FIX TO WTDITEMS ----
+# agi counts were any-value counts
+
 
 temp <- targets_used |> 
-  left_join(wtdsums1,
-            by = join_by(statecd, count, scope, fstatus, varname, agistub))
+  left_join(wtditems1 |> 
+              select(-valtype, -data_source),
+            by = join_by(statecd, varname, count, scope, fstatus, agistub)) |> 
+  select(statecd, varname, scope, fstatus, count, agistub, agilo, agihi, agirange, active, value, target)
 
 temp |> 
   filter(statecd=="ak00")
