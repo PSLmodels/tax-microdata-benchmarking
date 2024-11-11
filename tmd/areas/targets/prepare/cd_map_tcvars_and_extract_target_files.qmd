@@ -74,7 +74,7 @@ glimpse(stack)
 
 
 
-## Create variable mapping
+## Get saved variable mapping
 
 ```{r}
 #| label: tc-soi-variablemap
@@ -83,19 +83,21 @@ glimpse(stack)
 soivars <- count(stack, basevname)
 # soivars$basevname
 
+vmap <- read_csv(fs::path(CDINTERMEDIATE, "cd_variable_mapping.csv"))
+
 # the MARS mappings let us get counts by filing status by agi range
-vmap <- read_csv(file="
-tcvar, soivar
-XTOT, XTOT
-c00100, MARS1
-c00100, MARS2
-c00100, MARS4
-c00100, v00100
-e00200, v00200
-e00300, v00300
-e01700, v01700
-e26270, v26270
-")
+# vmap <- read_csv(file="
+# tcvar, soivar
+# XTOT, XTOT
+# c00100, MARS1
+# c00100, MARS2
+# c00100, MARS4
+# c00100, v00100
+# e00200, v00200
+# e00300, v00300
+# e01700, v01700
+# e26270, v26270
+# ")
 
 ```
 

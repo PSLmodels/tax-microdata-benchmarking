@@ -14,7 +14,11 @@ editor_options:
 #| output: false
 
 source(here::here("R", "libraries.R"))
+
+source(here::here("R", "system_specific_constants.R"))
 source(here::here("R", "constants.R"))
+
+source(here::here("R", "functions.R"))
 
 phase4_statecds <- c("AK00", "DE00", "ID01", "ID02", "ME02", "MT00", "ND00", "PA08", "SD00", "WY00")
 

@@ -19,7 +19,10 @@ This program is time consuming (~2+ minutes) when weights for all 436 districts 
 #| output: false
 
 source(here::here("R", "libraries.R"))
+
+source(here::here("R", "system_specific_constants.R"))
 source(here::here("R", "constants.R"))
+
 source(here::here("R", "functions.R"))
 
 ```
@@ -48,7 +51,9 @@ Once the file is created and saved, retrieving it only takes 3-4 seconds.
 #| eval: false
 #| output: false
 
-weightfiles <- dir_ls(here::here("temp_data")) |> str_subset("tmd_weights.csv.gz")
+# weightfiles <- dir_ls(here::here("temp_data")) |> str_subset("tmd_weights.csv.gz")
+weightfiles <- dir_ls(WEIGHTSDIR) |> str_subset("tmd_weights.csv.gz")
+length(weightfiles)
 
 f <- function(fpath){
   cd <- str_sub(fs::path_file(fpath), 1, 4)
