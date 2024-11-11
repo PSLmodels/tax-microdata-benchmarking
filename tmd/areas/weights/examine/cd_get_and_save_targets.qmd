@@ -84,5 +84,7 @@ targets_used <- readRDS(here::here("temp_data", "targets_used.rds"))
 targets_used |> filter(statecd == "ak00")
 targets_used |> filter(statecd == "de00")
 
+rm(targets_used1, targets_used2)
+
 ```
 
