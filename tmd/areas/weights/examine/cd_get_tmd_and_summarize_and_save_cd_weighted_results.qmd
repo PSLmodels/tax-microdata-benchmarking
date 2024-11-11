@@ -80,7 +80,7 @@ cdweights <- readRDS(here::here("intermediate", "cdweights.rds")) # ~ 700mb
 #| output: false
 
 # icuts <- c(-Inf, 1, 10e3, 25e3, 50e3, 75e3, 100e3, 200e3, 500e3, Inf)
-icuts <- CDICUTS
+# icuts <- CDICUTS
 
 # 0 = Total
 # 1 = Under $1
@@ -115,16 +115,15 @@ icuts <- CDICUTS
 # vmap <- read_csv(fs::path(CDINTERMEDIATE, "cd_variable_mapping.csv"))
 
 # create vector of all tax-calculator variables for which we might want summaries
-taxcalc_vars <- c("c00100", "e00200", "e00300", "e01700", "e26270", "e18400", "e18500", "iitax")
+taxcalc_vars <- c("XTOT", "c00100", "e00200", "e00300", "e01700", "e26270", "e18400", "e18500", "iitax")
 
 tmdplusweights <- tmd2021 |> 
   select(RECID, data_source, MARS, us=s006, all_of(taxcalc_vars)) |> 
   mutate(row=row_number(), 
-         wtdn=1,
          agistub=cut(c00100, CDICUTS, right = FALSE, ordered_result = TRUE) |> 
            as.integer()) |>
   left_join(cdweights, by = join_by(row)) |> 
-  relocate(row, wtdn, agistub, .after = RECID) |> 
+  relocate(row, agistub, .after = RECID) |> 
   relocate(us, .before = ak00)
   
 glimpse(tmdplusweights) # ~ 700mb
@@ -149,17 +148,18 @@ The resulting dataframe with sums and counts of interest is small, and easy to m
 
 a <- proc.time()
 long1 <- tmdplusweights |> 
-  pivot_longer(cols = c(wtdn, all_of(taxcalc_vars)),
+  pivot_longer(cols = all_of(taxcalc_vars),
                names_to = "variable") |> 
   relocate(variable, value, .before=us) # ~ 3gb used in creating, ~ 7gb total size
 # pryr::object_size(long1)
 
-# ~ 8gb used in creating wtditems, but it cannot be very large
+# ~ 8gb used in creating wtditems, but it is not very large
 wtditems <- long1 |> 
   summarise(across(us:wy00,
                    list(
                      sum = \(x) sum(x * value),
-                     nzcount = \(x) sum(x * (value != 0))
+                     nzcount = \(x) sum(x * (value != 0)),
+                     anycount = \(x) sum(x)
                      )
                    ),
             .by=c(MARS, agistub, data_source, variable)) |> 
@@ -168,7 +168,7 @@ wtditems <- long1 |>
   separate_wider_delim(statecd_valtype, "_", names=c("statecd", "valtype"))
 
 b <- proc.time()
-b - a # about 10 secs
+b - a # about 15 secs
 
 # save this even though small because it uses much memory and time to create it
 write_csv(wtditems, here::here("intermediate", "wtditems.csv")) 
@@ -206,9 +206,11 @@ Now we want to create additional derivative summaries and add them to our summar
 
 -   then total across all agi ranges, within the other categories, and add it to new existing totals
 
+-   then total across all data_source values, within the other categories, and add it to new existing totals
+
 This should be enough, but we could want additional subtotal categories
 
-Create and save an enhanced weighted sums file from this.
+Create and save an enhanced weighted items file from this.
 
 ```{r}
 #| label: calcsums-extended
@@ -243,7 +245,15 @@ count(sums_plus_agistubtot, variable)
 count(sums_plus_agistubtot, MARS, variable)
 skim(sums_plus_agistubtot)
 
-write_csv(sums_plus_agistubtot, here::here("intermediate", "wtditems_enhanced.csv"))
+# sum across all data_source values
+sums_plus_dstot <- sums_plus_agistubtot |> 
+  summarise(value=sum(value), 
+            .by=c(statecd, MARS, agistub, variable, valtype)) |> 
+  mutate(data_source=9) |> 
+  bind_rows(sums_plus_agistubtot)
+
+
+write_csv(sums_plus_dstot, here::here("intermediate", "wtditems_enhanced.csv"))
 
 ```
 
