@@ -2,20 +2,27 @@
 
 # folders to ignore
 .Rproj.user/
-.quarto/
+/.quarto/
 _examine/
 _freeze/
 site_libs/
 
+# Ignore `renv` directories that are system-specific
+renv/library/
+renv/cache/
+
+# Track the lockfile and settings file for reproducibility
+!renv.lock
+!renv/settings.dcf
+
 # files to ignore
 .Rhistory
+.RData
+.Rproj.user/
 ~*
 *.html
 *.rds
 
-
 # Local Netlify folder
 .netlify
 
-
-/.quarto/

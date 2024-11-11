@@ -1,0 +1,166 @@
+---
+output: html_document
+editor_options: 
+ chunk_output_type: console
+---
+
+# Combine data for tables
+
+
+## Setup
+
+```{r}
+#| label: setup
+#| output: false
+
+source(here::here("R", "libraries.R"))
+
+source(here::here("R", "system_specific_constants.R"))
+source(here::here("R", "constants.R"))
+
+source(here::here("R", "functions.R"))
+
+```
+
+
+```{r}
+#| label: get-data
+#| output: false
+
+# agibins <- read_csv(fs::path(CDINTERMEDIATE, "cd_agi_bins.csv"))
+vmap <- read_csv(fs::path(CDINTERMEDIATE, "cd_variable_mapping.csv"))
+wtditems <- read_csv(here::here("intermediate", "wtditems_enhanced.csv"))
+targets_data <- readRDS(here::here("temp_data", "targets_data.rds"))
+targets_used <- readRDS(here::here("temp_data", "targets_used.rds"))
+
+```
+
+```{r}
+#|label: notes-target-file-excerpt-and-counts
+#|eval: false
+
+# target file excerpt for reference ----
+# varname,count,scope,agilo,agihi,fstatus,target
+# XTOT,0,0,-9e99,9e99,0,732673
+
+# agi amounts all rets
+# c00100,1,1,-9e99,1,0,6430
+# c00100,1,1,1,10000,0,40520
+# ...
+# c00100,1,1,500000,9e99,0,3820
+
+# agi counts all rets -- done as ...
+# c00100,0,1,1,10000,0,177444000
+# c00100,0,1,10000,25000,0,874762000
+# ...
+# c00100,0,1,500000,9e99,0,4773666000
+
+# return counts, MARS 1
+# c00100,1,1,-9e99,1,1,4460
+# c00100,1,1,1,10000,1,34410
+# c00100,1,1,10000,25000,1,37290
+# ...
+
+# counts ----
+# count: integer in [0,4] range:
+# count==0 implies dollar total of varname is tabulated
+# count==1 implies number of tax units with any value of varname is tabulated
+# count==2 implies number of tax units with a nonzero value of varname is tabulated
+# count==3 implies number of tax units with a positive value of varname is tabulated
+# count==4 implies number of tax units with a negative value of varname is tabulated
+
+```
+
+
+```{r}
+#| label: combine
+#| output: false
+
+# documentation on target files
+# https://github.com/PSLmodels/tax-microdata-benchmarking/tree/master/tmd/areas/targets
+
+vmap
+glimpse(targets_used)
+glimpse(wtditems)
+count(wtditems, MARS)
+count(wtditems, data_source)
+
+# conform weighted sums to targets file definitions ----
+# names(targets_used)
+# "statecd"  "varname"  "count"    "scope"    "agilo"    "agihi"    "fstatus"  "target"   "active"   "agistub"  "agirange"
+
+# names(wtditems)
+# "statecd"     "MARS"        "data_source" "variable"    "valtype"     "value"       "agistub"    
+# wtditems$variable |> unique()
+# "wtdn"   "c00100" "e00200" "e00300" "e01700" "e26270" "e18400" "e18500" "iitax" 
+# wtditems$valtype |> unique() # sum, nzcount
+
+# prep wtdsums
+wtditems1 <- wtditems |> 
+  rename(fstatus=MARS,
+         varname=variable) |> 
+  mutate(count=case_when(valtype=="sum" ~ 0,
+                         valtype=="anycount" ~ 1,
+                         valtype=="nzcount" ~ 2,
+                         .default = -9e9),
+         scope=case_when(data_source==9 ~ 0, # all tax units
+                         data_source==1 ~ 1, # filers
+                         data_source==0 ~ 2, # nonfilers
+                         .default=-9e9))
+glimpse(wtditems1)
+count(wtditems1, agistub)
+count(wtditems1, scope)
+
+wtditems1 |> 
+  filter(varname=="XTOT", scope==0, count==0, fstatus==0, agistub==0) |> 
+  filter(statecd=="ak00")
+
+compare1 <- targets_used |> 
+  left_join(wtditems1 |> 
+              select(-valtype, -data_source),
+            by = join_by(statecd, varname, count, scope, fstatus, agistub)) |> 
+  select(statecd, varname, scope, fstatus, count, agistub, agilo, agihi, agirange, active, target, value) |> 
+  mutate(diff = value - target,
+         pdiff=diff / target)
+
+
+# now add variable description
+
+compare2 <- compare1 |> 
+  select(-agilo, -agihi) |> 
+  left_join(vmap |> 
+              filter(!str_starts(basevname, "MARS")) |> 
+              select(-basevname),
+            by = join_by(varname)) |> 
+  relocate(description, .after = varname)
+
+compare2  
+
+write_csv(compare2, here::here("intermediate", "compare.csv"))
+
+compare2 |> filter(statecd=="ak00")
+compare2 |> filter(statecd=="ny21")
+compare2 |> filter(statecd=="tx27")
+compare2 |> filter(statecd=="wa04")
+
+skim(compare2)
+
+compare2 |> arrange(desc(abs(pdiff)))
+
+nbad <- compare2 |> 
+  summarise(n=n(), 
+            ngt10=sum(abs(pdiff)>.1),
+            ngt5=sum(abs(pdiff)>.05),
+            ngt2=sum(abs(pdiff)>.02),
+            ngt1=sum(abs(pdiff)>.01),
+            .by = statecd)
+
+nbad |> arrange(desc(ngt10))
+nbad |> arrange(desc(ngt5))
+nbad |> arrange(desc(ngt2))
+nbad |> arrange(desc(ngt1))
+
+```
+
+
+
