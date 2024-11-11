@@ -98,6 +98,7 @@ wtditems1 <- wtditems |>
   rename(fstatus=MARS,
          varname=variable) |> 
   mutate(count=case_when(valtype=="sum" ~ 0,
+                         valtype=="anycount" ~ 1,
                          valtype=="nzcount" ~ 2,
                          .default = -9e9),
          scope=case_when(data_source==9 ~ 0, # all tax units
@@ -112,25 +113,38 @@ wtditems1 |>
   filter(varname=="XTOT", scope==0, count==0, fstatus==0, agistub==0) |> 
   filter(statecd=="ak00")
 
-# TEMPORARY FIX TO WTDITEMS ----
-# agi counts were any-value counts
-
-
-temp <- targets_used |> 
+compare <- targets_used |> 
   left_join(wtditems1 |> 
               select(-valtype, -data_source),
             by = join_by(statecd, varname, count, scope, fstatus, agistub)) |> 
-  select(statecd, varname, scope, fstatus, count, agistub, agilo, agihi, agirange, active, value, target)
+  select(statecd, varname, scope, fstatus, count, agistub, agilo, agihi, agirange, active, target, value) |> 
+  mutate(diff = value - target,
+         pdiff=diff / target)
+  
 
-temp |> 
+compare |> 
   filter(statecd=="ak00")
 
-temp |> 
+compare |> 
   filter(statecd=="ny21")
 
-wtdsums1 |> 
-  filter(statecd=="ak00")
+skim(compare)
 
+compare |> 
+  arrange(desc(abs(pdiff)))
+
+nbad <- compare |> 
+  summarise(n=n(), 
+            ngt10=sum(abs(pdiff)>.1),
+            ngt5=sum(abs(pdiff)>.05),
+            ngt2=sum(abs(pdiff)>.02),
+            ngt1=sum(abs(pdiff)>.01),
+            .by = statecd)
+
+nbad |> arrange(desc(ngt10))
+nbad |> arrange(desc(ngt5))
+nbad |> arrange(desc(ngt2))
+nbad |> arrange(desc(ngt1))
 
 ```
 
