@@ -52,7 +52,7 @@ The master branch of tax-microdata-benchmarking does not write `tmd2021_cache.cs
 
 TMDDIR <- here::here("..", "..", "..", "storage", "output")
 fpath <-  fs::path(TMDDIR, "tmd2021_cache.csv")
-tmd2021 <- vroom(fpath)
+tmd2021 <- vroom(fpath) # ~ 600mb
 ns(tmd2021)
 # tmd2021 |> filter(row_number() < 20) |> select(RECID, s006, c00100)
 
@@ -64,7 +64,7 @@ ns(tmd2021)
 #| label: get-weights
 #| output: false
 
-cdweights <- readRDS(here::here("intermediate", "cdweights.rds"))
+cdweights <- readRDS(here::here("intermediate", "cdweights.rds")) # ~ 700mb
 
 # fpath <- here::here("intermediate", "cdweights.rds")
 # ns(file_info(fpath))
@@ -79,6 +79,9 @@ cdweights <- readRDS(here::here("intermediate", "cdweights.rds"))
 #| label: agibins
 #| output: false
 
+# icuts <- c(-Inf, 1, 10e3, 25e3, 50e3, 75e3, 100e3, 200e3, 500e3, Inf)
+icuts <- CDICUTS
+
 # 0 = Total
 # 1 = Under $1
 # 2 = $1 under $10,000
@@ -89,9 +92,6 @@ cdweights <- readRDS(here::here("intermediate", "cdweights.rds"))
 # 7 = $100,000 under $200,000
 # 8 = $200,000 under $500,000
 # 9 = $500,000 or more
-
-# icuts <- c(-Inf, 1, 10e3, 25e3, 50e3, 75e3, 100e3, 200e3, 500e3, Inf)
-icuts <- CDICUTS
 
 # irange=cut(c00100, icuts, right = FALSE, ordered_result = TRUE),
 #          irange = factor(irange, 
@@ -119,14 +119,15 @@ taxcalc_vars <- c("c00100", "e00200", "e00300", "e01700", "e26270", "e18400", "e
 
 tmdplusweights <- tmd2021 |> 
   select(RECID, data_source, MARS, us=s006, all_of(taxcalc_vars)) |> 
-  mutate(row=row_number(), wtdn=1,
+  mutate(row=row_number(), 
+         wtdn=1,
          agistub=cut(c00100, CDICUTS, right = FALSE, ordered_result = TRUE) |> 
            as.integer()) |>
   left_join(cdweights, by = join_by(row)) |> 
   relocate(row, wtdn, agistub, .after = RECID) |> 
   relocate(us, .before = ak00)
   
-glimpse(tmdplusweights)
+glimpse(tmdplusweights) # ~ 700mb
 tmdplusweights[1:5, c(1:13, ncol(tmdplusweights))]
 
 ```
@@ -139,7 +140,7 @@ Making this step efficient is crucial. If we have 10 variables of interest 400+ 
 
 The approach taken here is to make a longer tmd file that has one row for each tax-calculator variable of interest for each tax unit, while maintaining the 400+ columns for areas, multiplying each variable's value by all of the weights (400+ weighted values) and summing by groups of interest. This is the second-fastest of the approaches investigated, and the easiest and least-error-prone to maintain as we add variables of interest.
 
-The resulting dataframe with sums of interest is small, and easy to manipulate.
+The resulting dataframe with sums and counts of interest is small, and easy to manipulate.
 
 
 ```{r}
@@ -149,36 +150,47 @@ The resulting dataframe with sums of interest is small, and easy to manipulate.
 a <- proc.time()
 long1 <- tmdplusweights |> 
   pivot_longer(cols = c(wtdn, all_of(taxcalc_vars)),
-               names_to = "variable")
+               names_to = "variable") |> 
+  relocate(variable, value, .before=us) # ~ 3gb used in creating, ~ 7gb total size
+# pryr::object_size(long1)
 
-wtdsums <- long1 |> 
+# ~ 8gb used in creating wtditems, but it cannot be very large
+wtditems <- long1 |> 
   summarise(across(us:wy00,
-                \(x) sum(x * value)),
+                   list(
+                     sum = \(x) sum(x * value),
+                     nzcount = \(x) sum(x * (value != 0))
+                     )
+                   ),
             .by=c(MARS, agistub, data_source, variable)) |> 
   pivot_longer(-c(MARS, agistub, data_source, variable),
-               names_to = "statecd",
-               values_to = "sum")
+               names_to = "statecd_valtype") |> 
+  separate_wider_delim(statecd_valtype, "_", names=c("statecd", "valtype"))
 
-rm(long1)
 b <- proc.time()
 b - a # about 10 secs
 
+# save this even though small because it uses much memory and time to create it
+write_csv(wtditems, here::here("intermediate", "wtditems.csv")) 
+
+# note that this has far more items than we need because we don't have targets corresponding to all of our sums
+
 # do some checking
-count(wtdsums, MARS)
-count(wtdsums, agistub)
-count(wtdsums, variable)
-count(wtdsums,  data_source)
-count(wtdsums, data_source, MARS)
+count(wtditems, MARS)
+count(wtditems, agistub)
+count(wtditems, variable)
+count(wtditems,  data_source)
+count(wtditems, data_source, MARS)
+count(wtditems, valtype)
 
-wtdsums$statecd |> unique() |> length()
-wtdsums$statecd |> unique() # 436 + us
-
-# wtdsums
-write_csv(wtdsums, here::here("intermediate", "wtdsums.csv"))
+wtditems$statecd |> unique() |> length()
+wtditems$statecd |> unique() # 436 + us
+rm(cdweights, long1, tmd2021, tmdplusweights)
+gc()
 
 ```
 
-## Extend weighted sums to include other subgroup sums
+## Extend weighted items to include other subgroup sums
 
 We just created weighted sums of tmd data by the following combination:
 
@@ -202,12 +214,15 @@ Create and save an enhanced weighted sums file from this.
 #| label: calcsums-extended
 #| output: false
 
+wtditems <- read_csv(here::here("intermediate", "wtditems.csv")) 
+ht(wtditems)
+
 # sums across all marital status
-sums_plus_marstot <- wtdsums |> 
-  summarise(sum=sum(sum), 
-            .by=c(statecd, agistub, data_source, variable)) |> 
+sums_plus_marstot <- wtditems |> 
+  summarise(value=sum(value), 
+            .by=c(statecd, agistub, data_source, variable, valtype)) |> 
   mutate(MARS=0) |> 
-  bind_rows(wtdsums)
+  bind_rows(wtditems)
 
 # quick checks
 count(sums_plus_marstot, MARS)
@@ -215,20 +230,20 @@ count(sums_plus_marstot, agistub)
 skim(sums_plus_marstot)
   
 # sum across all income ranges
-sums_plus_irangetot <- sums_plus_marstot |> 
-  summarise(sum=sum(sum), 
-            .by=c(statecd, MARS, data_source, variable)) |> 
+sums_plus_agistubtot <- sums_plus_marstot |> 
+  summarise(value=sum(value), 
+            .by=c(statecd, MARS, data_source, variable, valtype)) |> 
   mutate(agistub=0) |> 
   bind_rows(sums_plus_marstot)
 
 # quick checks
-count(sums_plus_irangetot, MARS)
-count(sums_plus_irangetot, agistub)
-count(sums_plus_irangetot, variable)
-count(sums_plus_irangetot, MARS, variable)
-skim(sums_plus_irangetot)
+count(sums_plus_agistubtot, MARS)
+count(sums_plus_agistubtot, agistub)
+count(sums_plus_agistubtot, variable)
+count(sums_plus_agistubtot, MARS, variable)
+skim(sums_plus_agistubtot)
 
-write_csv(sums_plus_irangetot, here::here("intermediate", "wtdsums_enhanced.csv"))
+write_csv(sums_plus_agistubtot, here::here("intermediate", "wtditems_enhanced.csv"))
 
 ```
 
