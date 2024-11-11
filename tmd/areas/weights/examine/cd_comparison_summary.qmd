@@ -22,4 +22,19 @@ source(here::here("R", "functions.R"))
 
 ```
 
+## Get data
+
+```{r}
+
+compare <- read_csv(here::here("intermediate", "compare.csv"))
+vmap <- read_csv(fs::path(CDINTERMEDIATE, "cd_variable_mapping.csv"))
+# read_csv(fs::path(CDINTERMEDIATE, "variable_documentation.csv"))
+# fs::dir_ls(CDINTERMEDIATE)
+
+# vmap2 <- vmap |> 
+  
+
+
+
+```
 
