@@ -28,6 +28,7 @@ source(here::here("R", "functions.R"))
 #| output: false
 
 # agibins <- read_csv(fs::path(CDINTERMEDIATE, "cd_agi_bins.csv"))
+vmap <- read_csv(fs::path(CDINTERMEDIATE, "cd_variable_mapping.csv"))
 wtditems <- read_csv(here::here("intermediate", "wtditems_enhanced.csv"))
 targets_data <- readRDS(here::here("temp_data", "targets_data.rds"))
 targets_used <- readRDS(here::here("temp_data", "targets_used.rds"))
@@ -78,6 +79,7 @@ targets_used <- readRDS(here::here("temp_data", "targets_used.rds"))
 # documentation on target files
 # https://github.com/PSLmodels/tax-microdata-benchmarking/tree/master/tmd/areas/targets
 
+vmap
 glimpse(targets_used)
 glimpse(wtditems)
 count(wtditems, MARS)
@@ -113,7 +115,7 @@ wtditems1 |>
   filter(varname=="XTOT", scope==0, count==0, fstatus==0, agistub==0) |> 
   filter(statecd=="ak00")
 
-compare <- targets_used |> 
+compare1 <- targets_used |> 
   left_join(wtditems1 |> 
               select(-valtype, -data_source),
             by = join_by(statecd, varname, count, scope, fstatus, agistub)) |> 
@@ -121,20 +123,31 @@ compare <- targets_used |>
   mutate(diff = value - target,
          pdiff=diff / target)
 
-write_csv(compare, here::here("intermediate", "compare.csv"))
-  
 
-compare |> filter(statecd=="ak00")
-compare |> filter(statecd=="ny21")
-compare |> filter(statecd=="tx27")
-compare |> filter(statecd=="wa04")
+# now add variable description
 
-skim(compare)
+compare2 <- compare1 |> 
+  select(-agilo, -agihi) |> 
+  left_join(vmap |> 
+              filter(!str_starts(basevname, "MARS")) |> 
+              select(-basevname),
+            by = join_by(varname)) |> 
+  relocate(description, .after = varname)
 
-compare |> 
-  arrange(desc(abs(pdiff)))
+compare2  
 
-nbad <- compare |> 
+write_csv(compare2, here::here("intermediate", "compare.csv"))
+
+compare2 |> filter(statecd=="ak00")
+compare2 |> filter(statecd=="ny21")
+compare2 |> filter(statecd=="tx27")
+compare2 |> filter(statecd=="wa04")
+
+skim(compare2)
+
+compare2 |> arrange(desc(abs(pdiff)))
+
+nbad <- compare2 |> 
   summarise(n=n(), 
             ngt10=sum(abs(pdiff)>.1),
             ngt5=sum(abs(pdiff)>.05),
