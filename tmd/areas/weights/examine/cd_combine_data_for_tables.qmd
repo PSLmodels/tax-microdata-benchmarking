@@ -21,3 +21,96 @@ source(here::here("R", "constants.R"))
 source(here::here("R", "functions.R"))
 
 ```
+
+
+```{r}
+#| label: get-data
+#| output: false
+
+# agibins <- read_csv(fs::path(CDINTERMEDIATE, "cd_agi_bins.csv"))
+wtdsums <- read_csv(here::here("intermediate", "wtdsums_enhanced.csv"))
+targets_data <- readRDS(here::here("temp_data", "targets_data.rds"))
+targets_used <- readRDS(here::here("temp_data", "targets_used.rds"))
+
+```
+
+```{r}
+#|label: notes-target-file-excerpt-and-counts
+#|eval: false
+
+# target file excerpt for reference ----
+# varname,count,scope,agilo,agihi,fstatus,target
+# XTOT,0,0,-9e99,9e99,0,732673
+
+# agi amounts all rets
+# c00100,1,1,-9e99,1,0,6430
+# c00100,1,1,1,10000,0,40520
+# ...
+# c00100,1,1,500000,9e99,0,3820
+
+# agi counts all rets -- done as ...
+# c00100,0,1,1,10000,0,177444000
+# c00100,0,1,10000,25000,0,874762000
+# ...
+# c00100,0,1,500000,9e99,0,4773666000
+
+# return counts, MARS 1
+# c00100,1,1,-9e99,1,1,4460
+# c00100,1,1,1,10000,1,34410
+# c00100,1,1,10000,25000,1,37290
+# ...
+
+# counts ----
+# count: integer in [0,4] range:
+# count==0 implies dollar total of varname is tabulated
+# count==1 implies number of tax units with any value of varname is tabulated
+# count==2 implies number of tax units with a nonzero value of varname is tabulated
+# count==3 implies number of tax units with a positive value of varname is tabulated
+# count==4 implies number of tax units with a negative value of varname is tabulated
+
+```
+
+
+```{r}
+#| label: combine
+#| output: false
+
+glimpse(targets_used)
+glimpse(wtdsums)
+count(wtdsums, MARS)
+
+# conform weighted sums to targets file definitions ----
+
+# prep wtdsums
+wtdsums1 <- wtdsums |> 
+  rename(fstatus=MARS,
+         varname=variable) |> 
+  mutate(varname=ifelse(varname=="wtdn", "XTOT", varname),
+         scope=case_when(varname=="XTOT" ~ 0,
+                         data_source==1 ~ 1,
+                         data_source==0 ~ 2,
+                         .default=-999999),
+         count=0)
+glimpse(wtdsums1)
+count(wtdsums1, agistub) |> 
+  arrange(irange)
+count(wtdsums1, scope)
+
+temp <- targets_used |> 
+  left_join(wtdsums1,
+            by = join_by(statecd, count, scope, fstatus, varname, agistub))
+
+temp |> 
+  filter(statecd=="ak00")
+
+temp |> 
+  filter(statecd=="ny21")
+
+wtdsums1 |> 
+  filter(statecd=="ak00")
+
+
+```
+
+
+
