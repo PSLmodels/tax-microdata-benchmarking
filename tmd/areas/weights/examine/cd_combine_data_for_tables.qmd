@@ -120,13 +120,14 @@ compare <- targets_used |>
   select(statecd, varname, scope, fstatus, count, agistub, agilo, agihi, agirange, active, target, value) |> 
   mutate(diff = value - target,
          pdiff=diff / target)
+
+write_csv(compare, here::here("intermediate", "compare.csv"))
   
 
-compare |> 
-  filter(statecd=="ak00")
-
-compare |> 
-  filter(statecd=="ny21")
+compare |> filter(statecd=="ak00")
+compare |> filter(statecd=="ny21")
+compare |> filter(statecd=="tx27")
+compare |> filter(statecd=="wa04")
 
 skim(compare)
 
