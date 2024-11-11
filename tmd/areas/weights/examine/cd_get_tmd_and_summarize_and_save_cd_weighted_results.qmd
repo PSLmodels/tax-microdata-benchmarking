@@ -8,6 +8,8 @@ editor_options:
 
 ** ONLY run the code below when tmd data have changed **
 
+Because this is time consuming and uses a lot of memory, and may not work well on some computers, eval is set to false in the chunks below. Set eval to true to run this.
+
 Get data and merge: 
 
 -   tmd2021 data used when creating area weights (tmd2021_cache.csv)
@@ -20,7 +22,6 @@ Summarize and save:
 -   get sums by groups: area x data_source x agi range
 -   supplement with sums across agi ranges - area x data source
 -   and again with sums across data_source
--   calculate averages (sums / weighted ns)
 -   stack files and save
 
 ## Setup
@@ -48,6 +49,7 @@ The master branch of tax-microdata-benchmarking does not write `tmd2021_cache.cs
 
 ```{r}
 #| label: get-tmd
+#| eval: false
 #| output: false
 
 TMDDIR <- here::here("..", "..", "..", "storage", "output")
@@ -62,6 +64,7 @@ ns(tmd2021)
 
 ```{r}
 #| label: get-weights
+#| eval: false
 #| output: false
 
 cdweights <- readRDS(here::here("intermediate", "cdweights.rds")) # ~ 700mb
@@ -77,6 +80,7 @@ cdweights <- readRDS(here::here("intermediate", "cdweights.rds")) # ~ 700mb
 
 ```{r}
 #| label: agibins
+#| eval: false
 #| output: false
 
 # icuts <- c(-Inf, 1, 10e3, 25e3, 50e3, 75e3, 100e3, 200e3, 500e3, Inf)
@@ -109,6 +113,7 @@ cdweights <- readRDS(here::here("intermediate", "cdweights.rds")) # ~ 700mb
 
 ```{r}
 #| label: bind-taxcalc-variables
+#| eval: false
 #| output: false
 
 # see what variables are mapped
@@ -144,6 +149,7 @@ The resulting dataframe with sums and counts of interest is small, and easy to m
 
 ```{r}
 #| label: calcsums
+#| eval: false
 #| output: false
 
 a <- proc.time()
@@ -214,6 +220,7 @@ Create and save an enhanced weighted items file from this.
 
 ```{r}
 #| label: calcsums-extended
+#| eval: false
 #| output: false
 
 wtditems <- read_csv(here::here("intermediate", "wtditems.csv")) 
