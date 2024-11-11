@@ -22,7 +22,9 @@ def test_area_xx(tests_folder):
     assert rc == 0, "create_areas_weights_file has non-zero return code"
     # compare actual vs expected results for faux area xx
     # ... instantiate Tax-Calculator object for area
-    pol = tc.Policy()
+    pol = tc.Policy.tmd_constructor(
+        growfactors_path=(STORAGE_FOLDER / "output" / "tmd_growfactors.csv"),
+    )
     rec = tc.Records.tmd_constructor(
         data_path=(STORAGE_FOLDER / "output" / "tmd.csv.gz"),
         weights_path=(AREAS_FOLDER / "weights" / "xx_tmd_weights.csv.gz"),
