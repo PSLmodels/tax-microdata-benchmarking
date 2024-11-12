@@ -37,7 +37,9 @@ def test_income_tax():
         ), f"{name}:act,exp,tol= {act} {exp} {tol}"
 
     # use national tmd files to compute various 2021 income tax statistics
-    pol = tc.Policy()
+    pol = tc.Policy.tmd_constructor(
+        growfactors_path=(STORAGE_FOLDER / "output" / "tmd_growfactors.csv"),
+    )
     rec = tc.Records.tmd_constructor(
         data_path=(STORAGE_FOLDER / "output" / "tmd.csv.gz"),
         weights_path=(STORAGE_FOLDER / "output" / "tmd_weights.csv.gz"),
