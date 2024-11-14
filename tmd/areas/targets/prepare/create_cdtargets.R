@@ -129,7 +129,8 @@ targets_matchframe <- target_stubs |>
   mutate(sort=row_number() + 1) |> 
   rows_insert(tibble(varname="XTOT", scope=0, count=0, fstatus=0, agistub=0, sort=1),
               by="varname") |> 
-  left_join(vmap, by = join_by(varname)) |> 
+  left_join(vmap, by = join_by(varname),
+            relationship = "many-to-many") |> 
   mutate(basevname = case_when(fstatus == 1 ~ "MARS1",
                                fstatus == 2 ~ "MARS2",
                                fstatus == 4 ~ "MARS4",
@@ -139,6 +140,8 @@ targets_matchframe <- target_stubs |>
 
 
 # set up filters for CDs, zero targets, and negative targets --------------------
+
+cdlist
 
 ##.. filtering Congressional districts ----
 cdlist <- unlist(cdrecipe$cdlist)
