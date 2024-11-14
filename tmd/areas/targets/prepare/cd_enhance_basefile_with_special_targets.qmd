@@ -8,6 +8,8 @@ editor_options:
 
 Goal: Construct targets for variables that don't have appropriate targets in the SOI Congressional District data
 
+At present we create targets for SALT deductions and for total Social Security income.
+
 ## Overview
 
 ### State and Local Tax (SALT) deductions
@@ -293,7 +295,9 @@ The tmd2021_cache.csv has total Social Security (e02400) and calculated taxable 
 
 (See commented-out lines in the code chunk below for details on what's in each file.)
 
-Pragmatic solution: We will *ASSUME* that total Social Security (e02400) is distributed across Congressional districts in the same way that taxable Social Security (A02500) is distributed across districts. We use this assumption to calculate Congressional district targets for total Social Security (e02400)
+Pragmatic solution: We will *ASSUME* that total Social Security (e02400) is distributed across Congressional districts in the same way that taxable Social Security (A02500) is distributed across districts. We use this assumption to calculate Congressional district targets for total Social Security (e02400).
+
+It may be possible at future date to test this assumption, if state-level data have both total and taxable Social Security income. Then we would be able to see how similar the distribution of taxable Social Security income across states is to the distribution of total Social Security income.
 
 
 ```{r}
