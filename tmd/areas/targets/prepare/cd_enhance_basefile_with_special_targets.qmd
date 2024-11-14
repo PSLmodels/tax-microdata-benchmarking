@@ -434,43 +434,35 @@ Make final Social Security targets
 #| label: socsec-final
 #| output: false
 
-salt_final <- saltcd2 |> 
-  right_join(saltus_long |> 
+socsec_final <- socseccd2 |> 
+  right_join(socsecus_long |> 
                filter(data_source==1), # only use filers!
              by = join_by(agistub, vname),
              relationship = "many-to-many") |> 
-  mutate(target=saltus *  soishare)
-head(salt_final)
+  mutate(target=socsecus *  soishare)
+head(socsec_final)
 
-salt_final |> 
+socsec_final |> 
   filter(str_detect(vname, "18425"), statecd=="NY01", agistub==2, session==117)
 
 # compare totals
 # sums are a little low because we have nothing in agirange 1
-salt_final |> summarise(target=sum(target), .by=c(vname, session))
-saltus_long |> filter(data_source==1) |> summarise(saltus=sum(saltus), .by=c(vname, tmdvname))
+socsec_final |> summarise(target=sum(target), .by=c(vname, session))
+socsecus_long |> filter(data_source==1) |> summarise(socsecus=sum(socsecus), .by=c(vname, tmdvname))
 
-salt_final |> 
+socsec_final |> 
   summarise(target=sum(target), .by=c(vname, session, agistub, agirange)) |> 
   filter(session==117)
 
 saltus
 
-glimpse(stack)
-names(stack) # we want this
-
-stack |> 
-  filter(vname %in% c("A18425", "A18500")) 
-
-glimpse(salt_final)
-count(salt_final, vname, basevname, description)
-
-salt_final
-setdiff(names(salt_final), names(stack))
+# glimpse(salt_final)
+# count(salt_final, vname, basevname, description)
+# 
+# salt_final
+# setdiff(names(salt_final), names(stack))
 
 ```
-
-
 
 
 ## Combine enhancements and write the enhanced file
