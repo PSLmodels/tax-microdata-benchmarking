@@ -61,6 +61,17 @@ source(here::here("R", "functions.R"))
 
 ```
 
+Define the agi cutpoints that the IRS uses in its published 2021 Congressional district data.
+
+```{r}
+#| label: agi-cutpoints
+
+# Define the agi cutpoints that the IRS uses in its published 2021 Congressional district data
+icuts <- c(-Inf, 1, 10e3, 25e3, 50e3, 75e3, 100e3, 200e3, 500e3, Inf)
+
+```
+
+Get the unenhanced target data and the tmd2021 cached data.
 
 ```{r}
 #| label: get-data
@@ -166,12 +177,11 @@ stack |>
 
 ### Get national SALT targets and allocate to Congressional districts
 
+Make preliminary salt targets.
 
 ```{r}
 #| label: salt-prelim
 #| output: false
-
-icuts <- c(-Inf, 1, 10e3, 25e3, 50e3, 75e3, 100e3, 200e3, 500e3, Inf)
 
 saltus <- tmd2021 |> 
   select(RECID, data_source, s006, c00100, e18400, e18500) |> 
@@ -246,7 +256,6 @@ Make final SALT targets
 #| label: salt-final
 #| output: false
 
-
 salt_final <- saltcd2 |> 
   right_join(saltus_long |> 
                filter(data_source==1), # only use filers!
@@ -268,7 +277,6 @@ salt_final |>
   filter(session==117)
 
 saltus
-
 
 glimpse(stack)
 names(stack) # we want this
