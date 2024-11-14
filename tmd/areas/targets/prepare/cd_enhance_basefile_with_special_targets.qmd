@@ -311,6 +311,15 @@ write_csv(stack_enhanced, fs::path(CDINTERMEDIATE, "cdbasefile_enhanced.csv"))
 
 ### Explore Social Security related data
 
+We only have 2021 taxable Social Security values in the Congressional district data (A02500 and N02500). We'd really like to have total Social Security.
+
+The tmd2021_cache.csv has total Social Security (e02400) and calculated taxable Social Security (c02500).
+
+(See commented-out lines in the code chunk below for details on what's in each file.)
+
+Pragmatic solution: We will *ASSUME* that total Social Security (e02400) is distributed across Congressional districts in the same way that taxable Social Security (A02500) is distributed across districts. We use this assumption to calculate Congressional district targets for total Social Security (e02400)
+
+
 ```{r}
 #| label: socsec-explore
 #| output: false
@@ -359,7 +368,8 @@ stack |>
 # A02500 Taxable Social Security benefits amount
 #   2021 tmd data_source==1: 410,820,512,000
 
-
 ```
 
+
+## Combine enhancements and write the enhanced file
 
