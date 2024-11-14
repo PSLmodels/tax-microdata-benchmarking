@@ -200,7 +200,7 @@ saltus_long <- saltus |>
   pivot_longer(cols=c(e18400, e18500),
                names_to = "tmdvname",
                values_to = "saltus") |> 
-  mutate(vname=case_when(tmdvname=="e18400" ~ "A18425",
+  mutate(vname=case_when(tmdvname=="e18400" ~ "A18425", # NOTE: we map tmd e18400 to IRS A18425 - INTENTIONAL!!
                          tmdvname=="e18500" ~ "A18500",
                          .default = "ERROR"))
 count(saltus_long, tmdvname, vname)  
@@ -368,69 +368,62 @@ Make preliminary Social Security targets.
 #| label: socsec-prelim
 #| output: false
 
-saltus <- tmd2021 |> 
-  select(RECID, data_source, s006, c00100, e18400, e18500) |> 
+socsecus <- tmd2021 |> 
+  select(RECID, data_source, s006, c00100, e02400) |> 
   mutate(irange=cut(c00100, icuts, right = FALSE, ordered_result = TRUE),
          irange = factor(irange, 
                          levels = levels(irange), # Ensure ordering is maintained
                          labels = str_replace(levels(irange), ",", ", ")), # more-readable labels
          agistub=as.numeric(irange)) |> 
-  summarise(e18400=sum(e18400 * s006),
-            e18500=sum(e18500 * s006),
+  summarise(e02400=sum(e02400 * s006),
             .by=c(data_source, agistub, irange)) |> 
   arrange(data_source, agistub)
-saltus
+socsecus
 
-saltus_long <- saltus |> 
-  pivot_longer(cols=c(e18400, e18500),
+socsecus_long <- socsecus |> 
+  pivot_longer(cols=c(e02400),
                names_to = "tmdvname",
-               values_to = "saltus") |> 
-  mutate(vname=case_when(tmdvname=="e18400" ~ "A18425",
-                         tmdvname=="e18500" ~ "A18500",
+               values_to = "socsecus") |> 
+  mutate(vname=case_when(tmdvname=="e02400" ~ "A02500", # NOTE: we map tmd total to IRS taxable Social Security - INTENTIONAL!!
                          .default = "ERROR"))
-count(saltus_long, tmdvname, vname)  
+count(socsecus_long, tmdvname, vname)  
 
 
 # now cd-level targets
-saltcd1 <- stack |> 
-  filter(vname %in% c("A18425", "A18500"),
+socseccd1 <- stack |> 
+  filter(vname %in% c("A02500"), # we only get A02500 because unfortunately there is no A02400
          agistub != 0) |> 
   rename(soivalue=target)
   
-checksums <- saltcd1 |> 
+checksums <- socseccd1 |> 
   summarise(soivalue=sum(soivalue),
-            .by=c(session, vname)) # values are correct
+            .by=c(session, vname)) # values are correct, see notes above with totals
 
-# TODO: investigate whether to give a nonzero share to agirinage 1
-saltcd2 <- saltcd1 |> 
+skim(socseccd1) # no negative or missing values, good
+
+# calculate shares
+socseccd2 <- socseccd1 |> 
   mutate(soisum=sum(soivalue),
-         soishare=ifelse(soisum == 0,  # U.S. agirange 1; < $1, both variables
+         soishare=ifelse(soisum == 0,  # keep same code as for salt
                          0,
                          soivalue / soisum),
          .by=c(session, vname, agistub, agirange))
 
-# data checks
-summary(saltcd2)
-skim(saltcd2)
-# stsums <- saltcd2 |> 
-#   filter(session==117) |> 
-#   select(agistub, agirange, vname, stabbr, soivalue, soisum) |> 
-#   summarise(stsum=sum(soivalue),
-#             soisum=first(soisum),
-#             .by=c(vname, stabbr, agistub, agirange)) |> 
-#   pivot_wider(names_from = vname, values_from = msoishare)
+# data checks - note that unlike SALT, we don't have any cells with zero values for soisum
+# so we don't have divide-by-zero issues that code above addresses nonetheless
+summary(socseccd2)
+skim(socseccd2)
 
-saltcd2 |> 
-  filter(str_detect(vname, "18425"), statecd=="NY01", agistub==2, session==117)
+socseccd2 |> 
+  filter(str_detect(vname, "02500"), statecd=="NY01", agistub==2, session==117)
 
 # ca from spreadsheet A18425 is 82008216, A18500 is 23310286 
-saltcd2 |> 
+socseccd2 |> 
   filter(stabbr=="CA", session==117) |> 
   summarise(stsum=sum(soivalue), .by=vname)
 #   vname        stsum
 #   <chr>        <dbl>
-# 1 A18425 82008216000
-# 2 A18500 23310286000
+# 1 A02500 42050284000
 
 ```
 
