@@ -37,9 +37,13 @@ e01700, v01700, Pensions and annuities included in AGI
 e26270, v26270, Combined partnership and S corporation net income/loss
 e18400, v18425, State and local income or sales taxes
 e18500, v18500, State and local real estate taxes
+e02400, v02500, Social Security total
 ", show_col_types = FALSE)
 
-# note that e18400 is not reported for districts; we have allocated it to districts by S&L income taxes
+# note that:
+#   e18400 is not reported for districts; we have allocated it to districts by S&L income taxes
+#   e2500 is not reported for districts; allocated to districts by e2500 taxable Social Security
+
 
 write_csv(vmap, fs::path(CDINTERMEDIATE, "cd_variable_mapping.csv"))
 
