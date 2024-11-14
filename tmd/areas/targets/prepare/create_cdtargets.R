@@ -141,11 +141,10 @@ targets_matchframe <- target_stubs |>
 
 # set up filters for CDs, zero targets, and negative targets --------------------
 
-cdlist
-
 ##.. filtering Congressional districts ----
 cdlist <- unlist(cdrecipe$cdlist)
-if(length(cdlist) > 1){
+cdlist
+if(cdlist != "all"){
   cd_filter <- expr(statecd %in% cdlist)
 } else if(length(cdlist) == 1 & cdlist == "all") {
   cd_filter <- TRUE
