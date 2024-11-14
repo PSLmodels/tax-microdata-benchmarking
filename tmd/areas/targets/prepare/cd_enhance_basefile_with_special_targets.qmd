@@ -235,36 +235,38 @@ saltcd2 |>
 # 1 A18425 82008216000
 # 2 A18500 23310286000
 
-saltcd3 <- saltcd2 |> 
+```
+
+
+Make final SALT targets
+
+```{r}
+#| label: salt-final
+#| output: false
+
+
+salt_final <- saltcd2 |> 
   right_join(saltus_long |> 
                filter(data_source==1), # only use filers!
              by = join_by(agistub, vname),
              relationship = "many-to-many") |> 
   mutate(target=saltus *  soishare)
-head(saltcd3)
+head(salt_final)
 
-saltcd3 |> 
+salt_final |> 
   filter(str_detect(vname, "18425"), statecd=="NY01", agistub==2, session==117)
 
 # compare totals
 # sums are a little low because we have nothing in agirange 1
-saltcd3 |> summarise(target=sum(target), .by=c(vname, session))
+salt_final |> summarise(target=sum(target), .by=c(vname, session))
 saltus_long |> filter(data_source==1) |> summarise(saltus=sum(saltus), .by=c(vname, tmdvname))
 
-saltcd3 |> 
+salt_final |> 
   summarise(target=sum(target), .by=c(vname, session, agistub, agirange)) |> 
   filter(session==117)
 
 saltus
 
-```
-
-
-Make final SALT targets and save
-
-```{r}
-#| label: salt-final
-#| output: false
 
 glimpse(stack)
 names(stack) # we want this
@@ -272,37 +274,11 @@ names(stack) # we want this
 stack |> 
   filter(vname %in% c("A18425", "A18500")) 
 
-glimpse(saltcd3)
-count(saltcd3, vname, basevname, description)
+glimpse(salt_final)
+count(salt_final, vname, basevname, description)
 
-
-saltcd3
-setdiff(names(saltcd3), names(stack))
-
-f <- function(vname, var){
-  ifelse(vname %in% c("A18425", "A18500"),
-         paste0(var, "_original"),
-         var)
-}
-stack_enhanced <- stack |> 
-  mutate(basevname=f(vname, basevname),
-         description=f(vname, description),
-         vname=f(vname, vname) # do vname last!
-         ) |> 
-  bind_rows(saltcd3 |> select(all_of(names(stack))))
-
-check <- stack_enhanced |> 
-  filter(str_detect(vname, "18425"), statecd=="NY01", agistub %in% 1:2)
-check
-
-check |> 
-  # arrange() |>
-  filter(count==0, agistub==2, session==117)
-
-saltcd3 |> 
-  filter(str_detect(vname, "18425"), statecd=="NY01", agistub==2, session==117)
-
-write_csv(stack_enhanced, fs::path(CDINTERMEDIATE, "cdbasefile_enhanced.csv"))
+salt_final
+setdiff(names(salt_final), names(stack))
 
 ```
 
@@ -372,4 +348,51 @@ stack |>
 
 
 ## Combine enhancements and write the enhanced file
+
+Combine enhancements and add them to basefile targets:
+
+-   SALT deduction targets
+-   Social Security targets
+
+Write the resulting enhanced targets file
+
+```{r}
+#| label: enhance-targets-file
+#| output: false
+
+
+f <- function(vname, var){
+  ifelse(vname %in% c("A18425", "A18500"),
+         paste0(var, "_original"),
+         var)
+}
+stack_enhanced <- stack |> 
+  mutate(basevname=f(vname, basevname),
+         description=f(vname, description),
+         vname=f(vname, vname) # do vname last!
+         ) |> 
+  bind_rows(salt_final |> select(all_of(names(stack))))
+
+check <- stack_enhanced |> 
+  filter(str_detect(vname, "18425"), statecd=="NY01", agistub %in% 1:2)
+check
+
+check |> 
+  # arrange() |>
+  filter(count==0, agistub==2, session==117)
+
+salt_final |> 
+  filter(str_detect(vname, "18425"), statecd=="NY01", agistub==2, session==117)
+
+```
+
+
+```{r}
+#| label: write-enhanced-targets-file
+#| output: false
+
+
+write_csv(stack_enhanced, fs::path(CDINTERMEDIATE, "cdbasefile_enhanced.csv"))
+
+```
 
