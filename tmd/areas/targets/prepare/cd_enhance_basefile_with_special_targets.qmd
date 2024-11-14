@@ -359,6 +359,127 @@ stack |>
 ```
 
 
+
+### Get national Social Security target and allocate to Congressional districts
+
+Make preliminary Social Security targets.
+
+```{r}
+#| label: socsec-prelim
+#| output: false
+
+saltus <- tmd2021 |> 
+  select(RECID, data_source, s006, c00100, e18400, e18500) |> 
+  mutate(irange=cut(c00100, icuts, right = FALSE, ordered_result = TRUE),
+         irange = factor(irange, 
+                         levels = levels(irange), # Ensure ordering is maintained
+                         labels = str_replace(levels(irange), ",", ", ")), # more-readable labels
+         agistub=as.numeric(irange)) |> 
+  summarise(e18400=sum(e18400 * s006),
+            e18500=sum(e18500 * s006),
+            .by=c(data_source, agistub, irange)) |> 
+  arrange(data_source, agistub)
+saltus
+
+saltus_long <- saltus |> 
+  pivot_longer(cols=c(e18400, e18500),
+               names_to = "tmdvname",
+               values_to = "saltus") |> 
+  mutate(vname=case_when(tmdvname=="e18400" ~ "A18425",
+                         tmdvname=="e18500" ~ "A18500",
+                         .default = "ERROR"))
+count(saltus_long, tmdvname, vname)  
+
+
+# now cd-level targets
+saltcd1 <- stack |> 
+  filter(vname %in% c("A18425", "A18500"),
+         agistub != 0) |> 
+  rename(soivalue=target)
+  
+checksums <- saltcd1 |> 
+  summarise(soivalue=sum(soivalue),
+            .by=c(session, vname)) # values are correct
+
+# TODO: investigate whether to give a nonzero share to agirinage 1
+saltcd2 <- saltcd1 |> 
+  mutate(soisum=sum(soivalue),
+         soishare=ifelse(soisum == 0,  # U.S. agirange 1; < $1, both variables
+                         0,
+                         soivalue / soisum),
+         .by=c(session, vname, agistub, agirange))
+
+# data checks
+summary(saltcd2)
+skim(saltcd2)
+# stsums <- saltcd2 |> 
+#   filter(session==117) |> 
+#   select(agistub, agirange, vname, stabbr, soivalue, soisum) |> 
+#   summarise(stsum=sum(soivalue),
+#             soisum=first(soisum),
+#             .by=c(vname, stabbr, agistub, agirange)) |> 
+#   pivot_wider(names_from = vname, values_from = msoishare)
+
+saltcd2 |> 
+  filter(str_detect(vname, "18425"), statecd=="NY01", agistub==2, session==117)
+
+# ca from spreadsheet A18425 is 82008216, A18500 is 23310286 
+saltcd2 |> 
+  filter(stabbr=="CA", session==117) |> 
+  summarise(stsum=sum(soivalue), .by=vname)
+#   vname        stsum
+#   <chr>        <dbl>
+# 1 A18425 82008216000
+# 2 A18500 23310286000
+
+```
+
+
+Make final Social Security targets
+
+```{r}
+#| label: socsec-final
+#| output: false
+
+salt_final <- saltcd2 |> 
+  right_join(saltus_long |> 
+               filter(data_source==1), # only use filers!
+             by = join_by(agistub, vname),
+             relationship = "many-to-many") |> 
+  mutate(target=saltus *  soishare)
+head(salt_final)
+
+salt_final |> 
+  filter(str_detect(vname, "18425"), statecd=="NY01", agistub==2, session==117)
+
+# compare totals
+# sums are a little low because we have nothing in agirange 1
+salt_final |> summarise(target=sum(target), .by=c(vname, session))
+saltus_long |> filter(data_source==1) |> summarise(saltus=sum(saltus), .by=c(vname, tmdvname))
+
+salt_final |> 
+  summarise(target=sum(target), .by=c(vname, session, agistub, agirange)) |> 
+  filter(session==117)
+
+saltus
+
+glimpse(stack)
+names(stack) # we want this
+
+stack |> 
+  filter(vname %in% c("A18425", "A18500")) 
+
+glimpse(salt_final)
+count(salt_final, vname, basevname, description)
+
+salt_final
+setdiff(names(salt_final), names(stack))
+
+```
+
+
+
+
 ## Combine enhancements and write the enhanced file
 
 Combine enhancements and add them to basefile targets:
