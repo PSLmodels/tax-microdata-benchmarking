@@ -41,6 +41,7 @@ fnrecipe <- args[1]
 # uncomment a line below for interactive testing
 # fnrecipe <- "temp.json"
 # fnrecipe <- "phase5_salt.json"
+# fnrecipe <- "phase6_add_socsec.json"
 
 # Check if the specified file exists
 fpath <- here::here(CDRECIPES, fnrecipe)
