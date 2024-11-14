@@ -60,10 +60,8 @@ source(here::here("R", "functions.R"))
 ```
 
 
-## SALT deductions
-
 ```{r}
-#| label: get-salt-related-data
+#| label: get-data
 #| output: false
 
 stack <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile_sessions.csv"))
@@ -75,6 +73,8 @@ ns(tmd2021)
 
 ```
 
+
+## SALT deductions
 
 ### Explore SALT-related data
 
@@ -303,6 +303,68 @@ saltcd3 |>
   filter(str_detect(vname, "18425"), statecd=="NY01", agistub==2, session==117)
 
 write_csv(stack_enhanced, fs::path(CDINTERMEDIATE, "cdbasefile_enhanced.csv"))
+
+```
+
+
+## Social Security income
+
+### Explore Social Security related data
+
+```{r}
+#| label: socsec-explore
+#| output: false
+#| eval: false
+
+glimpse(stack)
+count(stack, stabbr)
+count(stack, basevname, vname, description)
+count(stack, basevname, vname, description) |> filter(str_detect(vname, "18500"))
+
+
+# summarize SALT-related values in tmd2021
+tmd2021 |> 
+  mutate(wtdn=1) |> 
+  summarize(across(c(wtdn, e18400, e18500, e18400_capped, e18500_capped, c18300),
+                   \(x) sum(x * s006)), .by=data_source) |> 
+  pivot_longer(-data_source) |>
+  pivot_wider(names_from = data_source, names_prefix = "ds") |> 
+  gt() |> 
+  fmt_number(decimals=0)
+
+# summarize SALT-related variables in IRS SOI Congressional District data
+stack |> 
+  filter(vname %in% c("A18300", "A18425", "A18450", "A18500", "A18800", "A18460")) |> 
+  filter(agistub==0, count==0, fstatus==0, session==117) |> 
+  summarise(target=sum(target), .by=vname) |> 
+  gt() |> 
+  fmt_number(decimals=0)
+
+
+# SALT-related items in different sources
+# e18400 State and local taxes
+#  -- income OR sales taxes
+# IRS values in 2015 per PUF documentation:
+#  Full sample 2015: 35,270,132,000
+#  PUF 2015: 35,280,959,000
+#  tmd2021_cache.csv data_source==1:
+#    e18400: 445,295,833,890
+#    e18400_capped: 445,295,833,890
+#  Note: IRS national 2021 capped amount (per my notes) was $258.640 billion, not too far from the national CD N18425 amount of $249.3 billion
+#    see google doc https://docs.google.com/document/d/1IjbEe5MjHoAwlXQ4dhI5J13FopJSU2nIaeEg_H0UB_o/edit?tab=t.0
+
+# e18500 Real estate tax deductions
+# IRS values in 2015 per PUF documentation
+#  Full sample 2015: 18,860,584,000
+#  PUF 2015: 18,885,310,000
+#  tmd2021_cache.csv data_source==1:
+#    e18500: 226,186,527,940
+#    e18500_capped: 226,186,527,940
+
+# c18300 Sch A: State and local taxes plus real estate taxes deducted (component of pre-limitation c21060 total)
+# e18400_capped: Sch A: State and local income taxes deductible, capped as a decimal fraction of AGI
+# e18500_capped: Sch A: State and local real estate taxes deductible, capped as a decimal fraction of AGI
+
 
 ```
 
