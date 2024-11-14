@@ -29,7 +29,7 @@ varname, basevname, description
 XTOT, XTOT, Population
 c00100, MARS1, fstatus == 1
 c00100, MARS2, fstatus == 2
-c00100, MARS4, fstatus == 3
+c00100, MARS4, fstatus == 4
 c00100, v00100, Adjusted gross income
 e00200, v00200, Wages
 e00300, v00300, Taxable interest income
