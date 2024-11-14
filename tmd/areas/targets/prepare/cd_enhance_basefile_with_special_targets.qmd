@@ -321,49 +321,43 @@ count(stack, stabbr)
 count(stack, basevname, vname, description)
 count(stack, basevname, vname, description) |> filter(str_detect(vname, "18500"))
 
-
-# summarize SALT-related values in tmd2021
+# summarize Social Security -related values in tmd2021
 tmd2021 |> 
   mutate(wtdn=1) |> 
-  summarize(across(c(wtdn, e18400, e18500, e18400_capped, e18500_capped, c18300),
+  summarize(across(c(wtdn, e02400, c02500), # e02500 doesn't exist on tmd
                    \(x) sum(x * s006)), .by=data_source) |> 
   pivot_longer(-data_source) |>
   pivot_wider(names_from = data_source, names_prefix = "ds") |> 
   gt() |> 
   fmt_number(decimals=0)
 
-# summarize SALT-related variables in IRS SOI Congressional District data
+# summarize Social Security-related variables in IRS SOI Congressional District data -- we only have 02500
 stack |> 
-  filter(vname %in% c("A18300", "A18425", "A18450", "A18500", "A18800", "A18460")) |> 
+  filter(vname %in% c("A02500", "N02500")) |> 
   filter(agistub==0, count==0, fstatus==0, session==117) |> 
   summarise(target=sum(target), .by=vname) |> 
   gt() |> 
   fmt_number(decimals=0)
 
 
-# SALT-related items in different sources
-# e18400 State and local taxes
-#  -- income OR sales taxes
-# IRS values in 2015 per PUF documentation:
-#  Full sample 2015: 35,270,132,000
-#  PUF 2015: 35,280,959,000
-#  tmd2021_cache.csv data_source==1:
-#    e18400: 445,295,833,890
-#    e18400_capped: 445,295,833,890
-#  Note: IRS national 2021 capped amount (per my notes) was $258.640 billion, not too far from the national CD N18425 amount of $249.3 billion
-#    see google doc https://docs.google.com/document/d/1IjbEe5MjHoAwlXQ4dhI5J13FopJSU2nIaeEg_H0UB_o/edit?tab=t.0
+# pip install --upgrade taxcalc
 
-# e18500 Real estate tax deductions
-# IRS values in 2015 per PUF documentation
-#  Full sample 2015: 18,860,584,000
-#  PUF 2015: 18,885,310,000
-#  tmd2021_cache.csv data_source==1:
-#    e18500: 226,186,527,940
-#    e18500_capped: 226,186,527,940
+# see google doc https://docs.google.com/document/d/1IjbEe5MjHoAwlXQ4dhI5J13FopJSU2nIaeEg_H0UB_o/edit?tab=t.0
 
-# c18300 Sch A: State and local taxes plus real estate taxes deducted (component of pre-limitation c21060 total)
-# e18400_capped: Sch A: State and local income taxes deductible, capped as a decimal fraction of AGI
-# e18500_capped: Sch A: State and local real estate taxes deductible, capped as a decimal fraction of AGI
+# e02400 Gross Social Security benefits
+#   2015: 1040 line 20a, 2021: 1040 line 6a
+#   2015: IRS full sample 605,152,093 PUF 604,770,469
+#   2021: $791.161 nationally 21in14ar.xls_BW9
+#   2021 tmd data_source==1: 799,905,378,927
+
+# e02500 Social Security benefits in AGI
+#   2015: 1040 line 20b, 2021: 1040 line 6b
+#   2015: IRS full sample 277,411,075 PUF 276,960,978
+#   2021: $412.830 nationally 21in14ar.xls_BY9
+# c02500 Social security (OASDI) benefits included in AGI 
+#   2021 tmd data_source==1: 412,904,596,100
+# A02500 Taxable Social Security benefits amount
+#   2021 tmd data_source==1: 410,820,512,000
 
 
 ```
