@@ -199,7 +199,7 @@ saltus
 saltus_long <- saltus |> 
   pivot_longer(cols=c(e18400, e18500),
                names_to = "tmdvname",
-               values_to = "saltus") |> 
+               values_to = "tmdsum") |> 
   mutate(vname=case_when(tmdvname=="e18400" ~ "A18425", # NOTE: we map tmd e18400 to IRS A18425 - INTENTIONAL!!
                          tmdvname=="e18500" ~ "A18500",
                          .default = "ERROR"))
@@ -261,7 +261,7 @@ salt_final <- saltcd2 |>
                filter(data_source==1), # only use filers!
              by = join_by(agistub, vname),
              relationship = "many-to-many") |> 
-  mutate(target=saltus *  soishare)
+  mutate(target=tmdsum *  soishare)
 head(salt_final)
 
 salt_final |> 
@@ -270,7 +270,7 @@ salt_final |>
 # compare totals
 # sums are a little low because we have nothing in agirange 1
 salt_final |> summarise(target=sum(target), .by=c(vname, session))
-saltus_long |> filter(data_source==1) |> summarise(saltus=sum(saltus), .by=c(vname, tmdvname))
+saltus_long |> filter(data_source==1) |> summarise(tmdsum=sum(tmdsum), .by=c(vname, tmdvname))
 
 salt_final |> 
   summarise(target=sum(target), .by=c(vname, session, agistub, agirange)) |> 
@@ -383,7 +383,7 @@ socsecus
 socsecus_long <- socsecus |> 
   pivot_longer(cols=c(e02400),
                names_to = "tmdvname",
-               values_to = "socsecus") |> 
+               values_to = "tmdsum") |> 
   mutate(vname=case_when(tmdvname=="e02400" ~ "A02500", # NOTE: we map tmd total to IRS taxable Social Security - INTENTIONAL!!
                          .default = "ERROR"))
 count(socsecus_long, tmdvname, vname)  
@@ -439,7 +439,7 @@ socsec_final <- socseccd2 |>
                filter(data_source==1), # only use filers!
              by = join_by(agistub, vname),
              relationship = "many-to-many") |> 
-  mutate(target=socsecus *  soishare)
+  mutate(target=tmdsum *  soishare)
 head(socsec_final)
 
 socsec_final |> 
@@ -448,19 +448,14 @@ socsec_final |>
 # compare totals
 # sums are a little low because we have nothing in agirange 1
 socsec_final |> summarise(target=sum(target), .by=c(vname, session))
-socsecus_long |> filter(data_source==1) |> summarise(socsecus=sum(socsecus), .by=c(vname, tmdvname))
+socsecus_long |> filter(data_source==1) |> summarise(tmdsum=sum(tmdsum), .by=c(vname, tmdvname))
 
 socsec_final |> 
   summarise(target=sum(target), .by=c(vname, session, agistub, agirange)) |> 
   filter(session==117)
 
-saltus
+socsecus
 
-# glimpse(salt_final)
-# count(salt_final, vname, basevname, description)
-# 
-# salt_final
-# setdiff(names(salt_final), names(stack))
 
 ```
 
