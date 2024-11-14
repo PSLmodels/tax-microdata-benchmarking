@@ -474,17 +474,27 @@ Write the resulting enhanced targets file
 #| output: false
 
 
+changevars <- c("A18425", "A18500", "A02500")
+
 f <- function(vname, var){
-  ifelse(vname %in% c("A18425", "A18500"),
+  ifelse(vname %in% changevars,
          paste0(var, "_original"),
          var)
 }
+stacknames <- names(stack)
 stack_enhanced <- stack |> 
   mutate(basevname=f(vname, basevname),
          description=f(vname, description),
          vname=f(vname, vname) # do vname last!
          ) |> 
-  bind_rows(salt_final |> select(all_of(names(stack))))
+  bind_rows(salt_final |> select(all_of(stacknames)),
+            socsec_final |> select(all_of(stacknames))
+            )
+
+pattern <- paste(changevars, collapse="|")
+count(stack_enhanced |> 
+        filter(str_detect(vname, pattern)),
+      basevname, vname)
 
 check <- stack_enhanced |> 
   filter(str_detect(vname, "18425"), statecd=="NY01", agistub %in% 1:2)
@@ -503,7 +513,6 @@ salt_final |>
 ```{r}
 #| label: write-enhanced-targets-file
 #| output: false
-
 
 write_csv(stack_enhanced, fs::path(CDINTERMEDIATE, "cdbasefile_enhanced.csv"))
 
