@@ -1,6 +1,6 @@
 .PHONY=install
 install:
-	pip install -e .
+	pip install -e . --config-settings editable_mode=compat
 	python tmd/download_prerequisites.py
 
 .PHONY=clean
