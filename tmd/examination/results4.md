@@ -1,7 +1,7 @@
 Phase 4+ National Data Examination Results
 ==========================================
 
-**RESULTS AS OF 2024-10-28**
+**RESULTS AS OF 2024-11-17**
 
 This project is developing a new dataset for use by income and payroll
 tax microsimulation models.  The project is progressing in several
@@ -18,8 +18,8 @@ phases.
 For more on the source of the federal agency estimates and on how the
 model-plus-dataset estimates are generated, see the [examination
 methods](./methods.md) document.  The model used to generate the
-following Phase 5 estimates is [Tax-Calculator
-4.3.1](https://github.com/PSLmodels/Tax-Calculator/blob/master/docs/about/releases.md)).
+following Phase 6 estimates is [Tax-Calculator
+4.3.3](https://github.com/PSLmodels/Tax-Calculator/blob/master/docs/about/releases.md)).
 
 <br>
 
@@ -28,7 +28,7 @@ following Phase 5 estimates is [Tax-Calculator
 | CY23 Amount | CY26 Amount | Estimate Source |
 | ---:   | ---:   | :---   |
 | 1580.0 | 1829.9 | CBO    |
-| 1595.0 | 1851.4 | Tax-Calculator + phase 5 dataset |
+| 1595.0 | 1852.5 | Tax-Calculator + phase 6 dataset |
 
 <br>
 
@@ -37,7 +37,7 @@ following Phase 5 estimates is [Tax-Calculator
 | CY23 Amount | CY26 Amount | Estimate Source |
 | ---:   | ---:   | :---   |
 | 2512.3 | 2849.4 | CBO                              |
-| 2507.0 | 3160.9 | Tax-Calculator + phase 5 dataset |
+| 2507.0 | 3160.8 | Tax-Calculator + phase 6 dataset |
 
 <br>
 
@@ -47,7 +47,7 @@ following Phase 5 estimates is [Tax-Calculator
 | ---:   | ---:   | :---   |
 | 122.1  | 57.6   | JCT (assumes less than 100% participation) |
 | 108.6  | 55.7   | TSY (probably assumes less than 100% participation) |
-| 130.2  | 44.7   | Tax-Calculator + phase 5 dataset (100% participation) |
+| 130.2  | 44.7   | Tax-Calculator + phase 6 dataset (100% participation) |
 
 <br>
 
@@ -57,7 +57,7 @@ following Phase 5 estimates is [Tax-Calculator
 | ---:   | ---:   | :---   |
 | 71.9   | 78.0   | JCT (assumes less than 100% participation) |
 | 63.6   | 71.2   | TSY (probably assumes less than 100% participation) |
-| 69.6   | 77.8   | Tax-Calculator + phase 5 dataset (100% participation) |
+| 69.6   | 78.1   | Tax-Calculator + phase 6 dataset (100% participation) |
 
 <br>
 
@@ -67,7 +67,7 @@ following Phase 5 estimates is [Tax-Calculator
 | ---:   | ---:   | :---   |
 | 45.9   |  56.4  | JCT    |
 | 31.4   |  38.4  | TSY    |
-| 35.9   |  47.7  | Tax-Calculator + phase 5 dataset |
+| 35.9   |  47.7  | Tax-Calculator + phase 6 dataset |
 
 <br>
 
@@ -77,7 +77,7 @@ following Phase 5 estimates is [Tax-Calculator
 | ---:   | ---:   | :---   |
 | -56.5  | -53.8  | JCT    |
 |  ----  |  ----  | TSY    |
-| -54.0  | -53.8  | Tax-Calculator + phase 5 dataset |
+| -54.0  | -53.8  | Tax-Calculator + phase 6 dataset |
 
 <br>
 
@@ -87,7 +87,7 @@ following Phase 5 estimates is [Tax-Calculator
 | ---:   | ---:   | :---   |
 | 259.3  | 239.8  | JCT    |
 | 153.9  | 182.4  | TSY    |
-| 220.9  | 224.7  | Tax-Calculator + phase 5 dataset |
+| 220.9  | 224.8  | Tax-Calculator + phase 6 dataset |
 
 <br>
 
@@ -97,7 +97,7 @@ following Phase 5 estimates is [Tax-Calculator
 | ---:   | ---:   | :---   |
 | 56.2   |  0.0   | JCT    |
 | 50.4   |  0.0   | TSY    |
-| 58.0   |  0.0   | Tax-Calculator + phase 5 dataset |
+| 58.0   |  0.0   | Tax-Calculator + phase 6 dataset |
 
 <br>
 
@@ -107,4 +107,4 @@ following Phase 5 estimates is [Tax-Calculator
 | ---:   | ---:   | :---   |
 |  21.2  | 151.3  | JCT    |
 |  26.5  | 149.0  | TSY    |
-|  21.2  | 165.4  | Tax-Calculator + phase 5 dataset |
+|  21.2  | 165.5  | Tax-Calculator + phase 6 dataset |
