@@ -143,6 +143,8 @@ tmdmars <- tmd3 |>
   select(varname, scope, fstatus, count, agistub, value) |> 
   arrange(varname, scope, fstatus, count, agistub)
 
+# combine files and create selected additional totals
+tmdsums1 <- bind_rows(tmdxmars, tmdmars)
 ```
 
 
