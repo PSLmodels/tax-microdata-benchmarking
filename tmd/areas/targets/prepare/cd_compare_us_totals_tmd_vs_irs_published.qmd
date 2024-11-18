@@ -115,3 +115,17 @@ tmd3 <- tmd2 |>
     .default = -9e9))
 count(tmd3, count, type)
 
+# separate the mars and nonmars variables to get proper mars values
+tmdxmars <- tmd3 |> 
+  filter(str_detect(varname, "MARS", negate = TRUE)) |> 
+  mutate(fstatus=0) |> 
+  select(varname, scope, fstatus, count, agistub, value) |> 
+  arrange(varname, scope, fstatus, count, agistub)
+
+# tmdmars
+
+
+```
+
+
+
