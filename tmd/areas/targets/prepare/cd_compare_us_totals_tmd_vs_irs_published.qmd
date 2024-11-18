@@ -83,12 +83,9 @@ Prepare tmd data
 # 8 = $200,000 under $500,000
 # 9 = $500,000 or more
 
-vmap
-
-vmap2 <- vmap |> 
-  mutate(varname=ifelse(str_starts(basevname, "MARS"),
-                        basevname,
-                        varname))
+variables_to_sum <- ifelse(str_starts(vmap$basevname, "MARS"),
+                   vmap$basevname,
+                   vmap$varname)
 
 agicuts <- c(-Inf, 1, 10e3, 25e3, 50e3, 75e3, 100e3, 200e3, 500e3, Inf)
 
@@ -97,7 +94,7 @@ tmd2 <- tmd2021 |>
          MARS1=MARS==1, MARS2=MARS==2, MARS4=MARS==4,
          agistub=cut(c00100, agicuts, right = FALSE, ordered_result = TRUE) |> 
            as.integer()) |> 
-  summarize(across(all_of(vmap2$varname),
+  summarize(across(all_of(variables_to_sum),
                    list(amount = \(x) sum(x * s006),
                         nzcount = \(x) sum(x!=0 * s006),
                         allcount= \(x) sum(s006))),
@@ -162,10 +159,28 @@ tmd_scopes <- tmd_agitots |>
   select(varname, scope, fstatus, count, agistub, value) |> 
   arrange(varname, scope, fstatus, count, agistub)
 
+vmap2 <- vmap |> 
+  mutate(fstatus=case_when(basevname=="MARS1" ~ 1,
+                           basevname=="MARS2" ~ 2,
+                           basevname=="MARS4" ~ 4,
+                           .default = 0) |> 
+           as.integer())
 
+tmd_adjusted <- tmd_scopes |> 
+  left_join(vmap2,
+            by = join_by(varname, fstatus))
 
 
 ```
 
 
+## Prepare comaparison file
+
+```{r}
+#| label: prepare-compare
+#| eval: false
+#| output: false
+
+
+```
 
