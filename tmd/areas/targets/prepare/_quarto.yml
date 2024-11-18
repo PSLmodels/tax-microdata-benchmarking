@@ -46,9 +46,10 @@ book:
         - cd_construct_long_soi_data_file.qmd
         - cd_create_basefile_for_117Congress_cd_target_files.qmd
         - cd_create_cd_117_118_crosswalk_and_cdbasefile_118.qmd
-        - cd_enhance_basefile_with_special_targets.qmd
+        - cd_create_basefile_multiple_sessions.qmd
         - cd_create_variable_mapping.qmd
-        # - cd_map_tcvars_and_extract_target_files.qmd
+        - cd_compare_us_totals_tmd_vs_irs_published.qmd
+        - cd_enhance_basefile_with_special_targets.qmd
   appendices:
     - cd_issues_and_TODOs.qmd  
     - cd_IRS_documentation.qmd
