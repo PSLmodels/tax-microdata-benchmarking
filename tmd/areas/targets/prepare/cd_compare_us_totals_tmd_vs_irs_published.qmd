@@ -104,4 +104,14 @@ tmd2 <- tmd2021 |>
                    .by=c(scope, agistub)) |> 
   arrange(scope, agistub)
 
+# flip around and get count
+tmd3 <- tmd2 |> 
+  pivot_longer(cols=-c(scope, agistub)) |> 
+  separate_wider_delim(cols=name, delim="_", names=c("varname", "type")) |> 
+  mutate(count = case_when(
+    type == "amount"   ~ 0,
+    type == "nzcount"  ~ 2,
+    type == "allcount" ~ 1,
+    .default = -9e9))
+count(tmd3, count, type)
 
