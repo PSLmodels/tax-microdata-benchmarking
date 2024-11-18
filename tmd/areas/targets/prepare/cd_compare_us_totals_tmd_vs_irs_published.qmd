@@ -20,6 +20,8 @@ source(here::here("R", "functions.R"))
 ## Get data
 
 ```{r}
+#| label: get-data
+#| output: false
 
 vmap <- read_csv(fs::path(CDINTERMEDIATE, "cd_variable_mapping.csv"))
 cdirs <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile_sessions.csv"))
@@ -28,6 +30,34 @@ TMDDIR <- here::here("..", "..", "..", "storage", "output")
 fpath <-  fs::path(TMDDIR, "cached_allvars.csv")
 tmd2021 <- vroom(fpath)
 ns(tmd2021)
+
+```
+
+## Create comparison file
+
+```{r}
+#| label: create-comp
+#| output: false
+
+vmap
+
+#.. cd data ----
+cd2 <- cdirs |> 
+  filter(basevname %in% vmap$basevname,
+         session==118,
+         scope==1)
+
+count(cd2, basevname, vname)
+count(cd2, rectype)
+skim(cd2)
+
+cd3 <- cd2 |> 
+  summarise(target=sum(target),
+            .by=c(basevname, count, agistub, agirange, description))
+
+#.. tmd data ----
+
+
 
 ```
 
