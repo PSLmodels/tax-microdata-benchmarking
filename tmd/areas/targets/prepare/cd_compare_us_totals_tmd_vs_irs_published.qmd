@@ -56,9 +56,9 @@ count(cd2 |> filter(str_detect(vname, "MARS")),
       vname, fstatus)
 skim(cd2)
 
-cd3 <- cd2 |> 
+cd_adjusted <- cd2 |> 
   summarise(target=sum(target),
-            .by=c(basevname, count, agistub, agirange, description))
+            .by=c(basevname, vname, scope, count, fstatus, agistub, agirange, description))
 
 ```
 
