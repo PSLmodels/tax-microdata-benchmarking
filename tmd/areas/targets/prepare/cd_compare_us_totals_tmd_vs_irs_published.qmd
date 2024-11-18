@@ -64,7 +64,7 @@ Prepare tmd data
 
 ```{r}
 #| label: prepare-tmd-data
-#| eval: false
+#| eval: true
 #| output: false
 
 # 0 = Total
@@ -171,7 +171,7 @@ tmd_adjusted <- tmd_scopes |>
 
 ```{r}
 #| label: prepare-compare
-#| eval: false
+#| eval: true
 #| output: false
 
 comp <- tmd_adjusted |> 
