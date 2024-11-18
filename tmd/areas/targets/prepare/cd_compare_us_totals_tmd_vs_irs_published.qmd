@@ -153,6 +153,16 @@ tmd_agitots <- tmdsums1 |>
   mutate(agistub=0) |> 
   bind_rows(tmdsums1)
 
+# concatenate totals across scopes
+tmd_scopes <- tmd_agitots |> 
+  summarise(value=sum(value), 
+                      .by=c(varname, agistub, fstatus, count)) |> 
+  mutate(scope=0) |> 
+  bind_rows(tmd_agitots) |> 
+  select(varname, scope, fstatus, count, agistub, value) |> 
+  arrange(varname, scope, fstatus, count, agistub)
+
+
 
 
 ```
