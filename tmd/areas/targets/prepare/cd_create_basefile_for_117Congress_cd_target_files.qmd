@@ -124,7 +124,7 @@ cdlong4 <- cdlong3 |>
         .default = 0),
       
       count = case_when(
-        vtype == "count" ~ 1,
+        vtype == "count" ~ 2, # correction - used to be 1
         vtype == "amount" ~ 0,
         .default = -99),
       
