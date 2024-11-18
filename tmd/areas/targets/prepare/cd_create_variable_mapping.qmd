@@ -29,7 +29,7 @@ varname, basevname, description
 XTOT, XTOT, Population
 c00100, MARS1, fstatus == 1
 c00100, MARS2, fstatus == 2
-c00100, MARS4, fstatus == 3
+c00100, MARS4, fstatus == 4
 c00100, v00100, Adjusted gross income
 e00200, v00200, Wages
 e00300, v00300, Taxable interest income
@@ -37,9 +37,13 @@ e01700, v01700, Pensions and annuities included in AGI
 e26270, v26270, Combined partnership and S corporation net income/loss
 e18400, v18425, State and local income or sales taxes
 e18500, v18500, State and local real estate taxes
+e02400, v02500, Social Security total
 ", show_col_types = FALSE)
 
-# note that e18400 is not reported for districts; we have allocated it to districts by S&L income taxes
+# note that:
+#   e18400 is not reported for districts; we have allocated it to districts by S&L income taxes
+#   e2500 is not reported for districts; allocated to districts by e2500 taxable Social Security
+
 
 write_csv(vmap, fs::path(CDINTERMEDIATE, "cd_variable_mapping.csv"))
 

@@ -41,6 +41,7 @@ fnrecipe <- args[1]
 # uncomment a line below for interactive testing
 # fnrecipe <- "temp.json"
 # fnrecipe <- "phase5_salt.json"
+# fnrecipe <- "phase6_add_socsec.json"
 
 # Check if the specified file exists
 fpath <- here::here(CDRECIPES, fnrecipe)
@@ -124,11 +125,18 @@ if("agi_exclude" %in% names(target_rules)){
 # target_stubs
   
 # create a dataframe to match against the stack data for targets
+vmap
+vmap2 <- vmap |> 
+  mutate(fstatus=case_when(basevname=="MARS1" ~ 1,
+                           basevname=="MARS2" ~ 2,
+                           basevname=="MARS4" ~ 4,
+                           .default = 0))
+
 targets_matchframe <- target_stubs |>
   mutate(sort=row_number() + 1) |> 
   rows_insert(tibble(varname="XTOT", scope=0, count=0, fstatus=0, agistub=0, sort=1),
               by="varname") |> 
-  left_join(vmap, by = join_by(varname)) |> 
+  left_join(vmap2, by = join_by(varname, fstatus),  relationship = "many-to-many") |>
   mutate(basevname = case_when(fstatus == 1 ~ "MARS1",
                                fstatus == 2 ~ "MARS2",
                                fstatus == 4 ~ "MARS4",
@@ -141,7 +149,8 @@ targets_matchframe <- target_stubs |>
 
 ##.. filtering Congressional districts ----
 cdlist <- unlist(cdrecipe$cdlist)
-if(length(cdlist) > 1){
+cdlist
+if(cdlist != "all"){
   cd_filter <- expr(statecd %in% cdlist)
 } else if(length(cdlist) == 1 & cdlist == "all") {
   cd_filter <- TRUE

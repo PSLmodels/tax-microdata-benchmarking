@@ -8,6 +8,8 @@ editor_options:
 
 Goal: Construct targets for variables that don't have appropriate targets in the SOI Congressional District data
 
+At present we create targets for SALT deductions and for total Social Security income.
+
 ## Overview
 
 ### State and Local Tax (SALT) deductions
@@ -59,11 +61,20 @@ source(here::here("R", "functions.R"))
 
 ```
 
-
-## SALT deductions
+Define the agi cutpoints that the IRS uses in its published 2021 Congressional district data.
 
 ```{r}
-#| label: get-salt-related-data
+#| label: agi-cutpoints
+
+# Define the agi cutpoints that the IRS uses in its published 2021 Congressional district data
+icuts <- c(-Inf, 1, 10e3, 25e3, 50e3, 75e3, 100e3, 200e3, 500e3, Inf)
+
+```
+
+Get the unenhanced target data and the tmd2021 cached data.
+
+```{r}
+#| label: get-data
 #| output: false
 
 stack <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile_sessions.csv"))
@@ -75,6 +86,8 @@ ns(tmd2021)
 
 ```
 
+
+## SALT deductions
 
 ### Explore SALT-related data
 
@@ -164,12 +177,11 @@ stack |>
 
 ### Get national SALT targets and allocate to Congressional districts
 
+Make preliminary salt targets.
 
 ```{r}
 #| label: salt-prelim
 #| output: false
-
-icuts <- c(-Inf, 1, 10e3, 25e3, 50e3, 75e3, 100e3, 200e3, 500e3, Inf)
 
 saltus <- tmd2021 |> 
   select(RECID, data_source, s006, c00100, e18400, e18500) |> 
@@ -187,8 +199,8 @@ saltus
 saltus_long <- saltus |> 
   pivot_longer(cols=c(e18400, e18500),
                names_to = "tmdvname",
-               values_to = "saltus") |> 
-  mutate(vname=case_when(tmdvname=="e18400" ~ "A18425",
+               values_to = "tmdsum") |> 
+  mutate(vname=case_when(tmdvname=="e18400" ~ "A18425", # NOTE: we map tmd e18400 to IRS A18425 - INTENTIONAL!!
                          tmdvname=="e18500" ~ "A18500",
                          .default = "ERROR"))
 count(saltus_long, tmdvname, vname)  
@@ -235,36 +247,36 @@ saltcd2 |>
 # 1 A18425 82008216000
 # 2 A18500 23310286000
 
-saltcd3 <- saltcd2 |> 
-  right_join(saltus_long |> 
-               filter(data_source==1), # only use filers!
-             by = join_by(agistub, vname),
-             relationship = "many-to-many") |> 
-  mutate(target=saltus *  soishare)
-head(saltcd3)
-
-saltcd3 |> 
-  filter(str_detect(vname, "18425"), statecd=="NY01", agistub==2, session==117)
-
-# compare totals
-# sums are a little low because we have nothing in agirange 1
-saltcd3 |> summarise(target=sum(target), .by=c(vname, session))
-saltus_long |> filter(data_source==1) |> summarise(saltus=sum(saltus), .by=c(vname, tmdvname))
-
-saltcd3 |> 
-  summarise(target=sum(target), .by=c(vname, session, agistub, agirange)) |> 
-  filter(session==117)
-
-saltus
-
 ```
 
 
-Make final SALT targets and save
+Make final SALT targets
 
 ```{r}
 #| label: salt-final
 #| output: false
+
+salt_final <- saltcd2 |> 
+  right_join(saltus_long |> 
+               filter(data_source==1), # only use filers!
+             by = join_by(agistub, vname),
+             relationship = "many-to-many") |> 
+  mutate(target=tmdsum *  soishare)
+head(salt_final)
+
+salt_final |> 
+  filter(str_detect(vname, "18425"), statecd=="NY01", agistub==2, session==117)
+
+# compare totals
+# sums are a little low because we have nothing in agirange 1
+salt_final |> summarise(target=sum(target), .by=c(vname, session))
+saltus_long |> filter(data_source==1) |> summarise(tmdsum=sum(tmdsum), .by=c(vname, tmdvname))
+
+salt_final |> 
+  summarise(target=sum(target), .by=c(vname, session, agistub, agirange)) |> 
+  filter(session==117)
+
+saltus
 
 glimpse(stack)
 names(stack) # we want this
@@ -272,24 +284,217 @@ names(stack) # we want this
 stack |> 
   filter(vname %in% c("A18425", "A18500")) 
 
-glimpse(saltcd3)
-count(saltcd3, vname, basevname, description)
+glimpse(salt_final)
+count(salt_final, vname, basevname, description)
+
+salt_final
+setdiff(names(salt_final), names(stack))
+
+```
 
 
-saltcd3
-setdiff(names(saltcd3), names(stack))
+## Social Security income
+
+### Explore Social Security related data
+
+We only have 2021 taxable Social Security values in the Congressional district data (A02500 and N02500). We'd really like to have total Social Security.
+
+The tmd2021_cache.csv has total Social Security (e02400) and calculated taxable Social Security (c02500).
+
+(See commented-out lines in the code chunk below for details on what's in each file.)
+
+Pragmatic solution: We will *ASSUME* that total Social Security (e02400) is distributed across Congressional districts in the same way that taxable Social Security (A02500) is distributed across districts. We use this assumption to calculate Congressional district targets for total Social Security (e02400).
+
+It may be possible at future date to test this assumption, if state-level data have both total and taxable Social Security income. Then we would be able to see how similar the distribution of taxable Social Security income across states is to the distribution of total Social Security income.
+
+
+```{r}
+#| label: socsec-explore
+#| output: false
+#| eval: false
+
+glimpse(stack)
+count(stack, stabbr)
+count(stack, basevname, vname, description)
+count(stack, basevname, vname, description) |> filter(str_detect(vname, "18500"))
+
+# summarize Social Security -related values in tmd2021
+tmd2021 |> 
+  mutate(wtdn=1) |> 
+  summarize(across(c(wtdn, e02400, c02500), # e02500 doesn't exist on tmd
+                   \(x) sum(x * s006)), .by=data_source) |> 
+  pivot_longer(-data_source) |>
+  pivot_wider(names_from = data_source, names_prefix = "ds") |> 
+  gt() |> 
+  fmt_number(decimals=0)
+
+# summarize Social Security-related variables in IRS SOI Congressional District data -- we only have 02500
+stack |> 
+  filter(vname %in% c("A02500", "N02500")) |> 
+  filter(agistub==0, count==0, fstatus==0, session==117) |> 
+  summarise(target=sum(target), .by=vname) |> 
+  gt() |> 
+  fmt_number(decimals=0)
+
+
+# pip install --upgrade taxcalc
+
+# see google doc https://docs.google.com/document/d/1IjbEe5MjHoAwlXQ4dhI5J13FopJSU2nIaeEg_H0UB_o/edit?tab=t.0
+
+# e02400 Gross Social Security benefits
+#   2015: 1040 line 20a, 2021: 1040 line 6a
+#   2015: IRS full sample 605,152,093 PUF 604,770,469
+#   2021: $791.161 nationally 21in14ar.xls_BW9
+#   2021 tmd data_source==1: 799,905,378,927
+
+# e02500 Social Security benefits in AGI
+#   2015: 1040 line 20b, 2021: 1040 line 6b
+#   2015: IRS full sample 277,411,075 PUF 276,960,978
+#   2021: $412.830 nationally 21in14ar.xls_BY9
+# c02500 Social security (OASDI) benefits included in AGI 
+#   2021 tmd data_source==1: 412,904,596,100
+# A02500 Taxable Social Security benefits amount
+#   2021 tmd data_source==1: 410,820,512,000
+
+```
+
+
+
+### Get national Social Security target and allocate to Congressional districts
+
+Make preliminary Social Security targets.
+
+```{r}
+#| label: socsec-prelim
+#| output: false
+
+socsecus <- tmd2021 |> 
+  select(RECID, data_source, s006, c00100, e02400) |> 
+  mutate(irange=cut(c00100, icuts, right = FALSE, ordered_result = TRUE),
+         irange = factor(irange, 
+                         levels = levels(irange), # Ensure ordering is maintained
+                         labels = str_replace(levels(irange), ",", ", ")), # more-readable labels
+         agistub=as.numeric(irange)) |> 
+  summarise(e02400=sum(e02400 * s006),
+            .by=c(data_source, agistub, irange)) |> 
+  arrange(data_source, agistub)
+socsecus
+
+socsecus_long <- socsecus |> 
+  pivot_longer(cols=c(e02400),
+               names_to = "tmdvname",
+               values_to = "tmdsum") |> 
+  mutate(vname=case_when(tmdvname=="e02400" ~ "A02500", # NOTE: we map tmd total to IRS taxable Social Security - INTENTIONAL!!
+                         .default = "ERROR"))
+count(socsecus_long, tmdvname, vname)  
+
+
+# now cd-level targets
+socseccd1 <- stack |> 
+  filter(vname %in% c("A02500"), # we only get A02500 because unfortunately there is no A02400
+         agistub != 0) |> 
+  rename(soivalue=target)
+  
+checksums <- socseccd1 |> 
+  summarise(soivalue=sum(soivalue),
+            .by=c(session, vname)) # values are correct, see notes above with totals
+
+skim(socseccd1) # no negative or missing values, good
+
+# calculate shares
+socseccd2 <- socseccd1 |> 
+  mutate(soisum=sum(soivalue),
+         soishare=ifelse(soisum == 0,  # keep same code as for salt
+                         0,
+                         soivalue / soisum),
+         .by=c(session, vname, agistub, agirange))
+
+# data checks - note that unlike SALT, we don't have any cells with zero values for soisum
+# so we don't have divide-by-zero issues that code above addresses nonetheless
+summary(socseccd2)
+skim(socseccd2)
+
+socseccd2 |> 
+  filter(str_detect(vname, "02500"), statecd=="NY01", agistub==2, session==117)
+
+# ca from spreadsheet A18425 is 82008216, A18500 is 23310286 
+socseccd2 |> 
+  filter(stabbr=="CA", session==117) |> 
+  summarise(stsum=sum(soivalue), .by=vname)
+#   vname        stsum
+#   <chr>        <dbl>
+# 1 A02500 42050284000
+
+```
+
+
+Make final Social Security targets
+
+```{r}
+#| label: socsec-final
+#| output: false
+
+socsec_final <- socseccd2 |> 
+  right_join(socsecus_long |> 
+               filter(data_source==1), # only use filers!
+             by = join_by(agistub, vname),
+             relationship = "many-to-many") |> 
+  mutate(target=tmdsum *  soishare)
+head(socsec_final)
+
+socsec_final |> 
+  filter(str_detect(vname, "18425"), statecd=="NY01", agistub==2, session==117)
+
+# compare totals
+# sums are a little low because we have nothing in agirange 1
+socsec_final |> summarise(target=sum(target), .by=c(vname, session))
+socsecus_long |> filter(data_source==1) |> summarise(tmdsum=sum(tmdsum), .by=c(vname, tmdvname))
+
+socsec_final |> 
+  summarise(target=sum(target), .by=c(vname, session, agistub, agirange)) |> 
+  filter(session==117)
+
+socsecus
+
+
+```
+
+
+## Combine enhancements and write the enhanced file
+
+Combine enhancements and add them to basefile targets:
+
+-   SALT deduction targets
+-   Social Security targets
+
+Write the resulting enhanced targets file
+
+```{r}
+#| label: enhance-targets-file
+#| output: false
+
+
+changevars <- c("A18425", "A18500", "A02500")
 
 f <- function(vname, var){
-  ifelse(vname %in% c("A18425", "A18500"),
+  ifelse(vname %in% changevars,
          paste0(var, "_original"),
          var)
 }
+stacknames <- names(stack)
 stack_enhanced <- stack |> 
   mutate(basevname=f(vname, basevname),
          description=f(vname, description),
          vname=f(vname, vname) # do vname last!
          ) |> 
-  bind_rows(saltcd3 |> select(all_of(names(stack))))
+  bind_rows(salt_final |> select(all_of(stacknames)),
+            socsec_final |> select(all_of(stacknames))
+            )
+
+pattern <- paste(changevars, collapse="|")
+count(stack_enhanced |> 
+        filter(str_detect(vname, pattern)),
+      basevname, vname)
 
 check <- stack_enhanced |> 
   filter(str_detect(vname, "18425"), statecd=="NY01", agistub %in% 1:2)
@@ -299,11 +504,17 @@ check |>
   # arrange() |>
   filter(count==0, agistub==2, session==117)
 
-saltcd3 |> 
+salt_final |> 
   filter(str_detect(vname, "18425"), statecd=="NY01", agistub==2, session==117)
+
+```
+
+
+```{r}
+#| label: write-enhanced-targets-file
+#| output: false
 
 write_csv(stack_enhanced, fs::path(CDINTERMEDIATE, "cdbasefile_enhanced.csv"))
 
 ```
-
 
