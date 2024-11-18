@@ -31,6 +31,7 @@ fpath <-  fs::path(TMDDIR, "cached_allvars.csv")
 tmd2021 <- vroom(fpath)
 ns(tmd2021)
 
+
 ```
 
 ## Create comparison file
@@ -95,7 +96,7 @@ tmd2 <- tmd2021 |>
            as.integer()) |> 
   summarize(across(all_of(variables_to_sum),
                    list(amount = \(x) sum(x * s006),
-                        nzcount = \(x) sum(x!=0 * s006),
+                        nzcount = \(x) sum((x!=0) * s006),
                         allcount= \(x) sum(s006))),
                    .by=c(scope, agistub)) |> 
   arrange(scope, agistub)
@@ -104,6 +105,11 @@ tmd2 <- tmd2021 |>
 tmd2 |> select(scope, agistub, contains("nzcount"))
 tmd2 |> select(scope, agistub, contains("allcount"))
 tmd2 |> select(scope, agistub, contains("amount"))
+
+tmd2 |> 
+  filter(scope==1) |> 
+  select(scope, agistub, contains("c00100") & contains("count")) |> 
+  janitor::adorn_totals()
 
 
 # flip around and get count
@@ -117,10 +123,9 @@ tmd3 <- tmd2 |>
     .default = -9e9))
 count(tmd3, count, type)
 
-tmd3 |> filter(count==2, agistub==4) # looks good
+tmd3 |> filter(count==2, agistub==1) # looks good
 tmd3 |> filter(count==1, agistub==4) 
 # 37,694,755 is the bad val allcount
-  
 
 # separate the mars and nonmars variables to get proper mars values
 tmdxmars <- tmd3 |> 
@@ -184,7 +189,7 @@ tmd_adjusted <- tmd_scopes |>
 ```
 
 
-## Prepare comaparison file
+## Prepare comparison file
 
 ```{r}
 #| label: prepare-compare
@@ -201,12 +206,45 @@ comp <- tmd_adjusted |>
 summary(comp)
 skim(comp)
 
+write_csv(comp, fs::path(CDINTERMEDIATE, "cd_tmd_irs_compare.csv"))
+
+```
+
+## Explore comparisons file
+
+```{r}
+#| label: explore-compare
+#| eval: true
+#| output: false
+
+comp <- read_csv(fs::path(CDINTERMEDIATE, "cd_tmd_irs_compare.csv"))
+
 comp |> 
   arrange(desc(abs(pdiff)))
 
 badmatches <- c("e18400", "e18500", "e02400") # variables where tmd and IRS concepts are not well aligned
+
+badmatches <- c("e18400", "e18500", "e02400", "e26270") # to make it easier to examine other variables
+
+check <- comp |> 
+  filter(!varname %in% badmatches, count==2) |> 
+  arrange(desc(abs(pdiff)))
+
+tmd2021 |> 
+  filter(data_source==1, c00100 != 0) |> 
+  summarise(n=sum(s006)) # 160850840
+
+temp2 <- tmd_adjusted |> filter(fstatus==0, agistub==0, varname=="c00100", scope==1)
+temp2 |> gt() |> fmt_number(wtdvalue, decimals=0)
+# count 1 161,696,687
+# count 2 160,850,840
+
+temp <- comp |> 
+  filter(varname=="c00100", scope==1, agistub==0, count==2)
+# target 157375370 value 160850840
+
 comp |> 
-  filter(!varname %in% badmatches, count==1) |> 
+  filter(!varname %in% badmatches) |> 
   arrange(desc(abs(pdiff)))
 
 comp |> 
@@ -239,6 +277,7 @@ verybad |>
 #      agistub 0 is within 1.5% but ranges are way off
 #      should we create a shared-down variable?
 #  - e00300 taxable interest seems a little off
+
 
 ```
 
