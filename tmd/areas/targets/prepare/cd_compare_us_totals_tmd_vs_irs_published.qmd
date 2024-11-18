@@ -35,29 +35,34 @@ ns(tmd2021)
 
 ## Create comparison file
 
+Prepare Congressional district data.
+
 ```{r}
-#| label: create-comp
+#| label: prepare-cd-data
 #| output: false
 
-vmap
+# vmap
 
-#.. cd data ----
 cd2 <- cdirs |> 
   filter(basevname %in% vmap$basevname,
          session==118,
-         scope==1)
+         scope==1 | basevname=="XTOT")
 
 count(cd2, basevname, vname)
 count(cd2, rectype)
+count(cd2, scope)
+count(cd2, fstatus)
+count(cd2 |> filter(str_detect(vname, "MARS")), 
+      vname, fstatus)
 skim(cd2)
 
 cd3 <- cd2 |> 
   summarise(target=sum(target),
             .by=c(basevname, count, agistub, agirange, description))
 
-#.. tmd data ----
-
-
-
 ```
+
+Prepare tmd data
+
+```{r}
 
