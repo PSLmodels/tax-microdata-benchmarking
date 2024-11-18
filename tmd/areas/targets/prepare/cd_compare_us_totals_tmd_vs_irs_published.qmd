@@ -145,6 +145,16 @@ tmdmars <- tmd3 |>
 
 # combine files and create selected additional totals
 tmdsums1 <- bind_rows(tmdxmars, tmdmars)
+
+# concatenate totals across agi ranges
+tmd_agitots <- tmdsums1 |> 
+  summarise(value=sum(value), 
+                      .by=c(varname, scope, fstatus, count)) |> 
+  mutate(agistub=0) |> 
+  bind_rows(tmdsums1)
+
+
+
 ```
 
 
