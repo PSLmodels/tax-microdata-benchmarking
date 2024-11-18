@@ -92,4 +92,16 @@ vmap2 <- vmap |>
 
 agicuts <- c(-Inf, 1, 10e3, 25e3, 50e3, 75e3, 100e3, 200e3, 500e3, Inf)
 
+tmd2 <- tmd2021 |> 
+  mutate(scope=ifelse(data_source==0, 2, 1),
+         MARS1=MARS==1, MARS2=MARS==2, MARS4=MARS==4,
+         agistub=cut(c00100, agicuts, right = FALSE, ordered_result = TRUE) |> 
+           as.integer()) |> 
+  summarize(across(all_of(vmap2$varname),
+                   list(amount = \(x) sum(x * s006),
+                        nzcount = \(x) sum(x!=0 * s006),
+                        allcount= \(x) sum(s006))),
+                   .by=c(scope, agistub)) |> 
+  arrange(scope, agistub)
+
 
