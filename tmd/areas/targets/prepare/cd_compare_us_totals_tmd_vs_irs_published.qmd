@@ -1,0 +1,283 @@
+---
+output: html_document
+editor_options: 
+ chunk_output_type: console
+---
+
+# Compare U.S. totals of mapped variables, tax-microdata-benchmarking vs. IRS published CD values
+
+
+## Setup 
+```{r}
+#| label: setup
+
+source(here::here("R", "libraries.R"))
+source(here::here("R", "constants.R"))
+source(here::here("R", "functions.R"))
+
+```
+
+## Get data
+
+```{r}
+#| label: get-data
+#| output: false
+
+vmap <- read_csv(fs::path(CDINTERMEDIATE, "cd_variable_mapping.csv"))
+cdirs <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile_sessions.csv"))
+
+TMDDIR <- here::here("..", "..", "..", "storage", "output")
+fpath <-  fs::path(TMDDIR, "cached_allvars.csv")
+tmd2021 <- vroom(fpath)
+ns(tmd2021)
+
+
+```
+
+## Create comparison file
+
+Prepare Congressional district data.
+
+```{r}
+#| label: prepare-cd-data
+#| output: false
+
+count(cdirs, count)
+
+cd2 <- cdirs |> 
+  filter(basevname %in% vmap$basevname,
+         session==118,
+         scope==1 | basevname=="XTOT")
+
+glimpse(cd2)
+count(cd2, count)
+count(cd2, basevname, vname)
+count(cd2, rectype)
+count(cd2, scope)
+count(cd2, fstatus)
+count(cd2 |> filter(str_detect(vname, "MARS")), 
+      vname, fstatus)
+skim(cd2)
+
+cd_adjusted <- cd2 |> 
+  summarise(target=sum(target),
+            .by=c(basevname, vname, scope, count, fstatus, agistub, agirange, description))
+
+```
+
+Prepare tmd data
+
+```{r}
+#| label: prepare-tmd-data
+#| eval: true
+#| output: false
+
+# 0 = Total
+# 1 = Under $1
+# 2 = $1 under $10,000
+# 3 = $10,000 under $25,000
+# 4 = $25,000 under $50,000
+# 5 = $50,000 under $75,000
+# 6 = $75,000 under $100,000
+# 7 = $100,000 under $200,000
+# 8 = $200,000 under $500,000
+# 9 = $500,000 or more
+
+agicuts <- c(-Inf, 1, 10e3, 25e3, 50e3, 75e3, 100e3, 200e3, 500e3, Inf)
+
+variables_to_sum <- ifelse(str_starts(vmap$basevname, "MARS"),
+                   vmap$basevname,
+                   vmap$varname)
+
+tmd2 <- tmd2021 |> 
+  mutate(scope=ifelse(data_source==0, 2, 1),
+         MARS1=MARS==1, MARS2=MARS==2, MARS4=MARS==4,
+         agistub=cut(c00100, agicuts, right = FALSE, ordered_result = TRUE) |> 
+           as.integer()) |> 
+  summarize(across(all_of(variables_to_sum),
+                   list(amount = \(x) sum(x * s006),
+                        nzcount = \(x) sum((x!=0) * s006),
+                        allcount= \(x) sum(s006))),
+                   .by=c(scope, agistub)) |> 
+  arrange(scope, agistub)
+
+# look at nzcounts
+tmd2 |> select(scope, agistub, contains("nzcount"))
+tmd2 |> select(scope, agistub, contains("allcount"))
+tmd2 |> select(scope, agistub, contains("amount"))
+
+tmd2 |> 
+  filter(scope==1) |> 
+  select(scope, agistub, contains("c00100") & contains("count")) |> 
+  janitor::adorn_totals()
+
+
+# flip around and get count
+tmd3 <- tmd2 |> 
+  pivot_longer(cols=-c(scope, agistub), values_to = "wtdvalue") |> 
+  separate_wider_delim(cols=name, delim="_", names=c("varname", "type")) |> 
+  mutate(count = case_when(
+    type == "amount"   ~ 0,
+    type == "nzcount"  ~ 2,
+    type == "allcount" ~ 1,
+    .default = -9e9))
+count(tmd3, count, type)
+
+tmd3 |> filter(count==2, agistub==1) # looks good
+tmd3 |> filter(count==1, agistub==4) 
+# 37,694,755 is the bad val allcount
+
+# separate the mars and nonmars variables to get proper mars values
+tmdxmars <- tmd3 |> 
+  filter(str_detect(varname, "MARS", negate = TRUE)) |> 
+  filter(!(varname=="XTOT" & type != "amount")) |> 
+  mutate(fstatus=0) |> 
+  select(varname, scope, fstatus, count, agistub, wtdvalue) |> 
+  arrange(varname, scope, fstatus, count, agistub)
+
+# tmdxmars |> filter(varname=="e00200", agistub==4) # we'll want count==2 for counts -- nonzero counts
+
+# check tmd mars totals
+ tmd3 |> 
+   filter(str_detect(varname, "MARS")) |> 
+   summarize(wtdvalue=sum(wtdvalue),
+             .by=c(varname, scope, type, count))
+ # this helps verify that we want type=="amount" as the number of returns
+ # nothing else is useful
+ # CAUTION: to be consistent with the xxxx_targets.csv file format rules
+ # we need to set count to 1 (number of units with any value) INSTEAD of zero
+ # and by convention we'll use c00100 as the variable name but any variable would be the same
+ 
+tmdmars <- tmd3 |> 
+  filter(str_detect(varname, "MARS"),
+         type=="amount") |> 
+  mutate(fstatus=str_sub(varname, -1) |> 
+           as.integer(),
+         varname="c00100") |> 
+  select(varname, scope, fstatus, count, agistub, wtdvalue) |> 
+  arrange(varname, scope, fstatus, count, agistub)
+
+# combine files and concatenate totals across agi ranges
+tmdsums1 <- bind_rows(tmdxmars, tmdmars)
+tmd_agitots <- tmdsums1 |> 
+  summarise(wtdvalue=sum(wtdvalue), 
+                      .by=c(varname, scope, fstatus, count)) |> 
+  mutate(agistub=0) |> 
+  bind_rows(tmdsums1)
+
+# concatenate totals across scopes
+tmd_scopes <- tmd_agitots |> 
+  summarise(wtdvalue=sum(wtdvalue), 
+                      .by=c(varname, agistub, fstatus, count)) |> 
+  mutate(scope=0) |> 
+  bind_rows(tmd_agitots) |> 
+  select(varname, scope, fstatus, count, agistub, wtdvalue) |> 
+  arrange(varname, scope, fstatus, count, agistub)
+
+# we need to put fstatus on vmap for proper merging
+vmap2 <- vmap |> 
+  mutate(fstatus=case_when(basevname=="MARS1" ~ 1,
+                           basevname=="MARS2" ~ 2,
+                           basevname=="MARS4" ~ 4,
+                           .default = 0) |> 
+           as.integer())
+
+tmd_adjusted <- tmd_scopes |> 
+  left_join(vmap2,
+            by = join_by(varname, fstatus))
+
+```
+
+
+## Prepare comparison file
+
+```{r}
+#| label: prepare-compare
+#| eval: true
+#| output: false
+
+comp <- tmd_adjusted |> 
+  select(-description) |> 
+  inner_join(cd_adjusted,
+            by = join_by(scope, fstatus, count, agistub, basevname)) |> 
+  relocate(wtdvalue, .after = target) |> 
+  mutate(diff=wtdvalue - target,
+         pdiff=diff / target)
+summary(comp)
+skim(comp)
+
+write_csv(comp, fs::path(CDINTERMEDIATE, "cd_tmd_irs_compare.csv"))
+
+```
+
+## Explore comparisons file
+
+```{r}
+#| label: explore-compare
+#| eval: true
+#| output: false
+
+comp <- read_csv(fs::path(CDINTERMEDIATE, "cd_tmd_irs_compare.csv"))
+
+comp |> 
+  arrange(desc(abs(pdiff)))
+
+badmatches <- c("e18400", "e18500", "e02400") # variables where tmd and IRS concepts are not well aligned
+
+badmatches <- c("e18400", "e18500", "e02400", "e26270") # to make it easier to examine other variables
+
+check <- comp |> 
+  filter(!varname %in% badmatches, count==2) |> 
+  arrange(desc(abs(pdiff)))
+
+tmd2021 |> 
+  filter(data_source==1, c00100 != 0) |> 
+  summarise(n=sum(s006)) # 160850840
+
+temp2 <- tmd_adjusted |> filter(fstatus==0, agistub==0, varname=="c00100", scope==1)
+temp2 |> gt() |> fmt_number(wtdvalue, decimals=0)
+# count 1 161,696,687
+# count 2 160,850,840
+
+temp <- comp |> 
+  filter(varname=="c00100", scope==1, agistub==0, count==2)
+# target 157375370 value 160850840
+
+comp |> 
+  filter(!varname %in% badmatches) |> 
+  arrange(desc(abs(pdiff)))
+
+comp |> 
+  filter(!varname %in% badmatches, count==1) |> 
+  arrange(desc(wtdvalue))
+
+comp |> 
+  filter(!varname %in% badmatches, count==1, agistub==4) |> 
+  arrange(desc(wtdvalue))
+
+check <- comp |> 
+  filter(!varname %in% badmatches, count==0) |> 
+  arrange(desc(abs(pdiff)))
+
+check |> 
+  filter(agistub==0)
+
+check |> 
+  filter(agistub==9)
+
+verybad <- check |> 
+  filter(abs(pdiff) >= .3)
+
+verybad
+verybad |> 
+  filter(agistub==0)
+
+# Lessons:
+#  - e26270 Partnership / S Corp looks like it could be a conceptual mismatch?? Or some other problem in concept?
+#      agistub 0 is within 1.5% but ranges are way off
+#      should we create a shared-down variable?
+#  - e00300 taxable interest seems a little off
+
+
+```
+

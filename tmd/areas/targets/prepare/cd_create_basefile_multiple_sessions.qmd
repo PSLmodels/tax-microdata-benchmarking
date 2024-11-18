@@ -1,0 +1,56 @@
+---
+output: html_document
+editor_options: 
+ chunk_output_type: console
+---
+
+# Create a stacked Congressional district file with boundaries for 117th and 118th Congressional sessions
+
+## Setup
+
+```{r}
+#| label: setup
+#| output: false
+
+source(here::here("R", "libraries.R"))
+source(here::here("R", "constants.R"))
+source(here::here("R", "functions.R"))
+
+# phase4_statecds <- c("AK00", "DE00", "ID01", "ID02", "ME02", "MT00", "ND00", "PA08", "SD00", "WY00")
+# cd_create_basefile_multiple_sessions
+```
+
+
+## Get data
+
+```{r}
+
+
+cd117 <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile_117.csv"))
+cd118 <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile_118.csv"))
+
+stack <- bind_rows(
+  cd117 |> mutate(session=117),
+  cd118 |> mutate(session=118)
+)
+
+glimpse(stack)
+states <- stack |> 
+  summarise(target=sum(target), 
+            .by=c(session, stabbr, src, rectype,
+                     agistub, agilo, agihi, basevname,
+                     scope, fstatus, count, vname, description, agirange))
+  
+states |> 
+  pivot_wider(names_from = session,
+              values_from = target,
+              names_prefix = "s"
+              ) |> 
+  mutate(diff=s118 - s117,
+         pdiff=diff / s117) |> 
+  arrange(desc(abs(pdiff))) # good all the state sums work
+
+write_csv(stack, fs::path(CDINTERMEDIATE, "cdbasefile_sessions.csv"))
+
+```
+
