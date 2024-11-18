@@ -175,8 +175,15 @@ tmd_adjusted <- tmd_scopes |>
 #| output: false
 
 comp <- tmd_adjusted |> 
-  left_join(cd_adjusted,
-            by = join_by(scope, fstatus, count, agistub, basevname, description))
+  select(-description) |> 
+  inner_join(cd_adjusted,
+            by = join_by(scope, fstatus, count, agistub, basevname)) |> 
+  relocate(value, .after = target) |> 
+  mutate(diff=value - target,
+         pdiff=diff / target)
+summary(comp)
+skim(comp)
+
 
 ```
 
