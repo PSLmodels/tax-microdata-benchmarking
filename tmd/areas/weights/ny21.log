@@ -1,0 +1,61 @@
+CREATING WEIGHTS FILE FOR AREA ny21 ...
+INITIAL WEIGHTS STATISTICS:
+sum of national weights = 1.840247e+08
+area weights_scale = 2.329781e-03
+USING ny21_targets.csv FILE WITH 82 TARGETS
+ASSUMING TARGET_RATIO_TOLERANCE = 0.004000
+DISTRIBUTION OF TARGET ACT/EXP RATIOS (n=82):
+low bin ratio    high bin ratio    bin #    cum #     bin %     cum %
+>=     0.400000, <     0.800000:       4        4     4.88%     4.88%
+>=     0.800000, <     0.900000:       3        7     3.66%     8.54%
+>=     0.900000, <     0.990000:      12       19    14.63%    23.17%
+>=     0.990000, <     0.996000:       0       19     0.00%    23.17%
+>=     0.996000, <     1.004000:       2       21     2.44%    25.61%
+>=     1.004000, <     1.010000:       1       22     1.22%    26.83%
+>=     1.010000, <     1.100000:       9       31    10.98%    37.80%
+>=     1.100000, <     1.200000:       9       40    10.98%    48.78%
+>=     1.200000, <     1.600000:      14       54    17.07%    65.85%
+>=     1.600000, <     2.000000:      12       66    14.63%    80.49%
+>=     2.000000, <     3.000000:      14       80    17.07%    97.56%
+>=     3.000000, <     4.000000:       2       82     2.44%   100.00%
+MINIMUM VALUE OF TARGET ACT/EXP RATIO = 0.669
+MAXIMUM VALUE OF TARGET ACT/EXP RATIO = 3.083
+US_PROPORTIONALLY_SCALED_TARGET_RMSE= 7.375708784e-01
+target_matrix sparsity ratio = 0.929
+OPTIMIZE WEIGHT RATIOS POSSIBLY IN A REGULARIZATION LOOP
+  where initial REGULARIZATION DELTA value is 1.000000e-09
+  and there is only one REGULARIZATION LOOP
+  and where target_matrix.shape= (225256, 82)
+  ::loop,delta,misses:   1   1.000000e-09   0
+>>> final delta loop iterations=407  success=True
+>>> message: CONVERGENCE: REL_REDUCTION_OF_F_<=_FACTR*EPSMCH
+>>> L-BFGS-B optimized objective function value: 3.814234922e-05
+AREA-OPTIMIZED_TARGET_MISSES= 0
+DISTRIBUTION OF TARGET ACT/EXP RATIOS (n=82):
+  with REGULARIZATION_DELTA= 1.000000e-09
+low bin ratio    high bin ratio    bin #    cum #     bin %     cum %
+>=     0.996000, <     1.004000:      82       82   100.00%   100.00%
+MINIMUM VALUE OF TARGET ACT/EXP RATIO = 0.999
+MAXIMUM VALUE OF TARGET ACT/EXP RATIO = 1.002
+AREA-OPTIMIZED_TARGET_RMSE= 3.582120066e-04
+DISTRIBUTION OF AREA/US WEIGHT RATIO (n=225256):
+  with REGULARIZATION_DELTA= 1.000000e-09
+low bin ratio    high bin ratio    bin #    cum #     bin %     cum %
+>=     0.000000, <     0.000001:      27       27     0.01%     0.01%
+>=     0.000001, <     0.100000:    9749     9776     4.33%     4.34%
+>=     0.100000, <     0.200000:    4139    13915     1.84%     6.18%
+>=     0.200000, <     0.500000:   16007    29922     7.11%    13.28%
+>=     0.500000, <     0.800000:   34755    64677    15.43%    28.71%
+>=     0.800000, <     0.850000:   12872    77549     5.71%    34.43%
+>=     0.850000, <     0.900000:   18966    96515     8.42%    42.85%
+>=     0.900000, <     0.950000:   19631   116146     8.71%    51.56%
+>=     0.950000, <     1.000000:   35814   151960    15.90%    67.46%
+>=     1.000000, <     1.050000:   31899   183859    14.16%    81.62%
+>=     1.050000, <     1.100000:   13056   196915     5.80%    87.42%
+>=     1.100000, <     1.150000:    8547   205462     3.79%    91.21%
+>=     1.150000, <     1.200000:    6076   211538     2.70%    93.91%
+>=     1.200000, <     2.000000:   13112   224650     5.82%    99.73%
+>=     2.000000, <     5.000000:     603   225253     0.27%   100.00%
+>=     5.000000, <    10.000000:       2   225255     0.00%   100.00%
+>=    10.000000, <   100.000000:       1   225256     0.00%   100.00%
+RMSE OF AREA/US WEIGHT RATIO DEVIATIONS FROM ONE = 3.501686e-01
