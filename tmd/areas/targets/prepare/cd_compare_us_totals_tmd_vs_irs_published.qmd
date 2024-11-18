@@ -41,11 +41,15 @@ Prepare Congressional district data.
 #| label: prepare-cd-data
 #| output: false
 
+count(cdirs, count)
+
 cd2 <- cdirs |> 
   filter(basevname %in% vmap$basevname,
          session==118,
          scope==1 | basevname=="XTOT")
 
+glimpse(cd2)
+count(cd2, count)
 count(cd2, basevname, vname)
 count(cd2, rectype)
 count(cd2, scope)
@@ -96,9 +100,15 @@ tmd2 <- tmd2021 |>
                    .by=c(scope, agistub)) |> 
   arrange(scope, agistub)
 
+# look at nzcounts
+tmd2 |> select(scope, agistub, contains("nzcount"))
+tmd2 |> select(scope, agistub, contains("allcount"))
+tmd2 |> select(scope, agistub, contains("amount"))
+
+
 # flip around and get count
 tmd3 <- tmd2 |> 
-  pivot_longer(cols=-c(scope, agistub)) |> 
+  pivot_longer(cols=-c(scope, agistub), values_to = "wtdvalue") |> 
   separate_wider_delim(cols=name, delim="_", names=c("varname", "type")) |> 
   mutate(count = case_when(
     type == "amount"   ~ 0,
@@ -107,18 +117,25 @@ tmd3 <- tmd2 |>
     .default = -9e9))
 count(tmd3, count, type)
 
+tmd3 |> filter(count==2, agistub==4) # looks good
+tmd3 |> filter(count==1, agistub==4) 
+# 37,694,755 is the bad val allcount
+  
+
 # separate the mars and nonmars variables to get proper mars values
 tmdxmars <- tmd3 |> 
   filter(str_detect(varname, "MARS", negate = TRUE)) |> 
   filter(!(varname=="XTOT" & type != "amount")) |> 
   mutate(fstatus=0) |> 
-  select(varname, scope, fstatus, count, agistub, value) |> 
+  select(varname, scope, fstatus, count, agistub, wtdvalue) |> 
   arrange(varname, scope, fstatus, count, agistub)
+
+# tmdxmars |> filter(varname=="e00200", agistub==4) # we'll want count==2 for counts -- nonzero counts
 
 # check tmd mars totals
  tmd3 |> 
    filter(str_detect(varname, "MARS")) |> 
-   summarize(value=sum(value),
+   summarize(wtdvalue=sum(wtdvalue),
              .by=c(varname, scope, type, count))
  # this helps verify that we want type=="amount" as the number of returns
  # nothing else is useful
@@ -132,24 +149,24 @@ tmdmars <- tmd3 |>
   mutate(fstatus=str_sub(varname, -1) |> 
            as.integer(),
          varname="c00100") |> 
-  select(varname, scope, fstatus, count, agistub, value) |> 
+  select(varname, scope, fstatus, count, agistub, wtdvalue) |> 
   arrange(varname, scope, fstatus, count, agistub)
 
 # combine files and concatenate totals across agi ranges
 tmdsums1 <- bind_rows(tmdxmars, tmdmars)
 tmd_agitots <- tmdsums1 |> 
-  summarise(value=sum(value), 
+  summarise(wtdvalue=sum(wtdvalue), 
                       .by=c(varname, scope, fstatus, count)) |> 
   mutate(agistub=0) |> 
   bind_rows(tmdsums1)
 
 # concatenate totals across scopes
 tmd_scopes <- tmd_agitots |> 
-  summarise(value=sum(value), 
+  summarise(wtdvalue=sum(wtdvalue), 
                       .by=c(varname, agistub, fstatus, count)) |> 
   mutate(scope=0) |> 
   bind_rows(tmd_agitots) |> 
-  select(varname, scope, fstatus, count, agistub, value) |> 
+  select(varname, scope, fstatus, count, agistub, wtdvalue) |> 
   arrange(varname, scope, fstatus, count, agistub)
 
 # we need to put fstatus on vmap for proper merging
@@ -178,12 +195,50 @@ comp <- tmd_adjusted |>
   select(-description) |> 
   inner_join(cd_adjusted,
             by = join_by(scope, fstatus, count, agistub, basevname)) |> 
-  relocate(value, .after = target) |> 
-  mutate(diff=value - target,
+  relocate(wtdvalue, .after = target) |> 
+  mutate(diff=wtdvalue - target,
          pdiff=diff / target)
 summary(comp)
 skim(comp)
 
+comp |> 
+  arrange(desc(abs(pdiff)))
+
+badmatches <- c("e18400", "e18500", "e02400") # variables where tmd and IRS concepts are not well aligned
+comp |> 
+  filter(!varname %in% badmatches, count==1) |> 
+  arrange(desc(abs(pdiff)))
+
+comp |> 
+  filter(!varname %in% badmatches, count==1) |> 
+  arrange(desc(wtdvalue))
+
+comp |> 
+  filter(!varname %in% badmatches, count==1, agistub==4) |> 
+  arrange(desc(wtdvalue))
+
+check <- comp |> 
+  filter(!varname %in% badmatches, count==0) |> 
+  arrange(desc(abs(pdiff)))
+
+check |> 
+  filter(agistub==0)
+
+check |> 
+  filter(agistub==9)
+
+verybad <- check |> 
+  filter(abs(pdiff) >= .3)
+
+verybad
+verybad |> 
+  filter(agistub==0)
+
+# Lessons:
+#  - e26270 Partnership / S Corp looks like it could be a conceptual mismatch?? Or some other problem in concept?
+#      agistub 0 is within 1.5% but ranges are way off
+#      should we create a shared-down variable?
+#  - e00300 taxable interest seems a little off
 
 ```
 
