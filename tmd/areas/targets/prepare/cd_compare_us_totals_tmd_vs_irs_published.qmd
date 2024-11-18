@@ -41,8 +41,6 @@ Prepare Congressional district data.
 #| label: prepare-cd-data
 #| output: false
 
-# vmap
-
 cd2 <- cdirs |> 
   filter(basevname %in% vmap$basevname,
          session==118,
@@ -69,9 +67,6 @@ Prepare tmd data
 #| eval: false
 #| output: false
 
-# icuts <- c(-Inf, 1, 10e3, 25e3, 50e3, 75e3, 100e3, 200e3, 500e3, Inf)
-# icuts <- CDICUTS
-
 # 0 = Total
 # 1 = Under $1
 # 2 = $1 under $10,000
@@ -83,11 +78,11 @@ Prepare tmd data
 # 8 = $200,000 under $500,000
 # 9 = $500,000 or more
 
+agicuts <- c(-Inf, 1, 10e3, 25e3, 50e3, 75e3, 100e3, 200e3, 500e3, Inf)
+
 variables_to_sum <- ifelse(str_starts(vmap$basevname, "MARS"),
                    vmap$basevname,
                    vmap$varname)
-
-agicuts <- c(-Inf, 1, 10e3, 25e3, 50e3, 75e3, 100e3, 200e3, 500e3, Inf)
 
 tmd2 <- tmd2021 |> 
   mutate(scope=ifelse(data_source==0, 2, 1),
@@ -140,10 +135,8 @@ tmdmars <- tmd3 |>
   select(varname, scope, fstatus, count, agistub, value) |> 
   arrange(varname, scope, fstatus, count, agistub)
 
-# combine files and create selected additional totals
+# combine files and concatenate totals across agi ranges
 tmdsums1 <- bind_rows(tmdxmars, tmdmars)
-
-# concatenate totals across agi ranges
 tmd_agitots <- tmdsums1 |> 
   summarise(value=sum(value), 
                       .by=c(varname, scope, fstatus, count)) |> 
@@ -159,6 +152,7 @@ tmd_scopes <- tmd_agitots |>
   select(varname, scope, fstatus, count, agistub, value) |> 
   arrange(varname, scope, fstatus, count, agistub)
 
+# we need to put fstatus on vmap for proper merging
 vmap2 <- vmap |> 
   mutate(fstatus=case_when(basevname=="MARS1" ~ 1,
                            basevname=="MARS2" ~ 2,
@@ -170,7 +164,6 @@ tmd_adjusted <- tmd_scopes |>
   left_join(vmap2,
             by = join_by(varname, fstatus))
 
-
 ```
 
 
@@ -181,6 +174,9 @@ tmd_adjusted <- tmd_scopes |>
 #| eval: false
 #| output: false
 
+comp <- tmd_adjusted |> 
+  left_join(cd_adjusted,
+            by = join_by(scope, fstatus, count, agistub, basevname, description))
 
 ```
 
