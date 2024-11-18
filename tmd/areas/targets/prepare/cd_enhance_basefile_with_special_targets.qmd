@@ -80,7 +80,7 @@ Get the unenhanced target data and the tmd2021 cached data.
 stack <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile_sessions.csv"))
 
 TMDDIR <- here::here("..", "..", "..", "storage", "output")
-fpath <-  fs::path(TMDDIR, "tmd2021_cache.csv")
+fpath <-  fs::path(TMDDIR, "cached_allvars.csv")
 tmd2021 <- vroom(fpath)
 ns(tmd2021)
 
@@ -127,7 +127,7 @@ stack |>
 # IRS values in 2015 per PUF documentation:
 #  Full sample 2015: 35,270,132,000
 #  PUF 2015: 35,280,959,000
-#  tmd2021_cache.csv data_source==1:
+#  cached_allvars.csv data_source==1:
 #    e18400: 445,295,833,890
 #    e18400_capped: 445,295,833,890
 #  Note: IRS national 2021 capped amount (per my notes) was $258.640 billion, not too far from the national CD N18425 amount of $249.3 billion
@@ -137,7 +137,7 @@ stack |>
 # IRS values in 2015 per PUF documentation
 #  Full sample 2015: 18,860,584,000
 #  PUF 2015: 18,885,310,000
-#  tmd2021_cache.csv data_source==1:
+#  cached_allvars.csv data_source==1:
 #    e18500: 226,186,527,940
 #    e18500_capped: 226,186,527,940
 
@@ -299,7 +299,7 @@ setdiff(names(salt_final), names(stack))
 
 We only have 2021 taxable Social Security values in the Congressional district data (A02500 and N02500). We'd really like to have total Social Security.
 
-The tmd2021_cache.csv has total Social Security (e02400) and calculated taxable Social Security (c02500).
+File cached_allvars.csv has total Social Security (e02400) and calculated taxable Social Security (c02500).
 
 (See commented-out lines in the code chunk below for details on what's in each file.)
 
