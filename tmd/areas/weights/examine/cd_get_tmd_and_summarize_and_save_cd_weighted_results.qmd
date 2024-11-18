@@ -12,7 +12,7 @@ Because this is time consuming and uses a lot of memory, and may not work well o
 
 Get data and merge: 
 
--   tmd2021 data used when creating area weights (tmd2021_cache.csv)
+-   tmd2021 data used when creating area weights (cached_allvars.csv)
 -   weights
 -   merge tmd2021 with weights
 
@@ -43,9 +43,8 @@ source(here::here("R", "functions.R"))
 
 ## Get tmd2021 file
 
-Get `tmd2021_cache.csv`, a saved version of data from an object constructed during creation of area weights, in the file `create_taxcalc_cached_files.py`. `tmd2021_cache.csv` is the then-current tmd file with 2021 values, run through Tax-Calculator with 2021 law, written as csv. It includes all Tax-Calculator input and output variables.
+Get `cached_allvars.csv`, a saved version of data from an object constructed during creation of area weights, in the file `create_taxcalc_cached_files.py`. `cached_allvars.csv` is the then-current tmd file with 2021 values, run through Tax-Calculator with 2021 law, written as csv. It includes all Tax-Calculator input and output variables.
 
-The master branch of tax-microdata-benchmarking does not write `tmd2021_cache.csv` (it saves a few key variables in a cache), but it is written in Don Boyd's fork, branch xprep2, (see commit fe0c687433217ef455e359d3f2450c9e3e18cc06).
 
 ```{r}
 #| label: get-tmd
@@ -53,7 +52,7 @@ The master branch of tax-microdata-benchmarking does not write `tmd2021_cache.cs
 #| output: false
 
 TMDDIR <- here::here("..", "..", "..", "storage", "output")
-fpath <-  fs::path(TMDDIR, "tmd2021_cache.csv")
+fpath <-  fs::path(TMDDIR, "cached_allvars.csv")  # tmd2021_cache.csv
 tmd2021 <- vroom(fpath) # ~ 600mb
 ns(tmd2021)
 # tmd2021 |> filter(row_number() < 20) |> select(RECID, s006, c00100)

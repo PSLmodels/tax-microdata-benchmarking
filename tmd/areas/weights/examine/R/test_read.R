@@ -26,7 +26,7 @@ mhhi2022 <- get_acs(
 
 # tmd2021_cache.csv -------------------------------------------------------
 TMDDIR <- here::here("..", "..", "..", "storage", "output")
-fpath <-  fs::path(TMDDIR, "tmd2021_cache.csv")
+fpath <-  fs::path(TMDDIR, "cached_allvars.csv")
 # tmd2021 <- read_csv(fpath)
 tmd2021 <- vroom(fpath)
 ns(tmd2021)
