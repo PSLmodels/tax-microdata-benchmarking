@@ -91,6 +91,8 @@ ns(tmd2021)
 
 ### Explore SALT-related data
 
+Exploration is interactive so we set eval: false.
+
 ```{r}
 #| label: salt-explore
 #| output: false
@@ -307,6 +309,7 @@ Pragmatic solution: We will *ASSUME* that total Social Security (e02400) is dist
 
 It may be possible at future date to test this assumption, if state-level data have both total and taxable Social Security income. Then we would be able to see how similar the distribution of taxable Social Security income across states is to the distribution of total Social Security income.
 
+Exploration is interactive so we set eval: false.
 
 ```{r}
 #| label: socsec-explore
