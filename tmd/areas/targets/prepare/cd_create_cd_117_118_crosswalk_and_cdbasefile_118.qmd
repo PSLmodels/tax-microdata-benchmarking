@@ -22,6 +22,7 @@ Doing this requires a crosswalk that shows what fraction of the 2020 population 
 
 source(here::here("R", "libraries.R"))
 source(here::here("R", "constants.R"))
+source(here::here("R", "functions.R"))
 
 # phase4_statecds <- c("AK00", "DE00", "ID01", "ID02", "ME02", "MT00", "ND00", "PA08", "SD00", "WY00")
 

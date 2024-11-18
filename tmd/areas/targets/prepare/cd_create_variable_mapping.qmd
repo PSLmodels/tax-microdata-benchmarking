@@ -14,6 +14,7 @@ We do this in its own qmd file to make it easy to find, because it is also used 
 
 source(here::here("R", "libraries.R"))
 source(here::here("R", "constants.R"))
+source(here::here("R", "functions.R"))
 
 ```
 

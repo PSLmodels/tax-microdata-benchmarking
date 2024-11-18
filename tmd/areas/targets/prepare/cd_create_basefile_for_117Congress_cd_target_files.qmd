@@ -15,6 +15,7 @@ This section creates one long file that is a superset of what we need for indivi
 
 source(here::here("R", "libraries.R"))
 source(here::here("R", "constants.R"))
+source(here::here("R", "functions.R"))
 
 # 334283385.27000004 national pop
 
