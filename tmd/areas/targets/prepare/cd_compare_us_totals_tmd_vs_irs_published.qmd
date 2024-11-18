@@ -122,8 +122,25 @@ tmdxmars <- tmd3 |>
   select(varname, scope, fstatus, count, agistub, value) |> 
   arrange(varname, scope, fstatus, count, agistub)
 
-# tmdmars
-
+# check tmd mars totals
+ tmd3 |> 
+   filter(str_detect(varname, "MARS")) |> 
+   summarize(value=sum(value),
+             .by=c(varname, scope, type, count))
+ # this helps verify that we want type=="amount" as the number of returns
+ # nothing else is useful
+ # CAUTION: to be consistent with the xxxx_targets.csv file format rules
+ # we need to set count to 1 (number of units with any value) INSTEAD of zero
+ # and by convention we'll use c00100 as the variable name but any variable would be the same
+ 
+tmdmars <- tmd3 |> 
+  filter(str_detect(varname, "MARS"),
+         type=="amount") |> 
+  mutate(fstatus=str_sub(varname, -1) |> 
+           as.integer(),
+         varname="c00100") |> 
+  select(varname, scope, fstatus, count, agistub, value) |> 
+  arrange(varname, scope, fstatus, count, agistub)
 
 ```
 
