@@ -15,8 +15,6 @@ We do this in its own qmd file to make it easy to find, because it is also used 
 source(here::here("R", "libraries.R"))
 source(here::here("R", "constants.R"))
 
-# 334283385.27000004 national pop
-
 ```
 
 ## Create and save the mapping
