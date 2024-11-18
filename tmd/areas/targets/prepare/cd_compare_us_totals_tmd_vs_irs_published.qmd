@@ -21,5 +21,13 @@ source(here::here("R", "functions.R"))
 
 ```{r}
 
+vmap <- read_csv(fs::path(CDINTERMEDIATE, "cd_variable_mapping.csv"))
+cdirs <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile_sessions.csv"))
+
+TMDDIR <- here::here("..", "..", "..", "storage", "output")
+fpath <-  fs::path(TMDDIR, "cached_allvars.csv")
+tmd2021 <- vroom(fpath)
+ns(tmd2021)
+
 ```
 
