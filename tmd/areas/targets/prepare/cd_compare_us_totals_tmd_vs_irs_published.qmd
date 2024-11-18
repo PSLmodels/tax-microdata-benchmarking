@@ -1,0 +1,24 @@
+---
+output: html_document
+editor_options: 
+ chunk_output_type: console
+---
+
+# Compare U.S. totals of mapped variables, tax-microdata-benchmarking vs. IRS published CD values
+
+
+## Setup 
+```{r}
+#| label: setup
+
+source(here::here("R", "libraries.R"))
+source(here::here("R", "constants.R"))
+
+```
+
+## Get data
+
+```{r}
+
+```
+
