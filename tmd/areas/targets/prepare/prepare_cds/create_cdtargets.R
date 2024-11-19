@@ -1,6 +1,6 @@
 
 # run from terminal with:
-#   Rscript create_cdtargets.R phase5.json
+#   Rscript create_cdtargets.R phase6_add_socsec.json (or phase5.json)
 
 # Rscript test.r > output.log 2>&1
 
@@ -150,7 +150,10 @@ targets_matchframe <- target_stubs |>
 ##.. filtering Congressional districts ----
 cdlist <- unlist(cdrecipe$cdlist)
 cdlist
-if(cdlist != "all"){
+if(
+  (length(cdlist) > 1) ||
+  ((length(cdlist) ==1) && (cdlist != "all"))
+   ){
   cd_filter <- expr(statecd %in% cdlist)
 } else if(length(cdlist) == 1 & cdlist == "all") {
   cd_filter <- TRUE
