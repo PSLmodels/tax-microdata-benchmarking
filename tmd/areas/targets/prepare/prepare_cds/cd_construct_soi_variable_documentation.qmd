@@ -13,6 +13,7 @@ editor_options:
 
 source(here::here("R", "libraries.R"))
 source(here::here("R", "constants.R"))
+source(here::here("R", "functions.R"))
 
 ```
 
