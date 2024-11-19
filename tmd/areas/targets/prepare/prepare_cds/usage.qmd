@@ -43,7 +43,7 @@ At present the code prepares target files with targets we believe are useful and
 
 ## To create area weights using the target files in tax-microdata-benchmarking
 
--   copy desired target .csv files from ".../targets/prepare/cds/final/" folder to the ".../targets/" folder
+-   copy desired target .csv files from ".../targets/prepare/prepare_cds/cdtargets/" folder to the ".../targets/" folder
 -   follow tax-microdata-benchmarking instructions to run `make_all.py` or \`create_area_weights.py'
 
 ## Additional notes
