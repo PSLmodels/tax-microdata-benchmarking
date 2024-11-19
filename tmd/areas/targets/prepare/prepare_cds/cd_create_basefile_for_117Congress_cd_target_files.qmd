@@ -35,7 +35,7 @@ source(here::here("R", "functions.R"))
 #| label: get-soi-based-data
 
 cdlong <- read_csv(fs::path(CDINTERMEDIATE, "cddata_long_clean.csv"))
-check <- count(cdlong, basevname, vname)
+# check <- count(cdlong, basevname, vname)
 
 ```
 
@@ -97,7 +97,8 @@ We are going to create new rows for N00100 (Number of returns with AGI (estimate
 Note that this will (get allcount, count=1) (i.e., number of tax units with any value of varname) whereas other count measures will (get nzcount, count=2) (number of tax units with a nonzero value of varname). See the [documentation](https://github.com/PSLmodels/tax-microdata-benchmarking/tree/master/tmd/areas/targets).
 
 ```{r}
-# vname = "N00100",         basevname = "v00100",
+#| label: fstatus-and-vtype
+#| output: false
 
 count(cdlong2, vtype)
 skim(cdlong2)
@@ -125,48 +126,17 @@ count(cdlong3, fstatus)
 count(cdlong3, vtype)
 count(cdlong3, fstatus, vtype)
 
-
-```
-
-
-
-```{r}
-#| label: address-agi
-#| eval: false
-#| output: false
-
-# count(cdlong2, vtype)
-# 
-# nagi <- cdlong2 |> 
-#   filter(vname == "N1") |> 
-#   mutate(vname = "N00100",
-#          basevname = "v00100",
-#          description = "Number of returns with Adjusted Gross Income - AGI (estimated)")
-# 
-# cdlong3 <- bind_rows(cdlong2, nagi) |> 
-#   mutate(basevname = ifelse(vname == "A00100",
-#                             "v00100",
-#                             basevname))
-
-# check
-# check <- cdlong3 |> 
-#   filter(basevname=="v00100", STATE=="WY") |> 
-#   arrange(STATE, CONG_DISTRICT, basevname, desc(vtype), AGI_STUB)
-# 
-# rm(nagi, check)
-
 ```
 
 
 ### Define statecd, scope, count; put amounts in dollars; sort
 
 ```{r}
-#| label: fstatus-misc
+#| label: categoricals-misc
 #| output: false
 
 cdlong4 <- cdlong3 |> 
     mutate(
-      
       count = case_when(
         vtype == "amount" ~ 0,
         vtype == "allcount" ~ 1,
@@ -184,7 +154,7 @@ cdlong4 <- cdlong3 |>
 # count(cdlong4, fstatus)
 # count(cdlong4, count, vtype)
 # count(cdlong4, scope)
-check <- count(cdlong4, basevname, vname)
+# check <- count(cdlong4, basevname, vname)
 
 ```
 
@@ -252,7 +222,6 @@ cdbasefile <- bind_rows(cdlong4 |>
                         cdpop2 |> mutate(src="census")) |> 
   mutate(statecd = paste0(STATE, CONG_DISTRICT),
          basevname=case_when(
-           is.na(basevname) & vname=="A00101" ~ "v00101", # special handling
            is.na(basevname) ~ vname,
            .default = basevname)) |> # THINK ABOUT THIS CAREFULLY
   select(src, rectype, stabbr=STATE, cd=CONG_DISTRICT, statecd,
@@ -263,17 +232,15 @@ cdbasefile <- bind_rows(cdlong4 |>
 # glimpse(cdbasefile)
 # summary(cdbasefile)
 # skim(cdbasefile)
-check <- count(cdbasefile, basevname, vname)
+# check <- count(cdbasefile, basevname, vname)
+# cdbasefile |> count(basevname)
+check <- count(cdbasefile, src, scope, fstatus, count)
 
-
-
-cdbasefile |> count(basevname)
-
+cdbasefile |> filter(statecd=="WY00", scope==1, fstatus==0, count==1)
 cdbasefile |> filter(statecd=="WY00", agistub==0, basevname=="v00100")
 cdbasefile |> filter(statecd=="WY00", agistub==0, basevname=="v00101")
 
 write_csv(cdbasefile, fs::path(CDINTERMEDIATE, "cdbasefile_117.csv"))
 
 ```
-
 
