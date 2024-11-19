@@ -24,7 +24,8 @@ source(here::here("R", "functions.R"))
 ## Get data
 
 ```{r}
-
+#| label: stack-sessions
+#| output: false
 
 cd117 <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile_117.csv"))
 cd118 <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile_118.csv"))
@@ -50,7 +51,10 @@ states |>
          pdiff=diff / s117) |> 
   arrange(desc(abs(pdiff))) # good all the state sums work
 
+# check <- count(stack, basevname, vname)
+
 write_csv(stack, fs::path(CDINTERMEDIATE, "cdbasefile_sessions.csv"))
+
 
 ```
 

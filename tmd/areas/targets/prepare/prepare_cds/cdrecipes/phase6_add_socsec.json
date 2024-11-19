@@ -4,9 +4,9 @@
   "session": 118, // not present, or 117 or 118
   
 	// "cdlist": "all",  // all, or a list such as ["AK00", "DE00"],
-	"cdlist": ["NY21"],   // all, or a list such as ["AK00", "DE00"],
+	// "cdlist": ["NY21"],   // all, or a list such as ["AK00", "DE00"],
 	// "cdlist": ["AK00", "DE00"],   // all, or a list such as ["AK00", "DE00"],
-  // "cdlist": ["AK00", "DE00", "ID01", "ID02", "ME02", "MT00", "ND00", "PA08", "SD00", "WY00"],
+  "cdlist": ["AK00", "DE00", "ID01", "ID02", "ME02", "MT00", "ND00", "PA08", "SD00", "WY00"],
 	
 	// target parameters
 	"notzero": true, // true or false
@@ -27,19 +27,19 @@
     {
       "varname": "c00100",
       "scope": 1,
-      "count": 2,
+      "count": 1,
       "fstatus": 1
     },      
     {
       "varname": "c00100",
       "scope": 1,
-      "count": 2,
+      "count": 1,
       "fstatus": 2
     },      
     {
       "varname": "c00100",
       "scope": 1,
-      "count": 2,
+      "count": 1,
       "fstatus": 4
     },          
     {

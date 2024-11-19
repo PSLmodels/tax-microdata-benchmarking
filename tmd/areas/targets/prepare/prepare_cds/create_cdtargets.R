@@ -110,7 +110,8 @@ target_rules <- cdrecipe$targets |>
 target_stubs <- target_rules |> 
   select(varname, scope, count, fstatus) |> 
   distinct() |> 
-  cross_join(tibble(agistub=1:9))
+  cross_join(tibble(agistub=1:9)) |> 
+  arrange(varname, scope, count, fstatus, agistub)
 
 # update target_stubs to drop any agi ranges that are named for exclusion
 if("agi_exclude" %in% names(target_rules)){
@@ -126,19 +127,30 @@ if("agi_exclude" %in% names(target_rules)){
   
 # create a dataframe to match against the stack data for targets
 # vmap
+allcount_vars <- c("N1", "MARS1", "MARS2", "MARS4")
 vmap2 <- vmap |> 
-  mutate(fstatus=ifelse(str_starts(basevname, "MARS"),
-                        str_sub(basevname, -1),
-                        0),
-         fstatus=as.integer(fstatus))
+  select(varname, basevname, fstatus) |> 
+  mutate(basevname=ifelse(basevname %in% allcount_vars, "v00100", basevname)) |> 
+  distinct()
 
+# bring basevname in because we need it to match against targets file
 targets_matchframe <- target_stubs |>
   mutate(sort=row_number() + 1) |> 
   rows_insert(tibble(varname="XTOT", scope=0, count=0, fstatus=0, agistub=0, sort=1),
-              by="varname") |> 
-  left_join(vmap2, by = join_by(varname, fstatus),  relationship = "many-to-many") |>
-  relocate(sort) |> 
-  arrange(sort)
+              by="varname") |>
+  arrange(sort) |> 
+  left_join(vmap2, by = join_by(varname, fstatus)) |> # ,  relationship = "many-to-many"
+  relocate(sort)
+
+# targets_matchframe |> 
+#   mutate(nrecs=n(), .by=c(varname, scope, count, fstatus, agistub)) |> 
+#   filter(nrecs > 1)
+# 
+# stack |>
+#   filter(session==118, scope==1, count==0, fstatus==0, agistub==1, statecd=="NY21") |>
+#   filter(basevname %in% c("N1", "v00100"))
+# # check <- count(stack, basevname)
+# ns(stack)
 
 
 # set up filters for CDs, zero targets, and negative targets --------------------
@@ -168,6 +180,18 @@ if(cdrecipe$notnegative) {
 
 # load targets data -------------------------------------------------------
 stack <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile_enhanced.csv"), show_col_types = FALSE)
+# stack |> filter(statecd=="NY21", vname=="MARS1", session==118)
+check <- count(stack, basevname, vname, scope, fstatus, count)
+check |> filter(basevname=="v00100")
+# basevname vname  scope fstatus count     n
+# <chr>     <chr>  <dbl>   <dbl> <dbl> <int>
+# 1 v00100    A00100     1       0     0  8720
+# 2 v00100    MARS1      1       1     1  8720
+# 3 v00100    MARS2      1       2     1  8720
+# 4 v00100    MARS4      1       4     1  8720
+# 5 v00100    N1         1       0     1  8720
+# check |> filter(basevname=="MARS1") nothing
+# check |> filter(vname=="MARS1") only v00100
 
 
 # create mapped targets tibble --------------------------------------------
@@ -184,17 +208,22 @@ mapped <- targets_matchframe |>
             relationship = "many-to-many") |> 
   arrange(statecd, sort)
 
-tmp <- stack |>
-  filter(!!cd_filter,
-         !!zero_filter,
-         !!negative_filter,
-         session %in% cdrecipe$session)
-count(tmp, basevname, vname)
+# tmp <- targets_matchframe |> 
+#   left_join(mapped |> select(-description) |> rename(bvn=basevname),
+#             join_by(sort, varname, scope, count, fstatus, agistub))
 
-tmp |> 
-  filter(basevname=="v00100")
 
-count(stack, count)
+# tmp <- stack |>
+#   filter(!!cd_filter,
+#          !!zero_filter,
+#          !!negative_filter,
+#          session %in% cdrecipe$session)
+# count(tmp, basevname, vname)
+# 
+# tmp |> 
+#   filter(basevname=="v00100")
+# 
+# count(stack, count)
 
 # checks
 # mapped |> filter(target == 0)
@@ -230,11 +259,3 @@ deframe(ntargets)
 print("all done!")
 
 
-
-
-# f <- function(target){
-#   # for later -- a first step in adding income ranges as a possibility
-#   # if(!"agilo" %in% names(target)) target$agilo <- -9e99
-#   # if(!"agihi" %in% names(target)) target$agihi <- 9e99
-#   as_tibble(target)
-# }

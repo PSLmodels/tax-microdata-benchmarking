@@ -13,3 +13,5 @@ TMDHOME <- fs::path(here::here(), "..", "..", "..", "..", "..")
 # normalizePath(TMDHOME)
 TMDDATA <- fs::path(TMDHOME, "tmd", "storage", "output")
 # normalizePath(TMDDATA)
+
+CDAGICUTS <- c(-Inf, 1, 10e3, 25e3, 50e3, 75e3, 100e3, 200e3, 500e3, Inf)
