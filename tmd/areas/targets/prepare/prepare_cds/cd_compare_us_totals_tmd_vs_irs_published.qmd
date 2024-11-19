@@ -30,7 +30,6 @@ fpath <-  fs::path(TMDDATA, "cached_allvars.csv")
 tmd2021 <- vroom(fpath)
 ns(tmd2021)
 
-
 ```
 
 ## Create comparison file
@@ -58,132 +57,163 @@ count(cd2 |> filter(str_detect(vname, "MARS")),
       vname, fstatus)
 skim(cd2)
 
+# get sums over all Congressional districts
 cd_adjusted <- cd2 |> 
-  summarise(target=sum(target),
-            .by=c(basevname, vname, scope, count, fstatus, agistub, agirange, description))
+  summarise(target=sum(target), n=n(),
+            .by=c(basevname, vname, scope, count, fstatus, agistub, agirange, description)) |> 
+  select(-n) # I want to look at n but not keep it in the file
 
 ```
 
 Prepare tmd data
 
+Start by getting desired sums and making long
+
 ```{r}
-#| label: prepare-tmd-data
+#| label: get-tmdsums-long
 #| eval: true
 #| output: false
 
-# 0 = Total
-# 1 = Under $1
-# 2 = $1 under $10,000
-# 3 = $10,000 under $25,000
-# 4 = $25,000 under $50,000
-# 5 = $50,000 under $75,000
-# 6 = $75,000 under $100,000
-# 7 = $100,000 under $200,000
-# 8 = $200,000 under $500,000
-# 9 = $500,000 or more
+# CDAGICUTS
 
-agicuts <- c(-Inf, 1, 10e3, 25e3, 50e3, 75e3, 100e3, 200e3, 500e3, Inf)
-
-variables_to_sum <- ifelse(str_starts(vmap$basevname, "MARS"),
-                   vmap$basevname,
-                   vmap$varname)
-
-tmd2 <- tmd2021 |> 
+ns(tmd2021)
+keepvars <- c("RECID", "data_source", "MARS", "s006", unique(vmap$varname))
+tmdprep <- tmd2021 |> 
+  select(all_of(keepvars)) |> 
   mutate(scope=ifelse(data_source==0, 2, 1),
-         MARS1=MARS==1, MARS2=MARS==2, MARS4=MARS==4,
-         agistub=cut(c00100, agicuts, right = FALSE, ordered_result = TRUE) |> 
-           as.integer()) |> 
-  summarize(across(all_of(variables_to_sum),
-                   list(amount = \(x) sum(x * s006),
-                        nzcount = \(x) sum((x!=0) * s006),
-                        allcount= \(x) sum(s006))),
-                   .by=c(scope, agistub)) |> 
+         agistub=cut(c00100, CDAGICUTS, right = FALSE, ordered_result = TRUE) |> 
+           as.integer(),
+         # create all-returns count variables fow which we want weighted sums
+         N1=1,
+         MARS1 = if_else(MARS == 1, 1, 0),
+         MARS2 = if_else(MARS == 2, 1, 0),
+         MARS4 = if_else(MARS == 4, 1, 0))
+# summary(tmdprep)
+
+sum_vars <- unique(vmap$varname)
+nzcount_vars <- setdiff(sum_vars, "XTOT")
+allcount_vars <- c("N1", "MARS1", "MARS2", "MARS4")
+
+tmdsums <- tmdprep |> 
+  # note that we get nzcount for AGI but don't have counterpart in the CD data
+  summarize(across(all_of(sum_vars), list(amount = \(x) sum(x * s006))),
+            across(all_of(nzcount_vars), list(nzcount = \(x) sum((x!=0) * s006))),
+            across(all_of(allcount_vars), list(allcount = \(x) sum((x==1) * s006))),
+            .by=c(scope, agistub)) |> 
   arrange(scope, agistub)
 
 # look at nzcounts
-tmd2 |> select(scope, agistub, contains("nzcount"))
-tmd2 |> select(scope, agistub, contains("allcount"))
-tmd2 |> select(scope, agistub, contains("amount"))
+tmdsums |> select(scope, agistub, contains("nzcount"))
+tmdsums |> select(scope, agistub, contains("allcount"))
+tmdsums |> select(scope, agistub, contains("amount"))
+tmdsums |> select(scope, agistub, N1_allcount, c00100_nzcount) |> mutate(ratio=c00100_nzcount / N1_allcount)
 
-tmd2 |> 
+tmdsums |> 
+  filter(scope==1) |> 
+  select(scope, agistub, e00200_nzcount) |> 
+  janitor::adorn_totals()
+
+tmdsums |> 
   filter(scope==1) |> 
   select(scope, agistub, contains("c00100") & contains("count")) |> 
   janitor::adorn_totals()
 
-
-# flip around and get count
-tmd3 <- tmd2 |> 
+# flip around and get count and fstatus
+tmdsums_long <- tmdsums |> 
   pivot_longer(cols=-c(scope, agistub), values_to = "wtdvalue") |> 
   separate_wider_delim(cols=name, delim="_", names=c("varname", "type")) |> 
-  mutate(count = case_when(
-    type == "amount"   ~ 0,
-    type == "nzcount"  ~ 2,
-    type == "allcount" ~ 1,
-    .default = -9e9))
-count(tmd3, count, type)
+  mutate(
+    count = case_when(
+      type == "amount"   ~ 0,
+      type == "allcount" ~ 1,
+      type == "nzcount"  ~ 2,
+      .default = -9e9),
+    fstatus=case_when(
+      varname %in% c("MARS1", "MARS2", "MARS4") ~ str_sub(varname, -1),
+      .default = "0"),
+    fstatus=as.integer(fstatus)) |> 
+  select(varname, scope, fstatus, count, agistub, wtdvalue)
+glimpse(tmdsums_long)
+count(tmdsums_long, count)
+count(tmdsums_long, fstatus)
 
-tmd3 |> filter(count==2, agistub==1) # looks good
-tmd3 |> filter(count==1, agistub==4) 
+tmdsums_long |> 
+  filter(varname=="e00200", scope==1, count==2) |> 
+  janitor::adorn_totals()
+
+tmdsums_long |> filter(count==2, agistub==1) # looks good
+tmdsums_long |> filter(count==1, agistub==4) 
 # 37,694,755 is the bad val allcount
+tmdsums_long |> filter(varname=="MARS1")
 
-# separate the mars and nonmars variables to get proper mars values
-tmdxmars <- tmd3 |> 
-  filter(str_detect(varname, "MARS", negate = TRUE)) |> 
-  filter(!(varname=="XTOT" & type != "amount")) |> 
-  mutate(fstatus=0) |> 
-  select(varname, scope, fstatus, count, agistub, wtdvalue) |> 
-  arrange(varname, scope, fstatus, count, agistub)
+```
 
-# tmdxmars |> filter(varname=="e00200", agistub==4) # we'll want count==2 for counts -- nonzero counts
 
-# check tmd mars totals
- tmd3 |> 
-   filter(str_detect(varname, "MARS")) |> 
-   summarize(wtdvalue=sum(wtdvalue),
-             .by=c(varname, scope, type, count))
- # this helps verify that we want type=="amount" as the number of returns
- # nothing else is useful
- # CAUTION: to be consistent with the xxxx_targets.csv file format rules
- # we need to set count to 1 (number of units with any value) INSTEAD of zero
- # and by convention we'll use c00100 as the variable name but any variable would be the same
- 
-tmdmars <- tmd3 |> 
-  filter(str_detect(varname, "MARS"),
-         type=="amount") |> 
-  mutate(fstatus=str_sub(varname, -1) |> 
-           as.integer(),
-         varname="c00100") |> 
-  select(varname, scope, fstatus, count, agistub, wtdvalue) |> 
-  arrange(varname, scope, fstatus, count, agistub)
+Add additional category sums
 
-# combine files and concatenate totals across agi ranges
-tmdsums1 <- bind_rows(tmdxmars, tmdmars)
-tmd_agitots <- tmdsums1 |> 
+```{r}
+
+# we don't need sums over scope because entire scope is 1 for this, other than population
+# we don't need sums over filing status because we're only concerned about selected fstatus
+
+# add sums over filing statuses as this is what we'll usually want
+# tmd_fstatustots <- tmdsums_long |>
+#   filter(!str_starts(varname, "MARS")) |> # we don't need MARS totals over all filing statuses
+#   summarise(wtdvalue=sum(wtdvalue),
+#                       .by=c(varname, scope, agistub, count)) |>
+#   mutate(fstatus=0) |>
+#   bind_rows(tmdsums_long)
+# count(tmd_fstatustots, varname)
+# tmd_fstatustots |> filter(varname=="MARS1")
+# tmd_fstatustots |> 
+#   filter(varname=="e00200", scope==1, count==2, fstatus==0) |> 
+#   janitor::adorn_totals()
+# tmd_fstatustots |> 
+#   filter(varname=="e00200", scope==1, count==0) |> 
+#   janitor::adorn_totals()
+
+
+# add sums over agi ranges
+tmd_agitots <- tmdsums_long |> 
   summarise(wtdvalue=sum(wtdvalue), 
                       .by=c(varname, scope, fstatus, count)) |> 
   mutate(agistub=0) |> 
-  bind_rows(tmdsums1)
+  bind_rows(tmdsums_long)
+tmd_agitots |> filter(varname=="MARS1")
+
+tmd_agitots |>
+  filter(varname=="e00200", scope==1, count==2, fstatus==0, agistub!=0) |>
+  janitor::adorn_totals()
 
 # concatenate totals across scopes
-tmd_scopes <- tmd_agitots |> 
+tmd_scopetots <- tmd_agitots |> 
   summarise(wtdvalue=sum(wtdvalue), 
                       .by=c(varname, agistub, fstatus, count)) |> 
   mutate(scope=0) |> 
   bind_rows(tmd_agitots) |> 
   select(varname, scope, fstatus, count, agistub, wtdvalue) |> 
   arrange(varname, scope, fstatus, count, agistub)
+# skim(tmd_scopetots)
+tmd_scopetots |> filter(varname=="MARS1")
+count(tmd_scopetots, varname)
 
-# we need to put fstatus on vmap for proper merging
-vmap2 <- vmap |> 
-  mutate(fstatus=case_when(basevname=="MARS1" ~ 1,
-                           basevname=="MARS2" ~ 2,
-                           basevname=="MARS4" ~ 4,
-                           .default = 0) |> 
-           as.integer())
+tmd_scopetots |>
+  filter(varname=="e00200", scope==1, count==2, fstatus==0, agistub!=0) |>
+  janitor::adorn_totals()
 
-tmd_adjusted <- tmd_scopes |> 
-  left_join(vmap2,
-            by = join_by(varname, fstatus))
+
+vmap_prep <- vmap |> 
+  mutate(varname=ifelse(basevname %in% allcount_vars, basevname, varname))
+
+# setequal(vmap_prep$varname, tmd_scopetots$varname)
+# setdiff(tmd_scopetots$varname, vmap_prep$varname)
+# setdiff(vmap_prep$varname, tmd_scopetots$varname)
+
+# put basevname and description onto the file
+tmd_adjusted <- tmd_scopetots |> 
+  left_join(vmap_prep, by = join_by(varname, fstatus))
+
+skim(tmd_adjusted)
 
 ```
 
@@ -195,19 +225,28 @@ tmd_adjusted <- tmd_scopes |>
 #| eval: true
 #| output: false
 
+count(tmd_adjusted, basevname)
+count(cd_adjusted, basevname)
+
+cd_adjusted2 <- cd_adjusted |> 
+  mutate(basevname=ifelse(vname %in% allcount_vars,
+                          vname, 
+                          basevname))
+
 comp <- tmd_adjusted |> 
   select(-description) |> 
-  inner_join(cd_adjusted,
+  inner_join(cd_adjusted2,
             by = join_by(scope, fstatus, count, agistub, basevname)) |> 
   relocate(wtdvalue, .after = target) |> 
   mutate(diff=wtdvalue - target,
          pdiff=diff / target)
 summary(comp)
-skim(comp)
+skim(comp) # will generate Inf, -Inf warning
 
 write_csv(comp, fs::path(CDINTERMEDIATE, "cd_tmd_irs_compare.csv"))
 
 ```
+
 
 ## Explore comparisons file
 
@@ -228,6 +267,14 @@ badmatches <- c("e18400", "e18500", "e02400", "e26270") # to make it easier to e
 check <- comp |> 
   filter(!varname %in% badmatches, count==2) |> 
   arrange(desc(abs(pdiff)))
+
+check <- comp |> 
+  filter(!varname %in% badmatches, count==1) |> 
+  arrange(desc(abs(pdiff)))
+
+comp |> filter(!varname %in% badmatches, count==0, agistub==0) |> gt() |> fmt_number(columns = c(target, wtdvalue, diff), decimals = 0)
+comp |> filter(!varname %in% badmatches, count==1, agistub==0) |> gt() |> fmt_number(columns = c(target, wtdvalue, diff), decimals = 0)
+comp |> filter(!varname %in% badmatches, count==2, agistub==0) |> gt() |> fmt_number(columns = c(target, wtdvalue, diff), decimals = 0)
 
 tmd2021 |> 
   filter(data_source==1, c00100 != 0) |> 
@@ -277,6 +324,15 @@ verybad |>
 #      should we create a shared-down variable?
 #  - e00300 taxable interest seems a little off
 
+# agistub 0 
+#   n returns with taxable interest tmd >> cd
+#                  wages tmd >> cd  
+#   wage target 124333630 wage CD file: 124333630 wage natl file irs table 1.4 126,082,290
+#   but we say wtdvalue is 252208964 ?? actual is 126104482
+tmd2021 |> 
+  summarise(nwages=sum(s006 * (e00200 != 0)),
+            wages=sum(s006 * e00200),
+            .by=data_source)
 
 ```
 
