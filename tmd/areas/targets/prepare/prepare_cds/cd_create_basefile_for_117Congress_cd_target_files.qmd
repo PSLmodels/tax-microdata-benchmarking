@@ -35,6 +35,7 @@ source(here::here("R", "functions.R"))
 #| label: get-soi-based-data
 
 cdlong <- read_csv(fs::path(CDINTERMEDIATE, "cddata_long_clean.csv"))
+check <- count(cdlong, basevname, vname)
 
 ```
 
@@ -78,38 +79,86 @@ rm(dropvars)
 ```
 
 
-### Address agi issue
+### Create nzcount and allcount concepts
 
-We have an issue with AGI: for Congressional Districts IRS does NOT report the number of returns with AGI. See the discussion on the introduction page.
+We have an issue with AGI: for Congressional Districts IRS does NOT report the number of returns with nonzero AGI. See the discussion on the introduction page.
+
+However, we have N1, which is a count of all returns by agi range.
+
+Also, we have marital status counts (MARS1, MARS2, and MARS4), but they are not non-zero counts but rather counts of tax units with that filing status.
+
+Solution:
+- create vtype category of nzcount (nonzero count), which is what most count variables will have
+- and vtype category of allcount, for N1, MARS2, MARS2, and MARS4.
+- associate all of these with v00100
 
 We are going to create new rows for N00100 (Number of returns with AGI (estimated)), equal to N1, add it to the data.
 
+Note that this will (get allcount, count=1) (i.e., number of tax units with any value of varname) whereas other count measures will (get nzcount, count=2) (number of tax units with a nonzero value of varname). See the [documentation](https://github.com/PSLmodels/tax-microdata-benchmarking/tree/master/tmd/areas/targets).
+
 ```{r}
-#| label: address-agi
-#| output: false
+# vname = "N00100",         basevname = "v00100",
 
-nagi <- cdlong2 |> 
-  filter(vname == "N1") |> 
-  mutate(vname = "N00100",
-         basevname = "v00100",
-         description = "Number of returns with Adjusted Gross Income - AGI (estimated)")
+count(cdlong2, vtype)
+skim(cdlong2)
 
-cdlong3 <- bind_rows(cdlong2, nagi) |> 
-  mutate(basevname = ifelse(vname == "A00100",
-                            "v00100",
-                            basevname))
+marstats <- c("MARS1", "MARS2", "MARS4")
+allcounts <- c("N1", "MARS1", "MARS2", "MARS4")
 
-# check
-check <- cdlong3 |> 
-  filter(basevname=="v00100", STATE=="WY") |> 
-  arrange(STATE, CONG_DISTRICT, basevname, desc(vtype), AGI_STUB)
+cdlong3 <- cdlong2 |> 
+  mutate(
+    fstatus=case_when(
+    vname %in% marstats ~ str_sub(vname, -1),
+    .default = "0"),
+    fstatus=as.integer(fstatus),
+    
+    vtype = case_when(
+      vname %in% allcounts ~ "allcount",
+      vtype == "count" ~ "nzcount",
+      .default = vtype),
+    
+    basevname = ifelse(vname %in% allcounts, "v00100", basevname), # use AGI for allcounts variables
+    description = ifelse(vname %in% allcounts, "Number of returns", description)
+    )
 
-rm(nagi, check)
+count(cdlong3, fstatus)
+count(cdlong3, vtype)
+count(cdlong3, fstatus, vtype)
+
 
 ```
 
 
-### Define statecd, fstatus, scope, count; put amounts in dollars; sort
+
+```{r}
+#| label: address-agi
+#| eval: false
+#| output: false
+
+# count(cdlong2, vtype)
+# 
+# nagi <- cdlong2 |> 
+#   filter(vname == "N1") |> 
+#   mutate(vname = "N00100",
+#          basevname = "v00100",
+#          description = "Number of returns with Adjusted Gross Income - AGI (estimated)")
+# 
+# cdlong3 <- bind_rows(cdlong2, nagi) |> 
+#   mutate(basevname = ifelse(vname == "A00100",
+#                             "v00100",
+#                             basevname))
+
+# check
+# check <- cdlong3 |> 
+#   filter(basevname=="v00100", STATE=="WY") |> 
+#   arrange(STATE, CONG_DISTRICT, basevname, desc(vtype), AGI_STUB)
+# 
+# rm(nagi, check)
+
+```
+
+
+### Define statecd, scope, count; put amounts in dollars; sort
 
 ```{r}
 #| label: fstatus-misc
@@ -117,15 +166,11 @@ rm(nagi, check)
 
 cdlong4 <- cdlong3 |> 
     mutate(
-      fstatus = case_when(
-        vname == "MARS1" ~ 1,
-        vname == "MARS2" ~ 2,
-        vname == "MARS4" ~ 4, # VERIFY WITH MARTIN
-        .default = 0),
       
       count = case_when(
-        vtype == "count" ~ 2, # correction - used to be 1
         vtype == "amount" ~ 0,
+        vtype == "allcount" ~ 1,
+        vtype == "nzcount" ~ 2,
         .default = -99),
       
       scope = 1,
@@ -139,6 +184,7 @@ cdlong4 <- cdlong3 |>
 # count(cdlong4, fstatus)
 # count(cdlong4, count, vtype)
 # count(cdlong4, scope)
+check <- count(cdlong4, basevname, vname)
 
 ```
 
@@ -217,6 +263,9 @@ cdbasefile <- bind_rows(cdlong4 |>
 # glimpse(cdbasefile)
 # summary(cdbasefile)
 # skim(cdbasefile)
+check <- count(cdbasefile, basevname, vname)
+
+
 
 cdbasefile |> count(basevname)
 
