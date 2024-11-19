@@ -39,25 +39,6 @@ Create and map AGI bin labels to the AGI bins that SOI uses, and save in ".../cd
 #| label: agi-bins
 #| output: false
 
-# example of targets file
-# varname,count,scope,agilo,agihi,fstatus,target
-# XTOT,       0,    0,-9e99, 9e99,      0,  33e6
-# e00300,     0,    1,-9e99, 9e99,      0,  20e9
-# e00900,     0,    1,-9e99, 9e99,      0,  30e9
-# e00200,     0,    1,-9e99, 9e99,      0,1000e9
-# e02000,     0,    1,-9e99, 9e99,      0,  30e9
-# e02400,     0,    1,-9e99, 9e99,      0,  60e9
-# c00100,     0,    1,-9e99, 9e99,      0,1200e9
-# XTOT,       1,    1,  1e6, 9e99,      0,  10e3
-# e00400,     0,    1,-9e99, 9e99,      0,   2e9
-# e00600,     0,    1,-9e99, 9e99,      0,   8e9
-# e00650,     0,    1,-9e99, 9e99,      0,   7e9
-# e01700,     0,    1,-9e99, 9e99,      0,  12e9
-# e02300,     0,    1,-9e99, 9e99,      0,  10e9
-# e17500,     0,    1,-9e99, 9e99,      0,   5e9
-# e18400,     0,    1,-9e99, 9e99,      0,  10e9
-# e18500,     0,    1,-9e99, 9e99,      0,  10e9
-
 # in_bin = (vardf.c00100 >= row.agilo) & (vardf.c00100 < row.agihi)
 
 # 0 = Total
@@ -119,7 +100,7 @@ Get previously downloaded IRS SOI data with aggregate information for individual
 #| eval: true
 #| output: false
 
-# read the csv file from the zip archive that contains it
+# read the CD csv data file from the zip archive that contains it
 zpath <-  fs::path(CDRAW, fs::path_file(CDZIPURL))
 con <- unz(zpath, "21incd.csv")
 data <- read_csv(con)
@@ -189,7 +170,7 @@ rm(data, data2, cdnums)
 ## Create long SOI data file
 
 -   convert to a long file
--   merge with variable documenttion file
+-   merge with variable documentation file
 -   save as "cddata_long_clean.csv" in intermediate file directory
 
 ```{r}
@@ -216,6 +197,7 @@ dlong1 <- cdwide |>
 glimpse(dlong1)
 count(dlong1, vname)
 count(dlong1, vtype)
+check <- count(dlong1, basevname, vname)
 
 write_csv(dlong1, fs::path(CDINTERMEDIATE, "cddata_long_clean.csv"))
 
