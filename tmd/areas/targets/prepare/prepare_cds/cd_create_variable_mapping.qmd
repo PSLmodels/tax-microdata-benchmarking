@@ -23,9 +23,12 @@ source(here::here("R", "functions.R"))
 ```{r}
 #| label: create-save-variable-mapping
 
-vmap <- read_csv(file="
+# varname is the name used in python code for target variables
+
+vmap1 <- read_csv(file="
 varname, basevname, description
 XTOT, XTOT, Population
+c00100, N1, Total number of returns
 c00100, MARS1, fstatus == 1
 c00100, MARS2, fstatus == 2
 c00100, MARS4, fstatus == 4
@@ -43,6 +46,16 @@ e02400, v02500, Social Security total
 #   e18400 is not reported for districts; we have allocated it to districts by S&L income taxes
 #   e2500 is not reported for districts; allocated to districts by e2500 taxable Social Security
 
+# note that we hard-code filing status. this works for Congressional districts
+# because we do not have data by filing status but it may not work for states
+# RECONSIDER THIS
+vmap <- vmap1 |> 
+  mutate(
+    fstatus=case_when(
+      str_detect(basevname, "MARS") ~ str_sub(basevname, -1),
+      .default = "0"),
+    fstatus=as.integer(fstatus)
+    )
 
 write_csv(vmap, fs::path(CDINTERMEDIATE, "cd_variable_mapping.csv"))
 
