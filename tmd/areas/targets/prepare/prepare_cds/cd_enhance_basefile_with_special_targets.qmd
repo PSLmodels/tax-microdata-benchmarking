@@ -79,8 +79,7 @@ Get the unenhanced target data and the tmd2021 cached data.
 
 stack <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile_sessions.csv"))
 
-TMDDIR <- here::here("..", "..", "..", "storage", "output")
-fpath <-  fs::path(TMDDIR, "cached_allvars.csv")
+fpath <-  fs::path(TMDDATA, "cached_allvars.csv")
 tmd2021 <- vroom(fpath)
 ns(tmd2021)
 

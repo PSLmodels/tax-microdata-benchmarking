@@ -25,6 +25,7 @@ To re-download data and save to the "../cds/raw_data" folder, set option `eval: 
 
 source(here::here("R", "libraries.R"))
 source(here::here("R", "constants.R"))
+source(here::here("R", "functions.R"))
 
 ```
 

@@ -1,6 +1,6 @@
 
 # run from terminal with:
-#   Rscript create_cdtargets.R phase5.json
+#   Rscript create_cdtargets.R phase6_add_socsec.json (or phase5.json)
 
 # Rscript test.r > output.log 2>&1
 
@@ -125,22 +125,18 @@ if("agi_exclude" %in% names(target_rules)){
 # target_stubs
   
 # create a dataframe to match against the stack data for targets
-vmap
+# vmap
 vmap2 <- vmap |> 
-  mutate(fstatus=case_when(basevname=="MARS1" ~ 1,
-                           basevname=="MARS2" ~ 2,
-                           basevname=="MARS4" ~ 4,
-                           .default = 0))
+  mutate(fstatus=ifelse(str_starts(basevname, "MARS"),
+                        str_sub(basevname, -1),
+                        0),
+         fstatus=as.integer(fstatus))
 
 targets_matchframe <- target_stubs |>
   mutate(sort=row_number() + 1) |> 
   rows_insert(tibble(varname="XTOT", scope=0, count=0, fstatus=0, agistub=0, sort=1),
               by="varname") |> 
   left_join(vmap2, by = join_by(varname, fstatus),  relationship = "many-to-many") |>
-  mutate(basevname = case_when(fstatus == 1 ~ "MARS1",
-                               fstatus == 2 ~ "MARS2",
-                               fstatus == 4 ~ "MARS4",
-                               .default = basevname)) |> 
   relocate(sort) |> 
   arrange(sort)
 
@@ -150,7 +146,10 @@ targets_matchframe <- target_stubs |>
 ##.. filtering Congressional districts ----
 cdlist <- unlist(cdrecipe$cdlist)
 cdlist
-if(cdlist != "all"){
+if(
+  (length(cdlist) > 1) ||
+  ((length(cdlist) ==1) && (cdlist != "all"))
+   ){
   cd_filter <- expr(statecd %in% cdlist)
 } else if(length(cdlist) == 1 & cdlist == "all") {
   cd_filter <- TRUE
@@ -185,7 +184,17 @@ mapped <- targets_matchframe |>
             relationship = "many-to-many") |> 
   arrange(statecd, sort)
 
+tmp <- stack |>
+  filter(!!cd_filter,
+         !!zero_filter,
+         !!negative_filter,
+         session %in% cdrecipe$session)
+count(tmp, basevname, vname)
 
+tmp |> 
+  filter(basevname=="v00100")
+
+count(stack, count)
 
 # checks
 # mapped |> filter(target == 0)

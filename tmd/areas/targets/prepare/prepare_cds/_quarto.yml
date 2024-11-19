@@ -28,7 +28,7 @@ execute:
   freeze: false  # auto: during global project renders, re-render only when source changes
 
 book:
-  title: "Develop targets for subnational areas"
+  title: "Develop targets for Congressional districts"
   subtitle: "Create csv target files for use by area targeting routines"
   # author: "Don Boyd"
   date: today
