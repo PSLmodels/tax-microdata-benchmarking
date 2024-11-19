@@ -66,7 +66,10 @@ doc3 <- doc2 |>
                          NA_character_)) |> 
   arrange(suffix, vname) |> 
   mutate(nvars = n(), .by=suffix) |> 
-  mutate(basevname= ifelse(nvars==2,
+  # basevname is the "base" variable name when we might have both a count and an amount
+  # 2 variables A00100 and A00101 do not follow this format but we 
+  # may create counts for them later so we still want a basevname
+  mutate(basevname= ifelse(nvars==2 | vname %in% c("A00100", "A00101"),
                            paste0("v", suffix),
                            NA_character_)) |> 
   select(-c(nvars, suffix)) |> 
