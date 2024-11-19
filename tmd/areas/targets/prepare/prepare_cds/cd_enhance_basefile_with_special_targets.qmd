@@ -61,16 +61,6 @@ source(here::here("R", "functions.R"))
 
 ```
 
-Define the agi cutpoints that the IRS uses in its published 2021 Congressional district data.
-
-```{r}
-#| label: agi-cutpoints
-
-# Define the agi cutpoints that the IRS uses in its published 2021 Congressional district data
-icuts <- c(-Inf, 1, 10e3, 25e3, 50e3, 75e3, 100e3, 200e3, 500e3, Inf)
-
-```
-
 Get the unenhanced target data and the tmd2021 cached data.
 
 ```{r}
@@ -186,7 +176,7 @@ Make preliminary salt targets.
 
 saltus <- tmd2021 |> 
   select(RECID, data_source, s006, c00100, e18400, e18500) |> 
-  mutate(irange=cut(c00100, icuts, right = FALSE, ordered_result = TRUE),
+  mutate(irange=cut(c00100, CDAGICUTS, right = FALSE, ordered_result = TRUE),
          irange = factor(irange, 
                          levels = levels(irange), # Ensure ordering is maintained
                          labels = str_replace(levels(irange), ",", ", ")), # more-readable labels
@@ -372,7 +362,7 @@ Make preliminary Social Security targets.
 
 socsecus <- tmd2021 |> 
   select(RECID, data_source, s006, c00100, e02400) |> 
-  mutate(irange=cut(c00100, icuts, right = FALSE, ordered_result = TRUE),
+  mutate(irange=cut(c00100, CDAGICUTS, right = FALSE, ordered_result = TRUE),
          irange = factor(irange, 
                          levels = levels(irange), # Ensure ordering is maintained
                          labels = str_replace(levels(irange), ",", ", ")), # more-readable labels
