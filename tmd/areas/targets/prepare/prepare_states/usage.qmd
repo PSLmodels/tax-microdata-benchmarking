@@ -9,21 +9,28 @@ editor_options:
 ## Prerequisites
 
 -   Recent version of [R](https://www.r-project.org/). This project was created with R version 4.4.2.
+
 -   Recent release of [RStudio](https://posit.co/products/open-source/rstudio/). Other IDEs may work well, but RStudio has been used in this project (RStudio 2024.09.0 Build 375).
+
 -   Recent pre-release version of [quarto](https://quarto.org/docs/download/prerelease.html), 1.6 or higher. This project was created with quarto version 1.6.24
+
 -   Be sure that ".../targets/prepare/data/raw_data/" exists and has the files shown below, which should have been downloaded when you cloned the GitHub repo:
 
     <!-- -   21incddocguide.docx -->
+
     <!-- -   cd_documentation_extracted_from_21incddocguide.docx.xlsx -->
+
     <!-- -   cdpop1year_acs.csv -->
+
     <!-- -   congressional2021.zip -->
+
     <!-- -   geocorr2022_2428906586.csv -->
-    
+
 ## Setting up the environment
 
 -   After checking the above and starting RStudio, in the console run `renv::restore()` and answer y when asked whether to proceed installing packages. This may take a while the first time you set your environment up.
 
-`renv` is an environment manager for R that can set up a project-specific environment that is the same across multile machines. It should ensure that your environment includes the versions of R packages used in this project. (Most packages are loaded in ".../targets/prepare/prepare_states/R/libraries.R".)
+`renv` is an environment manager for R that can set up a project-specific environment that is the same across multiple machines. It should ensure that your environment includes the versions of R packages used in this project. (Most packages are loaded in ".../targets/prepare/prepare_states/R/libraries.R".)
 
 ## To create target files and build the web page
 
@@ -38,13 +45,13 @@ At present the code prepares target files with targets we believe are useful and
 
 ## After rendering is complete
 
--   target .csv files will be in the ".../targets/prepare/prepare_states/final/" folder
--   local documentation web page will be in the ".../targets/prepare/\_web/" folder
+-   xx_target.csv files will be in the ".../targets/prepare/prepare_states/final/" folder
+-   local documentation web page will be in the ".../targets/prepare/prepare_states/\_web/" folder
 
 ## To create area weights using the target files in tax-microdata-benchmarking
 
--   copy desired target .csv files from ".../targets/prepare/prepare_cds/cdtargets/" folder to the ".../targets/" folder
--   follow tax-microdata-benchmarking instructions to run `make_all.py` or \`create_area_weights.py'
+-   copy desired xx_target.csv files from ".../targets/prepare/prepare_states/targets/" folder to the ".../targets/" folder
+-   follow tax-microdata-benchmarking instructions to run `make_all.py` or `create_area_weights.py`
 
 ## Additional notes
 
