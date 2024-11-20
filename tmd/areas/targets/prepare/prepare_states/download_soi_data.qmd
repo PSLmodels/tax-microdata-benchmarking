@@ -1,0 +1,102 @@
+---
+output: html_document
+editor_options: 
+ chunk_output_type: console
+---
+
+# Download SOI state data and documentation files
+
+SOI state data and documentation files are included with the project in the "../data/raw_data" folder and by default, rendering the project will NOT re-download the data.
+
+To re-download data and save to the "../data/raw_data" folder, set option `eval: true` in the `downloads` chunk below
+
+## File locations on the web
+
+-   [SOI State Historical Table 2 landing page with 2020 and 2021 data](https://www.irs.gov/statistics/soi-tax-stats-historic-table-2)
+
+    -   [2021 csv data](https://www.irs.gov/pub/irs-soi/21in55cmcsv.csv)
+    -   [2021 documentation](https://www.irs.gov/pub/irs-soi/21incmdocguide.doc)
+    -   [2021 Excel file for all states](https://www.irs.gov/pub/irs-soi/21in55cm.xlsx)
+    -   also see [2015-2019 folder](https://www.irs.gov/statistics/soi-tax-stats-historic-table-2-2015-2019)
+
+## Setup
+
+```{r}
+#| label: setup
+
+source(here::here("R", "libraries.R"))
+source(here::here("R", "constants.R"))
+source(here::here("R", "functions.R"))
+
+```
+
+
+## (Optionally) Download SOI state data and documentation
+
+As noted, by default, the files will NOT be downloaded when the project is rendered.
+
+```{r}
+#| label: downloads
+#| eval: false
+
+# https://www.irs.gov/pub/irs-soi/21in55cmcsv.csv
+# https://www.irs.gov/pub/irs-soi/20in55cmcsv.csv
+# https://www.irs.gov/pub/irs-soi/19in55cmcsv.csv
+# https://www.irs.gov/pub/irs-soi/18in55cmagi.csv
+# https://www.irs.gov/pub/irs-soi/17in54cmcsv.csv
+# https://www.irs.gov/pub/irs-soi/16in54cmcsv.csv
+# https://www.irs.gov/pub/irs-soi/15in54cmcsv.csv
+
+# documentation
+# https://www.irs.gov/pub/irs-soi/21incmdocguide.doc
+# https://www.irs.gov/pub/irs-soi/20incmdocguide.doc
+# https://www.irs.gov/pub/irs-soi/19incmdocguide.doc
+# https://www.irs.gov/pub/irs-soi/18incmdocguide.doc
+# https://www.irs.gov/pub/irs-soi/17incmdocguide.doc
+# https://www.irs.gov/pub/irs-soi/16incmdocguide.doc
+# https://www.irs.gov/pub/irs-soi/15incmdocguide.doc
+
+# all-states spreadsheets
+# https://www.irs.gov/pub/irs-soi/21in55cm.xlsx
+# https://www.irs.gov/pub/irs-soi/20in55cm.xlsx
+# https://www.irs.gov/pub/irs-soi/19in55cm.xlsx
+# https://www.irs.gov/pub/irs-soi/18in55cm.xlsx
+# https://www.irs.gov/pub/irs-soi/17in54cm.xlsx
+# https://www.irs.gov/pub/irs-soi/16in54cm.xlsx
+# https://www.irs.gov/pub/irs-soi/15in54cm.xlsx
+
+
+# download 2015-2021 data
+get_data <- function(year){
+  soiurl <- r"(https://www.irs.gov/pub/irs-soi/)"
+  doc_suffix <- "incmdocguide.doc"
+  
+  csv_suffix <- case_when(
+    year %in% 2015:2017 ~ "in54cmcsv.csv",
+    year == 2018 ~ "in55cmagi.csv",
+    year %in% 2019:2021 ~ "in55cmcsv.csv")
+  
+  xlsx_suffix <- case_when(
+    year %in% 2015:2017 ~ "in54cm.xlsx",
+    year %in% 2018:2021 ~ "in55cm.xlsx")  
+  
+  dl <- function(y2, suffix){
+    fname <- paste0(y2, suffix)
+    url <- fs::path(soiurl, fname)
+    savedir <- fs::path(here::here(), "data", "data_raw")
+    savepath <- fs::path(savedir, fname)
+    download.file(url, savepath, mode="wb")
+  }
+  
+  print(paste0("Getting data for: ", year))
+  y2 <- str_sub(year, 3, 4)
+  dl(y2, csv_suffix)
+  dl(y2, doc_suffix)
+  dl(y2, xlsx_suffix)
+}
+
+purrr::walk(2015:2021, get_data)
+
+```
+
+

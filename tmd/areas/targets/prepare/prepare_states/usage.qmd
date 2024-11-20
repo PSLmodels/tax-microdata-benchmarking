@@ -1,0 +1,59 @@
+---
+output: html_document
+editor_options: 
+ chunk_output_type: console
+---
+
+# How to create state target files and the associated local web page
+
+## Prerequisites
+
+-   Recent version of [R](https://www.r-project.org/). This project was created with R version 4.4.2.
+
+-   Recent release of [RStudio](https://posit.co/products/open-source/rstudio/). Other IDEs may work well, but RStudio has been used in this project (RStudio 2024.09.0 Build 375).
+
+-   Recent pre-release version of [quarto](https://quarto.org/docs/download/prerelease.html), 1.6 or higher. This project was created with quarto version 1.6.24
+
+-   Be sure that ".../targets/prepare/data/raw_data/" exists and has the files shown below, which should have been downloaded when you cloned the GitHub repo:
+
+    <!-- -   21incddocguide.docx -->
+
+    <!-- -   cd_documentation_extracted_from_21incddocguide.docx.xlsx -->
+
+    <!-- -   cdpop1year_acs.csv -->
+
+    <!-- -   congressional2021.zip -->
+
+    <!-- -   geocorr2022_2428906586.csv -->
+
+## Setting up the environment
+
+-   After checking the above and starting RStudio, in the console run `renv::restore()` and answer y when asked whether to proceed installing packages. This may take a while the first time you set your environment up.
+
+`renv` is an environment manager for R that can set up a project-specific environment that is the same across multiple machines. It should ensure that your environment includes the versions of R packages used in this project. (Most packages are loaded in ".../targets/prepare/prepare_states/R/libraries.R".)
+
+## To create target files and build the web page
+
+-   Open a terminal in the "prepare" folder.
+-   Enter "quarto render"
+
+The first time the project is rendered, it will create needed intermediate files and put them in the "../data/intermediate" folder.
+
+Note that the \_quarto.yml file sets the `freeze` execution option to `false`, which means .qmd files will be rerendered even if they have not changed (except that quarto will not re-render chunks with the option `eval: false`), and intermediate data files will be recreated. For incremental re-rendering of changed .qmd files only, set `freeze: auto`, which will avoid recreating intermediate files. This should be used cautiously to avoid unintended consequences.
+
+At present the code prepares target files with targets we believe are useful and practical. Users who want different targets will have to modify code to do so. However, as described in overall repo documentation, users can comment-out individual targets.
+
+## After rendering is complete
+
+-   xx_target.csv files will be in the ".../targets/prepare/prepare_states/final/" folder
+-   local documentation web page will be in the ".../targets/prepare/prepare_states/\_web/" folder
+
+## To create area weights using the target files in tax-microdata-benchmarking
+
+-   copy desired xx_target.csv files from ".../targets/prepare/prepare_states/targets/" folder to the ".../targets/" folder
+-   follow tax-microdata-benchmarking instructions to run `make_all.py` or `create_area_weights.py`
+
+## Additional notes
+
+-   It is possible to render each qmd file separately, step by step, to be sure all is working as desired.
+-   Each qmd file has its own setup section in which it loads packages and constants. This is unnecessary duplication when rendering the entire project, but it is useful during development because it allows rendering individual qmd files without rendering the entire project.
