@@ -1,0 +1,36 @@
+# prepare_states
+
+# ignore quarto at the root level
+/.quarto/
+
+# folders to ignore (anywhere in project since not preceded by root /)
+.Rproj.user/
+#_docs/
+#_targetprep/
+#_freeze/
+#libs/
+# Local Netlify folder
+.netlify
+
+# Ignore `renv` directories that are system-specific
+renv/library/
+renv/cache/
+
+# Track the lockfile and settings file for reproducibility
+!renv.lock
+!renv/settings.dcf
+
+# file types to ignore (unless not ignored elsewhere)
+~*
+*.csv
+*.html
+*.rds
+
+# specific files to ignore regardless of how file types are treated
+.Rhistory
+
+# Do not ignore anything in raw data folder, including files or folders nested within
+!states/raw_data/**
+# but continue to ignore Word temp files
+states/raw_data/~*
+
