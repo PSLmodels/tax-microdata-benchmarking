@@ -8,6 +8,7 @@
 #_docs/
 #_targetprep/
 #_freeze/
+_web/
 #libs/
 # Local Netlify folder
 .netlify
