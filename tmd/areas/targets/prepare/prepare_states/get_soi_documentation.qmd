@@ -1,0 +1,62 @@
+---
+output: html_document
+editor_options: 
+ chunk_output_type: console
+---
+
+# Clean up SOI documentation files
+
+## Setup
+
+```{r}
+#| label: setup
+
+source(here::here("R", "libraries.R"))
+source(here::here("R", "constants.R"))
+source(here::here("R", "functions.R"))
+
+```
+
+## Cleaning
+
+```{r}
+
+
+fname <- "soi_states_variable_documentation.xlsx"
+fpath <- fs::path(DRAW, fname)
+
+f <- function(year){
+  df1 <- readxl::read_xlsx(fpath, sheet = as.character(year), col_types = "text")
+df2 <- df1 |> 
+  select(vname=1, description=2, reference=3, type=4) |> 
+  filter(if_any(everything(), ~!is.na(.))) |> 
+  # after verifying that AGI_STUB is the only variable with NA in vname
+  # fill down and then concatenate the reference column
+  fill(vname, description, type, .direction="down") |> 
+  mutate(reference = paste(reference, collapse = "\n"), .by=vname) |> 
+  distinct() |> 
+  # for now, make mistaken references NA
+  mutate(reference=ifelse(!is.na(as.numeric(reference)), NA_character_, reference),
+         reference=ifelse(reference=="NA", NA_character_, reference),
+         year=!!year) |> 
+  relocate(year)
+df2
+}
+
+f(2021)
+f(2020)
+f(2019)
+f(2018)
+f(2017)
+f(2016)
+f(2015)
+
+df <- purrr::map(2015:2021, f) |> 
+  list_rbind()
+
+count(df, year)
+
+write_csv(df, fs::path(DINTERMEDIATE, "soi_documentation.csv"))
+
+```
+
