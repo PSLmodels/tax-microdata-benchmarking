@@ -318,6 +318,7 @@ def target_rmse(wght, target_matrix, target_array, out, delta=None):
     # show distribution of target ratios
     tol = PARAMS.get("target_ratio_tolerance", TARGET_RATIO_TOLERANCE)
     bins = [
+        -np.inf,
         0.0,
         0.4,
         0.8,
