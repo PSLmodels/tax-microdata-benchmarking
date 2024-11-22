@@ -1,5 +1,7 @@
 # Ignore intermediate and final files but not raw_data/
 
+!data/raw_data/**
+
 intermediate/
 final/
 
