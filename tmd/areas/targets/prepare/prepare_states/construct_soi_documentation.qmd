@@ -169,6 +169,7 @@ adjusted1 <- distances |>
                              last))
 
 cleaned_descriptions <- adjusted1 |> 
+  mutate(vname=str_to_lower(vname)) |> 
   select(year, vname, description, udescription)
 
 ```
