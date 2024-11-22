@@ -15,12 +15,21 @@ source(here::here("R", "libraries.R"))
 source(here::here("R", "constants.R"))
 source(here::here("R", "functions.R"))
 
+library(stringdist) # for calculating "distances" between strings
+
 ```
 
-## Read, combine, and save the documentation data
+## Read, stack, and save the documentation data
+
+### Read and stack documentation files for different years
+
+Start with *soi_states_variable_documentation.xlsx*, a hand-created workbook that has a sheet for each year from 2015-2021. Each sheet has a table from the SOI documentation file for that year, with variable names, variable descriptions, and certain other information. For example, the SOI file for 2021 is named *21incmdocguide.doc*. 
+
+See the notes sheet in the workbook for how the Word tables were copied to Excel. The basic idea was to copy each table to a sheet and make the absolute minimum manual changes needed to make the table rectangular and computer-readable. The goal is to do as much parsing and cleaning in computer code as possible to reduce risk of errors and make it reproducible.
+
 
 ```{r}
-#| label: combine-documentation
+#| label: stack-documentation
 #| output: false
 
 fname <- "soi_states_variable_documentation.xlsx"
@@ -28,20 +37,20 @@ fpath <- fs::path(DRAW, fname)
 
 f <- function(year){
   df1 <- readxl::read_xlsx(fpath, sheet = as.character(year), col_types = "text")
-df2 <- df1 |> 
-  select(vname=1, description=2, reference=3, type=4) |> 
-  filter(if_any(everything(), ~!is.na(.))) |> 
-  # after verifying that AGI_STUB is the only variable with NA in vname
-  # fill down and then concatenate the reference column
-  fill(vname, description, type, .direction="down") |> 
-  mutate(reference = paste(reference, collapse = "\n"), .by=vname) |> 
-  distinct() |> 
-  # for now, make mistaken references NA
-  mutate(reference=ifelse(!is.na(as.numeric(reference)), NA_character_, reference),
-         reference=ifelse(reference=="NA", NA_character_, reference),
-         year=!!year) |> 
-  relocate(year)
-df2
+  df2 <- df1 |> 
+    select(vname=1, description=2, reference=3, type=4) |> 
+    filter(if_any(everything(), ~!is.na(.))) |> 
+    # after verifying that AGI_STUB is the only variable with NA in vname
+    # fill down and then concatenate the reference column
+    fill(vname, description, type, .direction="down") |> 
+    mutate(reference = paste(reference, collapse = "\n"), .by=vname) |> 
+    distinct() |> 
+    # for now, make mistaken references NA
+    mutate(reference=ifelse(!is.na(as.numeric(reference)), NA_character_, reference),
+           reference=ifelse(reference=="NA", NA_character_, reference),
+           year=!!year) |> 
+    relocate(year)
+  df2
 }
 
 # f(2021)
@@ -52,10 +61,10 @@ df2
 # f(2016)
 # f(2015)
 
-df <- purrr::map(2015:2021, f) |> 
+stacked_docs <- purrr::map(2015:2021, f) |> 
   list_rbind()
 
-count(df, year)
+count(stacked_docs, year)
 
 # write_csv(df, fs::path(DINTERMEDIATE, "soi_documentation.csv"))
 
@@ -66,7 +75,7 @@ count(df, year)
 
 # identify variables that have more than one description, and then
 # identify instances where the descriptions are highly dissimilar
-library(stringdist)
+
 
 f <- function(strings) {
   if(length(strings)==1) return(rep(0, length(strings)))

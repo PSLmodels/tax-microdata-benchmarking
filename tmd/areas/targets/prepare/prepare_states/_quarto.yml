@@ -42,7 +42,7 @@ book:
       chapters:
         # - cd_download_and_clean_census_population_data.qmd
         - download_soi_data.qmd
-        - get_soi_documentation.qmd
+        - construct_soi_documentation.qmd
         # - explore_soi_data.qmd
         # - analyze_SALT.qmd
         # - cd_construct_soi_variable_documentation.qmd
@@ -64,6 +64,8 @@ format:
 
 editor_options:
   chunk_output_type: console
+  
+# 5 states to do:  NJ, NM, VA, AK, MN  
 
 # rendering commands
 #   quarto render
