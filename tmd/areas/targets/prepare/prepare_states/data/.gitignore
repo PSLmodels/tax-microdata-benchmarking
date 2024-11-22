@@ -5,7 +5,8 @@
 # Continue to ignore Word temp files
 raw_data/~*
 
-intermediate/
-final/
-
-
+# Ignore contents of intermediate and final but track directories
+!intermediate/
+intermediate/*
+!final/
+final/*
