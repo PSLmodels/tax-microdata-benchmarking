@@ -1,6 +1,9 @@
 # Ignore intermediate and final files but not raw_data/
 
-!data/raw_data/**
+# Do not ignore anything in raw data folder, including nested files or folders
+!raw_data/**
+# Continue to ignore Word temp files
+raw_data/~*
 
 intermediate/
 final/
