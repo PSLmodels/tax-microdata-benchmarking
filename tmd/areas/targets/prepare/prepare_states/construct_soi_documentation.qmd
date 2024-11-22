@@ -112,6 +112,9 @@ str_distance <- function(strings) {
 distances <- stacked_docs |> 
   select(year, vname, description) |> 
   arrange(vname, year) |>
+  # fix known error
+  mutate(vname=ifelse(vname=="CREP", "CPREP", vname)) |> 
+  # prepare to determine distances
   mutate(n=n(),
          nunique=length(unique(description)), 
          .by=vname) |> 
