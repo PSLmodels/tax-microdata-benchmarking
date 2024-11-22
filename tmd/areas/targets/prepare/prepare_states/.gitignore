@@ -15,10 +15,6 @@ renv/cache/
 
 # Ignore generated folders and websites
 _web/
-#_docs/
-#_targetprep/
-#_freeze/
-#libs/
 
 # Ignore file types generated during work, unless tracked explicitly
 ~*
