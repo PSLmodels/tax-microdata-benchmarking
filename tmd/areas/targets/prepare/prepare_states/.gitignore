@@ -34,3 +34,5 @@ _web/
 !states/raw_data/**
 # Continue to ignore Word temp files
 states/raw_data/~*
+
+/.quarto/
