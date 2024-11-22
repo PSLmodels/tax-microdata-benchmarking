@@ -170,7 +170,16 @@ adjusted1 <- distances |>
 
 cleaned_descriptions <- adjusted1 |> 
   mutate(vname=str_to_lower(vname)) |> 
-  select(year, vname, description, udescription)
+  mutate(length=nchar(vname),
+         vtype=case_when(
+           vname == "numdep" ~ "count",
+           length != 6 ~ "count",
+           length == 6 & str_sub(vname, 1, 1) == "n" ~ "count",
+           length == 6 & str_sub(vname, 1, 1) == "a" ~ "amount",
+           .default = "ERROR")) |> 
+  select(year, vname, vtype, description, udescription)
+
+count(cleaned_descriptions, vtype)
 
 ```
 
@@ -183,7 +192,7 @@ cleaned_descriptions <- adjusted1 |>
 write_csv(cleaned_descriptions, fs::path(DINTERMEDIATE, "soi_documentation_by_year.csv"))
 
 uniform_descriptions <- cleaned_descriptions |> 
-  select(vname, udescription) |> 
+  select(vname, vtype, udescription) |> 
   distinct()
 
 # verify only one description per variable
