@@ -15,10 +15,6 @@ renv/cache/
 
 # Ignore generated folders and websites
 _web/
-#_docs/
-#_targetprep/
-#_freeze/
-#libs/
 
 # Ignore file types generated during work, unless tracked explicitly
 ~*
@@ -29,10 +25,5 @@ _web/
 # Specific files to ignore
 .Rhistory
 .RData
-
-# Do not ignore anything in raw data folder, including nested files or folders
-!states/raw_data/**
-# Continue to ignore Word temp files
-states/raw_data/~*
 
 /.quarto/

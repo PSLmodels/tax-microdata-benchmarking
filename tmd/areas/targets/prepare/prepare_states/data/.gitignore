@@ -1,5 +1,12 @@
-# Ignore everything in this directory
-*
+# Ignore intermediate and final files but not raw_data/
 
-# Allow the .gitignore file itself
-!.gitignore
+# Do not ignore anything in raw data folder, including nested files or folders
+!raw_data/**
+# Continue to ignore Word temp files
+raw_data/~*
+
+# Ignore contents of intermediate and final but track directories
+!intermediate/
+intermediate/*
+!final/
+final/*
