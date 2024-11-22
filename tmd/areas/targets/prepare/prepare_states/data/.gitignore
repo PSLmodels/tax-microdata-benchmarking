@@ -1,5 +1,6 @@
-# Ignore everything in this directory
-*
+# Ignore intermediate and final files but not raw_data/
 
-# Allow the .gitignore file itself
-!.gitignore
+intermediate/
+final/
+
+
