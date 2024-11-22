@@ -33,7 +33,18 @@ source(here::here("R", "functions.R"))
 
 ## (Optionally) Download SOI state data and documentation
 
-As noted, by default, the files will NOT be downloaded when the project is rendered.
+As noted, by default, the files will NOT be downloaded when the project is rendered. 
+
+**All necessary files will be in the `raw_data` folder on GitHub and should be available when the repo is cloned.**
+
+The necessary files are shown below. For those that have [yy], [yy] are the trailing 2 digits of the year. The project includes files for 2015-2021:
+
+-   [yy]in54cm.xlsx or similar, from SOI: each file has human-readable SOI values for all states for the year.
+-   [yy]in54cmcsv.csv or similar, from SOI: file with SOI values for all states for the year.
+-   [yy]incmdocguide.doc, from SOI: descriptive documentation, including a table of variables and their descriptions
+-   soi_states_variable_documentation.xlsx, hand-created by project team from the .doc files: has a sheet for each year with its documentation table. **NOT** intended to be edited by users.
+
+Change options for the chunk below to `eval: true` to download files.
 
 ```{r}
 #| label: downloads

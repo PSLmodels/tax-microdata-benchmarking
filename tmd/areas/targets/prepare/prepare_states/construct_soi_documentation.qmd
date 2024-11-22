@@ -1,0 +1,194 @@
+---
+output: html_document
+editor_options: 
+ chunk_output_type: console
+---
+
+# Prepare SOI documentation files
+
+## Setup
+
+```{r}
+#| label: setup
+
+source(here::here("R", "libraries.R"))
+source(here::here("R", "constants.R"))
+source(here::here("R", "functions.R"))
+
+library(stringdist) # for calculating "distances" between strings
+
+```
+
+
+## Read and stack documentation files for multiple years
+
+Start with *soi_states_variable_documentation.xlsx*, a hand-created workbook that has a sheet for each year from 2015-2021. Each sheet has a table from the SOI documentation file for that year, with variable names, variable descriptions, and certain other information. For example, the SOI file for 2021 is named *21incmdocguide.doc*. See the notes sheet in the workbook for how the Word tables were copied to Excel. The basic idea was to copy each table to a sheet and make the absolute minimum manual changes needed to make the table rectangular and computer-readable. The goal is to do as much parsing and cleaning in computer code as possible to reduce risk of errors and make it reproducible.
+
+Read each sheet (one per year).
+Drop empty rows.
+Combine multiple rows for the AGI_STUB variable into one row that has information on AGI ranges.
+Stack the years.
+
+```{r}
+#| label: stack-documentation
+#| output: false
+
+fname <- "soi_states_variable_documentation.xlsx"
+fpath <- fs::path(DRAW, fname)
+
+get_year <- function(year){
+  df1 <- readxl::read_xlsx(fpath, sheet = as.character(year), col_types = "text")
+  df2 <- df1 |> 
+    select(vname=1, description=2, reference=3, type=4) |> 
+    filter(if_any(everything(), ~!is.na(.))) |> 
+    # after verifying that AGI_STUB is the only variable with NA in vname
+    # fill down and then concatenate the reference column
+    fill(vname, description, type, .direction="down") |> 
+    mutate(reference = paste(reference, collapse = "\n"), .by=vname) |> 
+    distinct() |> 
+    # for now, make mistaken references NA
+    mutate(reference=ifelse(!is.na(as.numeric(reference)), NA_character_, reference),
+           reference=ifelse(reference=="NA", NA_character_, reference),
+           year=!!year) |> 
+    relocate(year)
+  df2
+}
+
+# get_year(2021)
+# get_year(2020)
+# get_year(2019)
+# get_year(2018)
+# get_year(2017)
+# get_year(2016)
+# get_year(2015)
+
+stacked_docs <- purrr::map(2015:2021, get_year) |> 
+  list_rbind()
+
+count(stacked_docs, year)
+
+
+```
+
+## Clean stacked file and make uniform variable descriptions
+
+Variable descriptions change somewhat from year to year, sometimes due to slight changes in what the variable measures, and sometimes for small inconsistencies.
+
+Goals: (1) create a cleaned description for each variable for each year, and (2) create uniform description for each variable that can be used for all years.
+
+Steps:
+
+-   Clean each SOI variable, removing footnotes and other year-specific editorial inconsistencies.
+-   For each variable, calculate a measure of distance between its description in one year and its description in the prior year.
+-   Visually inspect descriptions that have large year-to-year changes
+-   For a small set of variables that have significant changes, prepare new descriptions
+-   Create uniform descriptions:
+    -   for variables with minimal changes, use the latest year
+    -   for variables with larger changes, use the new descriptions
+-   Create and save new files:
+    -   one with descriptions for each year - original descriptions, cleaned descriptions, and uniform descriptions
+    -   one with a single uniform description for each variable
+
+```{r}
+#| label: clean-stacked-documentation
+#| output: false
+
+cleanit <- function(strings) {
+  # remove any footnotes at the end of descriptions when in square brackets
+  #   for example, remove [3] [16, 17] and similar
+  stringr::str_remove(strings, " \\[\\d+(, \\d+)*\\]")
+}
+
+str_distance <- function(strings) {
+  # calculate "distance" between strings - between the description for a variable
+  #   in one year and the previous year
+  if(length(strings)==1) return(rep(0, length(strings)))
+  c(NA_integer_, sapply(2:length(strings), \(i) stringdist::stringdist(strings[i], strings[i - 1], method = "lv")))
+}
+
+# identify variables that have more than one description, and then
+# identify instances where the descriptions are highly dissimilar
+
+distances <- stacked_docs |> 
+  select(year, vname, description) |> 
+  arrange(vname, year) |>
+  mutate(n=n(),
+         nunique=length(unique(description)), 
+         .by=vname) |> 
+  mutate(cleaned=cleanit(description),
+         distance=str_distance(cleaned), 
+         maxdist=max(distance, na.rm=TRUE),
+         .by=vname)
+
+count(distances, maxdist)
+
+# visually inspect differences to see which descriptions we will need to create manually
+distances |> filter(maxdist == 2) # all good keep latest
+distances |> filter(maxdist == 3) # keep latest
+distances |> filter(maxdist == 4) # A10971, N10971
+distances |> filter(maxdist == 10) # N2
+distances |> filter(maxdist == 14) # A06500, N06500
+distances |> filter(maxdist == 17) # A07180, N07180, N19700
+distances |> filter(maxdist == 18) # A19700
+distances |> filter(maxdist == 20) # A07225, N07225
+distances |> filter(maxdist == 30) # A20950, N20950
+distances |> filter(maxdist == 31) # N11070
+distances |> filter(maxdist == 32) # A11070
+distances |> filter(maxdist == 37) # A11450, N11450
+
+adjusted_descriptions <- read_delim(
+"vname; adjusted
+A00100; Adjusted gross income (AGI) amount
+A10971; Economic impact payment amount (pre-2021 is different)
+N10971; Number of returns with economic impact payment (pre-2021 is different)
+N2; Number of individuals (pre-2018 is different)
+N06500; Number of returns with income tax after credits (pre-2018 is different)
+A06500; Income tax after credits amount (pre-2018 is different)
+A07180; Nonrefundable child care credit amount (pre-2021 is different)
+N07180; Number of returns with nonrefundable child care credit (pre-2021 is different)
+N19700; Number of returns with Total charitable contributions (pre-2017 is different)
+A19700; Total charitable contributions amount (pre-2017 is different)
+A07225; Nonrefundable child and other dependent tax credit amount (pre-2021 is different)
+N07225; Number of returns with nonrefundable child and other dependent tax credit (pre-2021 is different)
+A20950; Other non-limited miscellaneous deductions amount (pre-2018 is different)
+N20950; Number of returns with Other non-limited miscellaneous deductions (pre-2018 is different)
+N11070; Number of returns with refundable child tax credit or additional child tax credit (pre-2021 is different)
+A11070; Refundable child tax credit or additional child tax credit amount (pre-2021 is different)
+A11450; Qualified sick and family leave credit for leave taken before April 1, 2021 amount (pre-2021 is different)
+N11450; Number of returns with qualified sick and family leave credit for leave taken before April 1, 2021 (pre-2021 is different)
+", delim=";", trim_ws=TRUE)
+adjusted_descriptions
+
+adjusted1 <- distances |> 
+  mutate(last=last(cleaned),
+         .by=vname) |> 
+  left_join(adjusted_descriptions,
+            by = join_by(vname)) |> 
+  mutate(udescription=ifelse(!is.na(adjusted),
+                             adjusted,
+                             last))
+
+cleaned_descriptions <- adjusted1 |> 
+  select(year, vname, description, udescription)
+
+```
+
+## Save files
+
+```{r}
+#| label: save-files
+#| output: false
+
+write_csv(cleaned_descriptions, fs::path(DINTERMEDIATE, "soi_documentation_by_year.csv"))
+
+uniform_descriptions <- cleaned_descriptions |> 
+  select(vname, udescription) |> 
+  distinct()
+
+# verify only one description per variable
+anyDuplicated(uniform_descriptions$vname)
+
+write_csv(uniform_descriptions, fs::path(DINTERMEDIATE, "soi_documentation.csv"))
+
+```
+
