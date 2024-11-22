@@ -30,9 +30,4 @@ _web/
 .Rhistory
 .RData
 
-# Do not ignore anything in raw data folder, including nested files or folders
-!data/raw_data/**
-# Continue to ignore Word temp files
-data/raw_data/~*
-
 /.quarto/
