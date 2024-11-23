@@ -112,6 +112,9 @@ str_distance <- function(strings) {
 distances <- stacked_docs |> 
   select(year, vname, description) |> 
   arrange(vname, year) |>
+  # fix known error
+  mutate(vname=ifelse(vname=="CREP", "CPREP", vname)) |> 
+  # prepare to determine distances
   mutate(n=n(),
          nunique=length(unique(description)), 
          .by=vname) |> 
@@ -169,7 +172,22 @@ adjusted1 <- distances |>
                              last))
 
 cleaned_descriptions <- adjusted1 |> 
-  select(year, vname, description, udescription)
+  mutate(vname=str_to_lower(vname)) |> 
+  mutate(length=nchar(vname),
+         vtype=case_when(
+           vname == "numdep" ~ "count",
+           length != 6 ~ "count",
+           length == 6 & str_sub(vname, 1, 1) == "n" ~ "count",
+           length == 6 & str_sub(vname, 1, 1) == "a" ~ "amount",
+           .default = "ERROR"),
+         basevname=case_when(
+           vname == "numdep" ~ "numdep",
+           length == 6 ~ str_sub(vname, 2, 6),
+           .default = vname
+  )) |> 
+  select(year, vname, basevname, vtype, description, udescription)
+
+count(cleaned_descriptions, vtype)
 
 ```
 
@@ -182,7 +200,7 @@ cleaned_descriptions <- adjusted1 |>
 write_csv(cleaned_descriptions, fs::path(DINTERMEDIATE, "soi_documentation_by_year.csv"))
 
 uniform_descriptions <- cleaned_descriptions |> 
-  select(vname, udescription) |> 
+  select(vname, basevname, vtype, udescription) |> 
   distinct()
 
 # verify only one description per variable

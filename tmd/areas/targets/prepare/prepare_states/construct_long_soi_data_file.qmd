@@ -1,0 +1,113 @@
+---
+output: html_document
+editor_options: 
+ chunk_output_type: console
+---
+
+# Prepare SOI documentation files
+
+## Setup
+
+```{r}
+#| label: setup
+
+source(here::here("R", "libraries.R"))
+source(here::here("R", "constants.R"))
+source(here::here("R", "functions.R"))
+
+```
+
+
+```{r}
+#| label: read-data
+#| output: false
+
+# variable_descriptions <- read_csv(fs::path(DINTERMEDIATE, "soi_documentation.csv"))
+variable_descriptions <- read_csv(fs::path(DINTERMEDIATE, "soi_documentation_by_year.csv"))
+
+csvfiles <- dir_ls(DRAW, glob="*.csv")
+
+get_csvdata <- function(csvfile){
+  year <- paste0("20", str_sub(fs::path_file(csvfile), 1, 2))
+  print(year)
+  vroom(csvfile) |> 
+    mutate(year=year)
+}
+
+csvdata <- purrr::map(csvfiles, get_csvdata) |> 
+  list_rbind()
+count(csvdata, year)
+
+csvdata2 <- csvdata |> 
+  rename_with(str_to_lower) |> 
+  rename(stabbr=state, agistub=agi_stub) |> 
+  mutate(year=as.integer(year)) |> 
+  pivot_longer(-c(stabbr, year, agistub),
+               names_to = "vname") |> 
+  filter(!is.na(value)) |> 
+  left_join(variable_descriptions,
+            by = join_by(vname, year)) |> 
+  mutate(value=ifelse(vtype=="amount", value * 1000, value)) |> 
+  select(stabbr, vname, basevname, vtype, agistub, year, value, udescription, description) |> 
+  arrange(stabbr, vname, basevname, vtype, agistub, year)
+
+skim(csvdata2)
+glimpse(csvdata2)
+count(csvdata2, vtype)
+csvdata2 |> filter(value==max(value))
+csvdata2 |> filter(value==min(value))
+
+saveRDS(csvdata2, fs::path(DINTERMEDIATE, "soilong.rds"))
+
+
+```
+
+Explore the data
+
+```{r}
+#| label: read-data
+#| output: false
+#| eval: false
+
+soilong <- readRDS(fs::path(DINTERMEDIATE, "soilong.rds"))
+
+# data checks
+
+soilong |>
+  filter(is.na(vtype)) |>
+  count(vname)
+
+soilong |>
+  filter(is.na(vtype)) |> 
+  skim()
+
+# n17000 had been one of the all-missing values variables in some years
+# we have since dropped all missing values
+variable_descriptions |> 
+  filter(vname=="n17000") # Number of returns with Total medical and dental expense deduction
+
+ns(csvdata)
+csvdata |> 
+  filter(STATE=="NY", AGI_STUB==0) |> 
+  select(STATE, AGI_STUB, year, N1, N17000, A17000)
+
+#   STATE AGI_STUB year        N1 N17000  A17000
+#   <chr>    <dbl> <chr>    <dbl>  <dbl>   <dbl>
+# 1 NY           0 2015   9614610     NA      NA
+# 2 NY           0 2016   9589410 458840 4776918
+# 3 NY           0 2017   9694910 494520 5124475
+# 4 NY           0 2018   9742580 235020 4029879
+# 5 NY           0 2019   9760870 221060 3953827
+# 6 NY           0 2020  10159910 200990 3753634
+# 7 NY           0 2021   9813320 187220 3702585
+
+soilong |> 
+  filter(stabbr=="NY", vname %in% c("n17000", "a17000"), agistub==0) |> 
+  select(stabbr, agistub, vname, vtype, year, value, udescription) |> 
+  arrange(vtype, year)
+
+
+
+```
+
+
