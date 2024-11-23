@@ -4,7 +4,7 @@ editor_options:
  chunk_output_type: console
 ---
 
-# Prepare SOI documentation files
+# Construct and save long SOI data frame
 
 ## Setup
 
@@ -65,7 +65,7 @@ saveRDS(csvdata2, fs::path(DINTERMEDIATE, "soilong.rds"))
 Explore the data
 
 ```{r}
-#| label: read-data
+#| label: explore
 #| output: false
 #| eval: false
 
