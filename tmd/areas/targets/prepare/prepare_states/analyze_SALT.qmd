@@ -17,25 +17,89 @@ source(here::here("R", "functions.R"))
 
 ```
 
-
 ```{r}
+#| label: get-data
+#| output: false
 
 soilong <- readRDS(fs::path(DINTERMEDIATE, "soilong.rds"))
 
-# data checks
+```
+
+
+## Basic SALT information
+
+### U.S. amounts in 2021
+
+Note that a18425 is the largest value by far
+
+```{r}
+#| label: salt-amounts-2021
+
+
+soilong |> 
+  filter(str_sub(vname, 1, 3)=="a18", stabbr=="US", agistub==0, year==2021) |> 
+  select(stabbr, vname, year, value, udescription) |> 
+  gt() |> 
+  tab_header(title="SALT-related variables in 2021, amounts for the U.S. in $ billions",
+             subtitle = "SOI Historical Table 2") |> 
+  fmt_currency(columns = value, scale=1e-9, decimals=1)
+
+
+```
+
+
+### U.S. amounts over time
+
+
+```{r}
+#| label: salt-amounts-over-time
+
+
+soilong |> 
+  filter(str_sub(vname, 1, 3)=="a18", stabbr=="US", agistub==0) |> 
+  select(stabbr, vname, year, value, udescription) |> 
+  pivot_wider(names_from = year) |> 
+  gt() |> 
+  tab_header(title="SALT-related variables over time, amounts for the U.S. in $ billions",
+             subtitle = "SOI Historical Table 2") |> 
+  fmt_currency(columns = -c(stabbr, vname, udescription), scale=1e-9, decimals=1) |> 
+  sub_missing(columns=everything(),
+              missing_text="--") 
+  
+
+```
+
+
+
+
+```{r}
+#| label: explore-and-take-notes
+#| eval: false
 
 skim(soilong)
-
-soilong |>
-  filter(is.na(vtype)) |>
-  count(vname)
-
-soilong |>
-  filter(is.na(value))
 
 soilong |> 
   filter(str_sub(vname, 1, 3)=="a18") |> 
   count(vname, year, udescription, description)
+
+soilong |> 
+  filter(str_sub(vname, 1, 3)=="a18") |> 
+  count(vname, udescription)
+
+#   vname  udescription                                 n  avail in 2021?      US amount in 2021
+#   <chr>  <chr>                                    <int>
+# 1 a18300 Taxes paid amount                         4125 yes; big drop 2018+; $120b
+# 2 a18425 State and local income taxes amount       4125 yes; big drop 2018+; $253b biggest item by far in 2021
+# 3 a18450 State and local general sales tax amount  4125 yes; big drop 2018+; $7.5b
+# 4 a18460 Limited state and local taxes             2376 yes; only for 2018+; $118b
+# 5 a18500 Real estate taxes amount                  4125 yes; big drop 2018+; $101b
+# 6 a18800 Personal property taxes amount            3542 yes; big drop 2018+; $4.3b
+
+soilong |> 
+  filter(str_sub(vname, 1, 3)=="a18", stabbr=="US", agistub==0)
+
+soilong |> 
+  filter(str_sub(vname, 1, 3)=="a18", stabbr=="US", agistub==0, year==2021)
 
 soilong |> filter(vname=="a18460", year==2015)
 
@@ -73,4 +137,3 @@ salt |>
             size=3) +
   theme_bw()
 ```
-
