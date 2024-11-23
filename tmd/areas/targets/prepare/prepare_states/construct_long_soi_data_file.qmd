@@ -17,6 +17,28 @@ source(here::here("R", "functions.R"))
 
 ```
 
+```{r}
+
+agilabels <- read_delim(
+"agistub; agilo; agihi; agilabel
+0; -9E+99; 0; Total
+1; -9E+99; 1; Under $1
+2; 1; 10000; $1 under $10,000
+3; 10000; 25000; $10,000 under $25,000
+4; 25000; 50000; $25,000 under $50,000
+5; 50000; 75000; $50,000 under $75,000
+6; 75000; 100000; $75,000 under $100,000
+7; 100000; 200000; $100,000 under $200,000
+8; 200000; 500000; $200,000 under $500,000
+9; 500000; 1000000; $500,000 under $1,000,000
+10; 1000000; 9E+99; $1,000,000 or more
+", delim=";", trim_ws=TRUE)
+agilabels
+
+write_csv(agilabels, fs::path(DINTERMEDIATE, "agilabels.csv"))
+
+```
+
 
 ```{r}
 #| label: read-data
@@ -24,6 +46,7 @@ source(here::here("R", "functions.R"))
 
 # variable_descriptions <- read_csv(fs::path(DINTERMEDIATE, "soi_documentation.csv"))
 variable_descriptions <- read_csv(fs::path(DINTERMEDIATE, "soi_documentation_by_year.csv"))
+agilabels <- read_csv(fs::path(DINTERMEDIATE, "agilabels.csv"))
 
 csvfiles <- dir_ls(DRAW, glob="*.csv")
 
@@ -47,8 +70,9 @@ csvdata2 <- csvdata |>
   filter(!is.na(value)) |> 
   left_join(variable_descriptions,
             by = join_by(vname, year)) |> 
+  left_join(agilabels, by = join_by(agistub)) |> 
   mutate(value=ifelse(vtype=="amount", value * 1000, value)) |> 
-  select(stabbr, vname, basevname, vtype, agistub, year, value, udescription, description) |> 
+  select(stabbr, vname, basevname, vtype, agistub, agilo, agihi, agilabel, year, value, udescription, description) |> 
   arrange(stabbr, vname, basevname, vtype, agistub, year)
 
 skim(csvdata2)
@@ -61,6 +85,35 @@ saveRDS(csvdata2, fs::path(DINTERMEDIATE, "soilong.rds"))
 
 
 ```
+
+```{r}
+#| label: info-for-targets
+#| eval: false
+
+# to be used later
+
+# varname: any Tax-Calculator input variable name plus any Tax-Calculator calculated variable in the list of cached variables in the tmd/storage/__init__.py file
+# count: integer in [0,4] range:
+# count==0 implies dollar total of varname is tabulated
+# count==1 implies number of tax units with any value of varname is tabulated
+# count==2 implies number of tax units with a nonzero value of varname is tabulated
+# count==3 implies number of tax units with a positive value of varname is tabulated
+# count==4 implies number of tax units with a negative value of varname is tabulated
+# scope: integer in [0,2] range:
+# scope==0 implies all tax units are tabulated
+# scope==1 implies only PUF-derived filing units are tabulated
+# scope==2 implies only CPS-derived filing units are tabulated
+# agilo: float representing lower bound of the AGI range (which is included in the range) that is tabulated.
+# agihi: float representing upper bound of the AGI range (which is excluded from the range) that is tabulated.
+# fstatus: integer in [0,5] range:
+# fstatus=0 implies all filing statuses are tabulated
+# other fstatus values imply just the tax units with the Tax-Calculator MARS variable equal to fstatus are included in the tabulation
+# target: target amount:
+# dollars if count==0
+# number of tax units if count>0
+
+```
+
 
 Explore the data
 
