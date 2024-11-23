@@ -4,7 +4,19 @@ editor_options:
   chunk_output_type: console
 ---
 
-# Analyze SALT data
+# Developing SALT targets
+
+In a perfect world our national and state data files (and our separate Congressional district files) would have *potential* SALT deductions for the entire universe of potential tax units, regardless of whether they itemize or not, before application of the TCJA SALT cap. We come reasonably close to this ideal for the *national* TMD data. The national TMD data, based on the 2015 PUF, include: (1) [e18400, Itemizable state and local income/sales taxes](https://taxcalc.pslmodels.org/guide/input_vars.html#e18400)), and (2) [e18500, Itemizable real-estate taxes paid](https://taxcalc.pslmodels.org/guide/input_vars.html#e18500) (links are to Tax-Calculator documentation). These TMD variables are based primarily on people who itemized deductions in 2015, grown to 2021 levels, before the application of the TCJA SALT cap that was in effect in 2021. Thus, while they do not represent the universe of potential SALT deductions, they do represent potential deductions for those who itemized in 2015, when the standard deduction was lower and SALT deductions are uncapped. Thus, they are a pretty good starting point for subnational data files.
+
+We want to target e18400 and e18500 for each state (and, in a separate part of the TMD project, each Congressional district). Unfortunately, we do not have data on the amount of these variables by state and Congressional district, by AGI range. Instead, we have published data by state and Congressional district for 2021, which reflect the TCJA's higher standard deduction and SALT cap. Thus, the published data include far fewer itemizers that might exist under some policy scenarios, and far lower potential deductions than would be available if the SALT cap were raised. We cannot use the published data directly as state and Congressional district targets.
+
+However, is there a way we can use the published data to help us construct estimates of subnational SALT targets, which by definition are unpublished?
+
+One possible approach, which we have taken here and in the Congressional districts part of the project, is to assume that the aggregate national uncapped itemizable deductions are spread across subnational areas in the same way that the published subnational data are distributed: for example, if a state has 7% of the nation's capped real estate deductions for itemizers.
+
+**Taxes-paid excerpt from 2021 Schedule A**
+
+![](images/clipboard-565930362.png)
 
 ## Setup
 
@@ -27,7 +39,6 @@ agilabels <- read_csv(fs::path(DINTERMEDIATE, "agilabels.csv"))
 
 ```
 
-
 ## Basic SALT information
 
 ### U.S. amounts in 2021
@@ -49,14 +60,12 @@ soilong |>
 
 ```
 
-
 ### U.S. amounts over time
 
-Note that a18425 is $0 in the lowest AGI range.
+Note that a18425 is \$0 in the lowest AGI range.
 
 ```{r}
 #| label: salt-amounts-over-time
-
 
 soilong |> 
   filter(str_sub(vname, 1, 3)=="a18", stabbr=="US", agistub==0) |> 
@@ -70,6 +79,13 @@ soilong |>
               missing_text="--") 
   
 
+```
+
+### U.S. amounts by AGI range over time
+
+```{r}
+#| label: income-sales-tax-by-agirange-amounts-over-time
+
 soilong |> 
   filter(vname=="a18425", stabbr=="US") |> 
   select(year, agistub, agilabel, value) |> 
@@ -80,7 +96,6 @@ soilong |>
   fmt_currency(columns = -c(agistub, agilabel), scale=1e-9, decimals=1) |> 
   sub_missing(columns=everything(),
               missing_text="--") 
-
 
 
 ```
@@ -132,10 +147,7 @@ salt |>
 
 ```
 
-
-
 ## Playground
-
 
 ```{r}
 #| label: explore-and-take-notes
