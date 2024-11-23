@@ -4,6 +4,18 @@ editor_options:
   chunk_output_type: console
 ---
 
+# Analyze SALT data
+
+## Setup
+
+```{r}
+#| label: setup
+
+source(here::here("R", "libraries.R"))
+source(here::here("R", "constants.R"))
+source(here::here("R", "functions.R"))
+
+```
 
 
 ```{r}
@@ -12,9 +24,14 @@ soilong <- readRDS(fs::path(DINTERMEDIATE, "soilong.rds"))
 
 # data checks
 
+skim(soilong)
+
 soilong |>
   filter(is.na(vtype)) |>
   count(vname)
+
+soilong |>
+  filter(is.na(value))
 
 soilong |> 
   filter(str_sub(vname, 1, 3)=="a18") |> 
