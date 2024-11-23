@@ -22,6 +22,8 @@ source(here::here("R", "functions.R"))
 #| output: false
 
 soilong <- readRDS(fs::path(DINTERMEDIATE, "soilong.rds"))
+agilabels <- read_csv(fs::path(DINTERMEDIATE, "agilabels.csv"))
+
 
 ```
 
@@ -50,6 +52,7 @@ soilong |>
 
 ### U.S. amounts over time
 
+Note that a18425 is $0 in the lowest AGI range.
 
 ```{r}
 #| label: salt-amounts-over-time
@@ -67,6 +70,19 @@ soilong |>
               missing_text="--") 
   
 
+soilong |> 
+  filter(vname=="a18425", stabbr=="US") |> 
+  select(year, agistub, agilabel, value) |> 
+  pivot_wider(names_from = year) |> 
+  gt() |> 
+  tab_header(title="a18425 State and local income taxes amount, over time, amounts for the U.S. in $ billions",
+             subtitle = "SOI Historical Table 2") |> 
+  fmt_currency(columns = -c(agistub, agilabel), scale=1e-9, decimals=1) |> 
+  sub_missing(columns=everything(),
+              missing_text="--") 
+
+
+
 ```
 
 ## How closely do current SALT data correspond to pre-TCJA SALT data
@@ -82,15 +98,24 @@ salt <- soilong |>
   filter(year %in% c(2017, 2018, 2021),
          vname=="a18425",
          !stabbr %in% c("US", "OA", "PR")) |> 
-  select(stabbr, year, agistub, value) |> 
+  mutate(agistubf=factor(agistub, levels=agilabels$agistub, labels=agilabels$agilabel)) |> 
+  select(stabbr, year, agistub, agistubf, value) |> 
   pivot_wider(names_from = year, names_prefix = "y")
 
 
-salt |> 
+
+saltshares <- salt |> 
+  mutate(across(starts_with("y2"),
+                \(x) x / sum(x)),
+                .by=agistub)
+
+saltshares |> 
   select(-stabbr) |> 
   filter(agistub != 1) |> 
   summarise(cor=cor(y2017, y2018, use = "complete.obs"),
-            .by=agistub)
+            .by=c(agistub, agistubf)) |> 
+  gt() |> 
+  fmt_number(columns = cor, decimals=3)
 
 
 salt |> 
