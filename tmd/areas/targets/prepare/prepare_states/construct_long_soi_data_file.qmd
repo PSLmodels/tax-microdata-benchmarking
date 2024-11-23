@@ -22,10 +22,6 @@ source(here::here("R", "functions.R"))
 #| label: read-data
 #| output: false
 
-# DRAW <- here::here("data", "data_raw")
-
-# read_csv(fs::path(DINTERMEDIATE, "soi_documentation.csv")) # uniform descriptions, else by_year
-
 # variable_descriptions <- read_csv(fs::path(DINTERMEDIATE, "soi_documentation.csv"))
 variable_descriptions <- read_csv(fs::path(DINTERMEDIATE, "soi_documentation_by_year.csv"))
 
@@ -48,58 +44,70 @@ csvdata2 <- csvdata |>
   mutate(year=as.integer(year)) |> 
   pivot_longer(-c(stabbr, year, agistub),
                names_to = "vname") |> 
+  filter(!is.na(value)) |> 
   left_join(variable_descriptions,
-            by = join_by(vname, year))
+            by = join_by(vname, year)) |> 
+  mutate(value=ifelse(vtype=="amount", value * 1000, value)) |> 
+  select(stabbr, vname, basevname, vtype, agistub, year, value, udescription, description) |> 
+  arrange(stabbr, vname, basevname, vtype, agistub, year)
 
 skim(csvdata2)
 glimpse(csvdata2)
+count(csvdata2, vtype)
+csvdata2 |> filter(value==max(value))
+csvdata2 |> filter(value==min(value))
+
+saveRDS(csvdata2, fs::path(DINTERMEDIATE, "soilong.rds"))
+
+
+```
+
+Explore the data
+
+```{r}
+#| label: read-data
+#| output: false
+#| eval: false
+
+soilong <- readRDS(fs::path(DINTERMEDIATE, "soilong.rds"))
 
 # data checks
 
-# csvdata2 |> 
-#   filter(is.na(vtype)) |> 
-#   count(vname)
+soilong |>
+  filter(is.na(vtype)) |>
+  count(vname)
 
-
-csvdata2 |> 
-  filter(str_sub(vname, 1, 3)=="a18") |> 
-  count(vname, year, udescription, description)
-
-csvdata2 |> filter(vname=="a18460", year==2015)
-
-count(csvdata2, stabbr) # 54 -- 50 + US, DC, PR, OA
-
-csvdata2 |> 
-  filter(vname=="a18460", year %in% 2015:2017) |> 
+soilong |>
+  filter(is.na(vtype)) |> 
   skim()
 
-csvdata2 |> 
-  filter(stabbr=="US", agistub==0, vtype=="amount", str_starts(basename, "184")) |> 
-  arrange(name, year)
+# n17000 had been one of the all-missing values variables in some years
+# we have since dropped all missing values
+variable_descriptions |> 
+  filter(vname=="n17000") # Number of returns with Total medical and dental expense deduction
 
-# a18425 drops 2018+ 369 --> 201
-# a8450 drops 2018+ 20 --> 9
-# a18460 2018+ 130 ish
+ns(csvdata)
+csvdata |> 
+  filter(STATE=="NY", AGI_STUB==0) |> 
+  select(STATE, AGI_STUB, year, N1, N17000, A17000)
 
-salt <- df3 |> 
-  filter(year %in% c(2017, 2018, 2021),
-         name=="a18425",
-         agistub==0,
-         !stabbr %in% c("US", "OA", "PR")) |> 
-  select(stabbr, year, value) |> 
-  pivot_wider(names_from = year, names_prefix = "y")
+#   STATE AGI_STUB year        N1 N17000  A17000
+#   <chr>    <dbl> <chr>    <dbl>  <dbl>   <dbl>
+# 1 NY           0 2015   9614610     NA      NA
+# 2 NY           0 2016   9589410 458840 4776918
+# 3 NY           0 2017   9694910 494520 5124475
+# 4 NY           0 2018   9742580 235020 4029879
+# 5 NY           0 2019   9760870 221060 3953827
+# 6 NY           0 2020  10159910 200990 3753634
+# 7 NY           0 2021   9813320 187220 3702585
 
-salt |> select(-stabbr) |> cor()
+soilong |> 
+  filter(stabbr=="NY", vname %in% c("n17000", "a17000"), agistub==0) |> 
+  select(stabbr, agistub, vname, vtype, year, value, udescription) |> 
+  arrange(vtype, year)
 
-salt |> 
-  filter(!stabbr %in% c("CA", "NY")) |> 
-  ggplot(aes(x=y2017, y=y2021)) +
-  geom_point(colour="blue",
-             size=0.5) +
-  geom_text(aes(label=stabbr),
-            colour="blue",
-            size=3) +
-  theme_bw()
+
 
 ```
+
 
