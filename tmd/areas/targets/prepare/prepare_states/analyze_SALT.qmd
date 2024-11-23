@@ -69,7 +69,47 @@ soilong |>
 
 ```
 
+## How closely do current SALT data correspond to pre-TCJA SALT data
 
+Explain why this is of interest.
+
+```{r}
+#| label: correlation
+
+# add agi info to agistub
+
+salt <- soilong |> 
+  filter(year %in% c(2017, 2018, 2021),
+         vname=="a18425",
+         !stabbr %in% c("US", "OA", "PR")) |> 
+  select(stabbr, year, agistub, value) |> 
+  pivot_wider(names_from = year, names_prefix = "y")
+
+
+salt |> 
+  select(-stabbr) |> 
+  filter(agistub != 1) |> 
+  summarise(cor=cor(y2017, y2018, use = "complete.obs"),
+            .by=agistub)
+
+
+salt |> 
+  filter(!stabbr %in% c("CA", "NY")) |> 
+  ggplot(aes(x=y2017, y=y2021)) +
+  geom_point(colour="blue",
+             size=0.5) +
+  geom_text(aes(label=stabbr),
+            colour="blue",
+            size=3) +
+  theme_bw() +
+  facet_wrap(~agistub, scales = "free")
+
+
+```
+
+
+
+## Playground
 
 
 ```{r}
