@@ -18,6 +18,8 @@ source(here::here("R", "functions.R"))
 ```
 
 ```{r}
+#| label: agilabels
+#| output: false
 
 agilabels <- read_delim(
 "agistub; agilo; agihi; agilabel
