@@ -6,10 +6,5 @@ editor_options:
 
 # Introduction
 
-This webpage documents an R project, `prepare_states`, that:
-
--   Creates creates target files for states of the form `xx_targets.csv`, where `xx` is a state postal abbreviation.
--   Documents the steps to create these files, and includes related analyses.
-
-An online version of the is [here](https://tmd-areas-prepare-state-targets.netlify.app/).
+This webpage documents an R project, `prepare_states`, that creates creates target files for states of the form `xx_targets.csv`, where `xx` is a state postal abbreviation.
 

@@ -6,13 +6,15 @@ editor_options:
 
 # Developing SALT targets
 
-In a perfect world our national and state data files (and our separate Congressional district files) would have *potential* SALT deductions for the entire universe of potential tax units, regardless of whether they itemize or not, before application of the TCJA SALT cap. We come reasonably close to this ideal for the *national* TMD data. The national TMD data, based on the 2015 PUF, include: (1) [e18400, Itemizable state and local income/sales taxes](https://taxcalc.pslmodels.org/guide/input_vars.html#e18400)), and (2) [e18500, Itemizable real-estate taxes paid](https://taxcalc.pslmodels.org/guide/input_vars.html#e18500) (links are to Tax-Calculator documentation). These TMD variables are based primarily on people who itemized deductions in 2015, grown to 2021 levels, before the application of the TCJA SALT cap that was in effect in 2021. Thus, while they do not represent the universe of potential SALT deductions, they do represent potential deductions for those who itemized in 2015, when the standard deduction was lower and SALT deductions are uncapped. Thus, they are a pretty good starting point for subnational data files.
+In a perfect world our national and state data files (and our separate Congressional district files) would have *potential* SALT deductions for the entire universe of potential tax units, regardless of whether they itemize or not, before application of the TCJA SALT cap. We come reasonably close to this ideal for the *national* TMD data. 
 
-We want to target e18400 and e18500 for each state (and, in a separate part of the TMD project, each Congressional district). Unfortunately, we do not have data on the amount of these variables by state and Congressional district, by AGI range. Instead, we have published data by state and Congressional district for 2021, which reflect the TCJA's higher standard deduction and SALT cap. Thus, the published data include far fewer itemizers that might exist under some policy scenarios, and far lower potential deductions than would be available if the SALT cap were raised. We cannot use the published data directly as state and Congressional district targets.
+The national TMD data, based on the 2015 PUF, include: (1) [e18400, Itemizable state and local income/sales taxes](https://taxcalc.pslmodels.org/guide/input_vars.html#e18400)), and (2) [e18500, Itemizable real-estate taxes paid](https://taxcalc.pslmodels.org/guide/input_vars.html#e18500) (links are to Tax-Calculator documentation). These TMD variables are based primarily on people who itemized deductions in 2015, grown to 2021 levels, before the application of the TCJA SALT cap that was in effect in 2021. Thus, while they do not represent the full universe of potential SALT deductions, they do represent potential SALT deductions for those who itemized in 2015, when the standard deduction was lower and there were many more itemizers than in 2018 and later, when TCJA was in effect. Thus, e18400 and e18500 are a pretty good starting point for subnational data files.
 
-However, is there a way we can use the published data to help us construct estimates of subnational SALT targets, which by definition are unpublished?
+We want to target `e18400` and `e18500` for each state (and, in a separate part of the TMD project, each Congressional district), which means we need to find or develop aggregate targets for these variables by AGI range. Unfortunately, we do not have data on these variables for the full universe. Instead, we have IRS-published data by state and Congressional district, by AGI range, for people who itemized in 2021. Because of the TCJA's higher standard deduction, the published data represent far fewer itemizers than are in our national PUF-based data and do not capture people who might become itemizers if the SALT cap were raised or if the standard deduction were lowered. Thus, these data are not directly suitable as targets.
 
-One possible approach, which we have taken here and in the Congressional districts part of the project, is to assume that the aggregate national uncapped itemizable deductions are spread across subnational areas in the same way that the published subnational data are distributed: for example, if a state has 7% of the nation's capped real estate deductions for itemizers.
+One possible approach, which we have taken here and in the Congressional districts part of the project, is to assume that the aggregate national uncapped itemizable deductions in our TMD data (`e18400` and `e18500`) are distributed across subnational areas in the same way that the published subnational data are distributed: for example, if a state has 7% of the nation's real estate deductions for 2021 itemizers, it will have 7% of the aggregate amount of potential real estate deductions in our TMD file (`e18500`), which includes many potential itemizers who would not have itemized in 2021. We use the same approach for other tax-itemizatoion variables.
+
+This seems like a reasonable first-cut assumption if we don't have direct data on potential real estate tax deductions of non-itemizers in 2021 -- i.e., assume they are distributed across states in the same way as real estate tax deductions of itemizers.
 
 **Taxes-paid excerpt from 2021 Schedule A**
 
@@ -36,14 +38,17 @@ source(here::here("R", "functions.R"))
 soilong <- readRDS(fs::path(DINTERMEDIATE, "soilong.rds"))
 agilabels <- read_csv(fs::path(DINTERMEDIATE, "agilabels.csv"))
 
+fpath <-  fs::path(TMDDATA, "cached_allvars.csv")
+tmd2021 <- vroom(fpath)
+ns(tmd2021)
 
 ```
 
 ## Basic SALT information
 
-### U.S. amounts in 2021
+### IRS-published U.S. amounts in 2021
 
-Note that a18425 is the largest value by far
+Note that a18425 is the largest value by far.
 
 ```{r}
 #| label: salt-amounts-2021
@@ -60,7 +65,7 @@ soilong |>
 
 ```
 
-### U.S. amounts over time
+### IRS-published U.S. amounts over time
 
 Note that a18425 is \$0 in the lowest AGI range.
 
@@ -81,7 +86,7 @@ soilong |>
 
 ```
 
-### U.S. amounts by AGI range over time
+### IRS-published U.S. amounts by AGI range over time
 
 ```{r}
 #| label: income-sales-tax-by-agirange-amounts-over-time
@@ -100,14 +105,102 @@ soilong |>
 
 ```
 
-## How closely do current SALT data correspond to pre-TCJA SALT data
+
+## How tmd sums compare to IRS-published aggregates
+
+### Potentially deductible amounts
+
+The following table shows 2021 sums for tax filers (data_source==1) in the TMD data and the IRS-published aggregates that correspond most closely to the TMD concepts. Note that for the TMD variable `e18400` (Itemizable state and local income/sales taxes) the closest available IRS-published aggregates are `a18425` (State and local income taxes amount) and `a18450` (State and local general sales tax amount). Because taxpayers can only deduct one or the other (income or sales taxes), the sum of `a18425` and `a18450` is relevant.
+
+It is clear, though, that the TMD 2021 estimated values (for the universe of 2015 itemizers) are far greater than the IRS-published amounts from 2021 tax returns.
+
+
+```{r}
+#| label: tmd-compare-amounts
+
+tmdvars <- tmd2021 |> 
+  select(RECID, data_source, s006, e18400, e18500) |> 
+  summarise(across(c(e18400, e18500),
+                   \(x) sum(s006 * x)),
+            .by=data_source) |> 
+  mutate(src="tmd") |> 
+  filter(data_source==1) |> 
+  select(-data_source) |> 
+  pivot_longer(-src) |> 
+  mutate(description=case_when(name=="e18400" ~ "Itemizable state and local income/sales taxes",
+                               name=="e18500" ~ "Itemizable real-estate taxes paid",
+                               .default = "ERROR"),
+         basename=str_sub(name, 2, -1))
+
+soivars <- soilong |> 
+  filter(stabbr=="US", agistub==0, year==2021) |> 
+  filter(vname %in% c("a18425", "a18450", "a18500")) |> 
+  mutate(src="irs", basename=str_sub(vname, 2, -1)) |> 
+  select(src, name=vname, value, description, basename)
+  
+comp <- bind_rows(tmdvars, soivars)
+
+comp |> 
+  arrange(basename, desc(src)) |> 
+  select(-basename) |> 
+  gt() |> 
+  tab_header(title="TMD and IRS amounts for 2021 filers, key SALT-related variables",
+             subtitle = "Amounts are in $ billions") |> 
+  fmt_currency(columns = value,
+               scale=1e-9,
+               decimals=2)
+
+```
+
+
+### Numbers of potential itemizers with SALT amounts
+
+The next table shows the number of taxpayers who have nonzero values for key SALT-related variables.
+
+```{r}
+#| label: tmd-compare-numbers
+
+tmdvars <- tmd2021 |> 
+  select(RECID, data_source, s006, e18400, e18500) |> 
+  summarise(across(c(e18400, e18500),
+                   \(x) sum(s006 * (x != 0))),
+            .by=data_source) |> 
+  mutate(src="tmd") |> 
+  filter(data_source==1) |> 
+  select(-data_source) |> 
+  pivot_longer(-src) |> 
+  mutate(description=case_when(name=="e18400" ~ "Itemizable state and local income/sales taxes",
+                               name=="e18500" ~ "Itemizable real-estate taxes paid",
+                               .default = "ERROR"),
+         basename=str_sub(name, 2, -1))
+
+soivars <- soilong |> 
+  filter(stabbr=="US", agistub==0, year==2021) |> 
+  filter(vname %in% c("n18425", "n18450", "n18500")) |> 
+  mutate(src="irs", basename=str_sub(vname, 2, -1)) |> 
+  select(src, name=vname, value, description, basename)
+  
+comp <- bind_rows(tmdvars, soivars)
+
+comp |> 
+  arrange(basename, desc(src)) |> 
+  select(-basename) |> 
+  gt() |> 
+  tab_header(title="Numbers of 2021 filers with nonzero amounts for key SALT-related variables",
+             subtitle = "Amounts are in $ billions") |> 
+  fmt_number(columns = value,
+             scale=1,
+             decimals=0)
+
+```
+
+
+## How closely do current SALT data correspond to pre-TCJA SALT data, using IRS-published data for both?
 
 Explain why this is of interest.
 
 ```{r}
-#| label: correlation
-
-# add agi info to agistub
+#| label: salt-shares-data
 
 salt <- soilong |> 
   filter(year %in% c(2017, 2018, 2021),
@@ -117,35 +210,53 @@ salt <- soilong |>
   select(stabbr, year, agistub, agistubf, value) |> 
   pivot_wider(names_from = year, names_prefix = "y")
 
-
-
 saltshares <- salt |> 
   mutate(across(starts_with("y2"),
                 \(x) x / sum(x)),
                 .by=agistub)
 
+```
+
+
+```{r}
+#| label: correlation-table
+
 saltshares |> 
   select(-stabbr) |> 
   filter(agistub != 1) |> 
-  summarise(cor=cor(y2017, y2018, use = "complete.obs"),
+  summarise(cor2017_2018=cor(y2017, y2018, use = "complete.obs"),
+            cor2018_2021=cor(y2018, y2021, use = "complete.obs"),
             .by=c(agistub, agistubf)) |> 
   gt() |> 
-  fmt_number(columns = cor, decimals=3)
+  tab_header(title="Correlation of SALT shares (a18425) in pairs of years") |> 
+  fmt_number(columns = c(cor2017_2018, cor2018_2021), decimals=3)
+
+```
 
 
-salt |> 
+```{r}
+#| label: shares-plot
+#| fig-height: 10
+
+saltshares |> 
   filter(!stabbr %in% c("CA", "NY")) |> 
+  filter(agistub != 1) |> 
   ggplot(aes(x=y2017, y=y2021)) +
   geom_point(colour="blue",
              size=0.5) +
   geom_text(aes(label=stabbr),
             colour="blue",
-            size=3) +
+            size=2) +
+  ggtitle("State shares of total U.S. a18425 deduction\n2017 and 2021, by AGI range",
+          subtitle = "CA and NY excluded to make figure easier to see.\nLowest AGI range excluded because SALT deductions were zero.") +
   theme_bw() +
-  facet_wrap(~agistub, scales = "free")
-
+  facet_wrap(~agistubf, scales = "free",
+             ncol = 3)
 
 ```
+
+
+
 
 ## Playground
 
