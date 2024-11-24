@@ -6,9 +6,29 @@ editor_options:
 
 # Developing SALT targets
 
-In a perfect world our national and state data files (and our separate Congressional district files) would have *potential* SALT deductions for the entire universe of potential tax units, regardless of whether they itemize or not, before application of the TCJA SALT cap. We come reasonably close to this ideal for the *national* TMD data. 
+## Available data and shortcomings of IRS-published aggregates for SALT targets
 
-The national TMD data, based on the 2015 PUF, include: (1) [e18400, Itemizable state and local income/sales taxes](https://taxcalc.pslmodels.org/guide/input_vars.html#e18400)), and (2) [e18500, Itemizable real-estate taxes paid](https://taxcalc.pslmodels.org/guide/input_vars.html#e18500) (links are to Tax-Calculator documentation). These TMD variables are based primarily on people who itemized deductions in 2015, grown to 2021 levels, before the application of the TCJA SALT cap that was in effect in 2021. Thus, while they do not represent the full universe of potential SALT deductions, they do represent potential SALT deductions for those who itemized in 2015, when the standard deduction was lower and there were many more itemizers than in 2018 and later, when TCJA was in effect. Thus, e18400 and e18500 are a pretty good starting point for subnational data files.
+We want the TMD national microdata file to include *potential* SALT deductions for the entire universe of tax units -- itemizers and non-itemizers (and nonfilers) -- before application of any caps. The TMD microdata include estimates of these concepts.
+
+We want state-weighted TMD microdata files to reflect *potential* SALT deductions in individual states, meaning we need state targets that reflect potential SALT deductions, not SALT deductions reported on 2021 tax returns.
+
+IRS has reported actual SALT deductions in 2021, but those are sharply reduced from earlier years due to the drop in itemization caused by the TCJA standard deduction increase. (The IRS does report amounts prior to the SALT cap, but only for those who itemized.)
+
+(Note that the same issue arises for Congressional districts.)
+
+### National TMD microdata
+
+The national TMD microdata include two uncapped SALT variables:
+
+-   [e18400](https://taxcalc.pslmodels.org/guide/input_vars.html#e18400): Itemizable state and local income/sales taxes, and
+
+-   [e18500](https://taxcalc.pslmodels.org/guide/input_vars.html#e18500): Itemizable real-estate taxes paid
+
+(links are to Tax-Calculator documentation). The TMD data also include capped variants of these variables.
+
+These variables are actual or estimated amounts available to be deducted in the 2015 PUF base year, grown to 2021 at a rate intended to capture growth in state and local taxes. Thus, they are unaffected by the TCJA SALT cap or the fact that many 2015 itemizers will be non-itemizers in 2021 due to the TCJA standard deduction increase.
+
+While they do not represent the full universe of potential SALT deductions, they do represent potential SALT deductions for those who itemized in 2015, when the standard deduction was lower and there were many more itemizers than in 2018 and later, when TCJA was in effect. Thus, e18400 and e18500 are a pretty good starting point for subnational data files.
 
 We want to target `e18400` and `e18500` for each state (and, in a separate part of the TMD project, each Congressional district), which means we need to find or develop aggregate targets for these variables by AGI range. Unfortunately, we do not have data on these variables for the full universe. Instead, we have IRS-published data by state and Congressional district, by AGI range, for people who itemized in 2021. Because of the TCJA's higher standard deduction, the published data represent far fewer itemizers than are in our national PUF-based data and do not capture people who might become itemizers if the SALT cap were raised or if the standard deduction were lowered. Thus, these data are not directly suitable as targets.
 
@@ -105,7 +125,6 @@ soilong |>
 
 ```
 
-
 ## How tmd sums compare to IRS-published aggregates
 
 ### Potentially deductible amounts
@@ -113,7 +132,6 @@ soilong |>
 The following table shows 2021 sums for tax filers (data_source==1) in the TMD data and the IRS-published aggregates that correspond most closely to the TMD concepts. Note that for the TMD variable `e18400` (Itemizable state and local income/sales taxes) the closest available IRS-published aggregates are `a18425` (State and local income taxes amount) and `a18450` (State and local general sales tax amount). Because taxpayers can only deduct one or the other (income or sales taxes), the sum of `a18425` and `a18450` is relevant.
 
 It is clear, though, that the TMD 2021 estimated values (for the universe of 2015 itemizers) are far greater than the IRS-published amounts from 2021 tax returns.
-
 
 ```{r}
 #| label: tmd-compare-amounts
@@ -151,7 +169,6 @@ comp |>
                decimals=2)
 
 ```
-
 
 ### Numbers of potential itemizers with SALT amounts
 
@@ -194,7 +211,6 @@ comp |>
 
 ```
 
-
 ## How closely do current SALT data correspond to pre-TCJA SALT data, using IRS-published data for both?
 
 Explain why this is of interest.
@@ -217,7 +233,6 @@ saltshares <- salt |>
 
 ```
 
-
 ```{r}
 #| label: correlation-table
 
@@ -232,7 +247,6 @@ saltshares |>
   fmt_number(columns = c(cor2017_2018, cor2018_2021), decimals=3)
 
 ```
-
 
 ```{r}
 #| label: shares-plot
@@ -254,9 +268,6 @@ saltshares |>
              ncol = 3)
 
 ```
-
-
-
 
 ## Playground
 
