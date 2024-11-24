@@ -8,13 +8,15 @@ editor_options:
 
 ## Available data and shortcomings of IRS-published aggregates for SALT targets
 
-We want the TMD national microdata file to include *potential* SALT deductions for the entire universe of tax units -- itemizers and non-itemizers (and nonfilers) -- before application of any caps. The TMD microdata include estimates of these concepts.
+We want the TMD *national* microdata file to include *potential* SALT deductions for the entire universe of tax units -- itemizers and non-itemizers (and nonfilers) -- before application of any caps. The TMD microdata include estimates of these concepts.
 
-We want state-weighted TMD microdata files to reflect *potential* SALT deductions in individual states, meaning we need state targets that reflect potential SALT deductions, not SALT deductions reported on 2021 tax returns.
+We want *state-weighted* TMD microdata files to reflect *potential* SALT deductions in individual states, including nonitemizers as well as itemizers, and before application of any caps. This is what our SALT targets should reflect.
 
-IRS has reported actual SALT deductions in 2021, but those are sharply reduced from earlier years due to the drop in itemization caused by the TCJA standard deduction increase. (The IRS does report amounts prior to the SALT cap, but only for those who itemized.)
+IRS publishes state-by-state *actual* SALT deductions, not *potential* deductions. Actual SALT deductions are sharply reduced from earlier years due to the drop in itemization caused by the TCJA standard deduction increase.
 
-(Note that the same issue arises for Congressional districts.)
+This section discusses how we develop state targets for potential SALT deductions using the published IRS data on actual SALT deductions by state.
+
+(Note that the same issue arises for Congressional districts, where we take a similar approach.)
 
 ### National TMD microdata
 
@@ -137,7 +139,8 @@ It is clear, though, that the TMD 2021 estimated values (for the universe of 201
 #| label: tmd-compare-amounts
 
 tmdvars <- tmd2021 |> 
-  select(RECID, data_source, s006, e18400, e18500) |> 
+  select(RECID, data_source, s006, c04470, e18400, e18500) |> 
+  mutate(itemizer=(c04470 > 0)) |> 
   summarise(across(c(e18400, e18500),
                    \(x) sum(s006 * x)),
             .by=data_source) |> 
@@ -167,6 +170,40 @@ comp |>
   fmt_currency(columns = value,
                scale=1e-9,
                decimals=2)
+
+
+tmdvars2 <- tmd2021 |> 
+  select(RECID, data_source, s006, c04470, e18400, e18500) |> 
+  mutate(itemizer=(c04470 > 0)) |> 
+  summarise(across(c(e18400, e18500),
+                   \(x) sum(s006 * x)),
+            .by=c(data_source, itemizer)) |> 
+  mutate(src="tmd") |> 
+  # filter(data_source==1) |> 
+  # select(-c()) |> 
+  pivot_longer(-c(src, data_source, itemizer)) |> 
+  mutate(description=case_when(name=="e18400" ~ "Itemizable state and local income/sales taxes",
+                               name=="e18500" ~ "Itemizable real-estate taxes paid",
+                               .default = "ERROR"),
+         basename=str_sub(name, 2, -1))
+
+tmdvars3 <- tmd2021 |> 
+  select(RECID, data_source, s006, c04470, e18400, e18500) |> 
+  mutate(itemizer=(c04470 > 0)) |> 
+  summarise(across(c(e18400, e18500),
+                   list(amount = \(x) sum(s006 * x),
+                        count = \(x) sum(s006 * (x > 0)))),
+            .by=c(data_source, itemizer)) |> 
+  mutate(src="tmd") |> 
+  # filter(data_source==1) |> 
+  # select(-c()) |> 
+  pivot_longer(-c(src, data_source, itemizer)) |> 
+  mutate(description=case_when(name=="e18400" ~ "Itemizable state and local income/sales taxes",
+                               name=="e18500" ~ "Itemizable real-estate taxes paid",
+                               .default = "ERROR"),
+         basename=str_sub(name, 2, -1))
+
+tmdvars3 |> filter(data_source==1, str_detect(name, "count"))
 
 ```
 
