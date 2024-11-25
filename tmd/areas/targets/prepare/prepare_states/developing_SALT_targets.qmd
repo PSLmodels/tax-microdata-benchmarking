@@ -4,45 +4,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-# Developing SALT targets
-
-## Available data and shortcomings of IRS-published aggregates for SALT targets
-
-We want the TMD *national* microdata file to include *potential* SALT deductions for the entire universe of tax units -- itemizers and non-itemizers (and nonfilers) -- before application of any caps. The TMD microdata include estimates of these concepts.
-
-We want *state-weighted* TMD microdata files to reflect *potential* SALT deductions in individual states, including nonitemizers as well as itemizers, and before application of any caps. This is what our SALT targets should reflect.
-
-IRS publishes state-by-state *actual* SALT deductions, not *potential* deductions. Actual SALT deductions are sharply reduced from earlier years due to the drop in itemization caused by the TCJA standard deduction increase.
-
-This section discusses how we develop state targets for potential SALT deductions using the published IRS data on actual SALT deductions by state.
-
-(Note that the same issue arises for Congressional districts, where we take a similar approach.)
-
-### National TMD microdata
-
-The national TMD microdata include two uncapped SALT variables:
-
--   [e18400](https://taxcalc.pslmodels.org/guide/input_vars.html#e18400): Itemizable state and local income/sales taxes, and
-
--   [e18500](https://taxcalc.pslmodels.org/guide/input_vars.html#e18500): Itemizable real-estate taxes paid
-
-(links are to Tax-Calculator documentation). The TMD data also include capped variants of these variables.
-
-These variables are actual or estimated amounts available to be deducted in the 2015 PUF base year, grown to 2021 at a rate intended to capture growth in state and local taxes. Thus, they are unaffected by the TCJA SALT cap or the fact that many 2015 itemizers will be non-itemizers in 2021 due to the TCJA standard deduction increase.
-
-While they do not represent the full universe of potential SALT deductions, they do represent potential SALT deductions for those who itemized in 2015, when the standard deduction was lower and there were many more itemizers than in 2018 and later, when TCJA was in effect. Thus, e18400 and e18500 are a pretty good starting point for subnational data files.
-
-We want to target `e18400` and `e18500` for each state (and, in a separate part of the TMD project, each Congressional district), which means we need to find or develop aggregate targets for these variables by AGI range. Unfortunately, we do not have data on these variables for the full universe. Instead, we have IRS-published data by state and Congressional district, by AGI range, for people who itemized in 2021. Because of the TCJA's higher standard deduction, the published data represent far fewer itemizers than are in our national PUF-based data and do not capture people who might become itemizers if the SALT cap were raised or if the standard deduction were lowered. Thus, these data are not directly suitable as targets.
-
-One possible approach, which we have taken here and in the Congressional districts part of the project, is to assume that the aggregate national uncapped itemizable deductions in our TMD data (`e18400` and `e18500`) are distributed across subnational areas in the same way that the published subnational data are distributed: for example, if a state has 7% of the nation's real estate deductions for 2021 itemizers, it will have 7% of the aggregate amount of potential real estate deductions in our TMD file (`e18500`), which includes many potential itemizers who would not have itemized in 2021. We use the same approach for other tax-itemizatoion variables.
-
-This seems like a reasonable first-cut assumption if we don't have direct data on potential real estate tax deductions of non-itemizers in 2021 -- i.e., assume they are distributed across states in the same way as real estate tax deductions of itemizers.
-
-**Taxes-paid excerpt from 2021 Schedule A**
-
-![](images/clipboard-565930362.png)
-
-## Setup
+# How we develop state SALT targets
 
 ```{r}
 #| label: setup
@@ -66,26 +28,155 @@ ns(tmd2021)
 
 ```
 
-## Basic SALT information
+## IRS-published state aggregates fall short of what we need
 
-### IRS-published U.S. amounts in 2021
+We want to develop state weights for the TMD national microdata file that reflect *potential* SALT deductions in individual states, including itemizers and non-itemizers, before caps. We need state targets that correspond to this concept. The TMD microdata already conform (largely) to this concept.
 
-Note that a18425 is the largest value by far.
+IRS publishes state-by-state *actual* SALT deductions, not *potential* deductions. Actual SALT deductions in 2018+ are sharply reduced from pre-TCJA years due to the drop in itemization caused by the TCJA standard deduction increase. The IRS state data as reported are not suitable for targets. (The IRS reports actual deductions before the TCJA SALT cap so the cap does not cause problems in developing state targets.)
+
+Note that the same issue arises for Congressional districts, where we take the same approach as described below.
+
+## Our methodology in brief
+
+We calculate each state's share of national IRS-reported *actual* SALT deductions. Next, we calculate SALT targets for each state by multiplying total *potential* SALT deductions in the TMD microdata file by these shares. We do this for each SALT variable, for each of the 10 AGI ranges for which the IRS reports *actual* state SALT deductions plus the total.
+
+We use these estimates of potential SALT deductions as targets in the optimization routine that develops state weights.
+
+The remainder of this page gives details on the relevant data and explains how we check the plausibility of our implicit assumption that potential SALT deductions are distributed across states in the same way as actual SALT deductions. We work with data for 2021, the latest year for which the IRS has reported aggregates by state and the year of our base TMD file.
+
+## *Potential* SALT deductions in the national TMD microdata
+
+The national TMD microdata include two uncapped SALT variables:
+
+-   [e18400](https://taxcalc.pslmodels.org/guide/input_vars.html#e18400): Itemizable state and local income/sales taxes, and
+
+-   [e18500](https://taxcalc.pslmodels.org/guide/input_vars.html#e18500): Itemizable real-estate taxes paid
+
+(links are to Tax-Calculator documentation). The TMD data also include capped variants of these variables.
+
+These variables are actual or estimated amounts available to be deducted in the 2015 PUF base year, grown to 2021 at a rate intended to capture growth in state and local taxes. Thus, they are unaffected by the TCJA SALT cap or the fact that many 2015 itemizers will be non-itemizers in 2021 due to the TCJA standard deduction increase.
+
+Thus, `e18400` and `e18500` in the TMD microdata represent *potential* SALT deductions for a large group of TCJA-era potential itemizers and are a good starting point for subnational data files.
+
+The table below, calculated from the national TMD microdata, shows numbers and amounts of these variables in 2021 for filers and non filers, for itemization status under 2021 law and its high standard deduction. The filer itemizer rows correspond to what the IRS would report and are consistent with the concept of actual SALT deductions. The filer non-itemizer rows correspond to non-itemizers in 2021 who have available potential SALT deductions. We want to be sure to capture these potential deductions in our state targets and resulting state weights.
 
 ```{r}
-#| label: salt-amounts-2021
+#| label: calc-tmd-salt-totals
 
+tabdata <- tmd2021 |> 
+  select(RECID, data_source, s006, c04470, e18400, e18500) |> 
+  mutate(itemizer=(c04470 > 0)) |> 
+  summarise(across(c(e18400, e18500),
+                   list(amount = \(x) sum(s006 * x),
+                        count = \(x) sum(s006 * (x > 0)))),
+            .by=c(data_source, itemizer)) |> 
+  pivot_longer(-c(data_source, itemizer)) |> 
+  separate(col=name, into=c("variable", "vtype")) |> 
+  pivot_wider(names_from = vtype) |> 
+  mutate(description=case_when(variable=="e18400" ~ "State and local income or sales taxes",
+                               variable=="e18500" ~ "Real estate taxes paid",
+                               .default = "ERROR")) |> 
+  mutate(itemizer=factor(itemizer,
+                         levels=c(TRUE, FALSE),
+                         labels=c("itemizer", "non-itemizer")),
+         fstatus=factor(data_source, levels=c(1, 0), labels=c("filer", "non-filer"))) |> 
+  select(fstatus, itemizer, variable, description, count, amount) |> 
+  arrange(fstatus, itemizer, variable)
 
-soilong |> 
-  filter(str_sub(vname, 1, 3)=="a18", stabbr=="US", agistub==0, year==2021) |> 
-  select(stabbr, vname, year, value, udescription) |> 
+tabdata |> 
   gt() |> 
-  tab_header(title="SALT-related variables in 2021, amounts for the U.S. in $ billions",
-             subtitle = "SOI Historical Table 2") |> 
-  fmt_currency(columns = value, scale=1e-9, decimals=1)
-
+  tab_header("Potential SALT deductions in the 2021 TMD microdata",
+             subtitle="Filers and non-filers, by 2021-law itemization status") |> 
+  cols_label(fstatus="Filing status",
+             count="Number of tax units (millions)",
+             amount="Amount ($ billions)") |> 
+  fmt_number(count, scale=1e-6, decimals=2) |> 
+  fmt_currency(amount, scale=1e-9, decimals=2) |> 
+  data_color(
+    columns = fstatus,
+    target_columns = everything(),
+    palette = c("#f7fbff", "#f0f0f0")
+  ) 
 
 ```
+
+## *Actual* SALT deductions in the IRS-published state data
+
+The IRS publishes actual SALT-related amounts in SOI Historical Table 2. The numbers and amounts for key variables, and their location on Schedule A (in parentheses) are:
+
+-   **n18425, a18425**: State and local income taxes (line 5a)
+-   **n18450, a18450**: State and local general sales tax (line 5a)
+-   **n18500, a18500**: Real estate taxes (line 5b)
+-   **n18800, a18800**: Personal property taxes (line 5c)
+-   **n18460, a18460**: Limited state and local taxes (line 5e)
+-   **n18300, a18300**: Taxes paid (line 7)
+
+The screenshot below shows where these variables appear on 2021 Schedule A:
+
+![](images/clipboard-565930362.png)
+
+Note that the published summaries break out state and local income or sales taxes into the income and sales components but the TMD data only have the combined amount (`e18400`). In our work we have combined the two SOI amounts, which are mutually exclusive for any given taxpayer, into a variable called 18400est.
+
+The table below, based upon IRS-published data from SOI Historical Table 2 (U.S. totals from state-level data), shows *actual* numbers and amounts for SALT-related variables in 2021 for those who itemized in 2021. The first two rows correspond, conceptually, to the first two rows in the table from the TMD (filers itemizing under 2021 law). The actual amounts are reasonably close to their corresponding TMD amounts (e.g., \$260.7 billion in actual State and local income or sales taxes vs. \$272.7 billion in the TMD data).
+
+However, the published SOI Historical Table 2 data do not capture potential deductions for non-itemizers, which according to the TMD data are even larger than the actual deductions.
+
+
+```{r}
+#| label: soi-salt-amounts-2021
+
+soibasevars <- c("18300", "18425", "18450", "18460", "18500", "18800")
+# soibasevars <- c("18300", "18425", "18450", "18500", "18800")
+
+tabdata1 <- soilong |> 
+  # filter(str_sub(vname, 2, 3)=="18", stabbr=="US", agistub==0, year==2021) |> 
+  filter(basevname %in% soibasevars, stabbr=="US", agistub==0, year==2021) |> 
+  mutate(description=udescription[vtype=="amount"], .by=basevname) |> 
+  mutate(description=str_remove(description, " amount")) |>
+  select(basevname, vtype, value, description) |> 
+  pivot_wider(names_from = vtype) |> 
+  select(basevname, description, count, amount)
+
+est18400 <- tabdata1 |> 
+  filter(basevname %in% c("18425", "18450")) |> 
+  summarise(count=sum(count), amount=sum(amount)) |> 
+  mutate(basevname="18400est", description="State and local income or sales taxes (estimated)")
+
+basesort <- c("18400est", "18500", "18425", "18450", "18800", "18460", "18300")
+tabdata <- bind_rows(tabdata1, est18400) |> 
+  mutate(basevname=factor(basevname, levels=basesort)) |> 
+  arrange(basevname)
+
+tabdata |> 
+  mutate(vgroup=basevname %in% basesort[1:2]) |> 
+  gt() |> 
+  cols_hide(vgroup) |> 
+  tab_header(title="Actual SALT deductions in 2021 IRS-published data",
+             subtitle = "SOI Historical Table 2 (state data, U.S. totals)") |> 
+  cols_label(count="Number of tax units (millions)",
+             amount="Amount ($ billions)") |> 
+  fmt_number(count, scale=1e-6, decimals=2) |> 
+  fmt_currency(amount, scale=1e-9, decimals=2) |> 
+  tab_style(
+    style = cell_fill(color = "#f7fbff"),
+    locations = cells_body(rows = vgroup == TRUE)
+  ) |> 
+  tab_style(
+    style = cell_fill(color = "#f0f0f0"),
+    locations = cells_body(rows = vgroup == FALSE)
+  )
+
+```
+
+## Our methodology for capturing full state-level potential SALT deductions
+
+We assume that potential SALT deductions for `e18400` and `e18500` are distributed across states in the same way that the published *actual* state SALT deductions are distributed: for example, if a state has 7% of the nation's real estate tax deductions for 2021 itemizers, it will have 7% of the aggregate amount of *potential* real estate deductions in our TMD file (`e18500`). We do this by AGI range.
+
+This seems like a reasonable first-cut assumption if we don't have direct data on potential real estate tax deductions of non-itemizers in 2021 -- i.e., assume they are distributed across states in the same way as real estate tax deductions of itemizers.
+
+We now examine the plausibility of this assumption.
+
+## How plausible is the assumption?
 
 ### IRS-published U.S. amounts over time
 
@@ -137,6 +228,7 @@ It is clear, though, that the TMD 2021 estimated values (for the universe of 201
 
 ```{r}
 #| label: tmd-compare-amounts
+#| eval: false
 
 tmdvars <- tmd2021 |> 
   select(RECID, data_source, s006, c04470, e18400, e18500) |> 
@@ -213,6 +305,7 @@ The next table shows the number of taxpayers who have nonzero values for key SAL
 
 ```{r}
 #| label: tmd-compare-numbers
+#| eval: false
 
 tmdvars <- tmd2021 |> 
   select(RECID, data_source, s006, e18400, e18500) |> 
