@@ -9,17 +9,16 @@ editor_options:
 ```{r}
 #| label: setup
 
-source(here::here("R", "libraries.R"))
+suppressPackageStartupMessages(source(here::here("R", "libraries.R")))
 source(here::here("R", "constants.R"))
 source(here::here("R", "functions.R"))
 
 ```
 
 ```{r}
-#| label: get-data
+#| label: get-tmd-data
 #| output: false
 
-soilong <- readRDS(fs::path(DINTERMEDIATE, "soilong.rds"))
 agilabels <- read_csv(fs::path(DINTERMEDIATE, "agilabels.csv"))
 
 fpath <-  fs::path(TMDDATA, "cached_allvars.csv")
@@ -28,13 +27,38 @@ ns(tmd2021)
 
 ```
 
+```{r}
+#| label: get-soi-combine-18425-and-18450
+#| output: false
+
+soilong <- readRDS(fs::path(DINTERMEDIATE, "soilong.rds"))
+
+est18400 <- soilong |> 
+  filter(basevname %in% c("18425", "18450")) |> 
+  summarise(value=sum(value), 
+            .by=c(stabbr, vtype, agistub, agilo, agihi, agilabel, year)) |> 
+  mutate(basevname="18400", 
+         vname=ifelse(vtype=="amount", 
+                      paste0("a", basevname),
+                      paste0("n", basevname)),
+         description="State and local income or sales taxes (estimated)",
+         udescription=description)
+summary(est18400)
+
+soilong <- bind_rows(soilong, est18400) |>
+  arrange(basevname)
+
+# check <- count(soilong, basevname, vname)
+
+```
+
 ## IRS-published state aggregates fall short of what we need
 
-We want to develop state weights for the TMD national microdata file that reflect *potential* SALT deductions in individual states, including itemizers and non-itemizers, before caps. We need state targets that correspond to this concept. The TMD microdata already conform (largely) to this concept.
+We want to develop state weights for the TMD national microdata file that reflect *potential* SALT deductions in individual states, including itemizers and non-itemizers, before caps. We need state targets that correspond to this concept. The TMD microdata already conform to this concept.
 
 IRS publishes state-by-state *actual* SALT deductions, not *potential* deductions. Actual SALT deductions in 2018+ are sharply reduced from pre-TCJA years due to the drop in itemization caused by the TCJA standard deduction increase. The IRS state data as reported are not suitable for targets. (The IRS reports actual deductions before the TCJA SALT cap so the cap does not cause problems in developing state targets.)
 
-Note that the same issue arises for Congressional districts, where we take the same approach as described below.
+Note that this issue also arises for Congressional districts, where we take the same approach as described below.
 
 ## Our methodology in brief
 
@@ -46,13 +70,13 @@ The remainder of this page gives details on the relevant data and explains how w
 
 ## *Potential* SALT deductions in the national TMD microdata
 
-The national TMD microdata include two uncapped SALT variables:
+The national TMD microdata include two uncapped SALT variables (links are to Tax-Calculator documentation):
 
 -   [e18400](https://taxcalc.pslmodels.org/guide/input_vars.html#e18400): Itemizable state and local income/sales taxes, and
 
 -   [e18500](https://taxcalc.pslmodels.org/guide/input_vars.html#e18500): Itemizable real-estate taxes paid
 
-(links are to Tax-Calculator documentation). The TMD data also include capped variants of these variables.
+The TMD data also include capped variants of these variables.
 
 These variables are actual or estimated amounts available to be deducted in the 2015 PUF base year, grown to 2021 at a rate intended to capture growth in state and local taxes. Thus, they are unaffected by the TCJA SALT cap or the fact that many 2015 itemizers will be non-itemizers in 2021 due to the TCJA standard deduction increase.
 
@@ -91,12 +115,13 @@ tabdata |>
              count="Number of tax units (millions)",
              amount="Amount ($ billions)") |> 
   fmt_number(count, scale=1e-6, decimals=2) |> 
-  fmt_currency(amount, scale=1e-9, decimals=2) |> 
+  fmt_currency(amount, scale=1e-9, decimals=2) |>  
   data_color(
     columns = fstatus,
     target_columns = everything(),
     palette = c("#f7fbff", "#f0f0f0")
-  ) 
+  ) |> 
+  tab_options(quarto.disable_processing = TRUE)
 
 ```
 
@@ -115,35 +140,27 @@ The screenshot below shows where these variables appear on 2021 Schedule A:
 
 ![](images/clipboard-565930362.png)
 
-Note that the published summaries break out state and local income or sales taxes into the income and sales components but the TMD data only have the combined amount (`e18400`). In our work we have combined the two SOI amounts, which are mutually exclusive for any given taxpayer, into a variable called 18400est.
+Note that the published summaries break out state and local income or sales taxes into the income and sales components but the TMD data only have the combined amount (`e18400`). In our work we have combined the two SOI amounts, which are mutually exclusive for any given taxpayer.
 
 The table below, based upon IRS-published data from SOI Historical Table 2 (U.S. totals from state-level data), shows *actual* numbers and amounts for SALT-related variables in 2021 for those who itemized in 2021. The first two rows correspond, conceptually, to the first two rows in the table from the TMD (filers itemizing under 2021 law). The actual amounts are reasonably close to their corresponding TMD amounts (e.g., \$260.7 billion in actual State and local income or sales taxes vs. \$272.7 billion in the TMD data).
 
-However, the published SOI Historical Table 2 data do not capture potential deductions for non-itemizers, which according to the TMD data are even larger than the actual deductions.
+Other rows show details available in the SOI data.
 
+Unfortunately, the published SOI Historical Table 2 data do not capture potential deductions for non-itemizers, which according to the TMD data are even larger than the actual deductions.
 
 ```{r}
 #| label: soi-salt-amounts-2021
 
-soibasevars <- c("18300", "18425", "18450", "18460", "18500", "18800")
-# soibasevars <- c("18300", "18425", "18450", "18500", "18800")
+basesort <- c("18400", "18500", "18425", "18450", "18800", "18460", "18300")
 
-tabdata1 <- soilong |> 
-  # filter(str_sub(vname, 2, 3)=="18", stabbr=="US", agistub==0, year==2021) |> 
-  filter(basevname %in% soibasevars, stabbr=="US", agistub==0, year==2021) |> 
-  mutate(description=udescription[vtype=="amount"], .by=basevname) |> 
-  mutate(description=str_remove(description, " amount")) |>
+tabdata <- soilong |> 
+  filter(basevname %in% basesort, stabbr=="US", agistub==0, year==2021) |> 
+  mutate(description=udescription[vtype=="amount"],
+         description=str_remove(description, " amount"),
+         .by=basevname) |> 
   select(basevname, vtype, value, description) |> 
   pivot_wider(names_from = vtype) |> 
-  select(basevname, description, count, amount)
-
-est18400 <- tabdata1 |> 
-  filter(basevname %in% c("18425", "18450")) |> 
-  summarise(count=sum(count), amount=sum(amount)) |> 
-  mutate(basevname="18400est", description="State and local income or sales taxes (estimated)")
-
-basesort <- c("18400est", "18500", "18425", "18450", "18800", "18460", "18300")
-tabdata <- bind_rows(tabdata1, est18400) |> 
+  select(basevname, description, count, amount) |> 
   mutate(basevname=factor(basevname, levels=basesort)) |> 
   arrange(basevname)
 
@@ -164,305 +181,261 @@ tabdata |>
   tab_style(
     style = cell_fill(color = "#f0f0f0"),
     locations = cells_body(rows = vgroup == FALSE)
-  )
+  ) |> 
+  tab_options(quarto.disable_processing = TRUE)
 
 ```
 
 ## Our methodology for capturing full state-level potential SALT deductions
 
-We assume that potential SALT deductions for `e18400` and `e18500` are distributed across states in the same way that the published *actual* state SALT deductions are distributed: for example, if a state has 7% of the nation's real estate tax deductions for 2021 itemizers, it will have 7% of the aggregate amount of *potential* real estate deductions in our TMD file (`e18500`). We do this by AGI range.
+We assume that potential SALT deductions for `e18400` and `e18500` are distributed across states in the same way that the published *actual* state SALT deductions are distributed: for example, if a state has 7% of the nation's *actual* real estate tax deductions for 2021 itemizers, it will have 7% of the aggregate amount of *potential* real estate deductions in our 2021 TMD file (`e18500`). We do this by AGI range.
 
-This seems like a reasonable first-cut assumption if we don't have direct data on potential real estate tax deductions of non-itemizers in 2021 -- i.e., assume they are distributed across states in the same way as real estate tax deductions of itemizers.
-
-We now examine the plausibility of this assumption.
+This seems like a reasonable first-cut assumption given that we don't have direct data on potential SALT deductions of non-itemizers in 2021.
 
 ## How plausible is the assumption?
 
+Just to get a grounding, we start by examining IRS-published SALT data over time, in aggregate and by AGI range, to get a sense of how things changed when the TCJA went into effect.
+
 ### IRS-published U.S. amounts over time
 
-Note that a18425 is \$0 in the lowest AGI range.
+The table below shows how SALT amounts have changed over time. We can see the large post-2017 fall in the dollar amount of deductions and the even larger fall in the number of deductions. It makes sense that the average deduction would increase, given that remaining itemizers generally will have higher incomes and deductions than in the pre-TCJA era.
 
 ```{r}
 #| label: salt-amounts-over-time
 
+basesort <- c("18400", "18500", "18425", "18450", "18800", "18460", "18300")
+
 soilong |> 
-  filter(str_sub(vname, 1, 3)=="a18", stabbr=="US", agistub==0) |> 
-  select(stabbr, vname, year, value, udescription) |> 
+  filter(basevname %in% basesort, stabbr=="US", agistub==0) |> 
+  select(stabbr, basevname, vname, vtype, year, value, udescription) |> 
   pivot_wider(names_from = year) |> 
+  mutate(basevname=factor(basevname, levels=basesort)) |> 
+  mutate(udescription=udescription[vtype=="amount"],
+         .by=basevname) |> 
+  arrange(vtype, basevname) |> 
+  select(-vname) |> 
   gt() |> 
-  tab_header(title="SALT-related variables over time, amounts for the U.S. in $ billions",
-             subtitle = "SOI Historical Table 2") |> 
-  fmt_currency(columns = -c(stabbr, vname, udescription), scale=1e-9, decimals=1) |> 
+  tab_header(title=html("Actual SALT variables for the U.S. over time<br>Amounts in $ billions, counts in millions"),
+             subtitle = "Source: IRS SOI Historical Table 2") |> 
+  fmt_currency(columns = -c(stabbr, basevname, vtype, udescription), 
+               rows = vtype=="amount",
+               scale=1e-9, decimals=2) |> 
+  fmt_number(columns = -c(stabbr, basevname, vtype, udescription), 
+               rows = vtype=="count",
+               scale=1e-6, decimals=2) |> 
   sub_missing(columns=everything(),
-              missing_text="--") 
-  
+              missing_text="--")
 
 ```
 
 ### IRS-published U.S. amounts by AGI range over time
 
+The next table shows a18400, State and local income or sales taxes (estimated), by AGI range over time. It is clear (with mental arithmetic) that the largest post-2017 percentage drops were in the lowest income ranges and the largest dollar drops were in the highest income ranges. This makes sense - the standard deduction increase would drive most lower and middle income taxpayers to the standard, but they would not have that much to lose, in dollar terms.
+
+Note that in the IRS SOI data, there are no deductions at all on returns with AGI less than $1. This may be an artifact of the sample they use to estimate their published amounts, or it could be truth. In any event, it means that we will not have an easy way to develop targets for this income range, and we won't try to do so.
+
+
 ```{r}
 #| label: income-sales-tax-by-agirange-amounts-over-time
 
 soilong |> 
-  filter(vname=="a18425", stabbr=="US") |> 
+  filter(vname=="a18400", stabbr=="US") |> 
   select(year, agistub, agilabel, value) |> 
   pivot_wider(names_from = year) |> 
   gt() |> 
-  tab_header(title="a18425 State and local income taxes amount, over time, amounts for the U.S. in $ billions",
-             subtitle = "SOI Historical Table 2") |> 
+  tab_header(title=html("Actual a18400 amounts: State and local income or sales taxes (estimated)<br>Amounts for the U.S. in $ billions"),
+             subtitle = "Source: IRS SOI Historical Table 2") |> 
   fmt_currency(columns = -c(agistub, agilabel), scale=1e-9, decimals=1) |> 
   sub_missing(columns=everything(),
-              missing_text="--") 
-
-
-```
-
-## How tmd sums compare to IRS-published aggregates
-
-### Potentially deductible amounts
-
-The following table shows 2021 sums for tax filers (data_source==1) in the TMD data and the IRS-published aggregates that correspond most closely to the TMD concepts. Note that for the TMD variable `e18400` (Itemizable state and local income/sales taxes) the closest available IRS-published aggregates are `a18425` (State and local income taxes amount) and `a18450` (State and local general sales tax amount). Because taxpayers can only deduct one or the other (income or sales taxes), the sum of `a18425` and `a18450` is relevant.
-
-It is clear, though, that the TMD 2021 estimated values (for the universe of 2015 itemizers) are far greater than the IRS-published amounts from 2021 tax returns.
-
-```{r}
-#| label: tmd-compare-amounts
-#| eval: false
-
-tmdvars <- tmd2021 |> 
-  select(RECID, data_source, s006, c04470, e18400, e18500) |> 
-  mutate(itemizer=(c04470 > 0)) |> 
-  summarise(across(c(e18400, e18500),
-                   \(x) sum(s006 * x)),
-            .by=data_source) |> 
-  mutate(src="tmd") |> 
-  filter(data_source==1) |> 
-  select(-data_source) |> 
-  pivot_longer(-src) |> 
-  mutate(description=case_when(name=="e18400" ~ "Itemizable state and local income/sales taxes",
-                               name=="e18500" ~ "Itemizable real-estate taxes paid",
-                               .default = "ERROR"),
-         basename=str_sub(name, 2, -1))
-
-soivars <- soilong |> 
-  filter(stabbr=="US", agistub==0, year==2021) |> 
-  filter(vname %in% c("a18425", "a18450", "a18500")) |> 
-  mutate(src="irs", basename=str_sub(vname, 2, -1)) |> 
-  select(src, name=vname, value, description, basename)
-  
-comp <- bind_rows(tmdvars, soivars)
-
-comp |> 
-  arrange(basename, desc(src)) |> 
-  select(-basename) |> 
-  gt() |> 
-  tab_header(title="TMD and IRS amounts for 2021 filers, key SALT-related variables",
-             subtitle = "Amounts are in $ billions") |> 
-  fmt_currency(columns = value,
-               scale=1e-9,
-               decimals=2)
-
-
-tmdvars2 <- tmd2021 |> 
-  select(RECID, data_source, s006, c04470, e18400, e18500) |> 
-  mutate(itemizer=(c04470 > 0)) |> 
-  summarise(across(c(e18400, e18500),
-                   \(x) sum(s006 * x)),
-            .by=c(data_source, itemizer)) |> 
-  mutate(src="tmd") |> 
-  # filter(data_source==1) |> 
-  # select(-c()) |> 
-  pivot_longer(-c(src, data_source, itemizer)) |> 
-  mutate(description=case_when(name=="e18400" ~ "Itemizable state and local income/sales taxes",
-                               name=="e18500" ~ "Itemizable real-estate taxes paid",
-                               .default = "ERROR"),
-         basename=str_sub(name, 2, -1))
-
-tmdvars3 <- tmd2021 |> 
-  select(RECID, data_source, s006, c04470, e18400, e18500) |> 
-  mutate(itemizer=(c04470 > 0)) |> 
-  summarise(across(c(e18400, e18500),
-                   list(amount = \(x) sum(s006 * x),
-                        count = \(x) sum(s006 * (x > 0)))),
-            .by=c(data_source, itemizer)) |> 
-  mutate(src="tmd") |> 
-  # filter(data_source==1) |> 
-  # select(-c()) |> 
-  pivot_longer(-c(src, data_source, itemizer)) |> 
-  mutate(description=case_when(name=="e18400" ~ "Itemizable state and local income/sales taxes",
-                               name=="e18500" ~ "Itemizable real-estate taxes paid",
-                               .default = "ERROR"),
-         basename=str_sub(name, 2, -1))
-
-tmdvars3 |> filter(data_source==1, str_detect(name, "count"))
-
-```
-
-### Numbers of potential itemizers with SALT amounts
-
-The next table shows the number of taxpayers who have nonzero values for key SALT-related variables.
-
-```{r}
-#| label: tmd-compare-numbers
-#| eval: false
-
-tmdvars <- tmd2021 |> 
-  select(RECID, data_source, s006, e18400, e18500) |> 
-  summarise(across(c(e18400, e18500),
-                   \(x) sum(s006 * (x != 0))),
-            .by=data_source) |> 
-  mutate(src="tmd") |> 
-  filter(data_source==1) |> 
-  select(-data_source) |> 
-  pivot_longer(-src) |> 
-  mutate(description=case_when(name=="e18400" ~ "Itemizable state and local income/sales taxes",
-                               name=="e18500" ~ "Itemizable real-estate taxes paid",
-                               .default = "ERROR"),
-         basename=str_sub(name, 2, -1))
-
-soivars <- soilong |> 
-  filter(stabbr=="US", agistub==0, year==2021) |> 
-  filter(vname %in% c("n18425", "n18450", "n18500")) |> 
-  mutate(src="irs", basename=str_sub(vname, 2, -1)) |> 
-  select(src, name=vname, value, description, basename)
-  
-comp <- bind_rows(tmdvars, soivars)
-
-comp |> 
-  arrange(basename, desc(src)) |> 
-  select(-basename) |> 
-  gt() |> 
-  tab_header(title="Numbers of 2021 filers with nonzero amounts for key SALT-related variables",
-             subtitle = "Amounts are in $ billions") |> 
-  fmt_number(columns = value,
-             scale=1,
-             decimals=0)
+              missing_text="--")
 
 ```
 
 ## How closely do current SALT data correspond to pre-TCJA SALT data, using IRS-published data for both?
 
-Explain why this is of interest.
+Next, because we assume in our target-setting that post-TCJA state shares of the U.S. for actual SALT deductions will be reasonably good predictors of unknown state shares of potential SALT deductions, we examine how these shares changed between 2017 and 2018. Because 2017 (pre-TCJA) was reasonably similar, conceptually, to potential deductions, we hope it is highly correlated with actual deductions in 2018. We also look at the correlation between 2018 and 2021, in the hope that the correlation continues.
+
+We do this both statistically (correlation coefficients) and graphically.
 
 ```{r}
 #| label: salt-shares-data
+#| eval: true
 
 salt <- soilong |> 
   filter(year %in% c(2017, 2018, 2021),
-         vname=="a18425",
+         basevname %in% c("18400", "18500"),
          !stabbr %in% c("US", "OA", "PR")) |> 
   mutate(agistubf=factor(agistub, levels=agilabels$agistub, labels=agilabels$agilabel)) |> 
-  select(stabbr, year, agistub, agistubf, value) |> 
+  select(stabbr, year, basevname, vtype, udescription, agistub, agistubf, value) |> 
   pivot_wider(names_from = year, names_prefix = "y")
 
 saltshares <- salt |> 
-  mutate(across(starts_with("y2"),
+  mutate(across(starts_with("y"),
                 \(x) x / sum(x)),
-                .by=agistub)
+                .by=c(agistub, basevname, vtype))
 
 ```
+
+### Correlation coefficients
+
+The next 2 tables show correlation coefficients:
+
+-   between 2017, which we think of as the last year for which we have data on "potential" deductions, and 2018, which we think of as the first year for which we only have actual deductions; and
+-   between 2018 and 2021, the most recent year of data on actual deductions.
+
+The first table shows the minimum and maximum correlations across income ranges for a particular variable for a pair of years. The second table shows all of the correlations (correlations within each income range).
+
+We would like these correlations to be high, giving us comfort that the state shares of actual deductions are highly related to state shares of potential deductions. As the tables show, the correlations are quite high.
+
 
 ```{r}
 #| label: correlation-table
+#| eval: true
 
-saltshares |> 
-  select(-stabbr) |> 
+corrs <- saltshares |> 
   filter(agistub != 1) |> 
   summarise(cor2017_2018=cor(y2017, y2018, use = "complete.obs"),
             cor2018_2021=cor(y2018, y2021, use = "complete.obs"),
-            .by=c(agistub, agistubf)) |> 
+            .by=c(basevname, vtype, udescription, agistub, agistubf)) |>
+  mutate(agistub=factor(agistub),
+         udescription=ifelse(basevname=="18400" & vtype=="count",
+                             "Number of returns with state and local income or sales taxes (estimated)",
+                             udescription))
+
+corrs |> 
+  summarise(across(c(cor2017_2018, cor2018_2021),
+                   list(min=min, max=max)),
+            .by=c(basevname, vtype, udescription)) |> 
   gt() |> 
-  tab_header(title="Correlation of SALT shares (a18425) in pairs of years") |> 
-  fmt_number(columns = c(cor2017_2018, cor2018_2021), decimals=3)
+  tab_header(title="Min and max correlations across states for state SALT variables as share of national total",
+             subtitle = "Comparing 2017 to 2018, and 2018 to 2021") |> 
+  tab_spanner(label="Correlation between 2017 and 2018",
+              columns=c(cor2017_2018_min, cor2017_2018_max)) |> 
+  tab_spanner(label="Correlation between 2018 and 2021",
+              columns=c(cor2018_2021_min, cor2018_2021_max)) |>  
+  cols_label(cor2017_2018_min= "min",
+             cor2017_2018_max = "max") |> 
+  cols_label(cor2018_2021_min= "min",
+             cor2018_2021_max = "max") |> 
+  fmt_number(-c(basevname, vtype, udescription),
+             decimals=3)
+
+corrs |> 
+  gt() |> 
+  tab_header(title="Correlations across states in state SALT variables as share of national total",
+             subtitle = "Comparing 2017 to 2018, and 2018 to 2021") |> 
+  cols_label(cor2017_2018 = "Correlation between 2017 and 2018",
+             cor2018_2021= "Correlation between 2018 and 2021") |> 
+  fmt_number(-c(basevname, vtype, udescription),
+             decimals=3)
 
 ```
 
+### Plots of state shares
+
+Finally, we plot the 2021 shares of the nation for our two main SALT variables, (1) 18400 State and local income or sales taxes (estimated) and (2) a18500 Real estate taxes, for the pre-TCJA year of 2017 and immediate TCJA year of 2018, by AGI range. We also plot the 45-degree line. We put 2018 on the x-axis because we think of it as the share of national "actual" SALT deduction, which we use to predict the share of national "predicted" SALT deduction (the 2017 share).
+
+For most states, 2018 seems like a good predictor of 
+
+#### a18400 State and local income or sales taxes (estimated)
+
 ```{r}
-#| label: shares-plot
+#| label: shares-plot-a18400
 #| fig-height: 10
+
+ub <- .075
 
 saltshares |> 
   filter(!stabbr %in% c("CA", "NY")) |> 
-  filter(agistub != 1) |> 
-  ggplot(aes(x=y2017, y=y2021)) +
+  filter(!agistub %in% c(0, 1)) |> 
+  filter(basevname=="18400", vtype=="amount") |> 
+  ggplot(aes(x=y2018, y=y2017)) +
+  geom_point(colour="blue",
+             size=0.5) +
+  geom_text(aes(label=stabbr),
+            colour="blue",
+            size=2.5) +
+  geom_abline(slope=1, intercept=0) +
+  scale_x_continuous(breaks=seq(0, .5, .01), labels=scales::label_percent(accuracy=.1), limits = c(0, ub)) +
+  scale_y_continuous(breaks=seq(0, .5, .01), labels=scales::label_percent(accuracy=.1), limits = c(0, ub)) +
+  ggtitle("State shares of total U.S. a18400  State and local income or sales taxes (estimated) amount\n2017 and 2018, by AGI range",
+          subtitle = "CA and NY excluded to make pattern easier to see.\nLowest AGI range excluded because SALT deductions were zero.") +
+  theme_bw() +
+  facet_wrap(~agistubf, scales = "fixed",
+             ncol = 3)
+
+```
+
+#### a18500 Real estate taxes
+
+```{r}
+#| label: shares-plot-a18500
+#| fig-height: 10
+
+ub <- .11
+
+saltshares |> 
+  filter(!stabbr %in% c("CA", "NY")) |> 
+  filter(!agistub %in% c(0, 1)) |> 
+  filter(basevname=="18500", vtype=="amount") |> 
+  ggplot(aes(x=y2018, y=y2017)) +
   geom_point(colour="blue",
              size=0.5) +
   geom_text(aes(label=stabbr),
             colour="blue",
             size=2) +
-  ggtitle("State shares of total U.S. a18425 deduction\n2017 and 2021, by AGI range",
-          subtitle = "CA and NY excluded to make figure easier to see.\nLowest AGI range excluded because SALT deductions were zero.") +
+  geom_abline(slope=1, intercept=0) +
+  scale_x_continuous(breaks=seq(0, .5, .01), labels=scales::label_percent(accuracy=.1), limits = c(0, ub)) +
+  scale_y_continuous(breaks=seq(0, .5, .01), labels=scales::label_percent(accuracy=.1), limits = c(0, ub)) +
+  ggtitle("State shares of total U.S. a18500 Real estate taxes amount\n2017 and 2018, by AGI range",
+          subtitle = "CA and NY excluded to make pattern easier to see.\nLowest AGI range excluded because SALT deductions were zero.") +
   theme_bw() +
-  facet_wrap(~agistubf, scales = "free",
+  facet_wrap(~agistubf, scales = "fixed",
              ncol = 3)
 
 ```
 
-## Playground
+### Table of shares
+
+Finally, all of the state shares are shown in the filter-able and sortable table below.
 
 ```{r}
-#| label: explore-and-take-notes
-#| eval: false
+#| label: shares-table
+#| column: page
 
-skim(soilong)
+saltshares |> 
+  filter(agistub != 1) |> 
+  select(stabbr, basevname, vtype, udescription, agistub, agistubf, y2017, y2018, y2021) |> 
+  mutate(y2018m2017=y2018 - y2017,
+         y2021m2018=y2021 - y2018,
+         across(c(stabbr, basevname, vtype, udescription, agistub),
+                \(x) factor(x))) |> 
+  DT::datatable(rownames = FALSE,
+                caption = htmltools::tags$caption(
+                  style = 'caption-side: top; text-align: center; color: black; font-size: 200%;',
+                  "State SALT deductions as a percentage of national total in 2017, 2018, and 2021"
+                  ),
+                options = list(order = list(0, "asc"), # use 1st column (0) for sorting
+                               scrollX = TRUE, scrollY = TRUE, paging = TRUE, pageLength = 10,
+                               autoWidth = TRUE),
+                filter="top",
+                escape = FALSE) |> 
+  formatPercentage(c("y2018", "y2017", "y2021", "y2018m2017", "y2021m2018"), digits = 2)
+  
 
-soilong |> 
-  filter(str_sub(vname, 1, 3)=="a18") |> 
-  count(vname, year, udescription, description)
-
-soilong |> 
-  filter(str_sub(vname, 1, 3)=="a18") |> 
-  count(vname, udescription)
-
-#   vname  udescription                                 n  avail in 2021?      US amount in 2021
-#   <chr>  <chr>                                    <int>
-# 1 a18300 Taxes paid amount                         4125 yes; big drop 2018+; $120b
-# 2 a18425 State and local income taxes amount       4125 yes; big drop 2018+; $253b biggest item by far in 2021
-# 3 a18450 State and local general sales tax amount  4125 yes; big drop 2018+; $7.5b
-# 4 a18460 Limited state and local taxes             2376 yes; only for 2018+; $118b
-# 5 a18500 Real estate taxes amount                  4125 yes; big drop 2018+; $101b
-# 6 a18800 Personal property taxes amount            3542 yes; big drop 2018+; $4.3b
-
-soilong |> 
-  filter(str_sub(vname, 1, 3)=="a18", stabbr=="US", agistub==0)
-
-soilong |> 
-  filter(str_sub(vname, 1, 3)=="a18", stabbr=="US", agistub==0, year==2021)
-
-soilong |> filter(vname=="a18460", year==2015)
-
-count(soilong, stabbr) # 54 -- 50 + US, DC, PR, OA
-
-soilong |> 
-  filter(vname=="a18460", year %in% 2015:2017) |> 
-  skim()
-
-soilong |> 
-  filter(stabbr=="US", agistub==0, vtype=="amount", str_starts(basevname, "184")) |> 
-  arrange(vname, year)
-
-# a18425 drops 2018+ 369 --> 201
-# a8450 drops 2018+ 20 --> 9
-# a18460 2018+ 130 ish
-
-salt <- soilong |> 
-  filter(year %in% c(2017, 2018, 2021),
-         vname=="a18425",
-         agistub==0,
-         !stabbr %in% c("US", "OA", "PR")) |> 
-  select(stabbr, year, value) |> 
-  pivot_wider(names_from = year, names_prefix = "y")
-
-salt |> select(-stabbr) |> cor()
-
-salt |> 
-  filter(!stabbr %in% c("CA", "NY")) |> 
-  ggplot(aes(x=y2017, y=y2021)) +
-  geom_point(colour="blue",
-             size=0.5) +
-  geom_text(aes(label=stabbr),
-            colour="blue",
-            size=3) +
-  theme_bw()
 ```
+
+
+## Conclusions
+
+Based on the relationships shown above, the assumption that potential SALT deductions are distributed across states in the same way that actual SALT deductions are distributed across states seems like a good simple assumption.
+
+It is easy to think of reasons why this might not always be true. 
+
+For example, suppose there are two states of equal size, A and B. A has relatively many high income taxpayers and B has relatively few. Suppose that all taxpayers in each state claim itemized deductions. Suppose that A, as a richer state, has higher taxes than B. Finally, suppose that A starts out with 60% of the nation's SALT deduction because of its higher taxes, even though everyone itemizes in both states, and B starts out with 40%. Suppose now that the standard deduction is increased significantly.  Suppose this happens within a year, so that we don't have to worry about confounding from other factors such as changes in the level of state and local taxation, or changes in income. In this scenario, assume that all of B's relatively lower-income taxpayers will claim the standard deduction while only half of A's taxpayers claim the standard deduction because, with higher incomes and higher taxes, they have more itemized deductions. In this case, even though A has far fewer itemizers than before, it will have 100% of the actual SALT deduction.
+
+In this example, assuming that a state's share of potential deductions predicts its share of actual deductions would be quite wrong. If we only observed A's actual deductions, we'd predict that it has 100% of potential deductions, but in fact it only has 60% of potential deductions. We would expect this effect to be most pronounced in lower income ranges where we could see a lot of switching from itemizers to standard-deduction takers. At the higher income levels, greater shares of taxpayers would remain itemizers, and the effect would be smaller.
+
+We appear to see some of this in California between 2017 and 2018, but it is hard to be sure. Many things are going on when we look across years - changes in tax policies, behavioral choices by taxpayers to accelerate deductions into 2017 to take advantage of higher 2017 federal tax rates, and more.
+
+Anyway, we don't pretend that we are making the best assumption, but we think it is pretty reasonable given the generally high correlations across years. It's an issue worth revisiting when time allows.
