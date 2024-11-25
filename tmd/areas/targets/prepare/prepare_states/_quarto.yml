@@ -9,13 +9,14 @@ project:
   # OLD id: 4d646266-9d1f-4d69-acb4-b9a17b63a5ff
   # Unique deploy URL:  https://671e13320a7e7cfb68b1ba7d--tmd-areas-prepare-targets.netlify.app
   # url: https://tmd-areas-targets-prepare.netlify.app
+  # url: https://tmd-areas-prepare-state-targets.netlify.app
 
 # publishing with netlify cli:
 #  open terminal in prepare
-#  quarto render && netlify deploy --prod --dir=_targetprep
+#  quarto render && netlify deploy --prod --dir=_web
 
 #  quarto render # inspect to be sure it is as desired
-#  netlify deploy --prod --dir=_targetprep
+#  netlify deploy --prod --dir=_web
 
 # or step by step
 #  netlify deploy # to test it, give _examine as publish directory
@@ -44,13 +45,10 @@ book:
         - download_soi_data.qmd
         - construct_soi_documentation.qmd
         - construct_long_soi_data_file.qmd
+    - part: "SALT analysis"
+      chapters:
+        - developing_SALT_targets.qmd
         # - explore_soi_data.qmd
-        # - analyze_SALT.qmd
-        # - cd_construct_soi_variable_documentation.qmd
-        #- cd_construct_long_soi_data_file.qmd
-        # - cd_create_basefile_for_117Congress_cd_target_files.qmd
-        # - cd_create_cd_117_118_crosswalk_and_cdbasefile_118.qmd
-        # - cd_create_basefile_multiple_sessions.qmd
         # - cd_create_variable_mapping.qmd
         # - cd_compare_us_totals_tmd_vs_irs_published.qmd
         # - cd_enhance_basefile_with_special_targets.qmd
@@ -61,7 +59,7 @@ book:
 format:
   html:
     theme: cosmo
-    code-fold: true    
+    code-fold: true
 
 editor_options:
   chunk_output_type: console

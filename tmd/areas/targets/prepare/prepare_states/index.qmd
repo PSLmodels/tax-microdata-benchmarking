@@ -6,5 +6,5 @@ editor_options:
 
 # Introduction
 
-TO COME.
+This webpage documents an R project, `prepare_states`, that creates creates target files for states of the form `xx_targets.csv`, where `xx` is a lower-case state postal abbreviation.
 

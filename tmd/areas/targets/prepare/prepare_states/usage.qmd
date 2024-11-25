@@ -10,36 +10,36 @@ editor_options:
 
 -   Recent version of [R](https://www.r-project.org/). This project was created with R version 4.4.2.
 
--   Recent release of [RStudio](https://posit.co/products/open-source/rstudio/). Other IDEs may work well, but RStudio has been used in this project (RStudio 2024.09.0 Build 375).
+-   Recent release of [RStudio](https://posit.co/products/open-source/rstudio/). Other IDEs may work well, but we have used RStudio and RStudio Server in this project.
 
--   Recent pre-release version of [quarto](https://quarto.org/docs/download/prerelease.html), 1.6 or higher. This project was created with quarto version 1.6.24
+-   [quarto](https://quarto.org/docs/get-started/), 1.6 or higher.
 
--   Be sure that ".../targets/prepare/data/raw_data/" exists and has the files shown below, which should have been downloaded when you cloned the GitHub repo:
+-   Be sure that ".../targets/prepare/prepare_states/data/raw_data/" exists and has the files described below, which should have been downloaded when you cloned the GitHub repo. For files that have \[yy\], \[yy\] are the trailing 2 digits of the year. The project includes files for 2015-2021:
 
-    <!-- -   21incddocguide.docx -->
+    -   \[yy\]in54cm.xlsx or similar, from SOI: each file has human-readable SOI values for all states for the year.
 
-    <!-- -   cd_documentation_extracted_from_21incddocguide.docx.xlsx -->
+    -   \[yy\]in54cmcsv.csv or similar, from SOI: file with SOI values for all states for the year.
 
-    <!-- -   cdpop1year_acs.csv -->
+    -   \[yy\]incmdocguide.doc, from SOI: descriptive documentation, including a table of variables and their descriptions
 
-    <!-- -   congressional2021.zip -->
-
-    <!-- -   geocorr2022_2428906586.csv -->
+    -   soi_states_variable_documentation.xlsx, hand-created by project team from the .doc files: has a sheet for each year with its documentation table. **NOT** intended to be edited by users.
 
 ## Setting up the environment
 
--   After checking the above and starting RStudio, in the console run `renv::restore()` and answer y when asked whether to proceed installing packages. This may take a while the first time you set your environment up.
+-   After checking the above and starting RStudio, in the console run `renv::restore()`
+-   Answer "y" when asked whether to proceed installing packages.
+Preparing the environment may take a while the first time you do this.
 
-`renv` is an environment manager for R that can set up a project-specific environment that is the same across multiple machines. It should ensure that your environment includes the versions of R packages used in this project. (Most packages are loaded in ".../targets/prepare/prepare_states/R/libraries.R".)
+`renv` is an environment manager for R that can set up a project-specific environment that is the same across multiple machines. It should ensure that your environment includes the versions of R packages used in this project. (Most packages are loaded in ".../targets/prepare/prepare_states/R/libraries.R" but `renv` will install packages that are used anywhere in the project.)
 
 ## To create target files and build the web page
 
--   Open a terminal in the "prepare" folder.
+-   Open a terminal in the "prepare_states" folder.
 -   Enter "quarto render"
 
-The first time the project is rendered, it will create needed intermediate files and put them in the "../data/intermediate" folder.
+The first time the project is rendered, it will create needed intermediate files and put them in the "../data/intermediate" folder. Files for the local web page will be in the "../\_web" folder
 
-Note that the \_quarto.yml file sets the `freeze` execution option to `false`, which means .qmd files will be rerendered even if they have not changed (except that quarto will not re-render chunks with the option `eval: false`), and intermediate data files will be recreated. For incremental re-rendering of changed .qmd files only, set `freeze: auto`, which will avoid recreating intermediate files. This should be used cautiously to avoid unintended consequences.
+Note that the `_quarto.yml` file sets the `freeze` execution option to `false`, which means .qmd files will be rerendered even if they have not changed (except that quarto will not re-render chunks with the option `eval: false`), and intermediate data files will be recreated. For incremental re-rendering of changed .qmd files only, set `freeze: auto`, which will avoid recreating intermediate files. This should be used cautiously to avoid unintended consequences.
 
 At present the code prepares target files with targets we believe are useful and practical. Users who want different targets will have to modify code to do so. However, as described in overall repo documentation, users can comment-out individual targets.
 
