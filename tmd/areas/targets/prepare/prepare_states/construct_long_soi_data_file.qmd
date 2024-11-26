@@ -48,7 +48,6 @@ write_csv(agilabels, fs::path(DINTERMEDIATE, "agilabels.csv"))
 #| label: read-data
 #| output: false
 
-
 csvfiles <- dir_ls(DRAW, glob="*.csv")
 
 get_csvdata <- function(csvfile){

@@ -224,28 +224,25 @@ count(cleaned1 |>
       vname, udescription, year)
 
 # salt variables basevname 18400, sum of 18425 and 18450, both avail 2015-2021
+# add documentation for n00100 agi count EVEN THOUGH it's not in the data
 newvars_base <- read_delim(
-"basevname; description_base
-18400; state and local income or sales tax (estimated)",
+"vname; basevname; description
+n18400; 18400; Number of returns with state and local income or sales tax (estimated)
+a18400; 18400; State and local income or sales tax (estimated) amount
+n00100; 00100; Number of returns with adjusted gross income (AGI)
+",
 delim=";", col_types="c", trim_ws = TRUE)
 newvars_base
 
 crosses <- crossing(year=2015:2021, vtype=c("amount", "count"))
 
 newvars <- newvars_base |>
-  cross_join(crosses) |> 
-  mutate(
-    vname=case_when(
-      vtype == "amount" ~ paste0("a", basevname),
-      vtype == "count" ~ paste0("n", basevname),
-      .default = "ERROR"),
-    description=case_when(
-      vtype == "amount" ~ paste0(str_to_sentence(description_base), " amount"),
-      vtype == "count" ~ paste0("Number of returns with ", description_base),
-    .default = "ERROR"),
-    udescription=description) |> 
+  cross_join(tibble(year=2015:2021)) |> 
+  mutate(vtype=case_when(str_sub(vname, 1, 1)=="n" ~ "count",
+                         str_sub(vname, 1, 1)=="a" ~ "amount",
+                         .default = "ERROR"),
+         udescription=description) |> 
   select(year, vname, basevname, vtype, description, udescription)
-  
 newvars
 
 cleaned_new <- bind_rows(cleaned1, newvars) |> 
@@ -258,6 +255,7 @@ cleaned_new <- bind_rows(cleaned1, newvars) |>
 
 ```{r}
 #| label: save-final-files
+#| output: false
 
 write_csv(cleaned_new, fs::path(DINTERMEDIATE, "soi_documentation_by_year.csv"))
 
@@ -269,6 +267,10 @@ uniform_descriptions <- cleaned_new |>
 anyDuplicated(uniform_descriptions$vname)
 
 write_csv(uniform_descriptions, fs::path(DINTERMEDIATE, "soi_documentation.csv"))
+
+uniform_descriptions <- read_csv(fs::path(DINTERMEDIATE, "soi_documentation.csv"))
+
+check <- count(uniform_descriptions, basevname, vtype, vname, udescription)
 
 
 ```
