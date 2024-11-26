@@ -1,0 +1,16 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+# Create state targets basefile
+
+```{r}
+#| label: setup
+
+suppressPackageStartupMessages(source(here::here("R", "libraries.R")))
+source(here::here("R", "constants.R"))
+source(here::here("R", "functions.R"))
+
+```
