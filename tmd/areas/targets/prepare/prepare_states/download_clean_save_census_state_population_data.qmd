@@ -1,0 +1,84 @@
+---
+output: html_document
+editor_options: 
+ chunk_output_type: console
+---
+
+# Get state Census population data
+
+From the Population Estimates Program, via `tidycensus`.
+
+## Setup
+
+```{r}
+#| label: setup
+
+suppressPackageStartupMessages(source(here::here("R", "libraries.R")))
+source(here::here("R", "constants.R"))
+source(here::here("R", "functions.R"))
+
+# 334283385.27000004 national pop per tmd
+
+```
+
+## Get Congressional District population
+
+The quarto chunk `state-pop-download-save` will, if a user sets the chunk `option `eval: true`, download and save state population data for 2021 from the Census Bureau's Population Estimates Program, via `tidycensus`.
+
+Ordinarily this will not be necessary because previously downloaded files are included with the project in the "../data/raw_data" folder. Thus, the default chunk option is `eval: false` and the chunk will not be run when this project is rendered.
+
+```{r}
+#| label: state-pop-download-save
+#| eval: false
+
+# census_apikey <- "b27cb41e46ffe3488af186dd80c64dce66bd5e87"
+
+## Not run: 
+# census_api_key("yourkey", install = TRUE, overwrite=TRUE)
+# First time, reload your environment so you can use the key without restarting R.
+# readRenviron("~/.Renviron")
+# Sys.getenv("CENSUS_API_KEY")
+
+stpop1 <- get_estimates(
+  geography = c("state"),
+  product = NULL,
+  variables = "POPESTIMATE",
+  vintage = 2023,
+  year = 2021,
+  state = NULL,
+  time_series = FALSE)
+
+# 52 recs: states, DC, PR
+# data(fips_codes) # built in to tidycensus
+
+stcodes <- fips_codes |> 
+  select(stabbr=state, GEOID=state_code) |> 
+  distinct() |> 
+  as_tibble()
+
+stpop2 <- stpop1 |> 
+  left_join(stcodes,
+            by = join_by(GEOID))
+count(stpop2, GEOID, stabbr, NAME)
+
+stpop2 |> 
+  summarise(allpop=sum(value),
+            xprpop=sum(value[stabbr != "PR"]))
+#      allpop    xprpop
+#       <dbl>     <dbl>
+# 1 335311670 332048977
+# 334283385.27000004 tmd national
+# 335311670 / 334283385.27000004 - 1 # allpop is 0.3% higher than tmd, don't worry about it
+# keep PR and add US, to be consistent with soilong (which has these plus OA other areas)
+
+stpop3 <- stpop2 |> 
+  select(stabbr, pop2021=value) |> 
+  bind_rows(stpop2 |> 
+              summarise(pop2021=sum(value)) |> 
+              mutate(stabbr="US"))
+stpop3
+
+write_csv(stpop3, fs::path(DRAW, "statepop_2021.csv"))
+
+```
+

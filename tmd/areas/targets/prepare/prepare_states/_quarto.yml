@@ -37,17 +37,19 @@ book:
     - part: "Usage"
       chapters:
         - usage.qmd
-    - part: "IRS SOI State data"
+    - part: "Get and clean data"
       chapters:
+        - download_clean_save_census_state_population_data.qmd
         - download_soi_data.qmd
         - construct_soi_documentation.qmd
         - construct_long_soi_data_file.qmd
-    - part: "SALT analysis"
+    - part: "Analysis of SALT variables and other issues"
       chapters:
         - developing_SALT_targets.qmd
-        # - explore_soi_data.qmd
+    - part: "Create basefile for state targets"
+      chapters: 
+        - create_state_targets_basefile.qmd
         # old files maybe use as base for new work
-        # - cd_download_and_clean_census_population_data.qmd        
         # - cd_create_variable_mapping.qmd
         # - cd_compare_us_totals_tmd_vs_irs_published.qmd
         # - cd_enhance_basefile_with_special_targets.qmd
@@ -64,6 +66,7 @@ editor_options:
   chunk_output_type: console
   
 # 5 states to do:  NJ, NM, VA, AK, MN  
+# also, SC for Jason
 
 # rendering commands
 #   quarto render
