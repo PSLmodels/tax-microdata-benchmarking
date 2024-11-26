@@ -189,17 +189,79 @@ cleaned_descriptions <- adjusted1 |>
 
 count(cleaned_descriptions, vtype)
 
+# verify no more than one description per variable per year
+glimpse(cleaned_descriptions)
+cleaned_descriptions |> 
+  summarise(n=n(), .by=c(vname, year)) |> 
+  filter(n > 1) # should be an empty tibble
+
+
 ```
 
-## Save files
+## Save raw file
 
 ```{r}
-#| label: save-files
+#| label: save-cleaned_file
 #| output: false
 
-write_csv(cleaned_descriptions, fs::path(DINTERMEDIATE, "soi_documentation_by_year.csv"))
+write_csv(cleaned_descriptions, fs::path(DINTERMEDIATE, "soi_documentation_by_year_raw.csv"))
 
-uniform_descriptions <- cleaned_descriptions |> 
+
+```
+
+
+## Add variables we may create that are not in the SOI documentation
+
+```{r}
+#| label: new-variables
+#| output: false
+
+cleaned1 <- read_csv(fs::path(DINTERMEDIATE, "soi_documentation_by_year_raw.csv"))
+glimpse(cleaned1)
+
+count(cleaned1 |> 
+        filter(str_starts(basevname, "18")),
+      vname, udescription, year)
+
+# salt variables basevname 18400, sum of 18425 and 18450, both avail 2015-2021
+newvars_base <- read_delim(
+"basevname; description_base
+18400; state and local income or sales tax (estimated)",
+delim=";", col_types="c", trim_ws = TRUE)
+newvars_base
+
+crosses <- crossing(year=2015:2021, vtype=c("amount", "count"))
+
+newvars <- newvars_base |>
+  cross_join(crosses) |> 
+  mutate(
+    vname=case_when(
+      vtype == "amount" ~ paste0("a", basevname),
+      vtype == "count" ~ paste0("n", basevname),
+      .default = "ERROR"),
+    description=case_when(
+      vtype == "amount" ~ paste0(str_to_sentence(description_base), " amount"),
+      vtype == "count" ~ paste0("Number of returns with ", description_base),
+    .default = "ERROR"),
+    udescription=description) |> 
+  select(year, vname, basevname, vtype, description, udescription)
+  
+newvars
+
+cleaned_new <- bind_rows(cleaned1, newvars) |> 
+  arrange(basevname, vtype, year)
+
+```
+
+
+## Save final documentation files
+
+```{r}
+#| label: save-final-files
+
+write_csv(cleaned_new, fs::path(DINTERMEDIATE, "soi_documentation_by_year.csv"))
+
+uniform_descriptions <- cleaned_new |> 
   select(vname, basevname, vtype, udescription) |> 
   distinct()
 
@@ -208,5 +270,8 @@ anyDuplicated(uniform_descriptions$vname)
 
 write_csv(uniform_descriptions, fs::path(DINTERMEDIATE, "soi_documentation.csv"))
 
+
 ```
+
+
 
