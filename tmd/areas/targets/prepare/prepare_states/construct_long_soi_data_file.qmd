@@ -138,7 +138,7 @@ saveRDS(soilong, fs::path(DINTERMEDIATE, "soilong.rds"))
 
 soilong <- readRDS(fs::path(DINTERMEDIATE, "soilong.rds"))
 glimpse(soilong)
-
+count(soilong, stabbr) # 54: 50 states, DC, PR, OA, US
 
 # data checks
 
