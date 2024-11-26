@@ -42,13 +42,12 @@ write_csv(agilabels, fs::path(DINTERMEDIATE, "agilabels.csv"))
 ```
 
 
+## Read and save raw SOI data
+
 ```{r}
 #| label: read-data
 #| output: false
 
-# variable_descriptions <- read_csv(fs::path(DINTERMEDIATE, "soi_documentation.csv"))
-variable_descriptions <- read_csv(fs::path(DINTERMEDIATE, "soi_documentation_by_year.csv"))
-agilabels <- read_csv(fs::path(DINTERMEDIATE, "agilabels.csv"))
 
 csvfiles <- dir_ls(DRAW, glob="*.csv")
 
@@ -69,7 +68,53 @@ csvdata2 <- csvdata |>
   mutate(year=as.integer(year)) |> 
   pivot_longer(-c(stabbr, year, agistub),
                names_to = "vname") |> 
-  filter(!is.na(value)) |> 
+  filter(!is.na(value))
+saveRDS(csvdata2, fs::path(DINTERMEDIATE, "soilong_raw.rds"))
+
+```
+
+## Enhance the raw data with derived variables
+
+
+```{r}
+#| label: add-18400
+#| output: false
+
+soilong_raw <- readRDS(fs::path(DINTERMEDIATE, "soilong_raw.rds"))
+glimpse(soilong_raw)
+
+# investigate the data to make sure correct
+check <- soilong_raw |> 
+  filter(str_sub(vname, 2, -1) %in% c("18425", "18450"))
+
+#.. 18400 State and local income or sales tax (estimated)
+est18400 <- soilong_raw |> 
+  filter(str_sub(vname, 2, -1) %in% c("18425", "18450")) |> 
+  mutate(vname=paste0(str_sub(vname, 1, 1), "18400")) |> 
+  summarise(value=sum(value),
+            .by=c(stabbr, agistub, year, vname))
+glimpse(est18400)
+skim(est18400)
+
+glimpse(soilong_raw)
+
+soilong1 <- bind_rows(soilong_raw,
+                      est18400)
+
+```
+
+
+## Add labels and write final long file
+
+```{r}
+#| label: soilong-final
+#| output: false
+
+# variable_descriptions <- read_csv(fs::path(DINTERMEDIATE, "soi_documentation.csv"))
+variable_descriptions <- read_csv(fs::path(DINTERMEDIATE, "soi_documentation_by_year.csv"))
+agilabels <- read_csv(fs::path(DINTERMEDIATE, "agilabels.csv"))
+
+soilong <- soilong1 |> 
   left_join(variable_descriptions,
             by = join_by(vname, year)) |> 
   left_join(agilabels, by = join_by(agistub)) |> 
@@ -77,16 +122,50 @@ csvdata2 <- csvdata |>
   select(stabbr, vname, basevname, vtype, agistub, agilo, agihi, agilabel, year, value, udescription, description) |> 
   arrange(stabbr, vname, basevname, vtype, agistub, year)
 
-skim(csvdata2)
-glimpse(csvdata2)
-count(csvdata2, vtype)
-csvdata2 |> filter(value==max(value))
-csvdata2 |> filter(value==min(value))
+skim(soilong)
+check <- count(soilong, basevname, vtype, vname, udescription)
 
-saveRDS(csvdata2, fs::path(DINTERMEDIATE, "soilong.rds"))
+saveRDS(soilong, fs::path(DINTERMEDIATE, "soilong.rds"))
+
+```
+
+
+## Explore the data
+
+```{r}
+#| label: explore
+#| output: false
+#| eval: false
+
+soilong <- readRDS(fs::path(DINTERMEDIATE, "soilong.rds"))
+glimpse(soilong)
+
+
+# data checks
+
+soilong |>
+  filter(is.na(vtype)) |>
+  count(vname) # should be zero recs
+
+soilong |>
+  filter(is.na(vtype)) |> 
+  skim() 
+
+# n17000 had been one of the all-missing values variables in some years
+# we have since dropped all missing values
+variable_descriptions |> 
+  filter(vname=="n17000") # Number of returns with Total medical and dental expense deduction
+
+soilong |> 
+  filter(stabbr=="NY", vname %in% c("n17000", "a17000"), agistub==0) |> 
+  select(stabbr, agistub, vname, vtype, year, value, udescription) |> 
+  arrange(vtype, year)
+
 
 
 ```
+
+
 
 ```{r}
 #| label: info-for-targets
@@ -115,54 +194,3 @@ saveRDS(csvdata2, fs::path(DINTERMEDIATE, "soilong.rds"))
 # number of tax units if count>0
 
 ```
-
-
-Explore the data
-
-```{r}
-#| label: explore
-#| output: false
-#| eval: false
-
-soilong <- readRDS(fs::path(DINTERMEDIATE, "soilong.rds"))
-
-# data checks
-
-soilong |>
-  filter(is.na(vtype)) |>
-  count(vname)
-
-soilong |>
-  filter(is.na(vtype)) |> 
-  skim()
-
-# n17000 had been one of the all-missing values variables in some years
-# we have since dropped all missing values
-variable_descriptions |> 
-  filter(vname=="n17000") # Number of returns with Total medical and dental expense deduction
-
-ns(csvdata)
-csvdata |> 
-  filter(STATE=="NY", AGI_STUB==0) |> 
-  select(STATE, AGI_STUB, year, N1, N17000, A17000)
-
-#   STATE AGI_STUB year        N1 N17000  A17000
-#   <chr>    <dbl> <chr>    <dbl>  <dbl>   <dbl>
-# 1 NY           0 2015   9614610     NA      NA
-# 2 NY           0 2016   9589410 458840 4776918
-# 3 NY           0 2017   9694910 494520 5124475
-# 4 NY           0 2018   9742580 235020 4029879
-# 5 NY           0 2019   9760870 221060 3953827
-# 6 NY           0 2020  10159910 200990 3753634
-# 7 NY           0 2021   9813320 187220 3702585
-
-soilong |> 
-  filter(stabbr=="NY", vname %in% c("n17000", "a17000"), agistub==0) |> 
-  select(stabbr, agistub, vname, vtype, year, value, udescription) |> 
-  arrange(vtype, year)
-
-
-
-```
-
-
