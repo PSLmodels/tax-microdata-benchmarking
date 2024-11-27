@@ -21,7 +21,7 @@ source(here::here("R", "functions.R"))
 
 ```
 
-## Get Congressional District population
+## Get data from Census Bureau and save
 
 The quarto chunk `state-pop-download-save` will, if a user sets the chunk `option `eval: true`, download and save state population data for 2021 from the Census Bureau's Population Estimates Program, via `tidycensus`.
 
