@@ -80,8 +80,11 @@ soi2 |>
 
 soi2021 <- soi2 |> 
   filter(year==2021, stabbr != "OA") |> # to conform to pop data
-  select(vname, count, scope, agilo, agihi, fstatus, target=value,
+  arrange(stabbr, vname, scope, fstatus, count, agistub) |> 
+  mutate(sort = row_number() + 1, .by=stabbr) |> 
+  select(sort, vname, count, scope, agilo, agihi, fstatus, target=value,
          stabbr, basevname, description=udescription, agistub, agilabel)
+  
 
 soi2021 |> filter(stabbr=="NY")
 
@@ -92,6 +95,7 @@ count(soi2021, stabbr) # 54
 
 ```{r}
 #| label: prepare-population
+#| output: false
 
 count(soi2021, stabbr) # 54: 50 states, DC, PR, OA, US
 count(pop2021, stabbr) # 53: 50 states, DC, PR, US
@@ -113,12 +117,34 @@ poprecs <- pop2021 |>
          count = 0,
          scope = 0, 
          fstatus = 0,
-         target = pop2021) |> 
+         target = pop2021,
+         sort = 1) |> 
   left_join(agilabels,
             by = join_by(agistub)) |> 
-  select(all_of(names(soi2021)))
+  select(all_of(names(soi2021))) |> 
+  arrange(stabbr)
 
 ```
+
+
+```{r}
+#| label: combine-pop-and-soi-data
+
+count(soi2021, stabbr) # 53
+count(poprecs, stabbr) # 53
+skim(soi2021)
+skim(poprecs)
+
+basetargets <- bind_rows(poprecs, soi2021) |> 
+  arrange(stabbr, sort)
+
+check <- basetargets |> 
+  filter(stabbr=="NY")
+
+write_csv(basetargets, fs::path(DINTERMEDIATE, "basetargets.csv"))
+
+```
+
 
 
 
