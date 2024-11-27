@@ -8,7 +8,7 @@ setup(
     install_requires=[
         "policyengine_us==1.55.0",
         "tables",  # required by policyengine_us
-        "taxcalc>=4.3.3",
+        "taxcalc>=4.3.3",  # TODO: change to 4.3.4 as soon as available
         "scikit-learn",
         "torch",
         "tensorboard",

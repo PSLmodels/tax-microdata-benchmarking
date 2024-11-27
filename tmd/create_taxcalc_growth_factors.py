@@ -11,9 +11,14 @@ FIRST_YEAR = 2021
 LAST_YEAR = 2074
 
 AWAGE_INDEX = 6
+ASCHCI_INDEX = 7
+ASCHEI_INDEX = 9
+AINTS_INDEX = 11
 ADIVS_INDEX = 12
 ACGNS_INDEX = 13
 ASOCSEC_INDEX = 14
+AUCOMP_INDEX = 15
+
 
 PGFFILE = STORAGE_FOLDER / "input" / "puf_growfactors.csv"
 TGFFILE = STORAGE_FOLDER / "output" / "tmd_growfactors.csv"
@@ -37,12 +42,15 @@ def create_factors_file():
 
     # adjust some factors in order to calibrate tax revenue after FIRST_YEAR
     # ... adjust 2022 factors to hit 2023 tax revenue targets:
-    # ...... adjustments to hit 2023 PTAX target of 1591.3
-    gfdf.iat[2022 - FIRST_YEAR, AWAGE_INDEX] += 0.099
-    # ...... adjustments to hit 2023 ITAX target of 2505.3
-    gfdf.iat[2022 - FIRST_YEAR, ADIVS_INDEX] += -0.039
-    gfdf.iat[2022 - FIRST_YEAR, ACGNS_INDEX] += -0.039
-    gfdf.iat[2022 - FIRST_YEAR, ASOCSEC_INDEX] += -0.192
+    # ...... adjustments to hit 2023 CBO PTAX target of 1580.0
+    gfdf.iat[2022 - FIRST_YEAR, AWAGE_INDEX] += 0.16
+    # ...... adjustments to hit 2023 CBO ITAX target of 2512.3
+    gfdf.iat[2022 - FIRST_YEAR, ASOCSEC_INDEX] += -0.19
+    gfdf.iat[2022 - FIRST_YEAR, ASCHCI_INDEX] += -0.30
+    gfdf.iat[2022 - FIRST_YEAR, ASCHEI_INDEX] += -0.30
+    gfdf.iat[2022 - FIRST_YEAR, ADIVS_INDEX] += -0.04
+    gfdf.iat[2022 - FIRST_YEAR, ACGNS_INDEX] += -0.04
+    gfdf.iat[2022 - FIRST_YEAR, AUCOMP_INDEX] += -0.50
 
     # add rows thru LAST_YEAR by copying values for last year in PUF file
     if LAST_YEAR > last_puf_year:
