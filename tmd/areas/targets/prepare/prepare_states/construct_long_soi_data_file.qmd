@@ -48,7 +48,8 @@ write_csv(agilabels, fs::path(DINTERMEDIATE, "agilabels.csv"))
 #| label: read-data
 #| output: false
 
-csvfiles <- dir_ls(DRAW, glob="*.csv")
+soi_csvfiles <- dir_ls(DRAW, glob="*.csv") |> 
+  str_subset("statepop", negate = TRUE)
 
 get_csvdata <- function(csvfile){
   year <- paste0("20", str_sub(fs::path_file(csvfile), 1, 2))
@@ -57,7 +58,7 @@ get_csvdata <- function(csvfile){
     mutate(year=year)
 }
 
-csvdata <- purrr::map(csvfiles, get_csvdata) |> 
+csvdata <- purrr::map(soi_csvfiles, get_csvdata) |> 
   list_rbind()
 count(csvdata, year)
 
