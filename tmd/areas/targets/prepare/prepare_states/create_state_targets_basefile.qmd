@@ -14,3 +14,110 @@ source(here::here("R", "constants.R"))
 source(here::here("R", "functions.R"))
 
 ```
+
+# get data
+
+```{r}
+#| label: get-data
+# variable_descriptions <- read_csv(fs::path(DINTERMEDIATE, "soi_documentation_by_year.csv"))
+# variable_udescriptions <- read_csv(fs::path(DINTERMEDIATE, "soi_documentation.csv"))
+# agilabels <- read_csv(fs::path(DINTERMEDIATE, "agilabels.csv"))
+soilong <- readRDS(fs::path(DINTERMEDIATE, "soilong.rds"))
+glimpse(soilong)
+
+```
+
+
+```{r}
+#| label: clean-soi-all-years-get2021
+#| output: false
+
+# c("mars1", "mars2", "mars4")
+# varname,count,scope,agilo,agihi,fstatus,target
+allcounts <- c("n1", "n2", "mars1", "mars2", "mars4")
+
+soi2 <- soilong |> 
+  mutate(
+    scope = 1L,
+    
+    count = case_when(
+      vtype == "amount" ~ 0,
+      vtype == "count" & 
+        vname %in% allcounts ~ 1, # count for any value for these vars
+      vtype == "count" & 
+        !vname %in% allcounts ~ 2, # counts when var is nonzero
+      .default = -9e9),
+    count = as.integer(count),
+    
+    fstatus = case_when(
+      str_starts(vname, "mars") ~ str_sub(vname, -1),
+      .default = "0"),
+    fstatus = as.integer(fstatus))
+
+count(soi2, scope)
+count(soi2, vtype, count)
+count(soi2, fstatus)
+
+soi3 <- soi2 |> 
+  select(vname, count, scope, agilo, agihi, fstatus, target=value,
+         year, stabbr, basevname, udescription, agistub, agilabel)
+
+soi3 |> 
+  filter(stabbr=="NY", year==2021)
+
+soi2021 <- soi3 |> 
+  filter(year==2021) |> 
+  select(-year)
+
+```
+
+```{r}
+#| label: prepare-population
+
+```
+
+
+
+```{r}
+#| label: notes
+
+# documentation for the targets.csv data file
+
+# sample file excerpt
+# varname,count,scope,agilo,agihi,fstatus,target
+# XTOT,       0,    0,-9e99, 9e99,      0,  33e6
+# e00300,     0,    1,-9e99, 9e99,      0,  20e9
+# e00900,     0,    1,-9e99, 9e99,      0,  30e9
+# e00200,     0,    1,-9e99, 9e99,      0,1000e9
+# e02000,     0,    1,-9e99, 9e99,      0,  30e9
+# e02400,     0,    1,-9e99, 9e99,      0,  60e9
+
+# varname: any Tax-Calculator input variable name plus any Tax-Calculator calculated variable in the list of cached variables in the tmd/storage/__init__.py file
+# count: integer in [0,4] range:
+# count==0 implies dollar total of varname is tabulated
+# count==1 implies number of tax units with any value of varname is tabulated
+# count==2 implies number of tax units with a nonzero value of varname is tabulated
+# count==3 implies number of tax units with a positive value of varname is tabulated
+# count==4 implies number of tax units with a negative value of varname is tabulated
+
+# scope: integer in [0,2] range:
+# scope==0 implies all tax units are tabulated
+# scope==1 implies only PUF-derived filing units are tabulated
+# scope==2 implies only CPS-derived filing units are tabulated
+
+# agilo: float representing lower bound of the AGI range (which is included in the range) that is tabulated.
+# agihi: float representing upper bound of the AGI range (which is excluded from the range) that is tabulated.
+
+# fstatus: integer in [0,5] range:
+# fstatus=0 implies all filing statuses are tabulated
+# other fstatus values imply just the tax units with the Tax-Calculator MARS variable equal to fstatus are included in the tabulation
+
+# target: target amount:
+# dollars if count==0
+# number of tax units if count>0
+
+
+
+
+```
+
