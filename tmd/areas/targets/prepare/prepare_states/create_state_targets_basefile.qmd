@@ -8,6 +8,7 @@ editor_options:
 
 ```{r}
 #| label: setup
+#| output: false
 
 suppressPackageStartupMessages(source(here::here("R", "libraries.R")))
 source(here::here("R", "constants.R"))
@@ -19,6 +20,8 @@ source(here::here("R", "functions.R"))
 
 ```{r}
 #| label: get-data
+#| output: false
+
 # variable_descriptions <- read_csv(fs::path(DINTERMEDIATE, "soi_documentation_by_year.csv"))
 # variable_udescriptions <- read_csv(fs::path(DINTERMEDIATE, "soi_documentation.csv"))
 agilabels <- read_csv(fs::path(DINTERMEDIATE, "agilabels.csv"))
@@ -65,6 +68,7 @@ count(soi2, fstatus)
 
 ```{r}
 #| label: winnow-down-soi2021
+#| output: false
 
 count(soi2, stabbr) # 54: 50 states, DC, OA, PR, US
 
@@ -129,6 +133,7 @@ poprecs <- pop2021 |>
 
 ```{r}
 #| label: combine-pop-and-soi-data
+#| output: false
 
 count(soi2021, stabbr) # 53
 count(poprecs, stabbr) # 53
@@ -146,10 +151,9 @@ write_csv(basetargets, fs::path(DINTERMEDIATE, "basetargets.csv"))
 ```
 
 
-
-
 ```{r}
 #| label: notes
+#| output: false
 
 # documentation for the targets.csv data file
 
