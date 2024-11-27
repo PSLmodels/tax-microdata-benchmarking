@@ -23,7 +23,7 @@ source(here::here("R", "functions.R"))
 
 agilabels <- read_delim(
 "agistub; agilo; agihi; agilabel
-0; -9E+99; 0; Total
+0; -9E+99; 9e99; Total
 1; -9E+99; 1; Under $1
 2; 1; 10000; $1 under $10,000
 3; 10000; 25000; $10,000 under $25,000
