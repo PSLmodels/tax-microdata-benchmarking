@@ -16,7 +16,7 @@ source(here::here("R", "functions.R"))
 ```
 
 ```{r}
-#| label: get-tmd-data
+#| label: get-data
 #| output: false
 
 agilabels <- read_csv(fs::path(DINTERMEDIATE, "agilabels.csv"))
@@ -25,30 +25,7 @@ fpath <-  fs::path(TMDDATA, "cached_allvars.csv")
 tmd2021 <- vroom(fpath)
 ns(tmd2021)
 
-```
-
-```{r}
-#| label: get-soi-combine-18425-and-18450
-#| output: false
-
 soilong <- readRDS(fs::path(DINTERMEDIATE, "soilong.rds"))
-
-est18400 <- soilong |> 
-  filter(basevname %in% c("18425", "18450")) |> 
-  summarise(value=sum(value), 
-            .by=c(stabbr, vtype, agistub, agilo, agihi, agilabel, year)) |> 
-  mutate(basevname="18400", 
-         vname=ifelse(vtype=="amount", 
-                      paste0("a", basevname),
-                      paste0("n", basevname)),
-         description="State and local income or sales taxes (estimated)",
-         udescription=description)
-summary(est18400)
-
-soilong <- bind_rows(soilong, est18400) |>
-  arrange(basevname)
-
-# check <- count(soilong, basevname, vname)
 
 ```
 
