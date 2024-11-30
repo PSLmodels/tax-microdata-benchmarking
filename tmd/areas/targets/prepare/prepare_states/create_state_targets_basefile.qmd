@@ -16,7 +16,7 @@ source(here::here("R", "functions.R"))
 
 ```
 
-# get data
+## get data
 
 ```{r}
 #| label: get-data
@@ -130,9 +130,10 @@ poprecs <- pop2021 |>
 
 ```
 
+## Combine population and SOI data and save
 
 ```{r}
-#| label: combine-pop-and-soi-data
+#| label: combine-pop-and-soi-data-and-save
 #| output: false
 
 count(soi2021, stabbr) # 53
