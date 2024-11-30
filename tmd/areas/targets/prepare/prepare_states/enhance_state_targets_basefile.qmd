@@ -31,7 +31,7 @@ Define which SOI variables will be used to share which tmd variables.
 #| output: false
 
 mappings <- read_csv(
-"tmdvar, soibasevname
+"tmdvar, basesoivname
 e18400, 18400
 e18500, 18500
 ", col_types="cc")
@@ -69,7 +69,7 @@ glimpse(basetargets)
 
 ```
 
-## SALT deductions
+## Variables shared to states
 
 ```{r}
 #| label: get-tmdsums
@@ -109,31 +109,29 @@ tmdsums
 
 
 ```{r}
-#| label: get-salt-shares
+#| label: get-variable-shares
 
 # note: by using the us record we include the (trivial) OA amounts, which 
 #   seems right - implicitly they are in the tmd data
-vname_shares <- basetargets |> 
-  filter(basevname %in% mappings$soibasevname) |> 
-  rename(soibasevname=basevname) |> 
+soivname_shares <- basetargets |> 
+  filter(basesoivname %in% mappings$basesoivname) |> 
   mutate(soi_ussum=target[stabbr=="US"],
          soi_share=ifelse(soi_ussum==0, 0, target / soi_ussum),
-            .by=c(vname, count, scope, fstatus, agistub))
+            .by=c(basesoivname, count, scope, fstatus, agistub))
 
-check <- vname_shares |> filter(stabbr=="US")
-check <- vname_shares |> filter(stabbr=="NY")
+check <- soivname_shares |> filter(stabbr=="US")
+check <- soivname_shares |> filter(stabbr=="NY")
 
-vname_targets <- vname_shares |> 
+soivname_targets <- soivname_shares |> 
   left_join(tmdsums |> 
-              select(tmdvar, soibasevname, agistub, scope, fstatus, count, tmdsum),
-              by = join_by(soibasevname, scope, fstatus, count, agistub)) |> 
+              select(tmdvar, basesoivname, agistub, scope, fstatus, count, tmdsum),
+              by = join_by(basesoivname, scope, fstatus, count, agistub)) |> 
   mutate(target=tmdsum * soi_share,
-         basevname=paste0(str_sub(tmdvar, 2, -1), "_", soibasevname, "shared"),
-         vname=case_when())
+         basetmdvname=paste0(str_sub(tmdvar, 2, -1), "_shared_by_soi", basesoivname))
 
-check <- vname_targets |> filter(stabbr=="NY")
+check <- soivname_targets |> filter(stabbr=="NY")
 
-count(vname_targets, tmdvar, soibasevname, mapname)
+count(soivname_targets, tmdvar, basesoivname, basetmdvname)
 
 
 ```
