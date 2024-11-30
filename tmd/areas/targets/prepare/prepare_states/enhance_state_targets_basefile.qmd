@@ -133,6 +133,14 @@ check <- soivname_targets |> filter(stabbr=="NY")
 
 count(soivname_targets, tmdvar, basesoivname, basetmdvname)
 
+write_csv(soivname_targets, fs::path(DINTERMEDIATE, "additional_targets.csv"))
 
 ```
+
+## Stack basefile targets and additional targets
+
+```{r}
+
+```
+
 
