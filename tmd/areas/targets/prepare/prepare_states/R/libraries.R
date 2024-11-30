@@ -25,6 +25,8 @@ library(tidycensus)
 library(tigris)
 options(tigris_use_cache = TRUE)
 
+library(janitor)
+
 
 # possible libraries ------------------------------------------------------
 
