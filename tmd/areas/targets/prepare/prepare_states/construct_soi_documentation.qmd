@@ -211,7 +211,7 @@ write_csv(cleaned_descriptions, fs::path(DINTERMEDIATE, "soi_documentation_by_ye
 ```
 
 
-## Add variables we may create that are not in the SOI documentation
+## Add variables not in the SOI documentation that we may create
 
 ```{r}
 #| label: new-variables
