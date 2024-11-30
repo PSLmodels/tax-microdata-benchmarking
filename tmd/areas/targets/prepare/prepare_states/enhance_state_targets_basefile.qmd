@@ -4,7 +4,14 @@ editor_options:
   chunk_output_type: console
 ---
 
-# Create state targets basefile
+# Enhance state targets basefile
+
+The targets basefile created in a prior .qmd file has a population target for each state and many SOI-based targets. However, for some target concepts SOI data are either not available or are inappropriate. 
+
+For example, for SALT deductions, for variables ending in 18400 (state and local income or sales tax deduction) or 18500 (real estate taxes paid) the SOI data for 2021 represent the amount available to be deducted by 2021 itemizers (at 2021 levels, under 2021), before the SALT cap. Because the TCJA raised the standard deduction sharply, there are far fewer itemizers in 2021 than pre-TCJA. We want our targets to be for available deductions including nonitemizers, in a manner consistent with the way the data are measured in our TMD variables e18400 and e18500.
+
+We construct alternative SALT targets below.
+
 
 ```{r}
 #| label: setup
