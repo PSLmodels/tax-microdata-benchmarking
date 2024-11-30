@@ -6,6 +6,16 @@ editor_options:
 
 # Create state targets basefile
 
+Create and save as .csv a state targets basefile ("basetargets.csv") that has most of what we will need to write \[xx\]\_targets.csv files. It is a data frame with population and SOI target information for each state:
+
+-   an initial "XTOT" record with the total population for the state
+-   records for data from SOI Historical Table 2 with the following information:
+    -   `vname` -- the SOI variable name (later, when we write target files we will map the SOI variable name to the TMD variable name and we will put the TMD variable name on the \[xx\]\_targets.csv file)
+    -   `count`, `scope`, `agilo`, `agihi`, `fstatus`, and `target` -- variables with the meanings noted in the [main documentation](https://github.com/PSLmodels/tax-microdata-benchmarking/tree/master/tmd/areas/targets)
+    -   certain other useful identifying information
+
+The information it will be missing at this point is: (1) any targets we need to estimate in other ways in cases where SOI targets are inappropriate or not available for a concept we care about, and (2) the TMD variable names. We hold off on adding TMD variable names until the last step because there are some challenges in mapping SOI concepts to TMD concepts. We want to have the targets right and then, finally, deal with the mapping.
+
 ```{r}
 #| label: setup
 #| output: false
@@ -31,7 +41,6 @@ glimpse(soilong)
 pop2021 <- read_csv(fs::path(DRAW, "statepop_2021.csv"))
 
 ```
-
 
 ```{r}
 #| label: clean-soi-all-years
@@ -65,7 +74,6 @@ count(soi2, fstatus)
 
 ```
 
-
 ```{r}
 #| label: winnow-down-soi2021
 #| output: false
@@ -95,7 +103,6 @@ soi2021 |> filter(stabbr=="NY")
 count(soi2021, stabbr) # 54
 
 ```
-
 
 ```{r}
 #| label: prepare-population
@@ -149,8 +156,11 @@ check <- basetargets |>
 
 write_csv(basetargets, fs::path(DINTERMEDIATE, "basetargets.csv"))
 
+basetargets <- read_csv(fs::path(DINTERMEDIATE, "basetargets.csv"))
+
 ```
 
+## Additional notes
 
 ```{r}
 #| label: notes
@@ -195,4 +205,3 @@ write_csv(basetargets, fs::path(DINTERMEDIATE, "basetargets.csv"))
 
 
 ```
-
