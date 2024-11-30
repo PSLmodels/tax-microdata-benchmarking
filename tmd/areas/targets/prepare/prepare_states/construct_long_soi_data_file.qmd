@@ -67,7 +67,7 @@ csvdata2 <- csvdata |>
   rename(stabbr=state, agistub=agi_stub) |> 
   mutate(year=as.integer(year)) |> 
   pivot_longer(-c(stabbr, year, agistub),
-               names_to = "vname") |> 
+               names_to = "soivname") |> 
   filter(!is.na(value))
 saveRDS(csvdata2, fs::path(DINTERMEDIATE, "soilong_raw.rds"))
 
@@ -85,14 +85,14 @@ glimpse(soilong_raw)
 
 # investigate the data to make sure correct
 check <- soilong_raw |> 
-  filter(str_sub(vname, 2, -1) %in% c("18425", "18450"))
+  filter(str_sub(soivname, 2, -1) %in% c("18425", "18450"))
 
 #.. 18400 State and local income or sales tax (estimated)
 est18400 <- soilong_raw |> 
-  filter(str_sub(vname, 2, -1) %in% c("18425", "18450")) |> 
-  mutate(vname=paste0(str_sub(vname, 1, 1), "18400")) |> 
+  filter(str_sub(soivname, 2, -1) %in% c("18425", "18450")) |> 
+  mutate(soivname=paste0(str_sub(soivname, 1, 1), "18400")) |> 
   summarise(value=sum(value),
-            .by=c(stabbr, agistub, year, vname))
+            .by=c(stabbr, agistub, year, soivname))
 glimpse(est18400)
 skim(est18400)
 
@@ -116,14 +116,14 @@ agilabels <- read_csv(fs::path(DINTERMEDIATE, "agilabels.csv"))
 
 soilong <- soilong1 |> 
   left_join(variable_descriptions,
-            by = join_by(vname, year)) |> 
+            by = join_by(soivname, year)) |> 
   left_join(agilabels, by = join_by(agistub)) |> 
   mutate(value=ifelse(vtype=="amount", value * 1000, value)) |> 
-  select(stabbr, vname, basevname, vtype, agistub, agilo, agihi, agilabel, year, value, udescription, description) |> 
-  arrange(stabbr, vname, basevname, vtype, agistub, year)
+  select(stabbr, soivname, basesoivname, vtype, agistub, agilo, agihi, agilabel, year, value, udescription, description) |> 
+  arrange(stabbr, soivname, basesoivname, vtype, agistub, year)
 
 skim(soilong)
-check <- count(soilong, basevname, vtype, vname, udescription)
+check <- count(soilong, basesoivname, vtype, soivname, udescription)
 
 saveRDS(soilong, fs::path(DINTERMEDIATE, "soilong.rds"))
 
@@ -145,7 +145,7 @@ count(soilong, stabbr) # 54: 50 states, DC, PR, OA, US
 
 soilong |>
   filter(is.na(vtype)) |>
-  count(vname) # should be zero recs
+  count(soivname) # should be zero recs
 
 soilong |>
   filter(is.na(vtype)) |> 
@@ -154,14 +154,12 @@ soilong |>
 # n17000 had been one of the all-missing values variables in some years
 # we have since dropped all missing values
 variable_descriptions |> 
-  filter(vname=="n17000") # Number of returns with Total medical and dental expense deduction
+  filter(soivname=="n17000") # Number of returns with Total medical and dental expense deduction
 
 soilong |> 
-  filter(stabbr=="NY", vname %in% c("n17000", "a17000"), agistub==0) |> 
-  select(stabbr, agistub, vname, vtype, year, value, udescription) |> 
+  filter(stabbr=="NY", soivname %in% c("n17000", "a17000"), agistub==0) |> 
+  select(stabbr, agistub, soivname, vtype, year, value, udescription) |> 
   arrange(vtype, year)
-
-
 
 ```
 
