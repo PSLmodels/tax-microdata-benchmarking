@@ -23,3 +23,118 @@ source(here::here("R", "functions.R"))
 
 ```
 
+
+Define which SOI variables will be used to share which tmd variables.
+
+```{r}
+#| label: construct-mappings
+#| output: false
+
+mappings <- read_csv(
+"tmdvar, soibasevname
+e18400, 18400
+e18500, 18500
+", col_types="cc")
+
+mappings
+
+```
+
+
+
+## Get data
+
+```{r}
+#| label: get-data
+#| output: false
+
+agilabels <- read_csv(fs::path(DINTERMEDIATE, "agilabels.csv"))
+agilabels
+STAGICUTS <- c(agilabels$agilo, agilabels$agihi) |> unique() |> sort()
+# agistub=cut(c00100, STAGICUTS, right = FALSE, ordered_result = TRUE) |> as.integer()
+
+fpath <-  fs::path(TMDDATA, "cached_allvars.csv")
+tmd2021 <- vroom(fpath)
+ns(tmd2021)
+
+tmd2021 <- tmd2021 |> 
+  mutate(agistublab=cut(c00100, STAGICUTS, right = FALSE, ordered_result = TRUE),
+         agistub=agistublab |> as.integer()) |> 
+  left_join(agilabels, by = join_by(agistub))
+# has more agistub info than we need but makes it easy to be sure we have the right stubs
+count(tmd2021, agistub, agistublab, agilo, agihi, agilabel)
+
+basetargets <- read_csv(fs::path(DINTERMEDIATE, "basetargets.csv"))
+glimpse(basetargets)
+
+```
+
+## SALT deductions
+
+```{r}
+#| label: get-tmdsums
+
+tmdsums1 <- tmd2021 |> 
+  filter(data_source==1) |> 
+  select(s006, agistub, agilabel, all_of(mappings$tmdvar)) |> 
+  pivot_longer(-c(s006, agistub, agilabel),
+               names_to = "tmdvar") |> 
+  summarize(nzcount=sum(s006 * (value !=0)),
+            amount=sum(s006 * value),
+            .by=c(tmdvar, agistub, agilabel)) |> 
+  arrange(tmdvar, agistub)
+
+tmdallincomes <- tmdsums1 |> 
+  summarise(nzcount=sum(nzcount),
+            amount=sum(amount),
+            .by=c(tmdvar)) |> 
+  mutate(agistub=0, agilabel="Total")
+
+tmdsums <- bind_rows(tmdsums1,
+                     tmdallincomes) |> 
+  arrange(tmdvar, agistub) |> 
+  pivot_longer(-c(tmdvar, agistub, agilabel),
+               names_to = "vtype",
+               values_to = "tmdsum") |>
+  mutate(fstatus=0, scope=1, 
+         count=case_when(vtype=="nzcount" ~ 2,
+                         vtype=="amount" ~ 0,
+                         .default = -9e99)) |> 
+  left_join(mappings, 
+            by = join_by(tmdvar)) |> 
+  arrange(tmdvar, scope, count, fstatus)
+tmdsums
+
+```
+
+
+```{r}
+#| label: get-salt-shares
+
+# note: by using the us record we include the (trivial) OA amounts, which 
+#   seems right - implicitly they are in the tmd data
+vname_shares <- basetargets |> 
+  filter(basevname %in% mappings$soibasevname) |> 
+  rename(soibasevname=basevname) |> 
+  mutate(soi_ussum=target[stabbr=="US"],
+         soi_share=ifelse(soi_ussum==0, 0, target / soi_ussum),
+            .by=c(vname, count, scope, fstatus, agistub))
+
+check <- vname_shares |> filter(stabbr=="US")
+check <- vname_shares |> filter(stabbr=="NY")
+
+vname_targets <- vname_shares |> 
+  left_join(tmdsums |> 
+              select(tmdvar, soibasevname, agistub, scope, fstatus, count, tmdsum),
+              by = join_by(soibasevname, scope, fstatus, count, agistub)) |> 
+  mutate(target=tmdsum * soi_share,
+         basevname=paste0(str_sub(tmdvar, 2, -1), "_", soibasevname, "shared"),
+         vname=case_when())
+
+check <- vname_targets |> filter(stabbr=="NY")
+
+count(vname_targets, tmdvar, soibasevname, mapname)
+
+
+```
+
