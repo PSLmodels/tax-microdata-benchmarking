@@ -39,12 +39,12 @@ fpath <- fs::path(DRAW, fname)
 get_year <- function(year){
   df1 <- readxl::read_xlsx(fpath, sheet = as.character(year), col_types = "text")
   df2 <- df1 |> 
-    select(vname=1, description=2, reference=3, type=4) |> 
+    select(soivname=1, description=2, reference=3, type=4) |> 
     filter(if_any(everything(), ~!is.na(.))) |> 
-    # after verifying that AGI_STUB is the only variable with NA in vname
+    # after verifying that AGI_STUB is the only variable with NA in soivname
     # fill down and then concatenate the reference column
-    fill(vname, description, type, .direction="down") |> 
-    mutate(reference = paste(reference, collapse = "\n"), .by=vname) |> 
+    fill(soivname, description, type, .direction="down") |> 
+    mutate(reference = paste(reference, collapse = "\n"), .by=soivname) |> 
     distinct() |> 
     # for now, make mistaken references NA
     mutate(reference=ifelse(!is.na(as.numeric(reference)), NA_character_, reference),
@@ -65,6 +65,7 @@ get_year <- function(year){
 stacked_docs <- purrr::map(2015:2021, get_year) |> 
   list_rbind()
 
+glimpse(stacked_docs)
 count(stacked_docs, year)
 
 
@@ -110,18 +111,18 @@ str_distance <- function(strings) {
 # identify instances where the descriptions are highly dissimilar
 
 distances <- stacked_docs |> 
-  select(year, vname, description) |> 
-  arrange(vname, year) |>
+  select(year, soivname, description) |> 
+  arrange(soivname, year) |>
   # fix known error
-  mutate(vname=ifelse(vname=="CREP", "CPREP", vname)) |> 
+  mutate(soivname=ifelse(soivname=="CREP", "CPREP", soivname)) |> 
   # prepare to determine distances
   mutate(n=n(),
          nunique=length(unique(description)), 
-         .by=vname) |> 
+         .by=soivname) |> 
   mutate(cleaned=cleanit(description),
          distance=str_distance(cleaned), 
          maxdist=max(distance, na.rm=TRUE),
-         .by=vname)
+         .by=soivname)
 
 count(distances, maxdist)
 
@@ -140,7 +141,7 @@ distances |> filter(maxdist == 32) # A11070
 distances |> filter(maxdist == 37) # A11450, N11450
 
 adjusted_descriptions <- read_delim(
-"vname; adjusted
+"soivname; adjusted
 A00100; Adjusted gross income (AGI) amount
 A10971; Economic impact payment amount (pre-2021 is different)
 N10971; Number of returns with economic impact payment (pre-2021 is different)
@@ -164,35 +165,35 @@ adjusted_descriptions
 
 adjusted1 <- distances |> 
   mutate(last=last(cleaned),
-         .by=vname) |> 
+         .by=soivname) |> 
   left_join(adjusted_descriptions,
-            by = join_by(vname)) |> 
+            by = join_by(soivname)) |> 
   mutate(udescription=ifelse(!is.na(adjusted),
                              adjusted,
                              last))
 
 cleaned_descriptions <- adjusted1 |> 
-  mutate(vname=str_to_lower(vname)) |> 
-  mutate(length=nchar(vname),
+  mutate(soivname=str_to_lower(soivname)) |> 
+  mutate(length=nchar(soivname),
          vtype=case_when(
-           vname == "numdep" ~ "count",
+           soivname == "numdep" ~ "count",
            length != 6 ~ "count",
-           length == 6 & str_sub(vname, 1, 1) == "n" ~ "count",
-           length == 6 & str_sub(vname, 1, 1) == "a" ~ "amount",
+           length == 6 & str_sub(soivname, 1, 1) == "n" ~ "count",
+           length == 6 & str_sub(soivname, 1, 1) == "a" ~ "amount",
            .default = "ERROR"),
-         basevname=case_when(
-           vname == "numdep" ~ "numdep",
-           length == 6 ~ str_sub(vname, 2, 6),
-           .default = vname
+         basesoivname=case_when(
+           soivname == "numdep" ~ "numdep",
+           length == 6 ~ str_sub(soivname, 2, 6),
+           .default = soivname
   )) |> 
-  select(year, vname, basevname, vtype, description, udescription)
+  select(year, soivname, basesoivname, vtype, description, udescription)
 
 count(cleaned_descriptions, vtype)
 
 # verify no more than one description per variable per year
 glimpse(cleaned_descriptions)
 cleaned_descriptions |> 
-  summarise(n=n(), .by=c(vname, year)) |> 
+  summarise(n=n(), .by=c(soivname, year)) |> 
   filter(n > 1) # should be an empty tibble
 
 
@@ -220,13 +221,13 @@ cleaned1 <- read_csv(fs::path(DINTERMEDIATE, "soi_documentation_by_year_raw.csv"
 glimpse(cleaned1)
 
 count(cleaned1 |> 
-        filter(str_starts(basevname, "18")),
-      vname, udescription, year)
+        filter(str_starts(basesoivname, "18")),
+      soivname, udescription, year)
 
-# salt variables basevname 18400, sum of 18425 and 18450, both avail 2015-2021
+# salt variables basesoivname 18400, sum of 18425 and 18450, both avail 2015-2021
 # add documentation for n00100 agi count EVEN THOUGH it's not in the data
 newvars_base <- read_delim(
-"vname; basevname; description
+"soivname; basesoivname; description
 n18400; 18400; Number of returns with state and local income or sales tax (estimated)
 a18400; 18400; State and local income or sales tax (estimated) amount
 n00100; 00100; Number of returns with adjusted gross income (AGI)
@@ -238,15 +239,15 @@ crosses <- crossing(year=2015:2021, vtype=c("amount", "count"))
 
 newvars <- newvars_base |>
   cross_join(tibble(year=2015:2021)) |> 
-  mutate(vtype=case_when(str_sub(vname, 1, 1)=="n" ~ "count",
-                         str_sub(vname, 1, 1)=="a" ~ "amount",
+  mutate(vtype=case_when(str_sub(soivname, 1, 1)=="n" ~ "count",
+                         str_sub(soivname, 1, 1)=="a" ~ "amount",
                          .default = "ERROR"),
          udescription=description) |> 
-  select(year, vname, basevname, vtype, description, udescription)
+  select(year, soivname, basesoivname, vtype, description, udescription)
 newvars
 
 cleaned_new <- bind_rows(cleaned1, newvars) |> 
-  arrange(basevname, vtype, year)
+  arrange(basesoivname, vtype, year)
 
 ```
 
@@ -260,18 +261,17 @@ cleaned_new <- bind_rows(cleaned1, newvars) |>
 write_csv(cleaned_new, fs::path(DINTERMEDIATE, "soi_documentation_by_year.csv"))
 
 uniform_descriptions <- cleaned_new |> 
-  select(vname, basevname, vtype, udescription) |> 
+  select(soivname, basesoivname, vtype, udescription) |> 
   distinct()
 
 # verify only one description per variable
-anyDuplicated(uniform_descriptions$vname)
+anyDuplicated(uniform_descriptions$soivname)
 
 write_csv(uniform_descriptions, fs::path(DINTERMEDIATE, "soi_documentation.csv"))
 
 uniform_descriptions <- read_csv(fs::path(DINTERMEDIATE, "soi_documentation.csv"))
 
-check <- count(uniform_descriptions, basevname, vtype, vname, udescription)
-
+check <- count(uniform_descriptions, basesoivname, vtype, soivname, udescription)
 
 ```
 
