@@ -6,7 +6,7 @@ editor_options:
 
 # Create state targets basefile
 
-Create and save as .csv a state targets basefile ("basetargets.csv") that has most of what we will need to write \[xx\]\_targets.csv files. It is a data frame with population and SOI target information for each state:
+Create and save as .csv a state targets basefile ("base_targets.csv") that has most of what we will need to write \[xx\]\_targets.csv files. It is a data frame with population and SOI target information for each state:
 
 -   an initial "XTOT" record with the total population for the state
 -   records for data from SOI Historical Table 2 with the following information:
@@ -146,15 +146,15 @@ count(poprecs, stabbr) # 53
 skim(soi2021)
 skim(poprecs)
 
-basetargets <- bind_rows(poprecs, soi2021) |> 
+base_targets <- bind_rows(poprecs, soi2021) |> 
   arrange(stabbr, scope, fstatus, basesoivname, count, agistub)
 
-check <- basetargets |> 
+check <- base_targets |> 
   filter(stabbr=="NY")
 
-write_csv(basetargets, fs::path(DINTERMEDIATE, "basetargets.csv"))
+write_csv(base_targets, fs::path(DINTERMEDIATE, "base_targets.csv"))
 
-basetargets <- read_csv(fs::path(DINTERMEDIATE, "basetargets.csv"))
+base_targets <- read_csv(fs::path(DINTERMEDIATE, "base_targets.csv"))
 
 ```
 

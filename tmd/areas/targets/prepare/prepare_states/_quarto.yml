@@ -46,10 +46,11 @@ book:
     - part: "Analysis of SALT variables and other issues"
       chapters:
         - SALT_analysis.qmd
-    - part: "Create basefile for state targets"
+    - part: "Create data from which to extract state target files"
       chapters: 
         - create_state_targets_basefile.qmd
-        - enhance_state_targets_basefile.qmd
+        - create_additional_state_targets.qmd
+        - combine_base_and_additional_targets.qmd
         # old files maybe use as base for new work
         # - cd_create_variable_mapping.qmd
         # - cd_compare_us_totals_tmd_vs_irs_published.qmd
