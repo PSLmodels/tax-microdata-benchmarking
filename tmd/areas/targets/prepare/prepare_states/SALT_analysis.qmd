@@ -16,7 +16,7 @@ source(here::here("R", "functions.R"))
 ```
 
 ```{r}
-#| label: get-tmd-data
+#| label: get-data
 #| output: false
 
 agilabels <- read_csv(fs::path(DINTERMEDIATE, "agilabels.csv"))
@@ -25,30 +25,7 @@ fpath <-  fs::path(TMDDATA, "cached_allvars.csv")
 tmd2021 <- vroom(fpath)
 ns(tmd2021)
 
-```
-
-```{r}
-#| label: get-soi-combine-18425-and-18450
-#| output: false
-
 soilong <- readRDS(fs::path(DINTERMEDIATE, "soilong.rds"))
-
-est18400 <- soilong |> 
-  filter(basevname %in% c("18425", "18450")) |> 
-  summarise(value=sum(value), 
-            .by=c(stabbr, vtype, agistub, agilo, agihi, agilabel, year)) |> 
-  mutate(basevname="18400", 
-         vname=ifelse(vtype=="amount", 
-                      paste0("a", basevname),
-                      paste0("n", basevname)),
-         description="State and local income or sales taxes (estimated)",
-         udescription=description)
-summary(est18400)
-
-soilong <- bind_rows(soilong, est18400) |>
-  arrange(basevname)
-
-# check <- count(soilong, basevname, vname)
 
 ```
 
@@ -154,18 +131,18 @@ Unfortunately, the published SOI Historical Table 2 data do not capture potentia
 basesort <- c("18400", "18500", "18425", "18450", "18800", "18460", "18300")
 
 tabdata <- soilong |> 
-  filter(basevname %in% basesort, stabbr=="US", agistub==0, year==2021) |> 
+  filter(basesoivname %in% basesort, stabbr=="US", agistub==0, year==2021) |> 
   mutate(description=udescription[vtype=="amount"],
          description=str_remove(description, " amount"),
-         .by=basevname) |> 
-  select(basevname, vtype, value, description) |> 
+         .by=basesoivname) |> 
+  select(basesoivname, vtype, value, description) |> 
   pivot_wider(names_from = vtype) |> 
-  select(basevname, description, count, amount) |> 
-  mutate(basevname=factor(basevname, levels=basesort)) |> 
-  arrange(basevname)
+  select(basesoivname, description, count, amount) |> 
+  mutate(basesoivname=factor(basesoivname, levels=basesort)) |> 
+  arrange(basesoivname)
 
 tabdata |> 
-  mutate(vgroup=basevname %in% basesort[1:2]) |> 
+  mutate(vgroup=basesoivname %in% basesort[1:2]) |> 
   gt() |> 
   cols_hide(vgroup) |> 
   tab_header(title="Actual SALT deductions in 2021 IRS-published data",
@@ -206,21 +183,21 @@ The table below shows how SALT amounts have changed over time. We can see the la
 basesort <- c("18400", "18500", "18425", "18450", "18800", "18460", "18300")
 
 soilong |> 
-  filter(basevname %in% basesort, stabbr=="US", agistub==0) |> 
-  select(stabbr, basevname, vname, vtype, year, value, udescription) |> 
+  filter(basesoivname %in% basesort, stabbr=="US", agistub==0) |> 
+  select(stabbr, basesoivname, soivname, vtype, year, value, udescription) |> 
   pivot_wider(names_from = year) |> 
-  mutate(basevname=factor(basevname, levels=basesort)) |> 
+  mutate(basesoivname=factor(basesoivname, levels=basesort)) |> 
   mutate(udescription=udescription[vtype=="amount"],
-         .by=basevname) |> 
-  arrange(vtype, basevname) |> 
-  select(-vname) |> 
+         .by=basesoivname) |> 
+  arrange(vtype, basesoivname) |> 
+  select(-soivname) |> 
   gt() |> 
   tab_header(title=html("Actual SALT variables for the U.S. over time<br>Amounts in $ billions, counts in millions"),
              subtitle = "Source: IRS SOI Historical Table 2") |> 
-  fmt_currency(columns = -c(stabbr, basevname, vtype, udescription), 
+  fmt_currency(columns = -c(stabbr, basesoivname, vtype, udescription), 
                rows = vtype=="amount",
                scale=1e-9, decimals=2) |> 
-  fmt_number(columns = -c(stabbr, basevname, vtype, udescription), 
+  fmt_number(columns = -c(stabbr, basesoivname, vtype, udescription), 
                rows = vtype=="count",
                scale=1e-6, decimals=2) |> 
   sub_missing(columns=everything(),
@@ -239,7 +216,7 @@ Note that in the IRS SOI data, there are no deductions at all on returns with AG
 #| label: income-sales-tax-by-agirange-amounts-over-time
 
 soilong |> 
-  filter(vname=="a18400", stabbr=="US") |> 
+  filter(soivname=="a18400", stabbr=="US") |> 
   select(year, agistub, agilabel, value) |> 
   pivot_wider(names_from = year) |> 
   gt() |> 
@@ -263,16 +240,16 @@ We do this both statistically (correlation coefficients) and graphically.
 
 salt <- soilong |> 
   filter(year %in% c(2017, 2018, 2021),
-         basevname %in% c("18400", "18500"),
+         basesoivname %in% c("18400", "18500"),
          !stabbr %in% c("US", "OA", "PR")) |> 
   mutate(agistubf=factor(agistub, levels=agilabels$agistub, labels=agilabels$agilabel)) |> 
-  select(stabbr, year, basevname, vtype, udescription, agistub, agistubf, value) |> 
+  select(stabbr, year, basesoivname, vtype, udescription, agistub, agistubf, value) |> 
   pivot_wider(names_from = year, names_prefix = "y")
 
 saltshares <- salt |> 
   mutate(across(starts_with("y"),
                 \(x) x / sum(x)),
-                .by=c(agistub, basevname, vtype))
+                .by=c(agistub, basesoivname, vtype))
 
 ```
 
@@ -296,16 +273,16 @@ corrs <- saltshares |>
   filter(agistub != 1) |> 
   summarise(cor2017_2018=cor(y2017, y2018, use = "complete.obs"),
             cor2018_2021=cor(y2018, y2021, use = "complete.obs"),
-            .by=c(basevname, vtype, udescription, agistub, agistubf)) |>
+            .by=c(basesoivname, vtype, udescription, agistub, agistubf)) |>
   mutate(agistub=factor(agistub),
-         udescription=ifelse(basevname=="18400" & vtype=="count",
+         udescription=ifelse(basesoivname=="18400" & vtype=="count",
                              "Number of returns with state and local income or sales taxes (estimated)",
                              udescription))
 
 corrs |> 
   summarise(across(c(cor2017_2018, cor2018_2021),
                    list(min=min, max=max)),
-            .by=c(basevname, vtype, udescription)) |> 
+            .by=c(basesoivname, vtype, udescription)) |> 
   gt() |> 
   tab_header(title="Min and max correlations across states for state SALT variables as share of national total",
              subtitle = "Comparing 2017 to 2018, and 2018 to 2021") |> 
@@ -317,7 +294,7 @@ corrs |>
              cor2017_2018_max = "max") |> 
   cols_label(cor2018_2021_min= "min",
              cor2018_2021_max = "max") |> 
-  fmt_number(-c(basevname, vtype, udescription),
+  fmt_number(-c(basesoivname, vtype, udescription),
              decimals=3)
 
 corrs |> 
@@ -326,7 +303,7 @@ corrs |>
              subtitle = "Comparing 2017 to 2018, and 2018 to 2021") |> 
   cols_label(cor2017_2018 = "Correlation between 2017 and 2018",
              cor2018_2021= "Correlation between 2018 and 2021") |> 
-  fmt_number(-c(basevname, vtype, udescription),
+  fmt_number(-c(basesoivname, vtype, udescription),
              decimals=3)
 
 ```
@@ -348,7 +325,7 @@ ub <- .075
 saltshares |> 
   filter(!stabbr %in% c("CA", "NY")) |> 
   filter(!agistub %in% c(0, 1)) |> 
-  filter(basevname=="18400", vtype=="amount") |> 
+  filter(basesoivname=="18400", vtype=="amount") |> 
   ggplot(aes(x=y2018, y=y2017)) +
   geom_point(colour="blue",
              size=0.5) +
@@ -377,7 +354,7 @@ ub <- .11
 saltshares |> 
   filter(!stabbr %in% c("CA", "NY")) |> 
   filter(!agistub %in% c(0, 1)) |> 
-  filter(basevname=="18500", vtype=="amount") |> 
+  filter(basesoivname=="18500", vtype=="amount") |> 
   ggplot(aes(x=y2018, y=y2017)) +
   geom_point(colour="blue",
              size=0.5) +
@@ -405,10 +382,10 @@ Finally, all of the state shares are shown in the filter-able and sortable table
 
 saltshares |> 
   filter(agistub != 1) |> 
-  select(stabbr, basevname, vtype, udescription, agistub, agistubf, y2017, y2018, y2021) |> 
+  select(stabbr, basesoivname, vtype, udescription, agistub, agistubf, y2017, y2018, y2021) |> 
   mutate(y2018m2017=y2018 - y2017,
          y2021m2018=y2021 - y2018,
-         across(c(stabbr, basevname, vtype, udescription, agistub),
+         across(c(stabbr, basesoivname, vtype, udescription, agistub),
                 \(x) factor(x))) |> 
   DT::datatable(rownames = FALSE,
                 caption = htmltools::tags$caption(

@@ -1,0 +1,108 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+# Combine base and additional target files
+
+
+```{r}
+#| label: setup
+#| output: false
+
+suppressPackageStartupMessages(source(here::here("R", "libraries.R")))
+source(here::here("R", "constants.R"))
+source(here::here("R", "functions.R"))
+
+```
+
+
+## Stack basefile targets and additional targets
+
+```{r}
+#| label: stack-targets
+#| output: false
+
+base_targets <- read_csv(fs::path(DINTERMEDIATE, "base_targets.csv"))
+additional_targets <- read_csv(fs::path(DINTERMEDIATE, "additional_targets.csv"))
+ns(additional_targets)
+
+setdiff(names(base_targets), names(additional_targets)) # none missing
+setdiff(names(additional_targets), names(base_targets)) # see below
+# "soi_ussum" "soi_share" "tmdvar" "tmdsum"
+# we can drop all of these
+
+# re-examine additional targets
+glimpse(additional_targets)
+count(additional_targets, basesoivname, soivname, description)
+count(additional_targets, tmdvar, basesoivname, soivname, description)
+
+stack <- bind_rows(base_targets, 
+                   additional_targets |> 
+                     select(all_of(names(base_targets)))) |> 
+  mutate(sort=ifelse(basesoivname=="XTOT" &
+                       soivname=="XTOT" &
+                       scope==0 &
+                       str_detect(description, "population"),
+                     1, NA_real_)) |> 
+  # sort is 1 for the  population record, NA for others - so pop sorts first
+  # set desired order
+  arrange(stabbr, sort, scope, fstatus, basesoivname, count, agistub) |> 
+  # now calc sort
+  mutate(sort=row_number(), .by=stabbr) |> 
+  select(stabbr, sort, count, scope, agilo, agihi, fstatus, target, basesoivname, soivname, description, agistub, agilabel)
+
+# varname,count,scope,agilo,agihi,fstatus,target
+check <- stack |> filter(stabbr=="NY")
+check2 <- count(check, basesoivname, soivname, description)
+
+write_csv(stack, fs::path(DINTERMEDIATE, "enhanced_targets.csv"))
+
+```
+
+
+
+## Additional notes
+
+```{r}
+#| label: notes
+#| output: false
+
+# documentation for the targets.csv data file
+
+# sample file excerpt
+# varname,count,scope,agilo,agihi,fstatus,target
+# XTOT,       0,    0,-9e99, 9e99,      0,  33e6
+# e00300,     0,    1,-9e99, 9e99,      0,  20e9
+# e00900,     0,    1,-9e99, 9e99,      0,  30e9
+# e00200,     0,    1,-9e99, 9e99,      0,1000e9
+# e02000,     0,    1,-9e99, 9e99,      0,  30e9
+# e02400,     0,    1,-9e99, 9e99,      0,  60e9
+
+# varname: any Tax-Calculator input variable name plus any Tax-Calculator calculated variable in the list of cached variables in the tmd/storage/__init__.py file
+# count: integer in [0,4] range:
+# count==0 implies dollar total of varname is tabulated
+# count==1 implies number of tax units with any value of varname is tabulated
+# count==2 implies number of tax units with a nonzero value of varname is tabulated
+# count==3 implies number of tax units with a positive value of varname is tabulated
+# count==4 implies number of tax units with a negative value of varname is tabulated
+
+# scope: integer in [0,2] range:
+# scope==0 implies all tax units are tabulated
+# scope==1 implies only PUF-derived filing units are tabulated
+# scope==2 implies only CPS-derived filing units are tabulated
+
+# agilo: float representing lower bound of the AGI range (which is included in the range) that is tabulated.
+# agihi: float representing upper bound of the AGI range (which is excluded from the range) that is tabulated.
+
+# fstatus: integer in [0,5] range:
+# fstatus=0 implies all filing statuses are tabulated
+# other fstatus values imply just the tax units with the Tax-Calculator MARS variable equal to fstatus are included in the tabulation
+
+# target: target amount:
+# dollars if count==0
+# number of tax units if count>0
+
+```
+

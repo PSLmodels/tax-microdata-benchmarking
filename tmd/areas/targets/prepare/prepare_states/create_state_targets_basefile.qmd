@@ -1,0 +1,202 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+# Create state targets basefile
+
+Create and save as .csv a state targets basefile ("base_targets.csv") that has most of what we will need to write \[xx\]\_targets.csv files. It is a data frame with population and SOI target information for each state:
+
+-   an initial "XTOT" record with the total population for the state
+-   records for data from SOI Historical Table 2 with the following information:
+    -   `soivname` -- the SOI variable name (later, when we write target files we will map the SOI variable name to the TMD variable name and we will put the TMD variable name on the \[xx\]\_targets.csv file)
+    -   `count`, `scope`, `agilo`, `agihi`, `fstatus`, and `target` -- variables with the meanings noted in the [main documentation](https://github.com/PSLmodels/tax-microdata-benchmarking/tree/master/tmd/areas/targets)
+    -   certain other useful identifying information
+
+The information it will be missing at this point is: (1) any targets we need to estimate in other ways in cases where SOI targets are inappropriate or not available for a concept we care about, and (2) the TMD variable names. We hold off on adding TMD variable names until the last step because there are some challenges in mapping SOI concepts to TMD concepts. We want to have the targets right and then, finally, deal with the mapping.
+
+```{r}
+#| label: setup
+#| output: false
+
+suppressPackageStartupMessages(source(here::here("R", "libraries.R")))
+source(here::here("R", "constants.R"))
+source(here::here("R", "functions.R"))
+
+```
+
+## get data
+
+```{r}
+#| label: get-data
+#| output: false
+
+# variable_descriptions <- read_csv(fs::path(DINTERMEDIATE, "soi_documentation_by_year.csv"))
+# variable_udescriptions <- read_csv(fs::path(DINTERMEDIATE, "soi_documentation.csv"))
+agilabels <- read_csv(fs::path(DINTERMEDIATE, "agilabels.csv"))
+soilong <- readRDS(fs::path(DINTERMEDIATE, "soilong.rds"))
+glimpse(soilong)
+
+pop2021 <- read_csv(fs::path(DRAW, "statepop_2021.csv"))
+
+```
+
+```{r}
+#| label: clean-soi-all-years
+#| output: false
+
+# c("mars1", "mars2", "mars4")
+# varname,count,scope,agilo,agihi,fstatus,target
+allcounts <- c("n1", "n2", "mars1", "mars2", "mars4")
+
+soi2 <- soilong |> 
+  mutate(
+    scope = 1L,
+    
+    count = case_when(
+      vtype == "amount" ~ 0,
+      vtype == "count" & 
+        soivname %in% allcounts ~ 1, # count for any value for these vars
+      vtype == "count" & 
+        !soivname %in% allcounts ~ 2, # counts when var is nonzero
+      .default = -9e9),
+    count = as.integer(count),
+    
+    fstatus = case_when(
+      str_starts(soivname, "mars") ~ str_sub(soivname, -1),
+      .default = "0"),
+    fstatus = as.integer(fstatus))
+
+count(soi2, scope)
+count(soi2, vtype, count)
+count(soi2, fstatus)
+
+```
+
+```{r}
+#| label: winnow-down-soi2021
+#| output: false
+
+count(soi2, stabbr) # 54: 50 states, DC, OA, PR, US
+
+# do areas sum to US?
+soi2 |> 
+  filter(soivname=="a00100", year==2021) |> 
+  mutate(groupus=stabbr=="US") |> 
+  summarise(value=sum(value), .by=groupus) |> 
+  gt() |> 
+  fmt_number(decimals = 0)
+# OA: 719k out of 159m returns in 2021 ~ 0.5%
+
+
+soi2021 <- soi2 |> 
+  filter(year==2021, stabbr != "OA") |> # to conform to pop data
+  arrange(stabbr, soivname, scope, fstatus, count, agistub) |> 
+  select(soivname, count, scope, agilo, agihi, fstatus, target=value,
+         stabbr, basesoivname, description=udescription, agistub, agilabel)
+  
+
+soi2021 |> filter(stabbr=="NY")
+
+count(soi2021, stabbr) # 54
+
+```
+
+```{r}
+#| label: prepare-population
+#| output: false
+
+count(soi2021, stabbr) # 54: 50 states, DC, PR, OA, US
+count(pop2021, stabbr) # 53: 50 states, DC, PR, US
+
+# check statepop sums
+pop2021 |> 
+  mutate(groupus=stabbr=="US") |> 
+  summarise(pop2021=sum(pop2021), .by=groupus)
+# yes, the states sum to the US
+# note that for soi, US includes OA so states won't quite sum to US
+
+# create the pop recs
+
+poprecs <- pop2021 |> 
+  mutate(soivname="XTOT",
+         basesoivname="XTOT",
+         description = "State population in 2021 per Census Population Estimates Program",
+         agistub = 0,
+         count = 0,
+         scope = 0, 
+         fstatus = 0,
+         target = pop2021) |> 
+  left_join(agilabels,
+            by = join_by(agistub)) |> 
+  select(all_of(names(soi2021))) |> 
+  arrange(stabbr)
+
+```
+
+## Combine population and SOI data and save
+
+```{r}
+#| label: combine-pop-and-soi-data-and-save
+#| output: false
+
+count(soi2021, stabbr) # 53
+count(poprecs, stabbr) # 53
+skim(soi2021)
+skim(poprecs)
+
+base_targets <- bind_rows(poprecs, soi2021) |> 
+  arrange(stabbr, scope, fstatus, basesoivname, count, agistub)
+
+check <- base_targets |> 
+  filter(stabbr=="NY")
+
+write_csv(base_targets, fs::path(DINTERMEDIATE, "base_targets.csv"))
+
+base_targets <- read_csv(fs::path(DINTERMEDIATE, "base_targets.csv"))
+
+```
+
+## Additional notes
+
+```{r}
+#| label: notes
+#| output: false
+
+# documentation for the targets.csv data file
+
+# sample file excerpt
+# varname,count,scope,agilo,agihi,fstatus,target
+# XTOT,       0,    0,-9e99, 9e99,      0,  33e6
+# e00300,     0,    1,-9e99, 9e99,      0,  20e9
+# e00900,     0,    1,-9e99, 9e99,      0,  30e9
+# e00200,     0,    1,-9e99, 9e99,      0,1000e9
+# e02000,     0,    1,-9e99, 9e99,      0,  30e9
+# e02400,     0,    1,-9e99, 9e99,      0,  60e9
+
+# varname: any Tax-Calculator input variable name plus any Tax-Calculator calculated variable in the list of cached variables in the tmd/storage/__init__.py file
+# count: integer in [0,4] range:
+# count==0 implies dollar total of varname is tabulated
+# count==1 implies number of tax units with any value of varname is tabulated
+# count==2 implies number of tax units with a nonzero value of varname is tabulated
+# count==3 implies number of tax units with a positive value of varname is tabulated
+# count==4 implies number of tax units with a negative value of varname is tabulated
+
+# scope: integer in [0,2] range:
+# scope==0 implies all tax units are tabulated
+# scope==1 implies only PUF-derived filing units are tabulated
+# scope==2 implies only CPS-derived filing units are tabulated
+
+# agilo: float representing lower bound of the AGI range (which is included in the range) that is tabulated.
+# agihi: float representing upper bound of the AGI range (which is excluded from the range) that is tabulated.
+
+# fstatus: integer in [0,5] range:
+# fstatus=0 implies all filing statuses are tabulated
+# other fstatus values imply just the tax units with the Tax-Calculator MARS variable equal to fstatus are included in the tabulation
+
+# target: target amount:
+# dollars if count==0
+# number of tax units if count>0
+
+```
