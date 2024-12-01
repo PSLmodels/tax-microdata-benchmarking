@@ -16,10 +16,12 @@ To generate the microdata files:
 
 The two tokens can be obtained from [Don Boyd](mailto:donboyd5@gmail.com).
 
+## Examination results
+
 To assess, review the data examination results that compare federal
-agency tax estimates with those generated using the microdata file
-created in each project phase:
+agency tax estimates with those generated using the national microdata
+files created in each project phase:
 [phase 1 results](./tmd/examination/results1.md) and
 [phase 2 results](./tmd/examination/results2.md) and
 [phase 3 results](./tmd/examination/results3.md) and
-[phase 4+ national results](./tmd/examination/results4.md).
+[phase 4+ results](./tmd/examination/results4.md).
