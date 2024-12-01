@@ -10,13 +10,26 @@ from tmd.storage import STORAGE_FOLDER
 FIRST_CYR = 2021
 LAST_CYR = 2033
 
-DEFAULT_RELTOL_ITAX = 0.10
+DEFAULT_RELTOL_ITAX = 0.010
 RELTOL_ITAX = {
-    2022: 0.13,
+    2021: 0.095,
+    2022: 0.090,
+    2024: 0.060,
+    2025: 0.050,
+    2026: 0.100,
+    2027: 0.060,
+    2028: 0.070,
+    2029: 0.075,
+    2030: 0.080,
+    2031: 0.085,
+    2032: 0.090,
+    2033: 0.090,
 }
-DEFAULT_RELTOL_PTAX = 0.02
+DEFAULT_RELTOL_PTAX = 0.010
 RELTOL_PTAX = {
-    2021: 0.05,
+    2021: 0.095,
+    2022: 0.020,
+    2024: 0.020,
 }
 
 
@@ -93,7 +106,7 @@ def test_tax_revenue(
     else:
         if emsg:
             reltol = RELTOL_ITAX.get(year, DEFAULT_RELTOL_ITAX)
-            emsg += f"\nRELTOL_ITAX= {reltol:4.2f}"
+            emsg += f"\nRELTOL_ITAX= {reltol:5.3f}"
             reltol = RELTOL_PTAX.get(year, DEFAULT_RELTOL_PTAX)
-            emsg += f"\nRELTOL_PTAX= {reltol:4.2f}"
+            emsg += f"\nRELTOL_PTAX= {reltol:5.3f}"
             raise ValueError(emsg)

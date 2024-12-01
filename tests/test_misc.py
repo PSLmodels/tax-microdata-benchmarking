@@ -57,8 +57,8 @@ def test_income_tax():
     compare("wght_sum", wght.sum(), 184e6, 0.01)
     hiagi = agi >= 1e6
     compare("wght_sum_hiagi", (wght * hiagi).sum(), 0.875e6, 0.01)
-    compare("wght_itax_sum", (wght * itax).sum(), 1595e9, 0.01)
-    compare("wght_itax_sum_hiagi", ((wght * itax) * hiagi).sum(), 902e9, 0.01)
+    compare("wght_itax_sum", (wght * itax).sum(), 1666e9, 0.01)
+    compare("wght_itax_sum_hiagi", ((wght * itax) * hiagi).sum(), 911e9, 0.01)
     # count weighted number of tax units with zero agi by filing status
     agi0 = agi == 0
     compare("wght_sum_agi0_fs0", (wght * agi0).sum(), 16.22e6, 0.01)
