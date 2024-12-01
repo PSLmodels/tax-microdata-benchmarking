@@ -45,10 +45,11 @@ book:
         - construct_long_soi_data_file.qmd
     - part: "Analysis of SALT variables and other issues"
       chapters:
-        - developing_SALT_targets.qmd
+        - SALT_analysis.qmd
     - part: "Create basefile for state targets"
       chapters: 
         - create_state_targets_basefile.qmd
+        - enhance_state_targets_basefile.qmd
         # old files maybe use as base for new work
         # - cd_create_variable_mapping.qmd
         # - cd_compare_us_totals_tmd_vs_irs_published.qmd

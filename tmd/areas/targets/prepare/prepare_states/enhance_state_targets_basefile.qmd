@@ -155,11 +155,16 @@ setdiff(names(additional_targets), names(basetargets)) # see below
 # re-examine additional targets
 glimpse(additional_targets)
 count(additional_targets, basesoivname, soivname, description)
-count(additional_targets, tmdvar, basetmdvname, basesoivname, soivname, description)
+count(additional_targets, tmdvar, basesoivname, soivname, description)
 
 stack <- bind_rows(basetargets, 
                    additional_targets |> 
                      select(all_of(names(basetargets)))) |> 
+  mutate(sort=ifelse(basesoivname=="XTOT" &
+                       soivname=="XTOT" &
+                       scope==0 &
+                       str_detect(description, "population"),
+                     1, NA_real_)) |> 
   # sort is 1 for the  population record, NA for others - so pop sorts first
   # set desired order
   arrange(stabbr, sort, scope, fstatus, basesoivname, count, agistub) |> 

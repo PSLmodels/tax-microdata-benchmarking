@@ -122,13 +122,12 @@ pop2021 |>
 poprecs <- pop2021 |> 
   mutate(soivname="XTOT",
          basesoivname="XTOT",
-         description = "CD population in 2021 per Census ACS",
+         description = "State population in 2021 per Census Population Estimates Program",
          agistub = 0,
          count = 0,
          scope = 0, 
          fstatus = 0,
-         target = pop2021,
-         sort = 1) |> 
+         target = pop2021) |> 
   left_join(agilabels,
             by = join_by(agistub)) |> 
   select(all_of(names(soi2021))) |> 
@@ -148,7 +147,7 @@ skim(soi2021)
 skim(poprecs)
 
 basetargets <- bind_rows(poprecs, soi2021) |> 
-  arrange(stabbr, sort, scope, fstatus, basesoivname, count, agistub)
+  arrange(stabbr, scope, fstatus, basesoivname, count, agistub)
 
 check <- basetargets |> 
   filter(stabbr=="NY")
