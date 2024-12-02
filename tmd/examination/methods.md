@@ -213,7 +213,7 @@ Model-plus-Dataset National Estimates for Phase 4+
 Beginning in the fourth phase of this project, the most recent version
 of [Tax-Calculator](https://github.com/PSLmodels/Tax-Calculator)
 microsimulation model is used to compute tax estimates that correspond
-to the federal agency estimates described above.  See the [results4
+to the federal agency estimates described above.  See the [results4+
 document](results4.md) for Tax-Calculator version details.
 
 The 2023 and 2026 tax revenue and tax expenditure estimates using the
