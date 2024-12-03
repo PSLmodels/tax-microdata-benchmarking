@@ -6,7 +6,7 @@ project:
 
 
 # site info:
-  # OLD Unique deploy URL:  https://671e13320a7e7cfb68b1ba7d--tmd-areas-prepare-targets.netlify.app
+  # site ID: 9c6bf4ca-1b88-4735-9c29-ec5a41dab2ef
   # url: https://tmd-areas-prepare-state-targets.netlify.app
 
 # publishing with netlify cli:
@@ -43,21 +43,16 @@ book:
         - download_soi_data.qmd
         - construct_soi_documentation.qmd
         - construct_long_soi_data_file.qmd
-    - part: "Analysis of SALT variables and other issues"
-      chapters:
-        - SALT_analysis.qmd
     - part: "Create data from which to extract state target files"
       chapters: 
         - create_state_targets_basefile.qmd
         - create_additional_state_targets.qmd
         - combine_base_and_additional_targets.qmd
-        # old files maybe use as base for new work
-        # - cd_create_variable_mapping.qmd
-        # - cd_compare_us_totals_tmd_vs_irs_published.qmd
-        # - cd_enhance_basefile_with_special_targets.qmd
-  # appendices:
-  #   - cd_issues_and_TODOs.qmd  
-  #   - cd_IRS_documentation.qmd
+    - part: "Writing target files"
+      chapters: 
+        - 50_state_data_underlying_target_files.qmd
+  appendices:
+  - SALT_analysis.qmd
         
 format:
   html:
