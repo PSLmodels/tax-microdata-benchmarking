@@ -1,3 +1,5 @@
+# NJ, NM, VA, AK, MN
+PHASE6_STATES <- c("AK", "MN", "NJ", "NM", "VA")
 
 DRAW <- here::here("data", "data_raw")
 DINTERMEDIATE <- here::here("data", "intermediate")
