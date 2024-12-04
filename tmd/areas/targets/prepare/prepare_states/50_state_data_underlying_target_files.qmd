@@ -49,7 +49,9 @@ skim(etargets)
 
 ### Browse the data for a single state
 
-The sortable and filter-able table below shows the 2021 potential-target data for one of the Phase 6 states, Minnesota. By selecting agistub 0, you can see one record per potential target. Putting 18400 in the upper right search box will show all entries related to e18400, "State and local income or sales tax",
+The sortable and filter-able table below shows the 2021 potential-target data for one of the Phase 6 states, Minnesota. The purpose is simply to make clear the kind of information that is available for targeting. We include just one state to keep the demands on this web page minimal.
+
+By selecting agistub 0, you can see one record per potential target. Putting 18400 in the upper right search box will show all entries related to e18400, "State and local income or sales tax",
 
 ::: {.cell-output-display style="font-size: 60%;"}
 ```{r}
@@ -86,6 +88,16 @@ The screenshot below shows the first few rows of a typical target file. The util
 ![](images/clipboard-754780137.png)
 
 ## How to run the utility program that writes \[xx\]\_targets.csv files
+
+It's a two-step process: (1) create a json file that defines what targets to write, and (2) run an R script that reads the json file and creates the desired target files.
+
+### The json file
+
+### Running the R script
+
+From a terminal in the prepare_states folder enter:
+
+`Rscript create_state_targets.R phase6.json`
 
 ## Additional notes
 
