@@ -81,7 +81,7 @@ def add_taxcalc_outputs(
         weights_scale=1.0,
     )
     if isinstance(growfactors, pathlib.PosixPath):
-        policy = tc.Policy.tmd_constructor(growfactors_path=growfactors)
+        policy = tc.Policy.tmd_constructor(growfactors=growfactors)
     else:
         policy = tc.Policy()
     if reform:

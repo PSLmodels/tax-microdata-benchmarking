@@ -38,12 +38,12 @@ def test_income_tax():
 
     # use national tmd files to compute various 2021 income tax statistics
     pol = tc.Policy.tmd_constructor(
-        growfactors_path=(STORAGE_FOLDER / "output" / "tmd_growfactors.csv"),
+        growfactors=(STORAGE_FOLDER / "output" / "tmd_growfactors.csv"),
     )
     rec = tc.Records.tmd_constructor(
         data_path=(STORAGE_FOLDER / "output" / "tmd.csv.gz"),
         weights_path=(STORAGE_FOLDER / "output" / "tmd_weights.csv.gz"),
-        growfactors_path=(STORAGE_FOLDER / "output" / "tmd_growfactors.csv"),
+        growfactors=(STORAGE_FOLDER / "output" / "tmd_growfactors.csv"),
         exact_calculations=True,
     )
     sim = tc.Calculator(policy=pol, records=rec)
