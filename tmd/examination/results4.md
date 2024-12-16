@@ -1,7 +1,7 @@
 Phase 4+ National Data Examination Results
 ==========================================
 
-**RESULTS AS OF 2024-11-30**
+**RESULTS AS OF 2024-12-16**
 
 This project is developing a new dataset for use by income and payroll
 tax microsimulation models.  The project is progressing in several
@@ -19,7 +19,7 @@ For more on the source of the federal agency estimates and on how the
 model-plus-dataset estimates are generated, see the [examination
 methods](./methods.md) document.  The model used to generate the
 following Phase 6 estimates is [Tax-Calculator
-4.3.4](https://github.com/PSLmodels/Tax-Calculator/blob/master/docs/about/releases.md)).
+4.3.5](https://github.com/PSLmodels/Tax-Calculator/blob/master/docs/about/releases.md)).
 
 <br>
 
