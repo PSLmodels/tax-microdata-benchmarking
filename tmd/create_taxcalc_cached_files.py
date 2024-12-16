@@ -19,11 +19,11 @@ def create_cached_files():
     for each variable in the CACHED_TAXCALC_VARIABLES list.
     """
     # calculate all Tax-Calculator variables for TAX_YEAR
-    pol = tc.Policy.tmd_constructor(growfactors_path=GFFILE_PATH)
+    pol = tc.Policy.tmd_constructor(growfactors=GFFILE_PATH)
     rec = tc.Records.tmd_constructor(
         data_path=INFILE_PATH,
         weights_path=WTFILE_PATH,
-        growfactors_path=GFFILE_PATH,
+        growfactors=GFFILE_PATH,
         exact_calculations=True,
     )
     calc = tc.Calculator(policy=pol, records=rec)

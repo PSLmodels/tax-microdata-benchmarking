@@ -1,7 +1,7 @@
 Phase 4+ National Data Examination Results
 ==========================================
 
-**RESULTS AS OF 2024-11-30**
+**RESULTS AS OF 2024-12-16**
 
 This project is developing a new dataset for use by income and payroll
 tax microsimulation models.  The project is progressing in several
@@ -19,7 +19,7 @@ For more on the source of the federal agency estimates and on how the
 model-plus-dataset estimates are generated, see the [examination
 methods](./methods.md) document.  The model used to generate the
 following Phase 6 estimates is [Tax-Calculator
-4.3.4](https://github.com/PSLmodels/Tax-Calculator/blob/master/docs/about/releases.md)).
+4.3.5](https://github.com/PSLmodels/Tax-Calculator/blob/master/docs/about/releases.md)).
 
 <br>
 
@@ -37,7 +37,7 @@ following Phase 6 estimates is [Tax-Calculator
 | CY23 Amount | CY26 Amount | Estimate Source |
 | ---:   | ---:   | :---   |
 | 2512.3 | 2849.4 | CBO                              |
-| 2527.0 | 3188.6 | Tax-Calculator + phase 6 dataset |
+| 2527.0 | 3164.6 | Tax-Calculator + phase 6 dataset |
 
 <br>
 
@@ -67,7 +67,7 @@ following Phase 6 estimates is [Tax-Calculator
 | ---:   | ---:   | :---   |
 | 45.9   |  56.4  | JCT    |
 | 31.4   |  38.4  | TSY    |
-| 35.8   |  47.5  | Tax-Calculator + phase 6 dataset |
+| 35.8   |  46.8  | Tax-Calculator + phase 6 dataset |
 
 <br>
 
@@ -87,7 +87,7 @@ following Phase 6 estimates is [Tax-Calculator
 | ---:   | ---:   | :---   |
 | 259.3  | 239.8  | JCT    |
 | 153.9  | 182.4  | TSY    |
-| 219.7  | 222.2  | Tax-Calculator + phase 6 dataset |
+| 219.7  | 221.3  | Tax-Calculator + phase 6 dataset |
 
 <br>
 
@@ -107,4 +107,4 @@ following Phase 6 estimates is [Tax-Calculator
 | ---:   | ---:   | :---   |
 |  21.2  | 151.3  | JCT    |
 |  26.5  | 149.0  | TSY    |
-|  21.1  | 165.0  | Tax-Calculator + phase 6 dataset |
+|  21.1  | 163.3  | Tax-Calculator + phase 6 dataset |

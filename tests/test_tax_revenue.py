@@ -57,7 +57,7 @@ def test_tax_revenue(
         exp_ptax[year] = round(fy2cy(fy_ptax[year], fy_ptax[year + 1]), 3)
     # calculate actual tax revenues for each calendar year
     pol = tc.Policy.tmd_constructor(
-        growfactors_path=(STORAGE_FOLDER / "output" / "tmd_growfactors.csv"),
+        growfactors=(STORAGE_FOLDER / "output" / "tmd_growfactors.csv"),
     )
     wghts = str(tmd_weights_path)
     growf = tc.GrowFactors(growfactors_filename=str(tmd_growfactors_path))
