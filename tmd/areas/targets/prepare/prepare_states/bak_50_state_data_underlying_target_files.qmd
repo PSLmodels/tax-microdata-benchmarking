@@ -1,0 +1,143 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+# How to write target files
+
+Previous code in this project culminated in creation of "enhanced_targets.csv", stored in the "data/intermediate/" folder. These data contain more than 1,800 potential targets for each state for 2021, based largely on SOI Historical Table 2 data for the state.
+
+The next task, which this page discusses but does not implement, is to choose which potential targets to use, to map these potential targets to TMD variables, to choose which states to include, and to write \[xx\]\_targets.csv files for those states.
+
+This page does not write those target files. Instead, a utility program that users can run from the command line, \`\`, reads a json file that defines variables and states to write targets for, and writes the state target files.
+
+The remainder of this page (1) shows information about the enhanced targets file, and (2) explains how to run the utility program.
+
+```{r}
+#| label: setup
+#| output: false
+
+suppressPackageStartupMessages(source(here::here("R", "libraries.R")))
+source(here::here("R", "constants.R"))
+source(here::here("R", "functions.R"))
+
+```
+
+```{r}
+#| label: get-etargets
+#| output: false
+
+etargets <- read_csv(fs::path(DINTERMEDIATE, "enhanced_targets.csv"))
+
+```
+
+## Show information about enhanced targets data
+
+```{r}
+#| label: show-etargets
+
+cat('"glimpse" the structure of the data')
+glimpse(etargets)
+
+cat("summarize the data")
+skim(etargets)
+
+
+
+```
+
+### Browse the data for a single state
+
+The sortable and filter-able table below shows the 2021 potential-target data for one of the Phase 6 states, Minnesota. The purpose is simply to make clear the kind of information that is available for targeting. We include just one state to keep the demands on this web page minimal.
+
+By selecting agistub 0, you can see one record per potential target. Putting 18400 in the upper right search box will show all entries related to e18400, "State and local income or sales tax",
+
+::: {.cell-output-display style="font-size: 60%;"}
+```{r}
+#| label: etargets-table
+#| column: page
+
+etargets |> 
+  filter(stabbr %in% c("MN")) |> 
+  mutate(across(c(sort, count, scope, fstatus, agistub, basesoivname, soivname), factor)) |> 
+  DT::datatable(rownames = FALSE,
+                caption = htmltools::tags$caption(
+                  style = 'caption-side: top; text-align: center; color: black; font-size: 200%;',
+                  "Potential targets for Minnesota"
+                  ),
+                options = list(order = list(0, "asc"), # use 1st column (0) for sorting
+                               scrollX = TRUE, scrollY = TRUE,
+                               paging = TRUE, pageLength = 20,
+                               # autoWidth = TRUE,
+                               columnDefs = list(list(width = '15px', targets = c("stabbr", "sort", "count", 
+                                                                                  "scope", "fstatus", "agistub")),
+                                                 list(width = '15px', targets = c("soivname", "basesoivname")))),
+                filter="top",
+                escape = FALSE,
+                class = "compact") |>   # A default DT class that makes the table more compact
+  formatRound(c("target"), digits = 0)
+
+```
+:::
+
+### Reminder of what the target files will look like
+
+The screenshot below shows the first few rows of a typical target file. The utility program described below will select targets and states defined in a json file and write a target file in that format.
+
+![](images/clipboard-754780137.png)
+
+## How to run the utility program that writes \[xx\]\_targets.csv files
+
+It's a two-step process: (1) create a json file that defines what targets to write, and (2) run an R script that reads the json file and creates the desired target files.
+
+### The json file
+
+### Running the R script
+
+From a terminal in the prepare_states folder enter:
+
+`Rscript create_state_targets.R phase6.json`
+
+## Additional notes
+
+```{r}
+#| label: notes
+#| output: false
+
+# documentation for the targets.csv data file
+
+# sample file excerpt
+# varname,count,scope,agilo,agihi,fstatus,target
+# XTOT,       0,    0,-9e99, 9e99,      0,  33e6
+# e00300,     0,    1,-9e99, 9e99,      0,  20e9
+# e00900,     0,    1,-9e99, 9e99,      0,  30e9
+# e00200,     0,    1,-9e99, 9e99,      0,1000e9
+# e02000,     0,    1,-9e99, 9e99,      0,  30e9
+# e02400,     0,    1,-9e99, 9e99,      0,  60e9
+
+# varname: any Tax-Calculator input variable name plus any Tax-Calculator calculated variable in the list of cached variables in the tmd/storage/__init__.py file
+# count: integer in [0,4] range:
+# count==0 implies dollar total of varname is tabulated
+# count==1 implies number of tax units with any value of varname is tabulated
+# count==2 implies number of tax units with a nonzero value of varname is tabulated
+# count==3 implies number of tax units with a positive value of varname is tabulated
+# count==4 implies number of tax units with a negative value of varname is tabulated
+
+# scope: integer in [0,2] range:
+# scope==0 implies all tax units are tabulated
+# scope==1 implies only PUF-derived filing units are tabulated
+# scope==2 implies only CPS-derived filing units are tabulated
+
+# agilo: float representing lower bound of the AGI range (which is included in the range) that is tabulated.
+# agihi: float representing upper bound of the AGI range (which is excluded from the range) that is tabulated.
+
+# fstatus: integer in [0,5] range:
+# fstatus=0 implies all filing statuses are tabulated
+# other fstatus values imply just the tax units with the Tax-Calculator MARS variable equal to fstatus are included in the tabulation
+
+# target: target amount:
+# dollars if count==0
+# number of tax units if count>0
+
+```
