@@ -1,8 +1,6 @@
 
-# run from terminal with:
-#   Rscript create_state_targets.R phase6.json
-
-#   Rscript create_state_targets.R phase6.json
+# run from terminal (not console) with:
+#   Rscript create_state_targets.R phase6_states.json
 
 # Rscript test.r > output.log 2>&1
 
@@ -16,19 +14,16 @@ suppressPackageStartupMessages({
   library(jsonlite)
 })
 
+HERE <- here::here()
+source(here::here("R", "constants.R"))
 
 # constants ---------------------------------------------------------------
 
-CDDIR <- here::here("cds")
-CDINTERMEDIATE <- fs::path(CDDIR, "intermediate")
-CDFINAL <- fs::path(CDDIR, "final")
-
-RECIPES <- fs::path("target_recipes") 
-TARGETS <- fs::path("target_files") # output files go here
+DRECIPES <- fs::path(HERE, "target_recipes") 
+DTARGETS <- fs::path(HERE, "target_files") # output files go here
 
 # Check command-line arguments --------------------------------------------
 print("checking arguments and getting data needed for target files...")
-
 args <- commandArgs(trailingOnly = TRUE)
 
 # Check if the correct number of arguments is provided
@@ -41,19 +36,19 @@ fnrecipe <- args[1]
 
 # ALTERNATIVE for testing: hardcode a file name -------------------------------------------
 # uncomment a line below for interactive testing
-# fnrecipe <- "temp.json"
-# fnrecipe <- "phase5_salt.json"
-# fnrecipe <- "phase6_add_socsec.json"
+# fnrecipe <- "phase6_states.json"
 
 # Check if the specified file exists
-fpath <- here::here(CDRECIPES, fnrecipe)
+fpath <- here::here(DRECIPES, fnrecipe)
 if (!file.exists(fpath)) {
   stop("Error: The specified file does not exist: ", fpath)
 }
 
 # get target recipes and validate ------------------------------------------------------
 
-cdrecipe <- read_json(fpath) 
+state_recipe <- read_json(fpath) 
+print(state_recipe)
+stop()
 # names(cdrecipe)
 
 # Check and set defaults for suffix
