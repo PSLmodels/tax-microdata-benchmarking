@@ -12,8 +12,9 @@
   //   cds: "all", or a list such as ["AK00", "DE00"]
   //     Phase 4 cds: ["AK00", "DE00", "ID01", "ID02", "ME02", "MT00", "ND00", "PA08", "SD00", "WY00"],
   //   states: "all", or a list such as ["ak", "de"]
-  //     Phase 6 states: ["AK", "MN", "NJ", "NM", "VA"]  plus SC
-  "arealist": ["AK", "MN", "NJ", "NM", "VA", "SC"],
+  //     Phase 6 states: ["AK", "MN", "NJ", "NM", "VA", "SC"]  plus SC
+  //     For testing: ["MN"]
+  "arealist": ["MN"],
 	
 	// target parameters
 	"notzero": true, // true or false -- whether to allow zero-valued targets

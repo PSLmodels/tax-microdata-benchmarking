@@ -50,6 +50,7 @@ fnrecipe <- args[1]
 # ALTERNATIVE for testing: hardcode a file name -------------------------------------------
 # uncomment a line below for interactive testing
 # fnrecipe <- "phase6_states.json"
+# fnrecipe <- "phase6_test.json"
 
 # Check if the specified file exists in the target_recipes folder
 fpath <- fs::path(DRECIPES, fnrecipe)
@@ -103,7 +104,15 @@ print(recipe)
 # allowable target variables are those mapped below
 # MARS mappings let us get counts by filing status by agi range
 
-vmap <- read_csv(fs::path(DRECIPES, "variable_mapping.csv"))
+vmap <- read_csv(fs::path(DRECIPES, "variable_mapping.csv"),
+                 col_types = "ccci")
+
+allcount_vars <- c("n1", "mars1", "mars2", "mars4")
+vmap2 <- crossing(vmap, count=0:4) |> 
+  # drop combinations we do not have in the SOI data
+  filter(!(basesoivname == "XTOT" & (count != 0 | fstatus != 0))) |> # not allowed by definition
+  filter(!(count == 1 & !basesoivname %in% allcount_vars)) |> # only allcount_vars allowed here
+  filter(!(basesoivname %in% allcount_vars & count != 1))
 
 # TODO: check whether target names are in vmap
 
@@ -130,17 +139,17 @@ if("agi_exclude" %in% names(target_rules)){
     anti_join(target_drops |> 
                 rename(agistub=agi_exclude),
               join_by(varname, scope, count, fstatus, agistub))
-}
+  }
 
   
 # create a dataframe to match against the stack data for targets
 # vmap
 # allcount_vars <- c("N1", "MARS1", "MARS2", "MARS4")
-allcount_vars <- c("n1", "mars1", "mars2", "mars4")
-vmap2 <- vmap |> 
-  select(varname, basesoivname, fstatus) |> 
-  mutate(basesoivname=ifelse(basesoivname %in% allcount_vars, "00100", basesoivname)) |> 
-  distinct()
+# allcount_vars <- c("n1", "mars1", "mars2", "mars4")
+# vmap2 <- vmap |> 
+#   select(varname, basesoivname, fstatus) |> 
+#   mutate(basesoivname=ifelse(basesoivname %in% allcount_vars, "00100", basesoivname)) |> 
+#   distinct()
 
 # bring basesoivname in because we need it to match against targets file
 targets_matchframe <- target_stubs |>
@@ -148,8 +157,11 @@ targets_matchframe <- target_stubs |>
   rows_insert(tibble(varname="XTOT", scope=0, count=0, fstatus=0, agistub=0, sort=1),
               by="varname") |>
   arrange(sort) |> 
-  left_join(vmap2, by = join_by(varname, fstatus)) |>
+  filter(row_number()==2) |> 
+  left_join(vmap2, by = join_by(varname, fstatus, count)) |>
   relocate(sort)
+
+# djb
 
 # set up filters for areas, zero targets, negative targets, etc. --------------------
 
@@ -185,6 +197,8 @@ stack <- read_csv(STATEINPUTS, show_col_types = FALSE) |>
   rename(area=stabbr)
 # check <- count(stack, basesoivname, soivname, description, scope, fstatus, count)
 # check |> filter(basesoivname=="00100")
+
+# tmd18400_shared_by_soi18400" "tmd18400_shared_by_soi18400" "tmd18500_shared_by_soi18500" "tmd18500_shared_by_soi18500
 
 # create mapped targets tibble --------------------------------------------
 
