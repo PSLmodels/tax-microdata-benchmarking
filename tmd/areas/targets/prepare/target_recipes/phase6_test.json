@@ -1,5 +1,5 @@
 // run from terminal (not console) with:
-//   Rscript write_area_target_files.R phase6_states.json
+//   Rscript write_area_target_files.R <filename>
 
 // note: all text values must be in quotes
 {
@@ -14,7 +14,7 @@
   //   states: "all", or a list such as ["ak", "de"]
   //     Phase 6 states: ["AK", "MN", "NJ", "NM", "VA", "SC"]  plus SC
   //     For testing: ["MN"]
-  "arealist": ["MN"],
+  "arealist": ["AK", "MN", "NJ", "NM", "VA", "SC"],
 	
 	// target parameters
 	"notzero": true, // true or false -- whether to allow zero-valued targets

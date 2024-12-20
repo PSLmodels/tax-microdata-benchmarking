@@ -157,15 +157,12 @@ targets_matchframe <- target_stubs |>
   rows_insert(tibble(varname="XTOT", scope=0, count=0, fstatus=0, agistub=0, sort=1),
               by="varname") |>
   arrange(sort) |> 
-  filter(row_number()==2) |> 
   left_join(vmap2, by = join_by(varname, fstatus, count)) |>
   relocate(sort)
 
-# djb
-
 # set up filters for areas, zero targets, negative targets, etc. --------------------
 
-##.. filtering Congressional districts ----
+##.. areas filters ----
 arealist <- unlist(recipe$arealist)
 arealist
 if(
@@ -177,27 +174,25 @@ if(
   area_filter <- TRUE
 } else stop('arealist must be "all" or a list of valid state or cd codes, as appropriate')
 
-##.. filtering out targets with zero values --------
+##.. zero-target filter --------
 if(recipe$notzero) {
   zero_filter <- expr(target != 0)
 } else zero_filter <- TRUE
 
-#.. filtering out targets with negative values ----------
+#.. negative-target filter ----------
 if(recipe$notnegative) {
   negative_filter <- expr(!(target < 0))
 } else negative_filter <- TRUE
 
+#.. if cd session filter ----
 if(recipe$areatype == "cd") {
   session_filter <- expr(session %in% recipe$session)
 } else session_filter <- TRUE
 
 
-# load targets data -------------------------------------------------------
+# TODO: make this flexible state or cd; load targets data -------------------------------------------------------
 stack <- read_csv(STATEINPUTS, show_col_types = FALSE) |> 
   rename(area=stabbr)
-# check <- count(stack, basesoivname, soivname, description, scope, fstatus, count)
-# check |> filter(basesoivname=="00100")
-
 # tmd18400_shared_by_soi18400" "tmd18400_shared_by_soi18400" "tmd18500_shared_by_soi18500" "tmd18500_shared_by_soi18500
 
 # create mapped targets tibble --------------------------------------------
