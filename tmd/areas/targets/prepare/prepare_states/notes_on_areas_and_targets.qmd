@@ -12,5 +12,5 @@ editor_options:
     -   ![](images/clipboard-2408217854.png)
         -   target values
         -   ![](images/clipboard-1601488084.png)
-        -   All targets hit, albeit with substantial changes in weights vs. national average (table is ratio of final weight to scaled down national weights):
-    -   ![](images/clipboard-1857134196.png)
+    -   All targets hit, albeit with substantial changes in weights vs. national average (table is ratio of final weight to scaled down national weights):
+        -   ![](images/clipboard-1857134196.png)
