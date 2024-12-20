@@ -21,19 +21,25 @@
 	"notnegative": true, // true or false -- whether to allow negative-valued targets
 	"targets": [
     {
-      "varname": "c00100",
+      "varname": "c00100", // agi used to get total count
       "scope": 1,
       "count": 1,
       "fstatus": 0
     },
     {
-      "varname": "c00100",
+      "varname": "c00100", // agi used to get total count
       "scope": 1,
       "count": 1,
       "fstatus": 4
     },          
     {
       "varname": "e00200",
+      "scope": 1,
+      "count": 0,
+      "fstatus": 0
+    },         
+    {
+      "varname": "e00300",
       "scope": 1,
       "count": 0,
       "fstatus": 0
@@ -59,7 +65,7 @@
       "agi_exclude": [1, 2]
     },         
     {
-      "varname": "e00300",
+      "varname": "e01500", // Total pensions and annuities
       "scope": 1,
       "count": 0,
       "fstatus": 0

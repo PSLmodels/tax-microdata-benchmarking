@@ -28,6 +28,8 @@ Define which SOI variables will be used to share which tmd variables.
 
 -   tmdvar is the puf-based variable we will eventually want to target
 -   basesoivname is the base name of the SOI variable that we will use to share the national aggregate tmdvar
+-   Pensions:
+    -   e01500 Total pensions and annuities shared by 01700 taxable
 -   Social Security:
     -   e02400 Total Social Security will be shared by 02500 taxable
 -   State and local income or sales tax
@@ -50,6 +52,7 @@ Define which SOI variables will be used to share which tmd variables.
 
 mappings <- read_csv(
 "tmdvar, basesoivname
+e01500, 01700
 e02400, 02500
 e18400, 18400
 e18500, 18500
