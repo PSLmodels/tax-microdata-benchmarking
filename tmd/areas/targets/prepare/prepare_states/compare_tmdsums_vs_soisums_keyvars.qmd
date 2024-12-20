@@ -45,7 +45,10 @@ glimpse(base_targets)
 #| label: get-tmdsums
 #| output: false
 
-tmdvars <- c("c00100", "e00200", "e00300",  "e01500",  "e01700", "e02400")
+# E02400 Gross Social Security benefits
+# E02500 Social Security benefits in AGI-- djb c02500
+
+tmdvars <- c("c00100", "e00200", "e00300",  "e01500",  "e01700", "e02400", "c02500", "e18400", "e18500", "e26270")
 
 tmdsums1 <- tmd2021 |> 
   filter(data_source==1) |> 
@@ -67,6 +70,20 @@ tmdsums1 |>
 #   SOI taxable: 853,473,354,000
 #   tmd taxable  858,205,915,983.9
 #   tmd total  1,508,287,559,037.2
+
+usvals <- base_targets |> 
+  filter(stabbr=="US", agistub==0, count %in% c(0, 2), fstatus==0, basesoivname %in% str_sub(tmdvars, 2, -1)) |> 
+  mutate(type=ifelse(count==0, "amount", "nzcount")) |> 
+  select(basesoivname, type, target) |> 
+  pivot_wider(names_from = type, values_from = target) |> 
+  select(basesoivname, nzcount, amount)
+
+tmdsums1 |> 
+  kable(format.args=list(big.mark=",", digits=13))
+
+usvals |> 
+  kable(format.args=list(big.mark=",", digits=13))
+
 
 ```
 
