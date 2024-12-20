@@ -44,6 +44,13 @@
       "count": 0,
       "fstatus": 0,
       "agi_exclude": [1, 2] // not present, or a vector of agistubs to include 
+    },
+    {
+      "varname": "e18500",
+      "scope": 1,
+      "count": 0,
+      "fstatus": 0,
+      "agi_exclude": [1, 2]
     }    
   ]
 }
