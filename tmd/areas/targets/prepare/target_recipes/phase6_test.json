@@ -57,6 +57,12 @@
       "count": 0,
       "fstatus": 0,
       "agi_exclude": [1, 2]
-    }  
+    },         
+    {
+      "varname": "e00300",
+      "scope": 1,
+      "count": 0,
+      "fstatus": 0
+    }
   ]
 }
