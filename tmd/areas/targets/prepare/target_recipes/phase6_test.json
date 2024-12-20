@@ -43,6 +43,12 @@
       "scope": 1,
       "count": 0,
       "fstatus": 0
+    },         
+    {
+      "varname": "e01500", // Total pensions and annuities
+      "scope": 1,
+      "count": 0,
+      "fstatus": 0
     },
     {
       "varname": "e02400",
@@ -63,12 +69,6 @@
       "count": 0,
       "fstatus": 0,
       "agi_exclude": [1, 2]
-    },         
-    {
-      "varname": "e01500", // Total pensions and annuities
-      "scope": 1,
-      "count": 0,
-      "fstatus": 0
     }
   ]
 }
