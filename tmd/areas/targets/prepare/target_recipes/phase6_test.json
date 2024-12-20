@@ -36,6 +36,12 @@
       "varname": "c00100", // agi used to get total count
       "scope": 1,
       "count": 1,
+      "fstatus": 1
+    }, 
+    {
+      "varname": "c00100", // agi used to get total count
+      "scope": 1,
+      "count": 1,
       "fstatus": 4
     },          
     {
