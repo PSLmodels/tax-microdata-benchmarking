@@ -21,6 +21,12 @@
 	"notnegative": true, // true or false -- whether to allow negative-valued targets
 	"targets": [
     {
+      "varname": "c00100", // agi
+      "scope": 1,
+      "count": 0,
+      "fstatus": 0
+    },	  
+    {
       "varname": "c00100", // agi used to get total count
       "scope": 1,
       "count": 1,
