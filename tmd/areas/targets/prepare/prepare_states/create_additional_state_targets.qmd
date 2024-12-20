@@ -26,12 +26,31 @@ source(here::here("R", "functions.R"))
 
 Define which SOI variables will be used to share which tmd variables.
 
+-   tmdvar is the puf-based variable we will eventually want to target
+-   basesoivname is the base name of the SOI variable that we will use to share the national aggregate tmdvar
+-   Social Security:
+    -   e02400 Total Social Security will be shared by 02500 taxable
+-   State and local income or sales tax
+    -   18400 State and local income or sales tax (estimated) amount was previously created by adding 18425 State and local income taxes amount, and 18450 State and local general sales tax amount
+    -   this sum  is used to share the national aggregate for 18400 State and local income or sales tax amount
+
+
 ```{r}
 #| label: construct-mappings
 #| output: false
 
+# tmdvar is the puf-based variable we will eventually want to target
+# basesoivname is the base name of the SOI variable that we will use to share the national aggregate tmdvar
+# e02400 Total Social Security will be shared by 02500 taxable
+# 18400 State and local income or sales tax (estimated) amount was previously created by adding
+#   18425 State and local income taxes amount, and
+#   18450 State and local general sales tax amount
+# this sum  is used to share the national aggregate for
+# 18400 State and local income or sales tax amount
+
 mappings <- read_csv(
 "tmdvar, basesoivname
+e02400, 02500
 e18400, 18400
 e18500, 18500
 ", col_types="cc")
@@ -66,10 +85,20 @@ count(tmd2021, agistub, agistublab, agilo, agihi, agilabel)
 
 base_targets <- read_csv(fs::path(DINTERMEDIATE, "base_targets.csv"))
 glimpse(base_targets)
+# tmp <- count(base_targets, soivname, basesoivname, description)
 
 ```
 
 ## Variables shared to states
+
+### tmd data
+
+Using the tmd 2021 data file:
+
+-   Get tmd weighted counts and sums by AGI range for variables that will be targeted in a sharing manner. Only include filers (in the 2015 PUF). 
+-   From first step get sums across all AGI ranges.
+-   Stack, so we have sums and counts by AGI range and in total, for all variables that will be targeted by sharing.
+
 
 ```{r}
 #| label: get-tmdsums
@@ -108,6 +137,19 @@ tmdsums
 
 ```
 
+
+### Use SOI data to share the target values created above to states
+
+With the SOI base targets data for 2021:
+
+-   Get the variables that will be used as "sharer" values
+-   For each such variable, by AGI range, get the state value as a share of the US record value
+
+Calculate targets:
+
+-   For each variable to be shared, by state and AGI range, target = tmd sum calculated previously x state's share of the US value of the SOI sharer variable
+-   Construct target variable name to tell which tmd variable is shared by which SOI variable
+-   Write results to additional_targets.csv
 
 ```{r}
 #| label: get-variable-shares
