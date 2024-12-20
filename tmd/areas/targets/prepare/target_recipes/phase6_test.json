@@ -36,13 +36,20 @@
       "varname": "c00100", // agi used to get total count
       "scope": 1,
       "count": 1,
-      "fstatus": 1
+      "fstatus": 1  // Single
     }, 
+
     {
       "varname": "c00100", // agi used to get total count
       "scope": 1,
       "count": 1,
-      "fstatus": 4
+      "fstatus": 2  // Married joint
+    },     
+    {
+      "varname": "c00100", // agi used to get total count
+      "scope": 1,
+      "count": 1,
+      "fstatus": 4 // Head of household
     },          
     {
       "varname": "e00200",
