@@ -76,6 +76,11 @@ OUTDIR <- case_when(
   recipe$areatype == "cd" ~ CDDIR,
   .default = "ERROR")
 
+VARIABLE_MAPPING <- case_when(
+  recipe$areatype == "state" ~ "state_variable_mapping.csv",
+  recipe$areatype == "cd" ~ "cd_variable_mapping.csv",
+  .default = "ERROR")
+
 #.. check and set defaults for suffix ----
 if (is.null(recipe$suffix)) {
   message("Note: Suffix value is missing. Defaulting to an empty string.")
@@ -104,7 +109,7 @@ print(recipe)
 # allowable target variables are those mapped below
 # MARS mappings let us get counts by filing status by agi range
 
-vmap <- read_csv(fs::path(DRECIPES, "variable_mapping.csv"),
+vmap <- read_csv(fs::path(DRECIPES, VARIABLE_MAPPING),
                  col_types = "ccci")
 
 allcount_vars <- c("n1", "mars1", "mars2", "mars4")
