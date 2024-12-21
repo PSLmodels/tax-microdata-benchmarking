@@ -1,0 +1,346 @@
+---
+output: html_document
+editor_options: 
+ chunk_output_type: console
+---
+
+# Summarize and save data by Congressional District
+
+** ONLY run the code below when tmd data have changed **
+
+Because this is time consuming and uses a lot of memory, and may not work well on some computers, eval is set to false in the chunks below. Set eval to true to run this.
+
+Get data and merge: 
+
+-   tmd2021 data used when creating area weights (cached_allvars.csv)
+-   weights
+-   merge tmd2021 with weights
+
+Summarize and save:
+
+-   calculate weighted values for tmd2021 data using area weights
+-   get sums by groups: area x data_source x agi range
+-   supplement with sums across agi ranges - area x data source
+-   and again with sums across data_source
+-   stack files and save
+
+## Setup
+
+```{r}
+#| label: setup
+#| output: false
+
+source(here::here("R", "libraries.R"))
+
+source(here::here("R", "system_specific_constants.R"))
+source(here::here("R", "constants.R"))
+
+source(here::here("R", "functions.R"))
+
+```
+
+## Get data and merge
+
+## Get tmd2021 file
+
+Get `cached_allvars.csv`, a saved version of data from an object constructed during creation of area weights, in the file `create_taxcalc_cached_files.py`. `cached_allvars.csv` is the then-current tmd file with 2021 values, run through Tax-Calculator with 2021 law, written as csv. It includes all Tax-Calculator input and output variables.
+
+
+```{r}
+#| label: get-tmd
+#| eval: false
+#| output: false
+
+here::here()
+TMDHOME <- fs::path(here::here(), "..", "..", "..", "..")
+# normalizePath(TMDHOME)
+TMDDATA <- fs::path(TMDHOME, "tmd", "storage", "output")
+# normalizePath(TMDDATA)
+# dir_ls(TMDDATA)
+fpath <-  fs::path(TMDDATA, "cached_allvars.csv")
+
+tmd2021 <- vroom(fpath) # ~ 600mb
+ns(tmd2021)
+# tmd2021 |> filter(row_number() < 20) |> select(RECID, s006, c00100)
+
+```
+
+## Get previously saved area weights
+
+```{r}
+#| label: get-weights
+#| eval: false
+#| output: false
+
+area_type <- "state"
+
+weights <- readRDS(here::here("intermediate", paste0(area_type, "_weights.rds"))) # ~ 700mb
+
+# fpath <- here::here("intermediate", "cdweights.rds")
+# ns(file_info(fpath))
+# file_info(fpath)$change_time # The time of last file status change - as a POSIXct datetime.
+# file_info(fpath)$modification_time # The time of last data modification, as a POSIXct datetime.
+
+```
+
+## Supplement the weights file with selected tmd variables
+
+```{r}
+#| label: agibins
+#| eval: false
+#| output: false
+
+
+# cd bins ----
+# icuts <- c(-Inf, 1, 10e3, 25e3, 50e3, 75e3, 100e3, 200e3, 500e3, Inf)
+# icuts <- CDICUTS
+
+# 0 = Total
+# 1 = Under $1
+# 2 = $1 under $10,000
+# 3 = $10,000 under $25,000
+# 4 = $25,000 under $50,000
+# 5 = $50,000 under $75,000
+# 6 = $75,000 under $100,000
+# 7 = $100,000 under $200,000
+# 8 = $200,000 under $500,000
+# 9 = $500,000 or more
+
+# irange=cut(c00100, icuts, right = FALSE, ordered_result = TRUE),
+#          irange = factor(irange, 
+#                          levels = levels(irange), # Ensure ordering is maintained
+#                          labels = str_replace(levels(irange), ",", ", ")), # make more-readable labels
+#          # add a total to the factor because down the road we will have totals ??
+#          irange = fct_expand(irange, "total"),
+#          irange = fct_relevel(irange, "total")
+
+# irange="total", irange = factor(irange, levels = levels(wtdsums$irange), ordered = TRUE)
+
+# state bins ----
+# agistub,agilo,agihi,agilabel
+# 0,-9e99,9e99,Total
+# 1,-9e99,1,Under $1
+# 2,1,10000,"$1 under $10,000"
+# 3,10000,25000,"$10,000 under $25,000"
+# 4,25000,50000,"$25,000 under $50,000"
+# 5,50000,75000,"$50,000 under $75,000"
+# 6,75000,100000,"$75,000 under $100,000"
+# 7,100000,200000,"$100,000 under $200,000"
+# 8,200000,500000,"$200,000 under $500,000"
+# 9,500000,1000000,"$500,000 under $1,000,000"
+# 10,1000000,9e99,"$1,000,000 or more"
+state_stubs <- read_csv(
+'agistub,agilo,agihi,agilabel
+0,-9e99,9e99,Total
+1,-9e99,1,Under $1
+2,1,10000,"$1 under $10,000"
+3,10000,25000,"$10,000 under $25,000"
+4,25000,50000,"$25,000 under $50,000"
+5,50000,75000,"$50,000 under $75,000"
+6,75000,100000,"$75,000 under $100,000"
+7,100000,200000,"$100,000 under $200,000"
+8,200000,500000,"$200,000 under $500,000"
+9,500000,1000000,"$500,000 under $1,000,000"
+10,1000000,9e99,"$1,000,000 or more
+')
+state_stubs
+state_cuts <- c(state_stubs$agilo[-1], Inf)
+
+```
+
+## Bind selected Tax-Calculator variables to area weights data frame
+
+```{r}
+#| label: bind-taxcalc-variables
+#| eval: false
+#| output: false
+
+# see what variables are mapped
+# vmap <- read_csv(fs::path(CDINTERMEDIATE, "cd_variable_mapping.csv"))
+
+# create vector of all tax-calculator variables for which we might want summaries
+taxcalc_vars <- c("XTOT", "c00100", "e00200", "e00300", "e01700", "e26270", "e18400", "e18500", "iitax")
+if(area_type=="state") {
+  agicuts <- state_cuts
+} else agicuts <- CDICUTS
+
+tmdplusweights <- tmd2021 |> 
+  select(RECID, data_source, MARS, us=s006, all_of(taxcalc_vars)) |> 
+  mutate(row=row_number(), 
+         agistub=cut(c00100, agicuts, right = FALSE, ordered_result = TRUE) |> 
+           as.integer()) |>
+  left_join(weights, by = join_by(row)) |> 
+  relocate(row, agistub, .after = RECID) |> 
+  relocate(us, .after = iitax)
+  
+glimpse(tmdplusweights)
+tmdplusweights[1:5, c(1:16, ncol(tmdplusweights))]
+
+```
+
+## Calculate sums and save
+
+Calculate sums by area, data_source, and AGI range. The 
+
+Making this step efficient is crucial. If we have 10 variables of interest 400+ area weights, 9 AGI categories, and 2 data_source categories, giving a large number of potential sums.
+
+The approach taken here is to make a longer tmd file that has one row for each tax-calculator variable of interest for each tax unit, while maintaining the 400+ columns for areas, multiplying each variable's value by all of the weights (400+ weighted values) and summing by groups of interest. This is the second-fastest of the approaches investigated, and the easiest and least-error-prone to maintain as we add variables of interest.
+
+The resulting dataframe with sums and counts of interest is small, and easy to manipulate.
+
+
+```{r}
+#| label: calcsums
+#| eval: false
+#| output: false
+
+a <- proc.time()
+long1 <- tmdplusweights |> 
+  pivot_longer(cols = all_of(taxcalc_vars),
+               names_to = "variable") |> 
+  relocate(variable, value, .before=us) # ~ 3gb used in creating, ~ 7gb total size
+# pryr::object_size(long1)
+
+# ~ 8gb used in creating wtditems, but it is not very large
+wtditems <- long1 |> 
+  summarise(across(-c(RECID:value),
+                   list(
+                     sum = \(x) sum(x * value),
+                     nzcount = \(x) sum(x * (value != 0)),
+                     anycount = \(x) sum(x)
+                     )
+                   ),
+            .by=c(MARS, agistub, data_source, variable)) |> 
+  pivot_longer(-c(MARS, agistub, data_source, variable),
+               names_to = "area_valtype") |> 
+  separate_wider_delim(area_valtype, "_", names=c("area", "valtype"))
+
+b <- proc.time()
+b - a
+
+# save this even though small because it uses much memory and time to create it
+write_csv(wtditems, here::here("intermediate", paste0(areatype, "_wtditems.csv")))
+
+# note that this has far more items than we need because we don't have targets corresponding to all of our sums
+
+# do some checking
+count(wtditems, MARS)
+count(wtditems, agistub)
+count(wtditems, variable)
+count(wtditems,  data_source)
+count(wtditems, data_source, MARS)
+count(wtditems, valtype)
+
+wtditems$area |> unique() |> length()
+wtditems$area |> unique() # 436 + us
+rm(weights, long1, tmd2021, tmdplusweights)
+gc()
+
+```
+
+## Extend weighted items to include other subgroup sums
+
+We just created weighted sums of tmd data by the following combination:
+
+-   Selected tmd variables, by
+-   area, by
+-   data_source, by
+-   Marital status, by
+-   AGI range
+
+Now we want to create additional derivative summaries and add them to our summary data:
+
+-   total across all marital statuses, and then add it to existing totals
+
+-   then total across all agi ranges, within the other categories, and add it to new existing totals
+
+-   then total across all data_source values, within the other categories, and add it to new existing totals
+
+This should be enough, but we could want additional subtotal categories
+
+Create and save an enhanced weighted items file from this.
+
+```{r}
+#| label: calcsums-extended
+#| eval: false
+#| output: false
+
+
+wtditems <- read_csv(here::here("intermediate", paste0(areatype, "_wtditems.csv"))) 
+ht(wtditems)
+
+# sums across all marital status
+sums_plus_marstot <- wtditems |> 
+  summarise(value=sum(value), 
+            .by=c(area, agistub, data_source, variable, valtype)) |> 
+  mutate(MARS=0) |> 
+  bind_rows(wtditems)
+
+# quick checks
+count(sums_plus_marstot, MARS)
+count(sums_plus_marstot, agistub)
+skim(sums_plus_marstot)
+  
+# sum across all income ranges
+sums_plus_agistubtot <- sums_plus_marstot |> 
+  summarise(value=sum(value), 
+            .by=c(area, MARS, data_source, variable, valtype)) |> 
+  mutate(agistub=0) |> 
+  bind_rows(sums_plus_marstot)
+
+# quick checks
+count(sums_plus_agistubtot, MARS)
+count(sums_plus_agistubtot, agistub)
+count(sums_plus_agistubtot, variable)
+count(sums_plus_agistubtot, MARS, variable)
+skim(sums_plus_agistubtot)
+
+# sum across all data_source values
+sums_plus_dstot <- sums_plus_agistubtot |> 
+  summarise(value=sum(value), 
+            .by=c(area, MARS, agistub, variable, valtype)) |> 
+  mutate(data_source=9) |> 
+  bind_rows(sums_plus_agistubtot)
+
+
+write_csv(sums_plus_dstot, here::here("intermediate", paste0(area_type, "_wtditems_enhanced.csv")))
+
+```
+
+
+```{r}
+#| label: wide-approach
+#| eval: false
+#| output: false
+
+
+# wide approach - harder to maintain because a new sum calculation must be created for each variable added
+# a <- proc.time()
+# sums1 <- tmdplusweights |>
+#   summarise(across(c(us, ak00:wy00),
+#                    list(wtdn = \(x) sum(x * wtdn),
+#                         c00100 = \(x) sum(x * c00100),
+#                         e00200 = \(x) sum(x * e00200),
+#                         e00300 = \(x) sum(x * e00300),
+#                         e26270 = \(x) sum(x * e26270),
+#                         iitax = \(x) sum(x * iitax))),
+#             .by=c(MARS, irange, data_source)) |>
+#   pivot_longer(-c(MARS, irange, data_source), values_to = "sum") |>
+#   separate(name, into=c("statecd", "variable"))
+# b <- proc.time()
+# b - a # about 2.4 secs
+# sums1
+
+# check that the two approaches produce the same result
+# count(sums1, data_source); count(sums2, data_source)
+# count(sums1, variable); count(sums2, variable)
+# 
+# bind_rows(sums1 |> mutate(src="sums1"),
+#                    sums2 |> mutate(src="sums2")) |> 
+#   pivot_wider(names_from = src, values_from = sum) |> 
+#   mutate(diff=sums2 - sums1) |> 
+#   arrange(desc(abs(diff)))
+```
+
+
+

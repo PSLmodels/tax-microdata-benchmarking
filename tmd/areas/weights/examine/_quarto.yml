@@ -29,7 +29,7 @@ book:
   date-format: long
   chapters:
     - index.qmd
-    - part: "IRS Congressional District data"
+    - part: "Examine Congressional Districts"
       chapters:
         # - cd_overall_documentation.qmd
         - cd_get_and_save_selected_ACS_data.qmd
@@ -41,6 +41,10 @@ book:
         # - cd_prepare_examination_data.qmd
         # - cd_simple_tables.qmd
         # - cd_results_vs_targets_tables.qmd
+    - part: "Examine states"
+      chapters:
+        - state_get_and_save_state_weights.qmd
+        - state_get_tmd_and_summarize_and_save_state_weighted_results.qmd
 
 format:
   html:
