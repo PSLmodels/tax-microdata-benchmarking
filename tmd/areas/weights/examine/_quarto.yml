@@ -43,8 +43,9 @@ book:
         # - cd_results_vs_targets_tables.qmd
     - part: "Examine states"
       chapters:
-        - state_get_and_save_state_weights.qmd
-        - state_get_tmd_and_summarize_and_save_state_weighted_results.qmd
+        - state_analysis.qmd
+        # - state_get_and_save_state_weights.qmd
+        # - state_get_tmd_and_summarize_and_save_state_weighted_results.qmd
 
 format:
   html:

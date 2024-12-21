@@ -52,37 +52,16 @@ Once the file is created and saved, retrieving it only takes 3-4 seconds.
 #| output: false
 
 # initial WEIGHTSDIR /home/donboyd5/Documents/python_projects/scratch/phase5_salt
-
 # "\\wsl.localhost\Ubuntu-24.04\home\donboyd5\Documents\python_projects\backups\tmd_items_2024-12-20\states"
-pp <- "/home/donboyd5/Documents/python_projects"
-WEIGHTSDIR <- fs::path(pp, "backups/tmd_items_2024-12-20/states")
+# pp <- "/home/donboyd5/Documents/python_projects"
+# WEIGHTSDIR <- fs::path(pp, "backups/tmd_items_2024-12-20/states")
 
-weightfiles <- dir_ls(WEIGHTSDIR) |> str_subset("tmd_weights.csv.gz")
-length(weightfiles)
-
+statedir <- "/mnt/g/.shortcut-targets-by-id/1pEdofaxeQgEeDLM8NOpo0vOGL1jT8Qa1/AFPI_2024/Phase 6/states/"
 areatype <- "state" # state or cd
 
-f <- function(fpath){
-  fname <- fs::path_file(fpath)
-  area <- stringr::word(fname, 1, sep = "_")
-  print(area)
-  vroom(fpath, col_select = "WT2021") |>
-    rename(!!area := WT2021) # create a column named for the cd, with its 2021 as its value
-}
+df <- get_weights(statedir, "state")
+glimpse(df)
 
-a <- proc.time()
-weights <- test <- purrr::map(weightfiles, f) |> 
-  list_cbind() |> 
-  mutate(row=row_number()) |> 
-  relocate(row)
-b <- proc.time()
-b - a # 79 seconds
-
-glimpse(weights)
-ht(weights)
-
-system.time(saveRDS(weights, here::here("intermediate", paste0(areatype, "_weights.rds")))) # 23 seconds
-
-# system.time(cdweights <- readRDS(here::here("intermediate", "cdweights.rds"))) 
+df2 <- readRDS(here::here("intermediate", paste0(areatype, "_weights.rds")))
 
 ```

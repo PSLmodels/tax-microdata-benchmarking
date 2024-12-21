@@ -1,0 +1,107 @@
+---
+output: html_document
+editor_options: 
+ chunk_output_type: console
+---
+
+# State analysis
+
+## Setup
+
+```{r}
+#| label: setup
+#| output: false
+
+source(here::here("R", "libraries.R"))
+
+source(here::here("R", "system_specific_constants.R"))
+source(here::here("R", "constants.R"))
+
+source(here::here("R", "functions.R"))
+
+```
+
+```{r}
+#| label: constants
+
+# initial WEIGHTSDIR /home/donboyd5/Documents/python_projects/scratch/phase5_salt
+# "\\wsl.localhost\Ubuntu-24.04\home\donboyd5\Documents\python_projects\backups\tmd_items_2024-12-20\states"
+# pp <- "/home/donboyd5/Documents/python_projects"
+# WEIGHTSDIR <- fs::path(pp, "backups/tmd_items_2024-12-20/states")
+
+# statedir is where the state weights and targets are stored
+statedir <- "/mnt/g/.shortcut-targets-by-id/1pEdofaxeQgEeDLM8NOpo0vOGL1jT8Qa1/AFPI_2024/Phase 6/states/"
+areatype <- "state" # state or cd
+
+TMDHOME <- fs::path(here::here(), "..", "..", "..", "..")
+TMDDATA <- fs::path(TMDHOME, "tmd", "storage", "output")
+# normalizePath(TMDHOME)
+# normalizePath(TMDDATA)
+
+```
+
+
+## ONETIME: Get and save weights
+
+Get and save a wide tibble of weights each time new weights are produced. Once the file is created and saved, retrieval is much faster.
+
+```{r}
+#| label: ONETIME-save-weights
+#| eval: false
+#| output: false
+
+save_weights(statedir, "state")
+
+```
+
+## ONETIME: Supplement the weights file with selected tmd variables and summarize
+
+Supplement the weights with selected tmd variables and summarize. Repeat when weights change, or the tmd data change, or desired tmd variables change.
+
+
+```{r}
+#| label: ONETIME-save-enhanced-weighted-tmd-sums
+#| eval: false
+#| output: false
+
+taxcalc_vars <- c("XTOT", "c00100", "e00200", "e00300", "e01700", "e26270", "e18400", "e18500", "iitax")
+save_enhanced_weighted_sums(areatype, taxcalc_vars, TMDDATA)
+
+```
+
+
+```{r}
+
+fs::dir_ls(CDINTERMEDIATE) # we want cdbasefile_enhanced.csv
+
+targets_data <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile_enhanced.csv"))
+glimpse(targets_data)
+count(targets_data, agistub, agilo, agihi, agirange)
+
+saveRDS(targets_data, here::here("temp_data", "targets_data.rds")) # about 9 mb
+
+```
+
+
+## Analysis
+
+```{r}
+#| label: explore
+#| output: false
+
+wtdsums <- read_csv(here::here("intermediate", paste0(area_type, "_wtditems_enhanced.csv")))
+
+
+```
+
+
+
+## more
+
+```{r}
+#| label: more
+#| output: false
+
+```
+
+

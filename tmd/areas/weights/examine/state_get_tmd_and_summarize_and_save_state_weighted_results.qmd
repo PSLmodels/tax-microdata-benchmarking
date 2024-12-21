@@ -37,6 +37,29 @@ source(here::here("R", "constants.R"))
 
 source(here::here("R", "functions.R"))
 
+# G:\.shortcut-targets-by-id\1pEdofaxeQgEeDLM8NOpo0vOGL1jT8Qa1\AFPI_2024\Phase 6\states
+# dir <- "/mnt/e/"
+# dir <- "/mnt/c/"
+# dir <- "/mnt/g/"
+# dir <- "/mnt/g/My Drive/"
+
+dir <- "/mnt/g/.shortcut-targets-by-id/1pEdofaxeQgEeDLM8NOpo0vOGL1jT8Qa1/AFPI_2024/Phase 6/states/"
+
+files <- fs::dir_ls(dir)
+fs::path_file(files) |> 
+  str_subset("targets.csv")
+
+fs::path_file(files) |> 
+  str_subset("targets.csv")
+
+csvs <- files |> str_subset("targets.csv")
+df <- vroom(csvs, id="area") |> 
+  mutate(area=fs::path_file(area),
+         area=stringr::word(area, sep = "_"),
+         area=stringr::str_to_upper(area))
+count(df, area)
+
+
 ```
 
 ## Get data and merge
