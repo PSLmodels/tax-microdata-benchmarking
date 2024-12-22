@@ -81,6 +81,12 @@ VARIABLE_MAPPING <- case_when(
   recipe$areatype == "cd" ~ "cd_variable_mapping.csv",
   .default = "ERROR")
 
+TOPAGISTUB <- case_when(
+  recipe$areatype == "state" ~ 10,
+  recipe$areatype == "cd" ~ 9,
+  .default = -9)
+
+
 #.. check and set defaults for suffix ----
 if (is.null(recipe$suffix)) {
   message("Note: Suffix value is missing. Defaulting to an empty string.")
@@ -132,7 +138,7 @@ target_rules <- recipe$targets |>
 target_stubs <- target_rules |> 
   select(varname, scope, count, fstatus) |> 
   distinct() |> 
-  cross_join(tibble(agistub=1:9)) |> # allow all agi ranges
+  cross_join(tibble(agistub=1:TOPAGISTUB)) |> # allow all agi ranges
   arrange(varname, scope, count, fstatus, agistub)
 
 # update target_stubs to drop any agi ranges that are named for exclusion
