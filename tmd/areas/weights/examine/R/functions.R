@@ -175,7 +175,7 @@ get_combined_file <- function(){
   targets_used <- vroom::vroom(target_files, id="area") |> 
     mutate(area = fs::path_file(area),
            area = stringr::word(area, sep = "_"),
-           used = TRUE)
+           targeted = TRUE)
   
   wtdsums <- readr::read_csv(fs::path(CONSTANTS$OUTPUT_DIR, "wtdsums_enhanced.csv"))
   vmap <- read_csv(fs::path(CONSTANTS$RECIPES_DIR, paste0(CONSTANTS$AREA_TYPE, "_variable_mapping.csv")))
@@ -198,16 +198,15 @@ get_combined_file <- function(){
               by = join_by(area, scope, count, fstatus, basesoivname, agistub)) |> 
     filter(!is.na(soivname)) |> 
     left_join(targets_used |> 
-                select(-target) |> 
-                mutate(used = TRUE),
+                select(-target),
               by = join_by(area, fstatus, varname, scope, count, agilo, agihi))|> 
     mutate(diff = wtdsum - target,
            pdiff = diff / target,
-           used = ifelse(is.na(used), FALSE, TRUE)) |> 
+           targeted = ifelse(is.na(targeted), FALSE, TRUE)) |> 
     arrange(area, scope, count, fstatus, varname, agistub) |> 
     mutate(sort=row_number(), .by=area) |> 
     relocate(sort, .after = area) |> 
-    select(area, sort, scope, count, fstatus, varname, basesoivname, agistub, agilabel, target, wtdsum, diff, pdiff, used, description)
+    select(area, sort, scope, count, fstatus, varname, basesoivname, agistub, agilabel, target, wtdsum, diff, pdiff, targeted, description)
   
   return(combined)
 }

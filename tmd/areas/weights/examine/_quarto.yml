@@ -19,7 +19,7 @@ execute:
   eval: true
   echo: true
   output: true
-  freeze: false  # auto: during global project renders, re-render only when source changes
+  freeze: auto  # auto: during global project renders, re-render only when source changes
 
 book:
   title: "Examine results using area weights"
@@ -41,6 +41,7 @@ book:
     - part: "Examine states"
       chapters:
         - state_analysis.qmd
+        - individual_state_reports.qmd
         # - state_get_and_save_state_weights.qmd
         # - state_get_tmd_and_summarize_and_save_state_weighted_results.qmd
 

@@ -4,7 +4,7 @@ editor_options:
  chunk_output_type: console
 ---
 
-# State analysis
+# State analysis -- summaries
 
 ## Setup
 
@@ -24,7 +24,6 @@ source(here::here("R", "functions.R"))
 
 CONSTANTS <- get_constants("state")
 CONSTANTS
-CONSTANTS$WEIGHTS_DIR
 
 ```
 
@@ -57,11 +56,11 @@ save_enhanced_weighted_sums(TAXCALC_VARS)
 
 ```
 
-## get targets
+## Prepare target comparison file
 
 ```{r}
 #| label: area-tables
-#| output: true
+#| output: false
 
 # fs::dir_ls(CDINTERMEDIATE) # we want cdbasefile_enhanced.csv, to become enhanced_targets.csv
 # fs::dir_ls(CONSTANTS$TARGETS_DIR) # enhanced_targets.csv
@@ -83,44 +82,7 @@ compfile <- get_combined_file()
 write_csv(compfile, fs::path(CONSTANTS$OUTPUT_DIR, "compfile.csv"))
 # skim_without_charts(compfile)
 
-# areas <- c("al", "ca", "ny")
-# f <- function(area){
-#   header <- paste0("## Comparison to potential targets for: ", area, "\n")
-#   cat(header)
-#   tab <- areatab(area, compfile)
-#   print(tab)
-# }
-# purrr::walk(areas, f)
-
-
-# areatab <- function(compfile){
-#   compfile |>
-#     filter(area == "{{area}}") |> 
-#     gt() |>  
-#     tab_header(title = paste("Results for", "{{area}}")) |> 
-#     fmt_number(columns = c(target, wtdsum, diff),
-#                scale = 1e-6,
-#                decimals = 1) |> 
-#     fmt_percent(columns = pdiff,
-#                 decimals = 2)
-# }
 
 ```
 
-
-
-```{r}
-#| results: asis
-#| echo: false
-
-areas <- c("al", "ca", "ny")
-# area <- "ca"
-for(area in areas) {
-    template <- readLines("_area-template_dt.qmd")
-    template <- str_replace_all(template, coll("{{area}}"), area)
-    cat(knitr::knit_child(text = template, quiet = TRUE))
-    cat("\n\n")
-}
-
-```
 

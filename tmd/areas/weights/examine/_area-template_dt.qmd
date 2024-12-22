@@ -5,8 +5,23 @@
 #| column: page
 
 areatab <- compfile |>
-    filter(area == "{{area}}") |> 
-    DT::datatable()
+  filter(area == "{{area}}") |> 
+  select(-basesoivname) |> 
+  mutate(across(c(sort, scope, count, fstatus, varname, agistub, agilabel),
+                \(x) as.factor(x)),
+         across(c(target, wtdsum, diff),
+                \(x) case_when(varname == "XTOT" & count == 0 ~ x,
+                               count == 0 ~ x / 1e6,
+                               count == 1 ~ x,
+                               .default = x))) |> 
+  DT::datatable(rownames = FALSE,
+                options = list(order = list(1, "asc"), # use 2nd column (1) for sorting
+                               scrollX = TRUE, scrollY = TRUE, paging = TRUE, pageLength = 20,
+                               autoWidth = TRUE),
+                filter="top",
+                escape = FALSE) |>
+  formatCurrency(columns = c("target", "wtdsum", "diff"), currency="", digits=1) |> 
+  formatPercentage(columns = c("pdiff"),  digits = 1)
 
 areatab
 

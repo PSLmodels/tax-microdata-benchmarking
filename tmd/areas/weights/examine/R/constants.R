@@ -16,6 +16,7 @@ get_constants <- function(area_type) {
   # Common constants
   constants <- list(
     AREA_TYPE = area_type,
+    PHASE6_STATES = c("AK", "MN", "NJ", "NM", "VA"),
     TMDHOME = fs::path(here::here(), "..", "..", "..", ".."),
     TMDDIR = NULL,  # Will be derived
     TMDAREAS = NULL, # Will be derived
