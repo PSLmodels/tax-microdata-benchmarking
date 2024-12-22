@@ -13,10 +13,7 @@ editor_options:
 #| output: false
 
 source(here::here("R", "libraries.R"))
-
-source(here::here("R", "system_specific_constants.R"))
 source(here::here("R", "constants.R"))
-
 source(here::here("R", "functions.R"))
 
 ```
@@ -24,19 +21,9 @@ source(here::here("R", "functions.R"))
 ```{r}
 #| label: constants
 
-# initial WEIGHTSDIR /home/donboyd5/Documents/python_projects/scratch/phase5_salt
-# "\\wsl.localhost\Ubuntu-24.04\home\donboyd5\Documents\python_projects\backups\tmd_items_2024-12-20\states"
-# pp <- "/home/donboyd5/Documents/python_projects"
-# WEIGHTSDIR <- fs::path(pp, "backups/tmd_items_2024-12-20/states")
-
-# statedir is where the state weights and targets are stored
-statedir <- "/mnt/g/.shortcut-targets-by-id/1pEdofaxeQgEeDLM8NOpo0vOGL1jT8Qa1/AFPI_2024/Phase 6/states/"
-areatype <- "state" # state or cd
-
-TMDHOME <- fs::path(here::here(), "..", "..", "..", "..")
-TMDDATA <- fs::path(TMDHOME, "tmd", "storage", "output")
-# normalizePath(TMDHOME)
-# normalizePath(TMDDATA)
+CONSTANTS <- get_constants("state")
+CONSTANTS
+CONSTANTS$WEIGHTS_DIR
 
 ```
 
@@ -50,7 +37,7 @@ Get and save a wide tibble of weights each time new weights are produced. Once t
 #| eval: false
 #| output: false
 
-save_weights(statedir, "state")
+save_weights()
 
 ```
 
@@ -64,21 +51,95 @@ Supplement the weights with selected tmd variables and summarize. Repeat when we
 #| eval: false
 #| output: false
 
-taxcalc_vars <- c("XTOT", "c00100", "e00200", "e00300", "e01700", "e26270", "e18400", "e18500", "iitax")
-save_enhanced_weighted_sums(areatype, taxcalc_vars, TMDDATA)
+TAXCALC_VARS <- c("XTOT", "c00100", "e00200", "e00300", "e01700", "e26270", "e18400", "e18500", "iitax")
+save_enhanced_weighted_sums(TAXCALC_VARS)
 
 ```
 
+## get targets
 
 ```{r}
 
-fs::dir_ls(CDINTERMEDIATE) # we want cdbasefile_enhanced.csv
+# fs::dir_ls(CDINTERMEDIATE) # we want cdbasefile_enhanced.csv, to become enhanced_targets.csv
+# fs::dir_ls(CONSTANTS$TARGETS_DIR) # enhanced_targets.csv
+# CONSTANTS
+CONSTANTS
 
-targets_data <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile_enhanced.csv"))
+files <- fs::dir_ls(CONSTANTS$WEIGHTS_DIR)
+
+csvs <- files |> str_subset("targets.csv")
+targets_used <- vroom::vroom(csvs, id="area") |> 
+  mutate(area=fs::path_file(area),
+         area=stringr::word(area, sep = "_")) # , area=stringr::str_to_upper(area)
+count(targets_used, area)
+
+targets_data <- read_csv(fs::path(CONSTANTS$TARGETS_DIR, "enhanced_targets.csv"))
 glimpse(targets_data)
-count(targets_data, agistub, agilo, agihi, agirange)
+count(targets_data, agistub, agilo, agihi, agilabel)
 
-saveRDS(targets_data, here::here("temp_data", "targets_data.rds")) # about 9 mb
+wtdsums <- readr::read_csv(fs::path(CONSTANTS$OUTPUT_DIR, "wtdsums_enhanced.csv"))
+vmap <- read_csv(fs::path(CONSTANTS$RECIPES_DIR, paste0(CONSTANTS$AREA_TYPE, "_variable_mapping.csv")))
+names(wtdsums)
+count(wtdsums, varname)
+count(wtdsums, MARS)
+count(wtdsums, data_source)
+vmap
+
+df <- wtdsums |> 
+  rename(fstatus = MARS) |> 
+  mutate(scope = case_when(data_source == 0 ~ 2, # cps only
+                           data_source == 1 ~ 1, # puf only
+                           data_source == 9 ~ 0, # all records
+                           .default = -9), # ERROR
+         count = case_when(valuetype == "sum" ~ 0,
+                           valuetype == "anycount" ~ 1,
+                           valuetype == "nzcount" ~ 2,
+                           .default = -9) # ERROR
+         ) |> 
+  left_join(vmap, relationship = "many-to-many",
+            by = join_by(fstatus, varname))
+
+# |>   left_join(targets_used |> select(-target))
+
+df |> filter(row_number() == 83311)
+
+df2 <- df |> 
+  left_join(targets_data |> 
+              mutate(area = str_to_lower(stabbr)) |> 
+              select(-description),
+            by = join_by(area, scope, count, fstatus, basesoivname, agistub)) |> 
+  left_join(targets_used |> 
+              select(-target) |> 
+              mutate(used = TRUE),
+            by = join_by(area, fstatus, varname, scope, count, agilo, agihi))|> 
+  mutate(used = ifelse(is.na(used), FALSE, TRUE))
+
+skim(df2)
+
+head(df2)
+
+df3 <- df2 |> 
+  filter(!is.na(stabbr))
+
+check <- df3 |> filter(area=="ny") |> arrange(sort)
+glimpse(check)
+
+check |> 
+  select(area, scope, fstatus, count, varname, basesoivname, agistub, agilabel, sort, target, wtdsum) |> 
+  mutate(diff = wtdsum - target,
+         pdiff = diff / target) |> 
+  gt() |> 
+  fmt_number(columns = c(target, wtdsum, diff),
+             scale = 1e-6,
+             decimals = 1) |> 
+  fmt_percent(columns = pdiff,
+              decimals = 2)
+  
+
+# vmap <- read_csv(fs::path(CDINTERMEDIATE, "cd_variable_mapping.csv"))
+# wtditems <- read_csv(here::here("intermediate", "wtditems_enhanced.csv"))
+# targets_data <- readRDS(here::here("temp_data", "targets_data.rds"))
+# targets_used <- readRDS(here::here("temp_data", "targets_used.rds"))
 
 ```
 

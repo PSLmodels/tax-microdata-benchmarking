@@ -14,24 +14,8 @@ ns <- function(obj){
 
 # functions to prepare data -----------------------------------------------
 
-combine_tmd_and_weights <- function(areatype, taxcalc_vars, tmd2021, weights){
-  
-  if(areatype=="state") {
-    agicuts <- state_cuts
-  } else agicuts <- CDICUTS
-  
-  tmdplusweights <- tmd2021 |> 
-    select(RECID, data_source, MARS, us=s006, all_of(taxcalc_vars)) |> 
-    mutate(row=row_number(), 
-           agistub=cut(c00100, agicuts, right = FALSE, ordered_result = TRUE) |> 
-             as.integer()) |>
-    left_join(weights, by = join_by(row)) |> 
-    relocate(row, agistub, .after = RECID) |> 
-    relocate(us, .after = iitax)
-  return(tmdplusweights)
-}
 
-save_weights <- function(areadir, areatype){
+save_weights <- function(){
   
   # Get and save a wide tibble of weights each time new weights are produced.
   # Once the file is created and saved, retrieval is much faster. It has one row
@@ -53,7 +37,7 @@ save_weights <- function(areadir, areatype){
   }
   
   a <- proc.time()
-  weightfiles <- fs::dir_ls(areadir) |> 
+  weightfiles <- fs::dir_ls(CONSTANTS$WEIGHTS_DIR) |> 
     str_subset("tmd_weights.csv.gz")
   weights <- purrr::map(weightfiles, get_file) |> 
     purrr::list_cbind() |> 
@@ -62,28 +46,44 @@ save_weights <- function(areadir, areatype){
   b <- proc.time()
   print(b - a)
   print("saving weights file...")
-  system.time(saveRDS(weights, here::here("intermediate", paste0(areatype, "_weights.rds"))))
+  system.time(saveRDS(weights, fs::path(CONSTANTS$OUTPUT_DIR, "weights.rds")))
   print(paste0("Weights file includes: ", paste(names(weights)[-1], collapse=", ")))
 }
 
 
-save_weighted_tmd_sums <- function(areatype, taxcalc_vars, TMDDATA){
+combine_tmd_and_weights <- function(taxcalc_vars, tmd2021, weights){
+  
+  agilabels <- readr::read_csv(fs::path(CONSTANTS$RAW_DIR, "agilabels.csv")) # Martin Holmer uses 9e99 for top valueinstead of Inf
+  agicuts <-  c(agilabels$agilo[-1], 9e99)
+  
+  tmdplusweights <- tmd2021 |> 
+    select(RECID, data_source, MARS, us=s006, all_of(taxcalc_vars)) |> 
+    mutate(row=row_number(), 
+           agistub=cut(c00100, agicuts, right = FALSE, ordered_result = TRUE) |> 
+             as.integer()) |>
+    left_join(weights, by = join_by(row)) |> 
+    relocate(row, agistub, .after = RECID) |> 
+    relocate(us, .after = iitax)
+  
+  return(tmdplusweights)
+}
+
+
+get_tmdplusweights <- function(taxcalc_vars){
   # Get `cached_allvars.csv`, a saved version of data from an object constructed
   # during creation of area weights, in the file
   # `create_taxcalc_cached_files.py`. `cached_allvars.csv` is the then-current
   # tmd file with 2021 values, run through Tax-Calculator with 2021 law, written
   # as csv. It includes all Tax-Calculator input and output variables.
-  fpath <-  fs::path(TMDDATA, "cached_allvars.csv")
+  fpath <-  fs::path(CONSTANTS$TMDDIR, "cached_allvars.csv")
   tmd2021 <- vroom(fpath) 
-  weights <- readRDS(here::here("intermediate", paste0(areatype, "_weights.rds")))
+  weights <- readRDS(fs::path(CONSTANTS$OUTPUT_DIR, "weights.rds"))
   
-  tmdplusweights <- combine_tmd_and_weights(areatype, taxcalc_vars, tmd2021, weights)
-  save_wtditems(tmdplusweights, "state")
+  tmdplusweights <- combine_tmd_and_weights(taxcalc_vars, tmd2021, weights)
+  return(tmdplusweights)
 }
 
-
-
-save_wtditems <- function(tmdplusweights, areatype){
+get_wtdsums <- function(tmdplusweights, taxcalc_vars){
   # Calculate and save sums by area, data_source, and AGI range. Making this
   # step efficient is crucial. For example, with 10 variables, up to 400+ areas,
   # 9 AGI categories, and 2 data_source categories, we'd gave over 70k potential
@@ -102,12 +102,12 @@ save_wtditems <- function(tmdplusweights, areatype){
   a <- proc.time()
   long1 <- tmdplusweights |> 
     pivot_longer(cols = all_of(taxcalc_vars),
-                 names_to = "variable") |> 
-    relocate(variable, value, .before=us) # ~ 3gb used in creating, ~ 7gb total size
+                 names_to = "varname") |> # same name Martin Holmer uses
+    relocate(varname, value, .before=us) # cds: ~ 3gb used in creating, ~ 7gb total size
   # pryr::object_size(long1)
   
   # ~ 8gb used in creating wtditems, but it is not very large
-  wtditems <- long1 |> 
+  wtdsums <- long1 |> 
     summarise(across(-c(RECID:value),
                      list(
                        sum = \(x) sum(x * value),
@@ -115,41 +115,47 @@ save_wtditems <- function(tmdplusweights, areatype){
                        anycount = \(x) sum(x)
                      )
     ),
-    .by=c(MARS, agistub, data_source, variable)) |> 
-    pivot_longer(-c(MARS, agistub, data_source, variable),
-                 names_to = "area_valtype") |> 
-    separate_wider_delim(area_valtype, "_", names=c("area", "valtype"))
+    .by=c(MARS, agistub, data_source, varname)) |> 
+    pivot_longer(-c(MARS, agistub, data_source, varname),
+                 names_to = "area_valuetype") |> 
+    separate_wider_delim(area_valuetype, "_", names=c("area", "valuetype"))
   b <- proc.time()
   print(b - a)
-  write_csv(wtditems, here::here("intermediate", paste0(areatype, "_wtditems.csv")))
+  return(wtdsums)
 }
 
-save_enhanced_weighted_sums <- function(areatype, taxcalc_vars, TMDDATA){
-  save_weighted_tmd_sums(areatype, taxcalc_vars, TMDDATA) # basic sums
-  
-  wtditems <- read_csv(here::here("intermediate", paste0(areatype, "_wtditems.csv"))) 
-  
+enhance_wtdsums <- function(wtdsums){
   # sums across all marital status
-  sums_plus_marstot <- wtditems |> 
+  sums_plus_marstot <- wtdsums |> 
     summarise(value=sum(value), 
-              .by=c(area, agistub, data_source, variable, valtype)) |> 
+              .by=c(area, agistub, data_source, varname, valuetype)) |> 
     mutate(MARS=0) |> 
-    bind_rows(wtditems)
+    bind_rows(wtdsums)
   
   # sum across all income ranges
   sums_plus_agistubtot <- sums_plus_marstot |> 
     summarise(value=sum(value), 
-              .by=c(area, MARS, data_source, variable, valtype)) |> 
+              .by=c(area, MARS, data_source, varname, valuetype)) |> 
     mutate(agistub=0) |> 
     bind_rows(sums_plus_marstot)
   
   # sum across all data_source values
   sums_plus_dstot <- sums_plus_agistubtot |> 
-    summarise(value=sum(value), 
-              .by=c(area, MARS, agistub, variable, valtype)) |> 
+    summarise(value=sum(value),
+              .by=c(area, MARS, agistub, varname, valuetype)) |> 
     mutate(data_source=9) |> 
-    bind_rows(sums_plus_agistubtot)
+    bind_rows(sums_plus_agistubtot) |> 
+    rename(wtdsum = value)
   
-  write_csv(sums_plus_dstot, here::here("intermediate", paste0(area_type, "_wtditems_enhanced.csv")))
+  return(sums_plus_dstot)
+}
+
+save_enhanced_weighted_sums <- function(taxcalc_vars){
+  
+  tmdplusweights <- get_tmdplusweights(taxcalc_vars)
+  wtdsums <- get_wtdsums(tmdplusweights, taxcalc_vars)
+  wtdsums_enhanced <- enhance_wtdsums(wtdsums)
+  
+  write_csv(wtdsums_enhanced, fs::path(CONSTANTS$OUTPUT_DIR, "wtdsums_enhanced.csv"))
 }
 
