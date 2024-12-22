@@ -159,3 +159,56 @@ save_enhanced_weighted_sums <- function(taxcalc_vars){
   write_csv(wtdsums_enhanced, fs::path(CONSTANTS$OUTPUT_DIR, "wtdsums_enhanced.csv"))
 }
 
+
+
+# create combined comparison file -----------------------------------------
+
+get_combined_file <- function(){
+  
+  targets_available <- read_csv(fs::path(CONSTANTS$TARGETS_DIR, "enhanced_targets.csv")) |> 
+    rename(area = 1) |> # fix this earlier in process
+    mutate(area = stringr::str_to_lower(area))
+  
+  target_files <- fs::dir_ls(CONSTANTS$WEIGHTS_DIR) |>
+    str_subset("targets.csv")
+  
+  targets_used <- vroom::vroom(target_files, id="area") |> 
+    mutate(area = fs::path_file(area),
+           area = stringr::word(area, sep = "_"),
+           used = TRUE)
+  
+  wtdsums <- readr::read_csv(fs::path(CONSTANTS$OUTPUT_DIR, "wtdsums_enhanced.csv"))
+  vmap <- read_csv(fs::path(CONSTANTS$RECIPES_DIR, paste0(CONSTANTS$AREA_TYPE, "_variable_mapping.csv")))
+  
+  combined <- wtdsums |> 
+    rename(fstatus = MARS) |> 
+    mutate(scope = case_when(data_source == 0 ~ 2, # cps only
+                             data_source == 1 ~ 1, # puf only
+                             data_source == 9 ~ 0, # all records
+                             .default = -9), # ERROR
+           count = case_when(valuetype == "sum" ~ 0,
+                             valuetype == "anycount" ~ 1,
+                             valuetype == "nzcount" ~ 2,
+                             .default = -9) # ERROR
+    ) |> 
+    left_join(vmap, relationship = "many-to-many",
+              by = join_by(fstatus, varname)) |> 
+    left_join(targets_available |> 
+                select(-c(sort, description)),
+              by = join_by(area, scope, count, fstatus, basesoivname, agistub)) |> 
+    filter(!is.na(soivname)) |> 
+    left_join(targets_used |> 
+                select(-target) |> 
+                mutate(used = TRUE),
+              by = join_by(area, fstatus, varname, scope, count, agilo, agihi))|> 
+    mutate(diff = wtdsum - target,
+           pdiff = diff / target,
+           used = ifelse(is.na(used), FALSE, TRUE)) |> 
+    arrange(area, scope, count, fstatus, varname, agistub) |> 
+    mutate(sort=row_number(), .by=area) |> 
+    relocate(sort, .after = area) |> 
+    select(area, sort, scope, count, fstatus, varname, basesoivname, agistub, agilabel, target, wtdsum, diff, pdiff, used, description)
+  
+  return(combined)
+}
+

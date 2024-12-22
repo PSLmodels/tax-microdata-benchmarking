@@ -1,0 +1,15 @@
+## Results for area: `r stringr::str_to_upper("{{area}}")`
+
+```{r}
+#| echo: false
+#| column: page
+
+areatab <- compfile |>
+    filter(area == "{{area}}") |> 
+    DT::datatable()
+
+areatab
+
+```
+
+
