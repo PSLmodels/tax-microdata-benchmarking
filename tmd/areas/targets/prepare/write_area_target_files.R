@@ -28,7 +28,7 @@ DLIB <- fs::path(PREPDIR, "target_file_library") # output files go here
 
 # input data
 STATEINPUTS <- fs::path(PREPDIR, "prepare_states", "data", "intermediate", "enhanced_targets.csv")
-CDINPUTS <- fs::path(PREPDIR, "prepare_cds", "cds", "intermediate", "cdbasefile_enhanced.csv")
+CDINPUTS <- fs::path(PREPDIR, "prepare_cds", "cds", "intermediate", "enhanced_targets.csv")
                    
 # output folders
 STATEDIR <- fs::path(DLIB, "states")
@@ -51,6 +51,7 @@ fnrecipe <- args[1]
 # uncomment a line below for interactive testing
 # fnrecipe <- "phase6_states.json"
 # fnrecipe <- "phase6_test.json"
+# fnrecipe <- "cds_test.json"
 
 # Check if the specified file exists in the target_recipes folder
 fpath <- fs::path(DRECIPES, fnrecipe)
@@ -85,6 +86,11 @@ TOPAGISTUB <- case_when(
   recipe$areatype == "state" ~ 10,
   recipe$areatype == "cd" ~ 9,
   .default = -9)
+
+INPUTS <- case_when(
+  recipe$areatype == "state" ~ STATEINPUTS,
+  recipe$areatype == "cd" ~ CDINPUTS,
+  .default = "ERROR")
 
 
 #.. check and set defaults for suffix ----
@@ -202,8 +208,9 @@ if(recipe$areatype == "cd") {
 
 
 # TODO: make this flexible state or cd; load targets data -------------------------------------------------------
-stack <- read_csv(STATEINPUTS, show_col_types = FALSE) |> 
-  rename(area=stabbr)
+# djb go back to state inputs make sure it has area on the file
+
+stack <- read_csv(INPUTS, show_col_types = FALSE)
 # tmd18400_shared_by_soi18400" "tmd18400_shared_by_soi18400" "tmd18500_shared_by_soi18500" "tmd18500_shared_by_soi18500
 
 # create mapped targets tibble --------------------------------------------
@@ -214,7 +221,7 @@ mapped <- targets_matchframe |>
               filter(!!area_filter,
                      !!zero_filter,
                      !!negative_filter,
-                     session_filter) |> 
+                     eval(session_filter)) |> 
               rename(label=description) |> 
              select(-sort),
              # is sort correct?
