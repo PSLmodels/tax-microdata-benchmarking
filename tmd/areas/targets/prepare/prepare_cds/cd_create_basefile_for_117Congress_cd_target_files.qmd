@@ -12,33 +12,13 @@ This section creates one long file that is a superset of what we need for indivi
 
 ```{r}
 #| label: setup
+#| output: false
 
-source(here::here("R", "libraries.R"))
+suppressPackageStartupMessages(source(here::here("R", "libraries.R")))
 source(here::here("R", "constants.R"))
 source(here::here("R", "functions.R"))
 
-# 334283385.27000004 national pop
-
-# varname,count,scope,agilo,agihi,fstatus,target
-# XTOT,       0,    0,-9e99, 9e99,      0,  33e6
-# e00300,     0,    1,-9e99, 9e99,      0,  20e9
-# e00900,     0,    1,-9e99, 9e99,      0,  30e9
-# e00200,     0,    1,-9e99, 9e99,      0,1000e9
-# e02000,     0,    1,-9e99, 9e99,      0,  30e9
-# e02400,     0,    1,-9e99, 9e99,      0,  60e9
-
 ```
-
-## Get needed data
-
-```{r}
-#| label: get-soi-based-data
-
-cdlong <- read_csv(fs::path(CDINTERMEDIATE, "cddata_long_clean.csv"))
-# check <- count(cdlong, basevname, vname)
-
-```
-
 
 ## Create streamlined long CD-only file 
 
@@ -46,201 +26,120 @@ cdlong <- read_csv(fs::path(CDINTERMEDIATE, "cddata_long_clean.csv"))
 -   Drop variables we would never want.
 -   Construct fstatus 0 records and records with counts by filing status.
 
-### Drop non-CD records and variables we won't want
+Create and save as .csv a Congressional Districts targets basefile ("base_targets.csv") that has most of what we will need to write \[xx\]\_targets.csv files. It is a data frame with population and SOI target information for each state:
+
+-   an initial "XTOT" record with the total population for the Congressional District
+-   records for data from SOI Historical Table 2 with the following information:
+    -   `soivname` -- the SOI variable name (later, when we write target files we will map the SOI variable name to the TMD variable name and we will put the TMD variable name on the \[xx\]\_targets.csv file)
+    -   `count`, `scope`, `agilo`, `agihi`, `fstatus`, and `target` -- variables with the meanings noted in the [main documentation](https://github.com/PSLmodels/tax-microdata-benchmarking/tree/master/tmd/areas/targets)
+    -   certain other useful identifying information
+
+The information it will be missing at this point is: (1) any targets we need to estimate in other ways in cases where SOI targets are inappropriate or not available for a concept we care about, and (2) the TMD variable names. We hold off on adding TMD variable names until the last step because there are some challenges in mapping SOI concepts to TMD concepts. We want to have the targets right and then, finally, deal with the mapping.
+
+## get data
 
 ```{r}
-#| label: drop-records-and-variables
+#| label: get-data
 #| output: false
+
+cdlong <- readRDS(fs::path(CDINTERMEDIATE, "soilong.rds"))
+glimpse(cdlong)
+count(cdlong, stabbr)
+
+```
+
+```{r}
+#| label: clean-soi
+#| output: false
+
+# varname,count,scope,agilo,agihi,fstatus,target
+allcounts <- c("n1", "n2", "mars1", "mars2", "mars4")
+count(cdlong |> filter(basesoivname %in% allcounts), soivname)
+count(cdlong, vtype)
 
 cdlong1 <- cdlong |> 
-  filter(rectype %in% c("cd", "cdstate", "DC"))
-
-# quick data checks
-cdlong1 |> filter(AGI_STUB==0) |> count(STATE)
-cdlong1 |> filter(AGI_STUB==0) |> select(STATE, CONG_DISTRICT) |> distinct() |> nrow()
-count(cdlong1, vtype)
-
-# winnow data to variables we might consider targeting
-# show candidates for dropping in a nice order
-cdlong1 |> 
-  filter(is.na(basevname)) |> 
-  select(vname, description) |> 
-  distinct() |> 
-  arrange(vname)
-
-dropvars <- c("CPREP", "DIR_DEP", "ELDERLY", "ELF", "PREP", "RAC", "TCE", 
-              "TOTAL_VITA", "VITA", "VITA_EIC", "VRTCRIND")
-
-cdlong2 <- cdlong1 |> 
-  filter(!vname %in% dropvars)
-
-rm(dropvars)
-
-```
-
-
-### Create nzcount and allcount concepts
-
-We have an issue with AGI: for Congressional Districts IRS does NOT report the number of returns with nonzero AGI. See the discussion on the introduction page.
-
-However, we have N1, which is a count of all returns by agi range.
-
-Also, we have marital status counts (MARS1, MARS2, and MARS4), but they are not non-zero counts but rather counts of tax units with that filing status.
-
-Solution:
-- create vtype category of nzcount (nonzero count), which is what most count variables will have
-- and vtype category of allcount, for N1, MARS2, MARS2, and MARS4.
-- associate all of these with v00100
-
-We are going to create new rows for N00100 (Number of returns with AGI (estimated)), equal to N1, add it to the data.
-
-Note that this will (get allcount, count=1) (i.e., number of tax units with any value of varname) whereas other count measures will (get nzcount, count=2) (number of tax units with a nonzero value of varname). See the [documentation](https://github.com/PSLmodels/tax-microdata-benchmarking/tree/master/tmd/areas/targets).
-
-```{r}
-#| label: fstatus-and-vtype
-#| output: false
-
-count(cdlong2, vtype)
-skim(cdlong2)
-
-marstats <- c("MARS1", "MARS2", "MARS4")
-allcounts <- c("N1", "MARS1", "MARS2", "MARS4")
-
-cdlong3 <- cdlong2 |> 
+  filter(rectype %in% c("US", "cd", "cdstate", "DC")) |> 
+  rename(description = udescription) |> 
   mutate(
-    fstatus=case_when(
-    vname %in% marstats ~ str_sub(vname, -1),
-    .default = "0"),
-    fstatus=as.integer(fstatus),
+    scope = 1L, # filers
     
-    vtype = case_when(
-      vname %in% allcounts ~ "allcount",
-      vtype == "count" ~ "nzcount",
-      .default = vtype),
+    count = case_when(
+      vtype == "amount" ~ 0,
+      vtype == "count" & 
+        soivname %in% allcounts ~ 1, # count for any value for these vars
+      vtype == "count" & 
+        !soivname %in% allcounts ~ 2, # counts when var is nonzero
+      .default = -9e9),
+    count = as.integer(count),
     
-    basevname = ifelse(vname %in% allcounts, "v00100", basevname), # use AGI for allcounts variables
-    description = ifelse(vname %in% allcounts, "Number of returns", description)
-    )
+    fstatus = case_when(
+      str_starts(soivname, "mars") ~ str_sub(soivname, -1),
+      .default = "0"),
+    fstatus = as.integer(fstatus))
 
-count(cdlong3, fstatus)
-count(cdlong3, vtype)
-count(cdlong3, fstatus, vtype)
+count(cdlong1, scope)
+count(cdlong1, vtype, count)
+count(cdlong1, fstatus)
+count(cdlong1, stabbr)
 
 ```
 
-
-### Define statecd, scope, count; put amounts in dollars; sort
-
-```{r}
-#| label: categoricals-misc
-#| output: false
-
-cdlong4 <- cdlong3 |> 
-    mutate(
-      count = case_when(
-        vtype == "amount" ~ 0,
-        vtype == "allcount" ~ 1,
-        vtype == "nzcount" ~ 2,
-        .default = -99),
-      
-      scope = 1,
-      value = ifelse(vtype == "amount",
-                     value * 1000,
-                     value)
-      )
-  
-# summary(cdlong4)
-# skim(cdlong4)
-# count(cdlong4, fstatus)
-# count(cdlong4, count, vtype)
-# count(cdlong4, scope)
-# check <- count(cdlong4, basevname, vname)
-
-```
-
-### Add Census population records to data
-
-Prepare the Census population data.
+### Prepare population
 
 ```{r}
-#| label: prepare-census-pop
+#| label: prepare-population
 #| output: false
 
-# -   **varname**: XTOT
-# -   **count**: 0
-# -   **scope**: 0
-# -   **agilo**: must be \< -8e99
-# -   **agihi**: must be \> 8e99
-# -   **fstatus**: 0
-# -   **target**: area population
+agilabels <- read_csv(fs::path(CDRAW, "agilabels.csv"))
 
 cdpop <- read_csv(fs::path(CDINTERMEDIATE, "cdpop1year.csv"))
 glimpse(cdpop)
+# create the pop recs -- add a U.S. record
 
-cdpop1 <- cdpop |> 
-  select(STATEFIPS, STATE, CONG_DISTRICT, target=pop2021) |> 
-  mutate(vname="XTOT",
-         basevname="XTOT",
-         description = "CD population in 2021 per Census ACS",
-         AGI_STUB = 0,
-         agirange = "Total",
-         agilo = -9e99,
-         agihi = 9e99,
+uspoprec <- tibble(stabbr="US", congdist="00", cdname="U.S. record", target=334283385)
+
+poprecs <- cdpop |> 
+  select(stabbr=STATE, congdist=CONG_DISTRICT, cdname, target=pop2021) |> 
+  bind_rows(uspoprec) |> 
+  mutate(soivname="XTOT",
+         basesoivname="XTOT",
+         description = "State population in 2021 per the 1-year ACS",
+         agistub = 0,
          count = 0,
          scope = 0, 
-         fstatus = 0)
-  
-# how well does cdpop merge against the soi data?
-soistubs <- cdlong4 |> 
-  select(STATEFIPS, STATE, CONG_DISTRICT, rectype, ndist) |> 
-  distinct()
-
-fmatch <- soistubs |> 
-  left_join(cdpop1,
-            by = join_by(STATEFIPS, STATE, CONG_DISTRICT))
-
-fmatch |> filter(is.na(target)) # good, we matched on all CDs
-
-# put rectype and ndist on the cdpop file
-cdpop2 <- cdpop1 |> 
-  left_join(fmatch |> 
-              select(STATE, CONG_DISTRICT, rectype, ndist),
-            by = join_by(STATE, CONG_DISTRICT))# statecd = paste0(STATE, CONG_DISTRICT),
-
-rm(soistubs, fmatch)
+         fstatus = 0) |> 
+  # bring in agilo and agihi
+  left_join(agilabels,
+            by = join_by(agistub)) 
 
 ```
 
+
+## Combine population and SOI data and save
 
 ```{r}
-#| label: create-cdbasefile
+#| label: combine-pop-and-soi-data-and-save
 #| output: false
 
-cdbasefile <- bind_rows(cdlong4 |> 
-                          rename(target=value) |> 
-                          mutate(src="soi"),
-                        cdpop2 |> mutate(src="census")) |> 
-  mutate(statecd = paste0(STATE, CONG_DISTRICT),
-         basevname=case_when(
-           is.na(basevname) ~ vname,
-           .default = basevname)) |> # THINK ABOUT THIS CAREFULLY
-  select(src, rectype, stabbr=STATE, cd=CONG_DISTRICT, statecd,
-         agistub=AGI_STUB, agilo, agihi, basevname, scope, fstatus, count, target,
-         vname, description, agirange) |> 
-  arrange(statecd, src, scope, fstatus, basevname, count, agistub)
+names(cdlong1)
+names(poprecs)
+
+cdlong2 <- cdlong1 |> 
+  rename(target=value) |> 
+  select(-rectype)
   
-# glimpse(cdbasefile)
-# summary(cdbasefile)
-# skim(cdbasefile)
-# check <- count(cdbasefile, basevname, vname)
-# cdbasefile |> count(basevname)
-check <- count(cdbasefile, src, scope, fstatus, count)
+base_targets <- bind_rows(poprecs, cdlong2) |> 
+  mutate(area=paste0(stabbr, congdist)) |> 
+  arrange(stabbr, scope, fstatus, basesoivname, count, agistub) |> 
+  select(stabbr, cd=congdist, area, 
+         agistub, agilo, agihi, agilabel, 
+         soivname, basesoivname, scope, fstatus, count, target, description)
+glimpse(base_targets)
 
-cdbasefile |> filter(statecd=="WY00", scope==1, fstatus==0, count==1)
-cdbasefile |> filter(statecd=="WY00", agistub==0, basevname=="v00100")
-cdbasefile |> filter(statecd=="WY00", agistub==0, basevname=="v00101")
+check <- base_targets |> filter(stabbr=="NY")
 
-write_csv(cdbasefile, fs::path(CDINTERMEDIATE, "cdbasefile_117.csv"))
+check <- base_targets |> filter(stabbr=="US")
+
+write_csv(base_targets, fs::path(CDINTERMEDIATE, "base_targets.csv"))
 
 ```
-
