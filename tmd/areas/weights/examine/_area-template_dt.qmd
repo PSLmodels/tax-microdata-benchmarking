@@ -16,7 +16,7 @@ areatab <- compfile |>
                                .default = x))) |> 
   DT::datatable(rownames = FALSE,
                 options = list(order = list(1, "asc"), # use 2nd column (1) for sorting
-                               scrollX = TRUE, scrollY = TRUE, paging = TRUE, pageLength = 20,
+                               scrollX = TRUE, scrollY = TRUE, paging = TRUE, pageLength = 25,
                                autoWidth = TRUE),
                 filter="top",
                 escape = FALSE) |>

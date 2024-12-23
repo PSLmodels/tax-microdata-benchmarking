@@ -4,7 +4,7 @@ editor_options:
  chunk_output_type: console
 ---
 
-# State analysis -- summaries
+# State data preparation
 
 ## Setup
 
@@ -13,8 +13,8 @@ editor_options:
 #| output: false
 
 source(here::here("R", "libraries.R"))
-source(here::here("R", "constants.R"))
 source(here::here("R", "functions.R"))
+source(here::here("R", "functions_constants.R"))
 
 ```
 
@@ -22,7 +22,10 @@ source(here::here("R", "functions.R"))
 #| label: constants
 #| output: false
 
-CONSTANTS <- get_constants("state")
+AREA_TYPE = "state"
+# AREA_TYPE = "test"
+
+CONSTANTS <- get_constants(AREA_TYPE)
 CONSTANTS
 
 ```
@@ -34,7 +37,7 @@ Get and save a wide tibble of weights each time new weights are produced. Once t
 
 ```{r}
 #| label: ONETIME-save-weights
-#| eval: false
+#| eval: true
 #| output: false
 
 save_weights()
@@ -48,7 +51,7 @@ Supplement the weights with selected tmd variables and summarize. Repeat when we
 
 ```{r}
 #| label: ONETIME-save-enhanced-weighted-tmd-sums
-#| eval: false
+#| eval: true
 #| output: false
 
 TAXCALC_VARS <- c("XTOT", "c00100", "e00200", "e00300", "e01500", "e02400", "e26270", "e18400", "e18500", "iitax")
@@ -59,29 +62,12 @@ save_enhanced_weighted_sums(TAXCALC_VARS)
 ## Prepare target comparison file
 
 ```{r}
-#| label: area-tables
+#| label: save-final-file
 #| output: false
-
-# fs::dir_ls(CDINTERMEDIATE) # we want cdbasefile_enhanced.csv, to become enhanced_targets.csv
-# fs::dir_ls(CONSTANTS$TARGETS_DIR) # enhanced_targets.csv
-# CONSTANTS
-
-# areatab <- function(area, compfile){
-#   compfile |>
-#     filter(area==!!area) |> 
-#     gt() |> 
-#     fmt_number(columns = c(target, wtdsum, diff),
-#                scale = 1e-6,
-#                decimals = 1) |> 
-#     fmt_percent(columns = pdiff,
-#                 decimals = 2)
-# }
-
 
 compfile <- get_combined_file()
 write_csv(compfile, fs::path(CONSTANTS$OUTPUT_DIR, "compfile.csv"))
 # skim_without_charts(compfile)
-
 
 ```
 

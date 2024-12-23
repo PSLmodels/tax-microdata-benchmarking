@@ -6,11 +6,12 @@
 # \\wsl.localhost\Ubuntu-24.04\home\donboyd5\Documents\python_projects\tax-microdata-benchmarking\tmd\areas\targets\prepare\prepare_states\data\intermediate
 # \\wsl.localhost\Ubuntu-24.04\home\donboyd5\Documents\python_projects\tax-microdata-benchmarking\tmd\areas\targets\prepare\prepare_cds\cds\intermediate
 
-# constants.R
+# functions_constants.R
 get_constants <- function(area_type) {
   # Validate input
-  if (!area_type %in% c("state", "cd")) {
-    stop("area_type must be either 'state' or 'cd'")
+  valid_area_types <- c("state", "cd", "test")
+  if (!area_type %in% valid_area_types) {
+    stop("area_type must be one of: ", paste(valid_area_types, collapse = ", "))
   }
   
   # Common constants
@@ -42,7 +43,12 @@ get_constants <- function(area_type) {
                              RAW_DIR = fs::path(constants$TMDAREAS, "targets", "prepare", "prepare_cds", "cds", "raw_data"),
                              TARGETS_DIR = fs::path(constants$TMDAREAS, "targets", "prepare", "prepare_cds", "cds", "intermediate"),
                              OUTPUT_DIR = here::here("data_cd")
-                           )
+                           ),"test" = dplyr::lst( # allows reference to earlier elements
+                             WEIGHTS_DIR = "/mnt/e/test_states/",
+                             RAW_DIR = WEIGHTS_DIR,
+                             TARGETS_DIR = WEIGHTS_DIR,
+                             OUTPUT_DIR = WEIGHTS_DIR
+                           ),
   )
   
   # Combine common and area-specific constants

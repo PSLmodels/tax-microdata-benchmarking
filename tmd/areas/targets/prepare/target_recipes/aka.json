@@ -5,7 +5,7 @@
 {
   "areatype": "state", // state or cd in quotes  
   
-  // "suffix": "", // not present, or null, or a capital letter
+  // "suffix": "A", // not present, or null, or a capital letter
   // "session": 118, // for areatype cd only: not present, or 117 or 118
   
   // arealist:
@@ -14,7 +14,7 @@
   //   states: "all", or a list such as ["ak", "de"]
   //     Phase 6 states: ["AK", "MN", "NJ", "NM", "VA", "SC"]  plus SC
   //     For testing: ["MN"]
-  "arealist": ["AK", "MN", "NJ", "NM", "VA", "SC"],
+  "arealist": ["AK"],
 	
 	// target parameters
 	"notzero": true, // true or false -- whether to allow zero-valued targets
@@ -56,13 +56,7 @@
       "scope": 1,
       "count": 0,
       "fstatus": 0
-    },      
-    {
-      "varname": "e00200",
-      "scope": 1,
-      "count": 2,
-      "fstatus": 0
-    },             
+    },         
     {
       "varname": "e00300",
       "scope": 1,

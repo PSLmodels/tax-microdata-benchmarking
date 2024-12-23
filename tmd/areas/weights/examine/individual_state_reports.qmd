@@ -14,8 +14,8 @@ execute:
 #| output: false
 
 source(here::here("R", "libraries.R"))
-source(here::here("R", "constants.R"))
 source(here::here("R", "functions.R"))
+source(here::here("R", "functions_constants.R"))
 
 ```
 
@@ -24,7 +24,10 @@ source(here::here("R", "functions.R"))
 #| label: constants
 #| output: false
 
-CONSTANTS <- get_constants("state")
+AREA_TYPE <- "state" # if want to redefine constants
+# AREA_TYPE <- "test" # if want to redefine constants
+
+CONSTANTS <- get_constants(AREA_TYPE)
 # CONSTANTS
 # CONSTANTS$WEIGHTS_DIR
 
@@ -69,6 +72,7 @@ compfile <- readr::read_csv(fs::path(CONSTANTS$OUTPUT_DIR, "compfile.csv"),
                                              show_col_types = FALSE)
 
 areas <- c(CONSTANTS$PHASE6_STATES, "SC") |> stringr::str_to_lower()
+# areas <- c("ak")
 
 for(area in areas) {
     template <- readLines("_area-template_dt.qmd")
