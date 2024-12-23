@@ -17,6 +17,24 @@ source(here::here("R", "functions.R"))
 
 ```
 
+```{r}
+#| eval: false
+
+# sample state documentation
+# soivname,basesoivname,vtype,udescription
+# a00100,00100,amount,Adjusted gross income (AGI) amount
+# n00100,00100,count,Number of returns with adjusted gross income (AGI)
+# ...
+# n1,n1,count,Number of returns
+# n2,n2,count,Number of individuals (pre-2018 is different)
+
+#    row vname     description                                                     reference type  vtype basevname
+#   <dbl> <chr>     <chr>                                                           <chr>     <chr> <chr> <chr>    
+# 1     1 STATEFIPS The State Federal Information Processing System (FIPS) code [3] 01-56     Char  other NA       
+
+
+```
+
 
 ## Parse and save variable documentation
 
@@ -75,44 +93,55 @@ doc3 <- doc2 |>
   select(-c(nvars, suffix)) |> 
   arrange(row)
 
-write_csv(doc3, fs::path(CDINTERMEDIATE, "variable_documentation.csv"))
+# conform to the state documentation style
+# write_csv(doc3, fs::path(CDINTERMEDIATE, "variable_documentation.csv")) # old name
 
-rm(doc1, doc2, doc3)
+glimpse(doc3)
+# soivname,basesoivname,vtype,udescription
+doc4 <- doc3 |> 
+  rename(soivname = vname, basesoivname=basevname, udescription=description) |> 
+  mutate(soivname = stringr::str_to_lower(soivname),
+         basesoivname = stringr::str_to_lower(basesoivname),
+         basesoivname = stringr::str_remove(basesoivname, "v"),
+         basesoivname = ifelse(is.na(basesoivname), soivname, basesoivname)) |> 
+  select(soivname, basesoivname, vtype, udescription)
+ht(doc4)
+
+# doc4 |> filter(str_starts(soivname, "a18"))
+#  soivname basesoivname vtype  udescription                            
+#   <chr>    <chr>        <chr>  <chr>                                   
+# 1 a18425   18425        amount State and local income taxes amount     
+# 2 a18450   18450        amount State and local general sales tax amount
+# 3 a18500   18500        amount Real estate taxes amount                
+# 4 a18800   18800        amount Personal property taxes amount          
+# 5 a18460   18460        amount Limited state and local taxes           
+# 6 a18300   18300        amount Total taxes paid amount         
+# add more names
+# salt variables basesoivname 18400, sum of 18425 and 18450, both avail 2015-2021
+# add documentation for n00100 agi count EVEN THOUGH it's not in the data
+newvars <- read_delim(
+"soivname; basesoivname; udescription
+n18400; 18400; Number of returns with state and local income or sales tax (estimated)
+a18400; 18400; State and local income or sales tax (estimated) amount
+n00100; 00100; Number of returns with adjusted gross income (AGI)
+",
+delim=";", col_types="c", trim_ws = TRUE) |>
+  mutate(vtype=case_when(str_sub(soivname, 1, 1)=="n" ~ "count",
+                         str_sub(soivname, 1, 1)=="a" ~ "amount",
+                         .default = "ERROR"))
+newvars
+
+doc5 <- bind_rows(doc4, newvars) |> 
+  arrange(basesoivname, vtype)
+# note that this has a few variables with vtype other; state version should do the same
+  
+write_csv(doc5, fs::path(CDINTERMEDIATE, "soi_documentation.csv"))
+
+rm(doc1, doc2, doc3, doc4, doc5)
 
 ```
 
 Project team members run this next chunk interactively to do some checks on the variable documentation. It has option `eval: false` and will not be run when the project is rendered.
-
-```{r}
-#| label: check-doc
-#| eval: false
-#| output: false
-
-# run some checks on the data interactively
-
-doc2 <- read_csv(fs::path(CDINTERMEDIATE, "variable_documentation.csv"))
-doc2 |> 
-  filter(type != "Num")
-
-count(doc2, vtype)
-
-doc2 |> 
-  filter(vtype=="ERROR")
-
-doc2 |> 
-  filter(vtype=="other")
-
-# check these next 2 to be sure they are appropriate
-countvars <- doc2 |> 
-  filter(vtype=="count")
-
-amountvars <- doc2 |> 
-  filter(vtype=="amount")
-
-rm(amountvars, countvars)
-
-```
-
 
 ## Show variable documentation in a datatable
 
@@ -121,10 +150,10 @@ Show documentation table for variables in the Congressional District csv data. T
 ```{r}
 #| label: show-doc
 
-vdoc <- read_csv(fs::path(CDINTERMEDIATE, "variable_documentation.csv"))
+vdoc <- read_csv(fs::path(CDINTERMEDIATE, "soi_documentation.csv"))
 
 vdoc |>
-  select(-type) |> 
+  mutate(vtype = as.factor(vtype)) |> 
   DT::datatable(rownames = FALSE,
                 options = list(order = list(0, "asc"), # use 1st column (0) for sorting
                                scrollX = TRUE, scrollY = TRUE, paging = TRUE, pageLength = 20,
