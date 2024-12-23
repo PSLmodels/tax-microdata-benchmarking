@@ -1,0 +1,14 @@
+varname,basesoivname,description,fstatus
+XTOT,XTOT,Population,0
+c00100,n1,Total number of returns,0
+c00100,mars1,fstatus == 1,1
+c00100,mars2,fstatus == 2,2
+c00100,mars4,fstatus == 4,4
+c00100,00100,Adjusted gross income,0
+e00200,00200,Wages,0
+e00300,00300,Taxable interest income,0
+e01500,tmd01500_shared_by_soi01700,Pensions total,0
+e02400,tmd02400_shared_by_soi02500,Social Security total,0
+e26270,26270,Combined partnership and S corporation net income/loss,0
+e18400,tmd18400_shared_by_soi18400,State and local income or sales taxes,0
+e18500,tmd18500_shared_by_soi18500,State and local real estate taxes,0

@@ -19,7 +19,7 @@ execute:
   eval: true
   echo: true
   output: true
-  freeze: auto  # auto: during global project renders, re-render only when source changes
+  freeze: false  # auto: during global project renders, re-render only when source changes
 
 book:
   title: "Examine results using area weights"
@@ -29,18 +29,20 @@ book:
   date-format: long
   chapters:
     - index.qmd
-    - part: "IRS Congressional District data"
+    # - part: "Examine Congressional Districts"
+    #   chapters:
+    #     # - cd_overall_documentation.qmd
+    #     - cd_get_and_save_selected_ACS_data.qmd
+    #     - cd_get_and_save_cd_weights.qmd
+    #     - cd_get_tmd_and_summarize_and_save_cd_weighted_results.qmd
+    #     - cd_get_and_save_targets.qmd
+    #     - cd_combine_data_for_tables.qmd
+    #     - cd_comparison_summary.qmd
+    - part: "Examine states"
       chapters:
-        # - cd_overall_documentation.qmd
-        - cd_get_and_save_selected_ACS_data.qmd
-        - cd_get_and_save_cd_weights.qmd
-        - cd_get_tmd_and_summarize_and_save_cd_weighted_results.qmd
-        - cd_get_and_save_targets.qmd
-        - cd_combine_data_for_tables.qmd
-        - cd_comparison_summary.qmd
-        # - cd_prepare_examination_data.qmd
-        # - cd_simple_tables.qmd
-        # - cd_results_vs_targets_tables.qmd
+        - state_data_preparation.qmd
+        - state_summary_analysis.qmd
+        - individual_state_reports.qmd
 
 format:
   html:

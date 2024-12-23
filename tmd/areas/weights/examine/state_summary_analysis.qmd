@@ -1,0 +1,189 @@
+---
+output: html_document
+editor_options: 
+ chunk_output_type: console
+---
+
+# State summary analysis
+
+## Setup
+
+```{r}
+#| label: setup
+#| output: false
+
+source(here::here("R", "libraries.R"))
+source(here::here("R", "functions.R"))
+source(here::here("R", "functions_constants.R"))
+
+```
+
+```{r}
+#| label: constants
+#| output: false
+
+AREA_TYPE <- "state" # if want to redefine constants
+
+CONSTANTS <- get_constants(AREA_TYPE)
+# CONSTANTS
+
+```
+
+
+```{r}
+#| label: get-data
+#| output: false
+
+compfile <- readr::read_csv(fs::path(CONSTANTS$OUTPUT_DIR, "compfile.csv"),
+                                             show_col_types = FALSE)
+```
+
+
+```{r}
+#| label: ftab
+#| output: false
+
+ftab <- function(tabdf, header, subheader){
+  tabdf |> 
+    select(area, scope, count, fstatus, varname, description, agistub, agilabel, target, wtdsum, diff, pdiff, targeted) |> 
+    gt() |> 
+    tab_header(title=header,
+               subtitle = subheader) |> 
+    fmt_percent(columns = pdiff, decimals=1) |> 
+    fmt_currency(columns = c(target, wtdsum, diff),
+                 rows = count == 0,
+                 scale = 1e-9,
+                 decimals = 2) |> 
+    fmt_number(columns = c(target, wtdsum, diff),
+                 rows = count > 0,
+                 scale = 1e-3,
+                 decimals = 1)
+}
+
+
+```
+
+
+## Selected results for agistub 0 -- total amounts for variables, whether targeted or not
+
+
+```{r}
+#| label: top-20-pdiff-agistub0
+#| column: page
+
+tabdf <-   compfile |> 
+  filter(agistub == 0, area != "us") |> 
+  arrange(desc(abs(pdiff))) |> 
+  filter(row_number() <= 20)
+
+header <- "Top 20 worst percentage differences from potential target for agistub 0"
+subheader <- "Amounts in $ billions, counts in thousands"
+
+ftab(tabdf, header, subheader)
+
+```
+
+
+```{r}
+#| label: top-20-diff-agistub0
+#| column: page
+
+tabdf <-   compfile |> 
+  filter(agistub == 0, area != "us") |> 
+  mutate(group = count==0) |> 
+  arrange(group, desc(abs(diff))) |> 
+  group_by(group) |> 
+  filter(row_number() <= 10) |> 
+  ungroup() |> 
+  select(-group)
+
+header <- "Top 10 each worst dollar and count differences from potential target, agistub 0"
+subheader <- "Amounts in $ billions, counts in thousands"
+
+ftab(tabdf, header, subheader)
+
+```
+
+
+
+
+## Selected results for targeted variables
+
+```{r}
+#| label: top-20-pdiff-targeted
+#| column: page
+
+tabdf <-   compfile |> 
+  filter(targeted, area != "us") |> 
+  arrange(desc(abs(pdiff))) |> 
+  filter(row_number() <= 20)
+
+header <- "Top 20 worst percentage differences from target, targeted items"
+subheader <- "Amounts in $ billions, counts in thousands"
+
+ftab(tabdf, header, subheader)
+
+```
+
+
+```{r}
+#| label: top-20-diff-targeted
+#| column: page
+
+tabdf <-   compfile |> 
+  filter(targeted, area != "us") |> 
+  mutate(group = count==0) |> 
+  arrange(group, desc(abs(diff))) |> 
+  group_by(group) |> 
+  filter(row_number() <= 10) |> 
+  ungroup() |> 
+  select(-group)
+
+header <- "Top 10 each worst dollar and count differences from target, targeted items"
+subheader <- "Amounts in $ billions, counts in thousands"
+
+ftab(tabdf, header, subheader)
+
+
+```
+
+
+## Selected results for untargeted variables and unused targets
+
+```{r}
+#| label: top-20-pdiff-untargeted
+#| column: page
+
+tabdf <-   compfile |> 
+  filter(!targeted, area != "us") |> 
+  arrange(desc(abs(pdiff))) |> 
+  filter(row_number() <= 20)
+
+header <- "Top 20 worst percentage differences from potential target, untargeted items"
+subheader <- "Amounts in $ billions, counts in thousands"
+
+ftab(tabdf, header, subheader)
+
+```
+
+
+```{r}
+#| label: top-20-diff-untargeted
+#| column: page
+
+tabdf <-   compfile |> 
+  filter(!targeted, area != "us") |> 
+  mutate(group = count==0) |> 
+  arrange(group, desc(abs(diff))) |> 
+  group_by(group) |> 
+  filter(row_number() <= 10) |> 
+  ungroup() |> 
+  select(-group)
+
+header <- "Top 10 each worst dollar and count differences from potential target, untargeted items"
+subheader <- "Amounts in $ billions, counts in thousands"
+
+ftab(tabdf, header, subheader)
+
+
+```

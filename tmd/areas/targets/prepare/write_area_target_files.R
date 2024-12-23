@@ -76,6 +76,17 @@ OUTDIR <- case_when(
   recipe$areatype == "cd" ~ CDDIR,
   .default = "ERROR")
 
+VARIABLE_MAPPING <- case_when(
+  recipe$areatype == "state" ~ "state_variable_mapping.csv",
+  recipe$areatype == "cd" ~ "cd_variable_mapping.csv",
+  .default = "ERROR")
+
+TOPAGISTUB <- case_when(
+  recipe$areatype == "state" ~ 10,
+  recipe$areatype == "cd" ~ 9,
+  .default = -9)
+
+
 #.. check and set defaults for suffix ----
 if (is.null(recipe$suffix)) {
   message("Note: Suffix value is missing. Defaulting to an empty string.")
@@ -104,7 +115,7 @@ print(recipe)
 # allowable target variables are those mapped below
 # MARS mappings let us get counts by filing status by agi range
 
-vmap <- read_csv(fs::path(DRECIPES, "variable_mapping.csv"),
+vmap <- read_csv(fs::path(DRECIPES, VARIABLE_MAPPING),
                  col_types = "ccci")
 
 allcount_vars <- c("n1", "mars1", "mars2", "mars4")
@@ -127,7 +138,7 @@ target_rules <- recipe$targets |>
 target_stubs <- target_rules |> 
   select(varname, scope, count, fstatus) |> 
   distinct() |> 
-  cross_join(tibble(agistub=1:9)) |> # allow all agi ranges
+  cross_join(tibble(agistub=1:TOPAGISTUB)) |> # allow all agi ranges
   arrange(varname, scope, count, fstatus, agistub)
 
 # update target_stubs to drop any agi ranges that are named for exclusion
