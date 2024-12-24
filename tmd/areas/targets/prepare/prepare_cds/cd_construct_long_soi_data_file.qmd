@@ -15,7 +15,7 @@ This involves cleaning the SOI Congressional District data, adding agi bin infor
 ```{r}
 #| label: setup
 
-source(here::here("R", "libraries.R"))
+suppressPackageStartupMessages(source(here::here("R", "libraries.R")))
 source(here::here("R", "constants.R"))
 source(here::here("R", "functions.R"))
 

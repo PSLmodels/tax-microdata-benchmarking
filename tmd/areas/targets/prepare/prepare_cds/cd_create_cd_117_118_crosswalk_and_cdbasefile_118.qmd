@@ -20,7 +20,7 @@ Doing this requires a crosswalk that shows what fraction of the 2020 population 
 #| label: setup
 #| output: false
 
-source(here::here("R", "libraries.R"))
+suppressPackageStartupMessages(source(here::here("R", "libraries.R")))
 source(here::here("R", "constants.R"))
 source(here::here("R", "functions.R"))
 

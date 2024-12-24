@@ -1,6 +1,6 @@
 project:
   type: book
-  output-dir: _targetprep
+  output-dir: _cdprep
 
 # https://prerelease.quarto.org/  # quarto documentation at this link
 
@@ -12,7 +12,7 @@ project:
 
 # publishing with netlify cli:
 #  open terminal in prepare
-#  quarto render && netlify deploy --prod --dir=_targetprep
+#  quarto render && netlify deploy --prod --dir=_cdprep
 
 #  quarto render # inspect to be sure it is as desired
 #  netlify deploy --prod --dir=_targetprep
@@ -40,7 +40,7 @@ book:
         - usage.qmd
     - part: "IRS SOI Congressional District data"
       chapters:
-        - cd_agilabels.qmd
+        # - cd_agilabels.qmd
         - cd_download_and_clean_census_population_data.qmd
         - cd_download_soi_data.qmd
         - cd_construct_soi_variable_documentation.qmd
@@ -49,12 +49,11 @@ book:
         - cd_create_additional_cd_targets.qmd
         - cd_combine_base_and_additional_targets.qmd
         - cd_create_cd_117_118_crosswalk_and_cdbasefile_118.qmd
-        - cd_create_basefile_multiple_sessions.qmd
+        - cd_create_final_enhanced_multisession_basefile.qmd
         # - cd_create_variable_mapping.qmd
         # - cd_compare_us_totals_tmd_vs_irs_published.qmd
-        # - cd_enhance_basefile_with_special_targets.qmd
   appendices:
-    - cd_issues_and_TODOs.qmd  
+    # - cd_issues_and_TODOs.qmd  
     - cd_IRS_documentation.qmd
 
 format:

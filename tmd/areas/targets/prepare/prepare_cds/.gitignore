@@ -5,9 +5,10 @@
 
 # folders to ignore (anywhere in project since not preceded by root /)
 .Rproj.user/
+_cdprep/
 _docs/
-_targetprep/
 _freeze/
+archive/
 libs/
 # Local Netlify folder
 .netlify
