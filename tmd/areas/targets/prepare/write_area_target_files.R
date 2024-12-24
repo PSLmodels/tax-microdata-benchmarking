@@ -28,7 +28,7 @@ DLIB <- fs::path(PREPDIR, "target_file_library") # output files go here
 
 # input data
 STATEINPUTS <- fs::path(PREPDIR, "prepare_states", "data", "intermediate", "enhanced_targets.csv")
-CDINPUTS <- fs::path(PREPDIR, "prepare_cds", "cds", "intermediate", "enhanced_targets.csv")
+CDINPUTS <- fs::path(PREPDIR, "prepare_cds", "data", "intermediate", "enhanced_targets.csv")
                    
 # output folders
 STATEDIR <- fs::path(DLIB, "states")
@@ -72,25 +72,17 @@ stopifnot(
   "areatype must be one of state or cd" = recipe$areatype %in% c("state", "cd")
 )
 
-OUTDIR <- case_when(
-  recipe$areatype == "state" ~ STATEDIR,
-  recipe$areatype == "cd" ~ CDDIR,
-  .default = "ERROR")
-
-VARIABLE_MAPPING <- case_when(
-  recipe$areatype == "state" ~ "state_variable_mapping.csv",
-  recipe$areatype == "cd" ~ "cd_variable_mapping.csv",
-  .default = "ERROR")
-
-TOPAGISTUB <- case_when(
-  recipe$areatype == "state" ~ 10,
-  recipe$areatype == "cd" ~ 9,
-  .default = -9)
-
-INPUTS <- case_when(
-  recipe$areatype == "state" ~ STATEINPUTS,
-  recipe$areatype == "cd" ~ CDINPUTS,
-  .default = "ERROR")
+if(recipe$areatype == "state"){
+  OUTDIR <- STATEDIR
+  VARIABLE_MAPPING <- "state_variable_mapping.csv"
+  TOPAGISTUB <- 10
+  INPUTS <- STATEINPUTS
+} else if (recipe$areatype == "cd") {
+  OUTDIR <- CDDIR
+  VARIABLE_MAPPING <- "cd_variable_mapping.csv"
+  TOPAGISTUB <- 9
+  INPUTS <- CDINPUTS
+} else stop("BAD areatype")
 
 
 #.. check and set defaults for suffix ----
@@ -160,14 +152,6 @@ if("agi_exclude" %in% names(target_rules)){
 
   
 # create a dataframe to match against the stack data for targets
-# vmap
-# allcount_vars <- c("N1", "MARS1", "MARS2", "MARS4")
-# allcount_vars <- c("n1", "mars1", "mars2", "mars4")
-# vmap2 <- vmap |> 
-#   select(varname, basesoivname, fstatus) |> 
-#   mutate(basesoivname=ifelse(basesoivname %in% allcount_vars, "00100", basesoivname)) |> 
-#   distinct()
-
 # bring basesoivname in because we need it to match against targets file
 targets_matchframe <- target_stubs |>
   mutate(sort=row_number() + 1) |> 
