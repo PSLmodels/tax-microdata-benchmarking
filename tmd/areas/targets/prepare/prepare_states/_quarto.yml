@@ -52,7 +52,6 @@ book:
       chapters: 
         - 50_state_data_underlying_target_files.qmd
   appendices:
-  - notes_on_areas_and_targets.qmd
   - compare_tmdsums_vs_soisums_keyvars.qmd
   - SALT_analysis.qmd
         

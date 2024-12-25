@@ -70,13 +70,13 @@ mappings
 #| label: get-data
 #| output: false
 
-agilabels <- read_csv(fs::path(DRAW, "agilabels.csv"))
+agilabels <- readr::read_csv(fs::path(DRAW, "agilabels.csv"))
 agilabels
 STAGICUTS <- c(agilabels$agilo, agilabels$agihi) |> unique() |> sort()
 # agistub=cut(c00100, STAGICUTS, right = FALSE, ordered_result = TRUE) |> as.integer()
 
 fpath <-  fs::path(TMDDATA, "cached_allvars.csv")
-tmd2021 <- vroom(fpath)
+tmd2021 <- vroom::vroom(fpath)
 ns(tmd2021)
 
 tmd2021 <- tmd2021 |> 
@@ -86,7 +86,7 @@ tmd2021 <- tmd2021 |>
 # has more agistub info than we need but makes it easy to be sure we have the right stubs
 count(tmd2021, agistub, agistublab, agilo, agihi, agilabel)
 
-base_targets <- read_csv(fs::path(DINTERMEDIATE, "base_targets.csv"))
+base_targets <- readr::read_csv(fs::path(DINTERMEDIATE, "base_targets.csv"))
 glimpse(base_targets)
 # tmp <- count(base_targets, soivname, basesoivname, description)
 

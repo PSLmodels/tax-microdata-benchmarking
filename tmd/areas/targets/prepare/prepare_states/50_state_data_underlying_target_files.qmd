@@ -43,8 +43,6 @@ glimpse(etargets)
 cat("summarize the data")
 skim(etargets)
 
-
-
 ```
 
 ### Browse the data for a single state

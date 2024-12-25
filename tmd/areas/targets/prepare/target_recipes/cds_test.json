@@ -14,7 +14,7 @@
   //   states: "all", or a list such as ["ak", "de"]
   //     Phase 6 states: ["AK", "MN", "NJ", "NM", "VA", "SC"]  plus SC
   //     For testing: ["MN"]
-  "arealist": "all",
+  "arealist": ["AK00", "DE00", "ID01", "ID02", "ME02", "MT00", "ND00", "PA08", "SD00", "WY00"],
 	
 	// target parameters
 	"notzero": true, // true or false -- whether to allow zero-valued targets
@@ -109,8 +109,7 @@
       "varname": "e26270",
       "scope": 1,
       "count": 0,
-      "fstatus": 0,
-      "agi_exclude": [1, 2, 3] // not present, or a vector of agistubs to include 
+      "fstatus": 0
     }
   ]
 }

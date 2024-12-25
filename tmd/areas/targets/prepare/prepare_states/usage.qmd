@@ -23,6 +23,8 @@ editor_options:
     -   \[yy\]incmdocguide.doc, from SOI: descriptive documentation, including a table of variables and their descriptions
 
     -   soi_states_variable_documentation.xlsx, hand-created by project team from the .doc files: has a sheet for each year with its documentation table. **NOT** intended to be edited by users.
+    
+    -   agilabels.csv, constructed from SOI data: short file with labeling information for AGI ranges used by the IRS for state data
 
 ## Setting up the environment
 
