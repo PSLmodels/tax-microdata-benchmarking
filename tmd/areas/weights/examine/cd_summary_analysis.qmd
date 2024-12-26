@@ -4,7 +4,7 @@ editor_options:
  chunk_output_type: console
 ---
 
-# State summary analysis
+# Congressional District summary analysis
 
 ## Setup
 
@@ -22,7 +22,7 @@ source(here::here("R", "functions_constants.R"))
 #| label: constants
 #| output: false
 
-AREA_TYPE <- "state" # if want to redefine constants
+AREA_TYPE <- "cd" # if want to redefine constants
 
 CONSTANTS <- get_constants(AREA_TYPE)
 # CONSTANTS

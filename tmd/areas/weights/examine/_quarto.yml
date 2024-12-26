@@ -29,8 +29,11 @@ book:
   date-format: long
   chapters:
     - index.qmd
-    # - part: "Examine Congressional Districts"
-    #   chapters:
+    - part: "Examine Congressional Districts"
+      chapters:
+        - cd_data_preparation.qmd
+        - cd_summary_analysis.qmd
+        - individual_cd_reports.qmd      
     #     # - cd_overall_documentation.qmd
     #     - cd_get_and_save_selected_ACS_data.qmd
     #     - cd_get_and_save_cd_weights.qmd

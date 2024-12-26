@@ -165,8 +165,7 @@ save_enhanced_weighted_sums <- function(taxcalc_vars){
 
 get_combined_file <- function(){
   
-  targets_available <- readr::read_csv(fs::path(CONSTANTS$TARGETS_DIR, "enhanced_targets.csv")) |> 
-    dplyr::rename(area = 1) |> # fix this earlier in process
+  targets_available <- readr::read_csv(fs::path(CONSTANTS$TARGETS_DIR, "enhanced_targets.csv")) |>
     dplyr::mutate(area = stringr::str_to_lower(area))
   
   target_files <- fs::dir_ls(CONSTANTS$WEIGHTS_DIR) |>
