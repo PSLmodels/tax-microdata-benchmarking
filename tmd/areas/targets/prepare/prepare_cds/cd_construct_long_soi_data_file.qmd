@@ -57,7 +57,9 @@ Clean SOI CD data:
 - 
 
 ```{r}
-# djb
+#| label: make-wide-file
+#| output: false
+
 agilabels <- read_csv(fs::path(CDRAW, "agilabels.csv"))
 
 data2 <- data |> 

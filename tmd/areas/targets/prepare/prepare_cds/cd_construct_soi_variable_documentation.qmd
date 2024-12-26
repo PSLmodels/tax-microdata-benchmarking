@@ -18,7 +18,6 @@ source(here::here("R", "functions.R"))
 ```
 
 ```{r}
-#| eval: false
 
 # sample state documentation
 # soivname,basesoivname,vtype,udescription

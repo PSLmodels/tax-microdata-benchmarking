@@ -34,11 +34,11 @@ source(here::here("R", "functions.R"))
 
 # variable_descriptions <- read_csv(fs::path(DINTERMEDIATE, "soi_documentation_by_year.csv"))
 # variable_udescriptions <- read_csv(fs::path(DINTERMEDIATE, "soi_documentation.csv"))
-agilabels <- read_csv(fs::path(DRAW, "agilabels.csv"))
+agilabels <- readr::read_csv(fs::path(DRAW, "agilabels.csv"))
 soilong <- readRDS(fs::path(DINTERMEDIATE, "soilong.rds"))
 glimpse(soilong)
 
-pop2021 <- read_csv(fs::path(DRAW, "statepop_2021.csv"))
+pop2021 <- readr::read_csv(fs::path(DRAW, "statepop_2021.csv"))
 
 ```
 
@@ -147,7 +147,9 @@ skim(soi2021)
 skim(poprecs)
 
 base_targets <- bind_rows(poprecs, soi2021) |> 
-  arrange(stabbr, scope, fstatus, basesoivname, count, agistub)
+  mutate(area=stabbr) |> # so that we have the same format as the cds file
+  arrange(stabbr, scope, fstatus, basesoivname, count, agistub) |>
+  select(stabbr, area, count, scope, agilo, agihi, fstatus, target, basesoivname, soivname, description, agistub, agilabel)
 
 check <- base_targets |> 
   filter(stabbr=="NY")

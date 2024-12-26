@@ -15,7 +15,7 @@ project:
 #  quarto render && netlify deploy --prod --dir=_cdprep
 
 #  quarto render # inspect to be sure it is as desired
-#  netlify deploy --prod --dir=_targetprep
+#  netlify deploy --prod --dir=_cdprep
 
 # or step by step
 #  netlify deploy # to test it, give _examine as publish directory

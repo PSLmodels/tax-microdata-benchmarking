@@ -73,7 +73,6 @@ mappings
 agilabels <- readr::read_csv(fs::path(DRAW, "agilabels.csv"))
 agilabels
 STAGICUTS <- c(agilabels$agilo, agilabels$agihi) |> unique() |> sort()
-# agistub=cut(c00100, STAGICUTS, right = FALSE, ordered_result = TRUE) |> as.integer()
 
 fpath <-  fs::path(TMDDATA, "cached_allvars.csv")
 tmd2021 <- vroom::vroom(fpath)
@@ -177,7 +176,8 @@ soivname_targets <- soivname_shares |>
          basesoivname=paste0("tmd", str_sub(tmdvar, 2, -1), "_shared_by_soi", basesoivname),
          soivname=paste0(str_sub(soivname, 1, 1), basesoivname)) |> 
   mutate(target=if_else(agistub==0, sum(target[agistub != 0]), target),
-         .by=c(stabbr, tmdvar, basesoivname, scope, fstatus, count))
+         .by=c(stabbr, tmdvar, basesoivname, scope, fstatus, count)) |> 
+  select(stabbr, area, count, scope, agilo, agihi, fstatus, target, basesoivname, soivname, description, agistub, agilabel, tmdvar)
 
 check <- soivname_targets |> filter(stabbr=="MN")
 

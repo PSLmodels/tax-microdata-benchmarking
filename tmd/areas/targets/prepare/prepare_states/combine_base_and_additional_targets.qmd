@@ -30,13 +30,6 @@ ns(additional_targets)
 
 setdiff(names(base_targets), names(additional_targets)) # none missing
 setdiff(names(additional_targets), names(base_targets)) # see below
-# "soi_ussum" "soi_share" "tmdvar" "tmdsum"
-# we can drop all of these
-
-# re-examine additional targets
-glimpse(additional_targets)
-count(additional_targets, basesoivname, soivname, description)
-count(additional_targets, tmdvar, basesoivname, soivname, description)
 
 stack <- bind_rows(base_targets, 
                    additional_targets |> 
@@ -51,7 +44,7 @@ stack <- bind_rows(base_targets,
   arrange(stabbr, sort, scope, fstatus, basesoivname, count, agistub) |> 
   # now calc sort
   mutate(sort=row_number(), .by=stabbr) |> 
-  select(stabbr, sort, count, scope, agilo, agihi, fstatus, target, basesoivname, soivname, description, agistub, agilabel)
+  select(stabbr, area, sort, count, scope, agilo, agihi, fstatus, target, basesoivname, soivname, description, agistub, agilabel)
 
 # varname,count,scope,agilo,agihi,fstatus,target
 check <- stack |> filter(stabbr=="NY")
