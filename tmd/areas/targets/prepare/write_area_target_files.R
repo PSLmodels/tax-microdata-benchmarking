@@ -1,6 +1,6 @@
 
 # run from terminal (not console) with:
-#   Rscript write_area_target_files.R phase6_states.json
+#   Rscript write_area_target_files.R <json file name>
 
 # json files MUST be in the target_recipes folder
 # Rscript test.r > output.log 2>&1
@@ -20,7 +20,8 @@ suppressPackageStartupMessages({
 # assume for NOW that this is called from the prepare/prepare_states folder
 # later we will move it to the prepare folder
 PREPDIR <- getwd() # folder in which the terminal is open; fs::path_abs("../")
-# during development use the following:
+
+# IMPORTANT: during interactive development use the following: ----
 #  PREPDIR <- "/home/donboyd5/Documents/python_projects/tax-microdata-benchmarking/tmd/areas/targets/prepare"
 
 DRECIPES <- fs::path(PREPDIR, "target_recipes") 
@@ -51,7 +52,10 @@ fnrecipe <- args[1]
 # uncomment a line below for interactive testing
 # fnrecipe <- "phase6_states.json"
 # fnrecipe <- "phase6_test.json"
+# fnrecipe <- "states_final.json"
+
 # fnrecipe <- "cds_test.json"
+# fnrecipe <- "cds_final.json"
 
 # Check if the specified file exists in the target_recipes folder
 fpath <- fs::path(DRECIPES, fnrecipe)
@@ -150,7 +154,6 @@ if("agi_exclude" %in% names(target_rules)){
               join_by(varname, scope, count, fstatus, agistub))
   }
 
-  
 # create a dataframe to match against the stack data for targets
 # bring basesoivname in because we need it to match against targets file
 targets_matchframe <- target_stubs |>
@@ -160,6 +163,8 @@ targets_matchframe <- target_stubs |>
   arrange(sort) |> 
   left_join(vmap2, by = join_by(varname, fstatus, count)) |>
   relocate(sort)
+
+nrow(targets_matchframe) # max possible targets before exclusions
 
 # set up filters for areas, zero targets, negative targets, etc. --------------------
 
@@ -212,6 +217,13 @@ mapped <- targets_matchframe |>
             by = join_by(basesoivname, scope, count, fstatus, agistub),
             relationship = "many-to-many") |> 
   arrange(area, sort)
+
+
+# min and max number of targets (depending on area-specific data and filters) -- 128, 129
+mapped |>
+  summarise(ntargs = n(), .by=area) |>
+  summarise(mintargs = min(ntargs), maxtargs = max(ntargs))
+
 
 # write targets -----------------------------------------------------------
 
