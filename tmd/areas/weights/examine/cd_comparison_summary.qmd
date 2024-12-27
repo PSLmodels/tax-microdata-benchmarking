@@ -28,7 +28,6 @@ source(here::here("R", "functions.R"))
 #| label: get-data
 #| output: false
 
-
 compare <- read_csv(here::here("intermediate", "compare.csv"))
 
 ntargets <- scales::label_comma()(nrow(compare))

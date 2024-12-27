@@ -34,8 +34,15 @@ CONSTANTS <- get_constants(AREA_TYPE)
 #| label: get-data
 #| output: false
 
-compfile <- readr::read_csv(fs::path(CONSTANTS$OUTPUT_DIR, "compfile.csv"),
+compfile_all <- readr::read_csv(fs::path(CONSTANTS$OUTPUT_DIR, "compfile.csv"),
                                              show_col_types = FALSE)
+
+areas <- unique(compfile_all$area) |> sort()
+# for testing, choose a subset of compfile_all
+# compfile <- compfile_all |> 
+#   filter(area %in% areas[1:8])
+
+compfile <- compfile_all
 
 ```
 
@@ -57,7 +64,52 @@ vars_included |>
 
 ## Summary results for targeted items and untargeted items in mapped variables
 
-### Overall summary
+### Overall summary by size of percentage difference
+
+
+```{r}
+#| label: overall-summary
+
+apdiffcuts <- c(0, .005, .01, .05, .1, .25, .5, .75, .90, .95, .99, 1, Inf)
+
+tabdata <- compfile |>
+  filter(!is.na(target)) |> 
+  mutate(apcut = cut(apdiff, apdiffcuts)) |>
+  summarise(n=n(),
+            .by=c(targeted, apcut)) |>
+  mutate(targeted=ifelse(targeted, "targeted", "not_targeted")) |> 
+  pivot_wider(names_from = targeted, 
+              values_from = n,
+              values_fill = 0) |> 
+  mutate(total=targeted + not_targeted) |> 
+  arrange(apcut) |> 
+  mutate(across(-apcut, list(share = \(x) x / sum(x))),
+         across(ends_with("share"), \(x) cumsum(x)))
+
+# skim_without_charts(tabdata)
+
+tabdata |> 
+  gt()|> 
+  tab_header("Summary results for TMD variables we have mapped to SOI data") |> 
+  tab_spanner(
+    md("Cumulative number of items by targeting status and percentage-error group"),
+    columns=c(targeted, not_targeted, total)) |> 
+  tab_spanner(
+    md("Cumulative percentage of items in error bins, by targeting status"),
+    columns=c(targeted_share, not_targeted_share, total_share)) |>   
+  cols_label(apcut="Error-group bounds (e.g., (0.005,0.01] = > 0.5% and <= 1% error bin",
+             targeted_share="targeted",
+             not_targeted_share="not_targeted",
+             total_share="total") |> 
+  fmt_number(columns = c(targeted, not_targeted, total),
+             decimals = 0) |> 
+  fmt_percent(columns = ends_with("share"),
+              decimals=1)
+
+
+```
+
+## Quantiles of percentage differences
 
 ```{r}
 #| label: overall-summary
@@ -65,12 +117,11 @@ vars_included |>
 probs <- c(0, .01, .05, .1, .25, .5, .75, .90, .95, .99, 1)
 
 tabdata <- compfile |>
-  summarise(pdiff=list(quantile(pdiff,
+  summarise(pdiff=list(quantile(abs(pdiff),
                                 probs=probs)),
             .by=c(targeted)) |>
   mutate(targeted=ifelse(targeted, "targeted", "not_targeted")) |> 
   unnest_longer(col=pdiff) |>
-  relocate(pdiff_id, pdiff) |>
   pivot_wider(names_from = targeted, values_from = pdiff)
 
 tabdata |> 
@@ -92,7 +143,6 @@ tabdata |>
 #| column: page
 
 probs <- c(0, .01, .05, .1, .25, .5, .75, .90, .95, .99, 1)
-
 
 tabdata <- compfile |>
   summarise(n=n(),

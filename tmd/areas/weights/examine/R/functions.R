@@ -168,6 +168,15 @@ get_combined_file <- function(){
   targets_available <- readr::read_csv(fs::path(CONSTANTS$TARGETS_DIR, "enhanced_targets.csv")) |>
     dplyr::mutate(area = stringr::str_to_lower(area))
   
+  agilabels <- targets_available |> 
+    select(agistub, agilo, agihi, agilabel) |> 
+    distinct()
+  
+  if(CONSTANTS$AREA_TYPE == "cd"){
+    targets_available <- targets_available |> 
+      filter(session == CONSTANTS$SESSION)
+  }
+  
   target_files <- fs::dir_ls(CONSTANTS$WEIGHTS_DIR) |>
     stringr::str_subset("targets.csv") |> 
     stringr::str_subset("enhanced", negate = TRUE) # allows us to have enhanced_targets.csv in folder
@@ -177,10 +186,22 @@ get_combined_file <- function(){
            area = stringr::word(area, sep = "_"),
            targeted = TRUE)
   
-  wtdsums <- readr::read_csv(fs::path(CONSTANTS$OUTPUT_DIR, "wtdsums_enhanced.csv"))
+  wtdsums_enhanced <- readr::read_csv(fs::path(CONSTANTS$OUTPUT_DIR, "wtdsums_enhanced.csv"))
   vmap <- readr::read_csv(fs::path(CONSTANTS$RECIPES_DIR, paste0(CONSTANTS$AREA_TYPE, "_variable_mapping.csv")))
   
-  combined <- wtdsums |> 
+  # reduce problem size by getting mapped targets
+  mapped_targets_available <- inner_join(targets_available |>
+                                           select(-description),
+                                         vmap,
+                                         by = join_by(fstatus, basesoivname)) |> 
+    select(stabbr, area, scope, fstatus, count, 
+           varname, basesoivname, 
+           agistub,
+           target,
+           description)
+  
+  combined <- wtdsums_enhanced |> 
+    # filter(area=="al07") |> 
     dplyr::rename(fstatus = MARS) |> 
     dplyr::mutate(scope = case_when(data_source == 0 ~ 2, # cps only
                              data_source == 1 ~ 1, # puf only
@@ -191,22 +212,33 @@ get_combined_file <- function(){
                              valuetype == "nzcount" ~ 2,
                              .default = -9) # ERROR
     ) |> 
-    left_join(vmap, relationship = "many-to-many",
-              by = join_by(fstatus, varname)) |> 
-    left_join(targets_available |> 
-                select(-c(sort, description)),
-              by = join_by(area, scope, count, fstatus, basesoivname, agistub)) |> 
-    filter(!is.na(soivname)) |> 
+    # we need mapping to make a crosswalk between wtdsums_enhanced and targets_available
+    # at this point (above) we include weighted sums for which we do not have targets
+    left_join(mapped_targets_available,
+              by = join_by(area, fstatus, agistub, varname, scope, count)) |> 
+    # keep targeted mapped variables, plus major variables for which we don't have targets
+    filter(varname %in% c("iitax") | !is.na(target)) |> 
+    left_join(agilabels,
+              by = join_by(agistub)) |> 
     left_join(targets_used |> 
-                select(-target),
+                rename(target_used=target),
               by = join_by(area, fstatus, varname, scope, count, agilo, agihi))|> 
     mutate(diff = wtdsum - target,
            pdiff = diff / target,
+           adiff = abs(diff),
+           apdiff = abs(pdiff),
            targeted = ifelse(is.na(targeted), FALSE, TRUE)) |> 
     arrange(area, scope, count, fstatus, varname, agistub) |> 
     mutate(sort=row_number(), .by=area) |> 
     relocate(sort, .after = area) |> 
-    select(area, sort, scope, count, fstatus, varname, basesoivname, agistub, agilabel, target, wtdsum, diff, pdiff, targeted, description)
+    select(area, sort, scope, count, fstatus, varname, basesoivname, agistub, agilabel, 
+           target, wtdsum, diff, pdiff, adiff, apdiff,
+           targeted, description, target_used)
+  
+  bad <- combined |> 
+    filter(target != target_used) |> 
+    mutate(bdiff=target_used - target,
+           bpdiff = bdiff / target)
   
   return(combined)
 }

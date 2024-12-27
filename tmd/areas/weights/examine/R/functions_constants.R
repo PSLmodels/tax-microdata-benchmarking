@@ -42,13 +42,9 @@ get_constants <- function(area_type) {
                              WEIGHTS_DIR = "/mnt/g/.shortcut-targets-by-id/1pEdofaxeQgEeDLM8NOpo0vOGL1jT8Qa1/AFPI_2024/Phase 6/cds/",
                              RAW_DIR = fs::path(constants$TMDAREAS, "targets", "prepare", "prepare_cds", "data", "data_raw"),
                              TARGETS_DIR = fs::path(constants$TMDAREAS, "targets", "prepare", "prepare_cds", "data", "intermediate"),
-                             OUTPUT_DIR = here::here("data_cd")
-                           ),"test" = dplyr::lst( # allows reference to earlier elements
-                             WEIGHTS_DIR = "/mnt/e/test_states/",
-                             RAW_DIR = WEIGHTS_DIR,
-                             TARGETS_DIR = WEIGHTS_DIR,
-                             OUTPUT_DIR = WEIGHTS_DIR
-                           ),
+                             OUTPUT_DIR = here::here("data_cd"),
+                             SESSION = 118
+                           )
   )
   
   # Combine common and area-specific constants

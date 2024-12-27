@@ -33,14 +33,7 @@ book:
       chapters:
         - cd_data_preparation.qmd
         - cd_summary_analysis.qmd
-        - individual_cd_reports.qmd      
-    #     # - cd_overall_documentation.qmd
-    #     - cd_get_and_save_selected_ACS_data.qmd
-    #     - cd_get_and_save_cd_weights.qmd
-    #     - cd_get_tmd_and_summarize_and_save_cd_weighted_results.qmd
-    #     - cd_get_and_save_targets.qmd
-    #     - cd_combine_data_for_tables.qmd
-    #     - cd_comparison_summary.qmd
+        - individual_cd_reports.qmd
     - part: "Examine states"
       chapters:
         - state_data_preparation.qmd
