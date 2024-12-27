@@ -23,7 +23,6 @@ source(here::here("R", "functions_constants.R"))
 #| output: false
 
 AREA_TYPE = "state"
-# AREA_TYPE = "test"
 
 CONSTANTS <- get_constants(AREA_TYPE)
 CONSTANTS
@@ -37,7 +36,7 @@ Get and save a wide tibble of weights each time new weights are produced. Once t
 
 ```{r}
 #| label: ONETIME-save-weights
-#| eval: true
+#| eval: false
 #| output: false
 
 save_weights()
@@ -51,7 +50,7 @@ Supplement the weights with selected tmd variables and summarize. Repeat when we
 
 ```{r}
 #| label: ONETIME-save-enhanced-weighted-tmd-sums
-#| eval: true
+#| eval: false
 #| output: false
 
 TAXCALC_VARS <- c("XTOT", "c00100", "e00200", "e00300", "e01500", "e02400", "e26270", "e18400", "e18500", "iitax")
@@ -63,6 +62,7 @@ save_enhanced_weighted_sums(TAXCALC_VARS)
 
 ```{r}
 #| label: save-final-file
+#| eval: false
 #| output: false
 
 compfile <- get_combined_file()

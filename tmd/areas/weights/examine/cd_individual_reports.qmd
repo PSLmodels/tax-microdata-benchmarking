@@ -7,7 +7,7 @@ execute:
  
 ---
 
-# State analysis -- individual state reports
+# Congressional District analysis -- individual district reports
 
 ```{r}
 #| label: setup
@@ -24,7 +24,7 @@ source(here::here("R", "functions_constants.R"))
 #| label: constants
 #| output: false
 
-AREA_TYPE <- "state" # if want to redefine constants
+AREA_TYPE <- "cd" # if want to redefine constants
 # AREA_TYPE <- "test" # if want to redefine constants
 
 CONSTANTS <- get_constants(AREA_TYPE)
@@ -33,7 +33,7 @@ CONSTANTS <- get_constants(AREA_TYPE)
 
 ```
 
-## Explanation of individual-state tables
+## Explanation of individual-district tables
 
 The next sections have results for selected states, in filterable and searchable form.
 
@@ -71,7 +71,8 @@ Dropdown boxes and search fields allow narrowing down the records that are displ
 compfile <- readr::read_csv(fs::path(CONSTANTS$OUTPUT_DIR, "compfile.csv"),
                                              show_col_types = FALSE)
 
-areas <- c(CONSTANTS$PHASE6_STATES, "SC") |> stringr::str_to_lower()
+# areas <- c(CONSTANTS$PHASE6_STATES, "SC") |> stringr::str_to_lower()
+areas <- c("AK00", "DE00", "ID01", "ID02", "ME02", "MT00", "ND00", "PA08", "SD00", "WY00") |> stringr::str_to_lower()
 # areas <- c("ak")
 
 for(area in areas) {

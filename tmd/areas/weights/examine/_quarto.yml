@@ -33,12 +33,12 @@ book:
       chapters:
         - cd_data_preparation.qmd
         - cd_summary_analysis.qmd
-        - individual_cd_reports.qmd
+        - cd_individual_reports.qmd
     - part: "Examine states"
       chapters:
         - state_data_preparation.qmd
         - state_summary_analysis.qmd
-        - individual_state_reports.qmd
+        - state_individual_reports.qmd
 
 format:
   html:

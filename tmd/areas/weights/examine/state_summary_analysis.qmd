@@ -57,30 +57,52 @@ vars_included |>
 
 ## Summary results for targeted items and untargeted items in mapped variables
 
-### Overall summary
+### Overall summary by size of percentage difference
 
 ```{r}
 #| label: overall-summary
 
-probs <- c(0, .01, .05, .1, .25, .5, .75, .90, .95, .99, 1)
+apdiffcuts <- c(-1e-99, .005, .01, .05, .1, .25, .5, .75, .90, .95, .99, 1, Inf)
 
 tabdata <- compfile |>
-  summarise(pdiff=list(quantile(pdiff,
-                                probs=probs)),
-            .by=c(targeted)) |>
+  filter(!is.na(target)) |> 
+  mutate(apcut = cut(apdiff, apdiffcuts)) |>
+  summarise(n=n(),
+            .by=c(targeted, apcut)) |>
   mutate(targeted=ifelse(targeted, "targeted", "not_targeted")) |> 
-  unnest_longer(col=pdiff) |>
-  relocate(pdiff_id, pdiff) |>
-  pivot_wider(names_from = targeted, values_from = pdiff)
+  pivot_wider(names_from = targeted, 
+              values_from = n,
+              values_fill = 0) |> 
+  mutate(total=targeted + not_targeted) |> 
+  arrange(apcut) |> 
+  mutate(across(-apcut, list(share = \(x) x / sum(x))),
+         across(ends_with("share"), \(x) cumsum(x))) |> 
+  adorn_totals() |> 
+  mutate(across(contains("_share"), \(x) ifelse(apcut=="Total", NA_real_, x)))
+
+# skim_without_charts(tabdata)
 
 tabdata |> 
-  gt() |>
-  tab_header("Overall summary: Percentage differences from potential targets") |>
-  tab_spanner(label=html("Percentage above (+)<br>or below (-) target"),
-              columns = c(targeted, not_targeted)) |> 
-  cols_label(pdiff_id="quantile") |> 
-  fmt_percent(columns = c(targeted, not_targeted),
-              decimals=2)
+  gt()|> 
+  tab_header("Summary results for TMD variables we have mapped to SOI data") |> 
+  tab_spanner(
+    md("Number of items by targeting status and percentage-error group"),
+    columns=c(targeted, not_targeted, total)) |> 
+  tab_spanner(
+    md("Cumulative percentage of items in error bins, by targeting status"),
+    columns=c(targeted_share, not_targeted_share, total_share)) |>   
+  cols_label(apcut="Error-group bounds",
+             targeted_share="targeted",
+             not_targeted_share="not_targeted",
+             total_share="total") |> 
+  fmt_number(columns = c(targeted, not_targeted, total),
+             decimals = 0) |> 
+  fmt_percent(columns = ends_with("share"),
+              decimals=1) |> 
+  tab_footnote(
+    footnote = "Example: (0.005,0.01] means > 0.5% and <= 1% error.",
+    locations = cells_column_labels(columns = apcut)) |> 
+  sub_missing(missing_text = "--")
 
 ```
 
@@ -93,36 +115,29 @@ tabdata |>
 
 probs <- c(0, .01, .05, .1, .25, .5, .75, .90, .95, .99, 1)
 
-
 tabdata <- compfile |>
+  filter(!is.na(target)) |> 
+  mutate(apcut = cut(apdiff, apdiffcuts)) |>
   summarise(n=n(),
-            pdiff=list(quantile(pdiff,
-                                probs=probs)),
-            .by=c(varname, basesoivname, description, scope, count, fstatus, targeted)) |>
+            .by=c(varname, basesoivname, description, scope, count, apcut, targeted)) |>
   mutate(targeted=ifelse(targeted, "targeted", "not_targeted")) |> 
-  unnest_longer(col=pdiff) |>
-  pivot_wider(names_from = targeted, values_from = c(n, pdiff))
+  pivot_wider(names_from = targeted, 
+              values_from = n,
+              values_fill = 0) |> 
+  mutate(total=targeted + not_targeted) |> 
+  arrange(varname, basesoivname, scope, count, apcut) |> 
+  mutate(across(-apcut, list(share = \(x) x / sum(x))),
+         across(ends_with("share"), \(x) cumsum(x)),
+         .by=c(varname, basesoivname, description, scope, count))
 
 tabdata |> 
-  rename(quantile=pdiff_id) |> 
-  select(-varname) |> 
   DT::datatable(rownames = FALSE,
                 options = list(scrollX = TRUE, scrollY = TRUE, paging = TRUE, pageLength = 25,
                                autoWidth = TRUE),
                 filter="top",
                 escape = FALSE) |>
-  formatPercentage(columns = c("pdiff_targeted", "pdiff_not_targeted"),  digits = 1)
-
-# tabdata |> 
-#   gt() |>
-#   tab_header("Summary by variable: Percentage differences from potential targets") |>
-#   tab_spanner(label=html("Number"),
-#               columns = c(n_targeted, n_not_targeted)) |> 
-#   tab_spanner(label=html("Percentage above (+)<br>or below (-) target"),
-#               columns = c(pdiff_targeted, pdiff_not_targeted)) |>   
-#   cols_label(pdiff_id="quantile") |> 
-#   fmt_percent(columns = c(pdiff_targeted, pdiff_not_targeted),
-#               decimals=2)
+  formatRound(columns = c("targeted", "not_targeted", "total"), digits = 0) |> 
+  formatPercentage(columns = c("targeted_share", "not_targeted_share", "total_share"),  digits = 1)
 
 ```
 
@@ -154,7 +169,7 @@ ftab <- function(tabdf, header, subheader){
 ```
 
 
-## Selected results for agistub 0 -- total amounts for variables, whether targeted or not
+### Selected results for agistub 0 -- total amounts for variables, whether targeted or not
 
 
 ```{r}
@@ -195,9 +210,7 @@ ftab(tabdf, header, subheader)
 ```
 
 
-
-
-## Selected results for targeted variables
+### Selected results for targeted variables
 
 ```{r}
 #| label: top-20-pdiff-targeted
@@ -234,11 +247,10 @@ subheader <- "Amounts in $ billions, counts in thousands"
 
 ftab(tabdf, header, subheader)
 
-
 ```
 
 
-## Selected results for untargeted variables and unused targets
+### Selected results for untargeted variables and unused targets
 
 ```{r}
 #| label: top-20-pdiff-untargeted
@@ -275,5 +287,5 @@ subheader <- "Amounts in $ billions, counts in thousands"
 
 ftab(tabdf, header, subheader)
 
-
 ```
+

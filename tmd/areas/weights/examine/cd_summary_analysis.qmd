@@ -69,7 +69,7 @@ vars_included |>
 ```{r}
 #| label: overall-summary
 
-apdiffcuts <- c(0, .005, .01, .05, .1, .25, .5, .75, .90, .95, .99, 1, Inf)
+apdiffcuts <- c(-1e-99, .005, .01, .05, .1, .25, .5, .75, .90, .95, .99, 1, Inf)
 
 tabdata <- compfile |>
   filter(!is.na(target)) |> 
