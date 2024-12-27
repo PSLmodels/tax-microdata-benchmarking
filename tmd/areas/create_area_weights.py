@@ -42,8 +42,8 @@ DELTA_INIT_VALUE = 1.0e-9
 DELTA_MAX_LOOPS = 1
 
 # default optimization parameters:
-OPTIMIZE_FTOL = 1e-7
-OPTIMIZE_GTOL = 1e-7
+OPTIMIZE_FTOL = 1e-9
+OPTIMIZE_GTOL = 1e-9
 OPTIMIZE_MAXITER = 5000
 OPTIMIZE_IPRINT = 20  # 20 is a good diagnostic value; set to 0 for production
 OPTIMIZE_RESULTS = True  # set to True to see complete optimization results
