@@ -1,25 +1,38 @@
 
+# This program examines logfiles for two separate CD runs, which will be called
+# main (the preferred run if its results are acceptable) and alt (a fallback
+# run). It uses a set of decision rules defined below to decide, for each CD,
+# which of the two runs to use in subsequent analysis. It then copies all 3
+# files for that CD (the targets, log, and weights files) from its location to
+# the dcdbest folder.
+
+# If, after reviewing the files, the user wants to use the CD best files for
+# examination, they could be copied to the cds folder.
 
 # libraries and folders -------------------------------------------------------------------
 
 source(here::here("R", "libraries.R"))
 source(here::here("R", "functions.R"))
-# source(here::here("R", "functions_constants.R"))
 
 dafpi <- "/mnt/g/.shortcut-targets-by-id/1pEdofaxeQgEeDLM8NOpo0vOGL1jT8Qa1/AFPI_2024"
 
+# dcdp5salt <- fs::path(dafpi, "Phase 5", "Phase 5_SALT")
+dcd75 <- fs::path(dafpi, "Phase 6", "cds_75targets")
 dcd128 <- fs::path(dafpi, "Phase 6", "cds_128targets")
-dcdp5salt <- fs::path(dafpi, "Phase 5", "Phase 5_SALT")
 dcdbest <- fs::path(dafpi, "Phase 6", "cds_best")
 
+# set main and alt --------------------------------------------------------
 
-# files -----------------------------------------------------------------
+dmain <- dcd128
+dalt <- dcd75
 
-files128 <- fs::dir_ls(dcd128)
-filesp5salt <- fs::dir_ls(dcdp5salt)
+# get file names -----------------------------------------------------------------
 
-logfiles128 <- files128 |> str_subset(coll(".log"))
-logfilesp5salt <- filesp5salt |> str_subset(coll(".log"))
+files_main <- fs::dir_ls(dmain)
+files_alt <- fs::dir_ls(dalt)
+
+logfiles_main <- files_main |> str_subset(coll(".log"))
+logfiles_alt <- files_alt |> str_subset(coll(".log"))
 
 
 # function to extract -----------------------------------------------------
@@ -47,22 +60,20 @@ extract_min_max_values <- function(logfile) {
 
 # extract values and save -------------------------------------------------
 
-logfiles128 <- files128 |> str_subset(coll(".log"))
-logfilesp5salt <- filesp5salt |> str_subset(coll(".log"))
-
-vals128 <- purrr::map(logfiles128, extract_min_max_values, .progress = TRUE) |> 
+values_main <- purrr::map(logfiles_main, extract_min_max_values, .progress = TRUE) |> 
   list_rbind()
 
-valsp5salt <- purrr::map(logfilesp5salt, extract_min_max_values, .progress = TRUE) |> 
+values_alt <- purrr::map(logfiles_alt, extract_min_max_values, .progress = TRUE) |> 
   list_rbind()
 
 stack <- bind_rows(
-  vals128 |> mutate(src="cd128"),
-  valsp5salt |> mutate(src="cdp5salt")
+  values_main |> mutate(src="main"),
+  values_alt |> mutate(src="alt")
 )
 
 write_csv(stack, here::here("data_cd", "logstack.csv"))
 
+count(stack, src)
 
 # get saved values and explore --------------------------------------------
 
@@ -72,48 +83,39 @@ long <- stack |>
   mutate(range=maxval - minval) |> 
   pivot_longer(cols = c(minval, maxval, range)) |> 
   pivot_wider(names_from = src) |> 
-  relocate(cdp5salt, .before=cd128) |> 
-  mutate(diff=cd128 - cdp5salt)
+  mutate(mma=main - alt)
 
 long |> filter(area=="ut04") # ca18
 
-best_marked <- long |> 
-  mutate(best = ifelse(cd128[label=="post" & name=="range"] < 
-                         cdp5salt[label=="post" & name=="range"],
-                       "cd128",
-                       "cdp5salt"),
-         .by=area) |> 
-  mutate(bestval=case_when(best == "cd128" ~ cd128,
-                           best == "cdp5salt" ~ cdp5salt))
 
-low_threshold <- .975
-high_threshold <- 1.025
+# define best set of weights for each CD ----------------------------------
 
 # low_threshold <- .98
 # high_threshold <- 1.02
 
+low_threshold <- .975
+high_threshold <- 1.025
+
 best_marked <- long |> 
   mutate(
-    min128 = cd128[label=="post" & name=="minval"],
-    max128 = cd128[label=="post" & name=="maxval"],
-    range128 = cd128[label=="post" & name=="range"],
-    minp5 = cdp5salt[label=="post" & name=="minval"],
-    maxp5 = cdp5salt[label=="post" & name=="maxval"],
-    rangep5 = cdp5salt[label=="post" & name=="range"],
+    min_main = main[label=="post" & name=="minval"],
+    max_main = main[label=="post" & name=="maxval"],
+    range_main = main[label=="post" & name=="range"],
+    
+    min_alt = alt[label=="post" & name=="minval"],
+    max_alt = alt[label=="post" & name=="maxval"],
+    range_alt = alt[label=="post" & name=="range"],
     
     best = case_when(
-      min128 >= low_threshold & max128 <= high_threshold ~ "cd128",
-      
-      cd128[label=="post" & name=="range"] <= 
-        cdp5salt[label=="post" & name=="range"] ~ "cd128",
-      
-      cd128[label=="post" & name=="range"] > 
-        cdp5salt[label=="post" & name=="range"] ~ "cdp5salt",
-      
-    .default = "ERROR"),
+      (min_main >= low_threshold) & 
+        (max_main <= high_threshold) ~ "main",
+      range_main <= range_alt ~ "main",
+      range_main > range_alt ~ "alt",
+      .default = "ERROR"),
     .by=area) |> 
-  mutate(bestval=case_when(best == "cd128" ~ cd128,
-                           best == "cdp5salt" ~ cdp5salt))
+  
+  mutate(bestval=case_when(best == "main" ~ main,
+                           best == "alt" ~ alt))
 # count(best_marked, best)
 
 best <- best_marked |> 
@@ -130,10 +132,6 @@ best_marked |> filter(area=="ca36")
 # copy best files ---------------------------------------------------------
 
 copy_best_files <- function(best_tibble, dcdbest) {
-  # Create the 'best' directory if it doesn't exist
-  # best_dir <- dcdbest  # file.path(base_path, "best")
-  # dir.create(best_dir, showWarnings = FALSE)
-  
   # For each row in the tibble
   for (i in seq_len(nrow(best_tibble))) {
     area <- best_tibble$area[i]
@@ -141,14 +139,15 @@ copy_best_files <- function(best_tibble, dcdbest) {
     print(paste0("Row ", i, "Best source for area: ", area, " is: ", bestname))
     
     # Construct source paths
-    if(bestname == "cd128"){
-      source_dir <- dcd128
-    } else if(bestname=="cdp5salt"){
-      source_dir <- dcdp5salt
+    if(bestname == "main"){
+      source_dir <- dmain
+    } else if(bestname=="alt"){
+      source_dir <- dalt
     }
     log_path <- fs::path(source_dir, paste0(area, ".log"))
     targets_path <- fs::path(source_dir, paste0(area, "_targets.csv"))
     weights_path <- fs::path(source_dir, paste0(area, "_tmd_weights.csv.gz"))
+    print(source_dir)
     
     # Copy files to best directory
     file.copy(
@@ -159,13 +158,9 @@ copy_best_files <- function(best_tibble, dcdbest) {
   }
 }
 
-# temp <- best |> filter(row_number() <= 8)
+# test run up to the point where we've seen main and alt
+# temp <- best |> filter(row_number() <= 7)
 # copy_best_files(temp, dcdbest)
+
 copy_best_files(best, dcdbest)
 
-
-# logfile <- fs::path(dcd128, "ak00.log")
-# logfile <- fs::path(dcd128, "ca18.log")
-# extract_min_max_values(logfile)
-# logfiles <- files |> str_subset(coll(".log"))
-# df <- readLines(fs::path(dcd128, "ak00.log"))

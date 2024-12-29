@@ -17,8 +17,8 @@
   "arealist": "all",
 	
 	// target parameters
-	"notzero": true, // true or false -- whether to allow zero-valued targets
-	"notnegative": false, // true or false -- whether to allow negative-valued targets
+	"notzero": true, // true or false -- true means disallow zero-valued targets
+	"notnegative": false, // true or false -- true means disallow negative-valued targets
 	"targets": [
     {
       "varname": "c00100", // agi
@@ -52,19 +52,19 @@
       "fstatus": 4 // Head of household
     },          
     {
-      "varname": "e00200",
+      "varname": "e00200", // wages
       "scope": 1,
       "count": 0,
       "fstatus": 0
     },      
     {
-      "varname": "e00200",
+      "varname": "e00200", // wages
       "scope": 1,
       "count": 2,
       "fstatus": 0
     },             
     {
-      "varname": "e00300",
+      "varname": "e00300", // taxable interest income
       "scope": 1,
       "count": 0,
       "fstatus": 0
@@ -76,37 +76,37 @@
       "fstatus": 0
     },
     {
-      "varname": "e02400",
+      "varname": "e02400", // Total Social Security income
       "scope": 1,
       "count": 0,
       "fstatus": 0
     },
     {
-      "varname": "e18400",
+      "varname": "e18400", // State and local income or sales tax deductions
       "scope": 1,
       "count": 0,
       "fstatus": 0
     },
     {
-      "varname": "e18400",
+      "varname": "e18400", // State and local income or sales tax deductions
       "scope": 1,
       "count": 2,
       "fstatus": 0
     },    
     {
-      "varname": "e18500",
+      "varname": "e18500", // State and local real estate tax deductions
       "scope": 1,
       "count": 0,
       "fstatus": 0
     },
     {
-      "varname": "e18500",
+      "varname": "e18500", // State and local real estate tax deductions
       "scope": 1,
       "count": 2,
       "fstatus": 0
     },    
     {
-      "varname": "e26270",
+      "varname": "e26270", // Combined partnership and S corporation net income/loss
       "scope": 1,
       "count": 0,
       "fstatus": 0

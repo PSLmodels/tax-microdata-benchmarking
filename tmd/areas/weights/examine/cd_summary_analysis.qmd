@@ -64,6 +64,26 @@ vars_included |>
 
 ## Summary results for targeted items and untargeted items in mapped variables
 
+The results below are for items we have mapped to SOI data, whether targeted or not.
+
+### What it means for a variable to be mapped to SOI data
+
+A variable is "mapped" if we have, after careful checking, determined that we can link a specific TMD variable to a specific SOI variable or to a related proxy. For example:
+
+-   TMD variable c00100 (AGI) links directly to the SOI variable a00100.
+-   TMD variable e01500 (Total pension income) does not have a directly corresponding variable in the SOI summary data. However, the SOI data do have a01700 (Taxable pension income), which we used as a proxy for linking - when targeted, each area's target is estimated by sharing total TMD value for e01500 according to its share of the sum of a01700 across areas. (This is done separately for each AGI range.)
+
+So we consider both c00100 and e01500 mapped to the SOI and include them in the analysis below along with other variables in the table above that have a non-missing basesoivname.
+
+### What it means for an item to be targeted
+
+Whether an item is targeted depends on how we defined targeting for a specific variable as well as our general rules of targeting. When we targeted specific variables, we generally targeted each AGI range separately. Because targeted all AGI ranges, we did not need to target a total for the variable. This makes the optimization more efficient than if we targeted the total.
+
+In some cases, we excluded one or more income ranges from targeting, usually because the target created challenges and we expected it to be unimportant to overall tax liability. Also, we generally applied a blanket rule and did not target area-variable-agi combinations where the reported SOI value was zero.
+
+Thus, it is possible to have mapped variables that are untargeted, and it is possible to have targeted variables that have one or more AGI ranges that are not targeted.
+
+
 ### Overall summary by size of percentage difference
 
 ```{r}
@@ -113,6 +133,57 @@ tabdata |>
 
 
 ```
+
+
+### Summary by area
+
+```{r}
+#| label: summary-by-area
+#| column: page
+
+totapdiffs <- compfile |>
+  filter(!is.na(target), area != "us") |> 
+  summarise(n=n(),
+            apdiff_median = median(apdiff),
+            .by=c(area)) |> 
+  mutate(targeted = "total")
+
+tabdata <- compfile |>
+  filter(!is.na(target), area != "us") |> 
+  summarise(n=n(),
+            apdiff_median = median(apdiff),
+            .by=c(area, targeted)) |>
+  mutate(targeted=ifelse(targeted, "targeted", "not_targeted")) |> 
+  bind_rows(totapdiffs) |> 
+  pivot_wider(names_from = targeted, 
+              values_from = c(n, apdiff_median),
+              values_fill = 0) |> 
+  mutate(n_total = n_targeted + n_not_targeted) |> 
+  arrange(desc(apdiff_median_total))
+
+tabdata |> 
+  gt()|> 
+  tab_header("Summary results by area across variables we have mapped to SOI data",
+             subtitle = "Areas sorted by total absolute percentage difference") |> 
+  tab_spanner(
+    md("Number of items by targeting status and area"),
+    columns=c(n_targeted, n_not_targeted, n_total)) |> 
+  tab_spanner(
+    md("Median absolute percentage error by targeting status"),
+    columns=c(apdiff_median_targeted, apdiff_median_not_targeted, apdiff_median_total)) |>  
+  cols_label(
+    contains("n_targeted") ~ "targeted",
+    contains("not_targeted") ~ "not targeted",
+    contains("total") ~ "total"
+    ) |> 
+  fmt_number(columns = starts_with("n_"),
+             decimals = 0) |> 
+  fmt_percent(columns = starts_with("apdiff_"),
+              decimals=1) |> 
+  sub_missing(missing_text = "--")
+
+```
+
 
 ### Summary by variable -- All filing statuses and agi ranges combined
 

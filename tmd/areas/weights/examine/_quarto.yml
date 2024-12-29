@@ -8,13 +8,6 @@ project:
 #  open terminal in examine
 # quarto render && netlify deploy --prod --dir=_examine
 
-#  quarto render # inspect to be sure it is as desired
-#  netlify deploy --prod --dir=_examine
-
-# or step by step
-#  netlify deploy # to test it, give _examine as publish directory
-#  netlify deploy --prod   # to deploy, give _examine as publish directory
-
 execute:
   eval: true
   echo: true

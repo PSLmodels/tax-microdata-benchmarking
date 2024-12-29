@@ -27,6 +27,8 @@ AREA_TYPE = "cd"
 CONSTANTS <- get_constants(AREA_TYPE)
 CONSTANTS
 
+TAXCALC_VARS <- c("XTOT", "c00100", "e00200", "e00300", "e01500", "e02400", "e26270", "e18400", "e18500", "iitax")
+
 ```
 
 
@@ -53,12 +55,21 @@ Supplement the weights with selected tmd variables and summarize. Repeat when we
 #| eval: false
 #| output: false
 
-TAXCALC_VARS <- c("XTOT", "c00100", "e00200", "e00300", "e01500", "e02400", "e26270", "e18400", "e18500", "iitax")
 save_enhanced_weighted_sums(TAXCALC_VARS)
 
 ```
 
 ## Prepare target comparison file
+
+This section prepares a comparison file with the following information:
+
+-   weighted sums for each area for each of the following TMD variables, for each AGI range, filer / non-filer indicator, and filing status:
+       `r paste(TAXCALC_VARS, collapse=", ")`
+-   target values for the variable, if available, based on SOI or other appropriate data
+-   difference and percentage difference between the weighted sum and target value (if available)
+-   an indicator for whether the variable was targeted or instead "floated free"
+
+It saves the file as compfile.csv in the `data_cd` or `data_state` folder as appropriate.
 
 ```{r}
 #| label: save-final-file

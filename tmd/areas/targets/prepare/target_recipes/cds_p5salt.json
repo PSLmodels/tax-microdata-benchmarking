@@ -15,8 +15,8 @@
   "arealist": "all",
 	
 	// target parameters
-	"notzero": true, // true or false -- whether to allow zero-valued targets
-	"notnegative": false, // true or false -- whether to allow negative-valued targets
+	"notzero": true, // true or false -- true means disallow zero-valued targets
+	"notnegative": false, // true or false -- true means disallow negative-valued targets
 	"targets": [
     {
       "varname": "c00100",
@@ -25,31 +25,31 @@
       "fstatus": 0
     },
     {
-      "varname": "c00100",
+      "varname": "c00100", // agi
       "scope": 1,
       "count": 0,
       "fstatus": 0
     },  
     {
-      "varname": "c00100",
+      "varname": "c00100", // agi used to get total count
       "scope": 1,
       "count": 1,
       "fstatus": 1
     },      
     {
-      "varname": "c00100",
+      "varname": "c00100", // agi used to get total count
       "scope": 1,
       "count": 1,
       "fstatus": 2
     },      
     {
-      "varname": "c00100",
+      "varname": "c00100", // agi used to get total count
       "scope": 1,
       "count": 1,
       "fstatus": 4
     },          
     {
-      "varname": "e00200",
+      "varname": "e00200", // wages
       "scope": 1,
       "count": 0,
       "fstatus": 0
