@@ -34,11 +34,11 @@ source(here::here("R", "functions.R"))
 
 # variable_descriptions <- read_csv(fs::path(DINTERMEDIATE, "soi_documentation_by_year.csv"))
 # variable_udescriptions <- read_csv(fs::path(DINTERMEDIATE, "soi_documentation.csv"))
-agilabels <- read_csv(fs::path(DINTERMEDIATE, "agilabels.csv"))
+agilabels <- readr::read_csv(fs::path(DRAW, "agilabels.csv"))
 soilong <- readRDS(fs::path(DINTERMEDIATE, "soilong.rds"))
 glimpse(soilong)
 
-pop2021 <- read_csv(fs::path(DRAW, "statepop_2021.csv"))
+pop2021 <- readr::read_csv(fs::path(DRAW, "statepop_2021.csv"))
 
 ```
 
@@ -107,7 +107,7 @@ count(soi2021, stabbr) # 54
 #| label: prepare-population
 #| output: false
 
-count(soi2021, stabbr) # 54: 50 states, DC, PR, OA, US
+count(soi2021, stabbr) # 53: 50 states, DC, PR, US
 count(pop2021, stabbr) # 53: 50 states, DC, PR, US
 
 # check statepop sums
@@ -147,7 +147,9 @@ skim(soi2021)
 skim(poprecs)
 
 base_targets <- bind_rows(poprecs, soi2021) |> 
-  arrange(stabbr, scope, fstatus, basesoivname, count, agistub)
+  mutate(area=stabbr) |> # so that we have the same format as the cds file
+  arrange(stabbr, scope, fstatus, basesoivname, count, agistub) |>
+  select(stabbr, area, count, scope, agilo, agihi, fstatus, target, basesoivname, soivname, description, agistub, agilabel)
 
 check <- base_targets |> 
   filter(stabbr=="NY")
@@ -158,45 +160,3 @@ base_targets <- read_csv(fs::path(DINTERMEDIATE, "base_targets.csv"))
 
 ```
 
-## Additional notes
-
-```{r}
-#| label: notes
-#| output: false
-
-# documentation for the targets.csv data file
-
-# sample file excerpt
-# varname,count,scope,agilo,agihi,fstatus,target
-# XTOT,       0,    0,-9e99, 9e99,      0,  33e6
-# e00300,     0,    1,-9e99, 9e99,      0,  20e9
-# e00900,     0,    1,-9e99, 9e99,      0,  30e9
-# e00200,     0,    1,-9e99, 9e99,      0,1000e9
-# e02000,     0,    1,-9e99, 9e99,      0,  30e9
-# e02400,     0,    1,-9e99, 9e99,      0,  60e9
-
-# varname: any Tax-Calculator input variable name plus any Tax-Calculator calculated variable in the list of cached variables in the tmd/storage/__init__.py file
-# count: integer in [0,4] range:
-# count==0 implies dollar total of varname is tabulated
-# count==1 implies number of tax units with any value of varname is tabulated
-# count==2 implies number of tax units with a nonzero value of varname is tabulated
-# count==3 implies number of tax units with a positive value of varname is tabulated
-# count==4 implies number of tax units with a negative value of varname is tabulated
-
-# scope: integer in [0,2] range:
-# scope==0 implies all tax units are tabulated
-# scope==1 implies only PUF-derived filing units are tabulated
-# scope==2 implies only CPS-derived filing units are tabulated
-
-# agilo: float representing lower bound of the AGI range (which is included in the range) that is tabulated.
-# agihi: float representing upper bound of the AGI range (which is excluded from the range) that is tabulated.
-
-# fstatus: integer in [0,5] range:
-# fstatus=0 implies all filing statuses are tabulated
-# other fstatus values imply just the tax units with the Tax-Calculator MARS variable equal to fstatus are included in the tabulation
-
-# target: target amount:
-# dollars if count==0
-# number of tax units if count>0
-
-```

@@ -1,0 +1,79 @@
+// run from terminal (not console) with:
+//   Rscript write_area_target_files.R <filename>
+{
+  "areatype": "cd", // state or cd in quotes  
+  
+  // "suffix": "", // not present, or null, or a capital letter
+  "session": 118, // for areatype cd only: not present, or 117 or 118
+  
+  // arealist:
+  //   cds: "all", or a list such as ["AK00", "DE00"]
+  //     Phase 4 cds: ["AK00", "DE00", "ID01", "ID02", "ME02", "MT00", "ND00", "PA08", "SD00", "WY00"],
+  //   states: "all", or a list such as ["ak", "de"]
+  //     Phase 6 states: ["AK", "MN", "NJ", "NM", "VA", "SC"]  plus SC
+  //     For testing: ["MN"]
+  "arealist": "all",
+	
+	// target parameters
+	"notzero": true, // true or false -- true means disallow zero-valued targets
+	"notnegative": false, // true or false -- true means disallow negative-valued targets
+	"targets": [
+    {
+      "varname": "c00100",
+      "scope": 1,
+      "count": 1,
+      "fstatus": 0
+    },
+    {
+      "varname": "c00100", // agi
+      "scope": 1,
+      "count": 0,
+      "fstatus": 0
+    },  
+    {
+      "varname": "c00100", // agi used to get total count
+      "scope": 1,
+      "count": 1,
+      "fstatus": 1
+    },      
+    {
+      "varname": "c00100", // agi used to get total count
+      "scope": 1,
+      "count": 1,
+      "fstatus": 2
+    },      
+    {
+      "varname": "c00100", // agi used to get total count
+      "scope": 1,
+      "count": 1,
+      "fstatus": 4
+    },          
+    {
+      "varname": "e00200", // wages
+      "scope": 1,
+      "count": 0,
+      "fstatus": 0
+    },
+    {
+      "varname": "e26270",
+      "scope": 1,
+      "count": 0,
+      "fstatus": 0,
+      "agi_exclude": [1, 2, 3] // not present, or a vector of agistubs to include 
+    },
+    {
+      "varname": "e18400",
+      "scope": 1,
+      "count": 0,
+      "fstatus": 0,
+      "agi_exclude": [1, 2] // not present, or a vector of agistubs to include 
+    },
+    {
+      "varname": "e18500",
+      "scope": 1,
+      "count": 0,
+      "fstatus": 0,
+      "agi_exclude": [1, 2]
+    }    
+  ]
+}

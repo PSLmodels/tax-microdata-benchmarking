@@ -4,7 +4,7 @@ editor_options:
  chunk_output_type: console
 ---
 
-# State summary analysis
+# Congressional District summary analysis
 
 ## Setup
 
@@ -22,7 +22,7 @@ source(here::here("R", "functions_constants.R"))
 #| label: constants
 #| output: false
 
-AREA_TYPE <- "state"
+AREA_TYPE <- "cd" # if want to redefine constants
 
 CONSTANTS <- get_constants(AREA_TYPE)
 # CONSTANTS
@@ -34,8 +34,15 @@ CONSTANTS <- get_constants(AREA_TYPE)
 #| label: get-data
 #| output: false
 
-compfile <- readr::read_csv(fs::path(CONSTANTS$OUTPUT_DIR, "compfile.csv"),
+compfile_all <- readr::read_csv(fs::path(CONSTANTS$OUTPUT_DIR, "compfile.csv"),
                                              show_col_types = FALSE)
+
+areas <- unique(compfile_all$area) |> sort()
+# for testing, choose a subset of compfile_all
+# compfile <- compfile_all |> 
+#   filter(area %in% areas[1:8])
+
+compfile <- compfile_all
 
 ```
 
@@ -124,7 +131,9 @@ tabdata |>
     locations = cells_column_labels(columns = apcut)) |> 
   sub_missing(missing_text = "--")
 
+
 ```
+
 
 ### Summary by area
 
@@ -176,7 +185,7 @@ tabdata |>
 ```
 
 
-### Summary by variable
+### Summary by variable -- All filing statuses and agi ranges combined
 
 ```{r}
 #| label: summary-by-variable
@@ -200,6 +209,8 @@ tabdata <- compfile |>
          .by=c(varname, basesoivname, description, scope, count))
 
 tabdata |> 
+  # rename(quantile=pdiff_id) |> 
+  # select(-varname) |> 
   DT::datatable(rownames = FALSE,
                 options = list(scrollX = TRUE, scrollY = TRUE, paging = TRUE, pageLength = 25,
                                autoWidth = TRUE),
@@ -357,4 +368,3 @@ subheader <- "Amounts in $ billions, counts in thousands"
 ftab(tabdf, header, subheader)
 
 ```
-

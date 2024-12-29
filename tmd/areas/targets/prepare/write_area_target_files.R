@@ -1,6 +1,6 @@
 
 # run from terminal (not console) with:
-#   Rscript write_area_target_files.R phase6_states.json
+#   Rscript write_area_target_files.R <json file name>
 
 # json files MUST be in the target_recipes folder
 # Rscript test.r > output.log 2>&1
@@ -20,7 +20,8 @@ suppressPackageStartupMessages({
 # assume for NOW that this is called from the prepare/prepare_states folder
 # later we will move it to the prepare folder
 PREPDIR <- getwd() # folder in which the terminal is open; fs::path_abs("../")
-# during development use the following:
+
+# IMPORTANT: during interactive development use the following: ----
 #  PREPDIR <- "/home/donboyd5/Documents/python_projects/tax-microdata-benchmarking/tmd/areas/targets/prepare"
 
 DRECIPES <- fs::path(PREPDIR, "target_recipes") 
@@ -28,7 +29,7 @@ DLIB <- fs::path(PREPDIR, "target_file_library") # output files go here
 
 # input data
 STATEINPUTS <- fs::path(PREPDIR, "prepare_states", "data", "intermediate", "enhanced_targets.csv")
-CDINPUTS <- fs::path(PREPDIR, "prepare_cds", "cds", "intermediate", "cdbasefile_enhanced.csv")
+CDINPUTS <- fs::path(PREPDIR, "prepare_cds", "data", "intermediate", "enhanced_targets.csv")
                    
 # output folders
 STATEDIR <- fs::path(DLIB, "states")
@@ -51,6 +52,10 @@ fnrecipe <- args[1]
 # uncomment a line below for interactive testing
 # fnrecipe <- "phase6_states.json"
 # fnrecipe <- "phase6_test.json"
+# fnrecipe <- "states_final.json"
+
+# fnrecipe <- "cds_test.json"
+# fnrecipe <- "cds_final.json"
 
 # Check if the specified file exists in the target_recipes folder
 fpath <- fs::path(DRECIPES, fnrecipe)
@@ -71,20 +76,17 @@ stopifnot(
   "areatype must be one of state or cd" = recipe$areatype %in% c("state", "cd")
 )
 
-OUTDIR <- case_when(
-  recipe$areatype == "state" ~ STATEDIR,
-  recipe$areatype == "cd" ~ CDDIR,
-  .default = "ERROR")
-
-VARIABLE_MAPPING <- case_when(
-  recipe$areatype == "state" ~ "state_variable_mapping.csv",
-  recipe$areatype == "cd" ~ "cd_variable_mapping.csv",
-  .default = "ERROR")
-
-TOPAGISTUB <- case_when(
-  recipe$areatype == "state" ~ 10,
-  recipe$areatype == "cd" ~ 9,
-  .default = -9)
+if(recipe$areatype == "state"){
+  OUTDIR <- STATEDIR
+  VARIABLE_MAPPING <- "state_variable_mapping.csv"
+  TOPAGISTUB <- 10
+  INPUTS <- STATEINPUTS
+} else if (recipe$areatype == "cd") {
+  OUTDIR <- CDDIR
+  VARIABLE_MAPPING <- "cd_variable_mapping.csv"
+  TOPAGISTUB <- 9
+  INPUTS <- CDINPUTS
+} else stop("BAD areatype")
 
 
 #.. check and set defaults for suffix ----
@@ -152,16 +154,7 @@ if("agi_exclude" %in% names(target_rules)){
               join_by(varname, scope, count, fstatus, agistub))
   }
 
-  
 # create a dataframe to match against the stack data for targets
-# vmap
-# allcount_vars <- c("N1", "MARS1", "MARS2", "MARS4")
-# allcount_vars <- c("n1", "mars1", "mars2", "mars4")
-# vmap2 <- vmap |> 
-#   select(varname, basesoivname, fstatus) |> 
-#   mutate(basesoivname=ifelse(basesoivname %in% allcount_vars, "00100", basesoivname)) |> 
-#   distinct()
-
 # bring basesoivname in because we need it to match against targets file
 targets_matchframe <- target_stubs |>
   mutate(sort=row_number() + 1) |> 
@@ -170,6 +163,8 @@ targets_matchframe <- target_stubs |>
   arrange(sort) |> 
   left_join(vmap2, by = join_by(varname, fstatus, count)) |>
   relocate(sort)
+
+nrow(targets_matchframe) # max possible targets before exclusions
 
 # set up filters for areas, zero targets, negative targets, etc. --------------------
 
@@ -202,8 +197,9 @@ if(recipe$areatype == "cd") {
 
 
 # TODO: make this flexible state or cd; load targets data -------------------------------------------------------
-stack <- read_csv(STATEINPUTS, show_col_types = FALSE) |> 
-  rename(area=stabbr)
+# djb go back to state inputs make sure it has area on the file
+
+stack <- read_csv(INPUTS, show_col_types = FALSE)
 # tmd18400_shared_by_soi18400" "tmd18400_shared_by_soi18400" "tmd18500_shared_by_soi18500" "tmd18500_shared_by_soi18500
 
 # create mapped targets tibble --------------------------------------------
@@ -214,13 +210,20 @@ mapped <- targets_matchframe |>
               filter(!!area_filter,
                      !!zero_filter,
                      !!negative_filter,
-                     session_filter) |> 
+                     eval(session_filter)) |> 
               rename(label=description) |> 
              select(-sort),
              # is sort correct?
             by = join_by(basesoivname, scope, count, fstatus, agistub),
             relationship = "many-to-many") |> 
   arrange(area, sort)
+
+
+# min and max number of targets (depending on area-specific data and filters) -- 128, 129
+mapped |>
+  summarise(ntargs = n(), .by=area) |>
+  summarise(mintargs = min(ntargs), maxtargs = max(ntargs))
+
 
 # write targets -----------------------------------------------------------
 

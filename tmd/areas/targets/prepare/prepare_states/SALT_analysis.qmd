@@ -19,7 +19,7 @@ source(here::here("R", "functions.R"))
 #| label: get-data
 #| output: false
 
-agilabels <- read_csv(fs::path(DINTERMEDIATE, "agilabels.csv"))
+agilabels <- read_csv(fs::path(DRAW, "agilabels.csv"))
 
 fpath <-  fs::path(TMDDATA, "cached_allvars.csv")
 tmd2021 <- vroom(fpath)

@@ -20,7 +20,7 @@ Doing this requires a crosswalk that shows what fraction of the 2020 population 
 #| label: setup
 #| output: false
 
-source(here::here("R", "libraries.R"))
+suppressPackageStartupMessages(source(here::here("R", "libraries.R")))
 source(here::here("R", "constants.R"))
 source(here::here("R", "functions.R"))
 
@@ -32,11 +32,11 @@ source(here::here("R", "functions.R"))
 #| label: get-data
 #| output: false
 
-cd117 <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile_117.csv"))
+# cd117 <- read_csv(fs::path(CDINTERMEDIATE, "cdbasefile_117.csv"))
+cd117 <- readr::read_csv(fs::path(CDINTERMEDIATE, "enhanced_targets_session117.csv"))
 
-xwalk1 <- read_csv(fs::path(CDRAW, "geocorr2022_2428906586.csv"))
+xwalk1 <- readr::read_csv(fs::path(CDRAW, "geocorr2022_2428906586.csv"))
 glimpse(xwalk1)
-
 
 (xwalk_labels <- unlist(xwalk1[1, ], use.names = TRUE))  # variable names and labels
 
@@ -123,13 +123,13 @@ xwalk3 |>
   filter(statecd118 == "NC14")
   
 # how do the 117th CDs match up?
-usoi <- cd117$statecd |> unique()
+usoi <- cd117$area |> unique()
 ugeo <- xwalk3$statecd117 |> unique()
 
 usoi
 ugeo
 
-setdiff(usoi, ugeo) # none missing
+setdiff(usoi, ugeo) # US00 is in SOI but not in xwalk
 setdiff(ugeo, usoi) # none missing
 
 check <- xwalk2 |> 
@@ -190,8 +190,7 @@ cd118v1 <- xwalk |>
   rename(statecd=statecd118,
          cd=cd118) |> 
   left_join(cd117 |> 
-              select(-cd) |> 
-              rename(statecd117=statecd),
+              rename(statecd117=area),
             by = join_by(stabbr, statecd117),
             relationship = "many-to-many")
 
@@ -199,13 +198,22 @@ cd118v1 <- xwalk |>
 cd118v2 <- cd118v1 |> 
   mutate(target=target * share117to118) |> 
   summarise(target=sum(target),
-            .by=c(stabbr, cd, statecd, src, rectype,
-                     agistub, agilo, agihi, basevname,
-                     scope, fstatus, count, vname, description, agirange))
-
+            .by=c(stabbr, statecd,
+                  basesoivname, soivname, description, 
+                  scope, fstatus, count,
+                  agistub, agistub, agilo, agihi, agilabel)) |> 
+  rename(area=statecd)
 glimpse(cd118v2)
 summary(cd118v2)
-write_csv(cd118v2, fs::path(CDINTERMEDIATE, "cdbasefile_118.csv"))
+
+names(cd117)
+names(cd118v2)
+
+targ117 <- cd117 |> filter(stabbr != "US") |> summarise(target=sum(target)) |> pull(target)
+targ118 <- sum(cd118v2$target)
+targ117; targ118 # good they are the same
+
+write_csv(cd118v2, fs::path(CDINTERMEDIATE, "enhanced_targets_session118.csv"))
 
 ```
 

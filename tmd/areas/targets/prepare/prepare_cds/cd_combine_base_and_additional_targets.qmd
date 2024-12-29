@@ -1,0 +1,65 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+# Combine base and additional target files
+
+
+```{r}
+#| label: setup
+#| output: false
+
+suppressPackageStartupMessages(source(here::here("R", "libraries.R")))
+source(here::here("R", "constants.R"))
+source(here::here("R", "functions.R"))
+
+```
+
+
+## Stack basefile targets and additional targets
+
+```{r}
+#| label: stack-targets
+#| output: false
+
+base_targets <- read_csv(fs::path(CDINTERMEDIATE, "base_targets.csv"))
+additional_targets <- read_csv(fs::path(CDINTERMEDIATE, "additional_targets.csv"))
+ns(additional_targets)
+
+setdiff(names(base_targets), names(additional_targets)) # none missing
+setdiff(names(additional_targets), names(base_targets)) # see below
+# "soi_ussum" "soi_share" "tmdvar" "tmdsum"
+# we can drop all of these
+
+# re-examine additional targets
+glimpse(additional_targets)
+count(additional_targets, basesoivname, soivname, description)
+count(additional_targets, tmdvar, basesoivname, soivname, description)
+
+stack <- bind_rows(base_targets, 
+                   additional_targets |> 
+                     select(all_of(names(base_targets)))) |> 
+  mutate(sort=ifelse(basesoivname=="XTOT" &
+                       soivname=="XTOT" &
+                       scope==0 &
+                       str_detect(description, "population"),
+                     1, NA_real_)) |> 
+  # sort is 1 for the  population record, NA for others - so pop sorts first
+  # set desired order
+  arrange(stabbr, sort, scope, fstatus, basesoivname, count, agistub) |> 
+  # now calc sort
+  mutate(sort=row_number(), .by=area) |> 
+  select(stabbr, area, sort, count, scope, agilo, agihi, fstatus, target, basesoivname, soivname, description, agistub, agilabel)
+
+skim_without_charts(stack)
+
+# varname,count,scope,agilo,agihi,fstatus,target
+check <- stack |> filter(area=="NY01")
+check2 <- count(check, basesoivname, soivname, description)
+
+write_csv(stack, fs::path(CDINTERMEDIATE, "enhanced_targets_session117.csv"))
+
+```
+

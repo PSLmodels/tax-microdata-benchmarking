@@ -4,9 +4,9 @@ editor_options:
   chunk_output_type: console
 ---
 
-# Enhance state targets basefile
+# Enhance Congressional District targets basefile
 
-The targets basefile created in a prior .qmd file has a population target for each state and many SOI-based targets. However, for some target concepts SOI data are either not available or are inappropriate. 
+The targets basefile created in a prior .qmd file has a population target for each cd and many SOI-based targets. However, for some target concepts SOI data are either not available or are inappropriate. 
 
 For example, for SALT deductions, for variables ending in 18400 (state and local income or sales tax deduction) or 18500 (real estate taxes paid) the SOI data for 2021 represent the amount available to be deducted by 2021 itemizers (at 2021 levels, under 2021), before the SALT cap. Because the TCJA raised the standard deduction sharply, there are far fewer itemizers in 2021 than pre-TCJA. We want our targets to be for available deductions including nonitemizers, in a manner consistent with the way the data are measured in our TMD variables e18400 and e18500.
 
@@ -63,35 +63,34 @@ mappings
 ```
 
 
-
 ## Get data
 
 ```{r}
 #| label: get-data
 #| output: false
 
-agilabels <- readr::read_csv(fs::path(DRAW, "agilabels.csv"))
+agilabels <- read_csv(fs::path(CDRAW, "agilabels.csv"))
 agilabels
-STAGICUTS <- c(agilabels$agilo, agilabels$agihi) |> unique() |> sort()
+CDAGICUTS <- c(agilabels$agilo, agilabels$agihi) |> unique() |> sort()
 
 fpath <-  fs::path(TMDDATA, "cached_allvars.csv")
-tmd2021 <- vroom::vroom(fpath)
+tmd2021 <- vroom(fpath)
 ns(tmd2021)
 
 tmd2021 <- tmd2021 |> 
-  mutate(agistublab=cut(c00100, STAGICUTS, right = FALSE, ordered_result = TRUE),
+  mutate(agistublab=cut(c00100, CDAGICUTS, right = FALSE, ordered_result = TRUE),
          agistub=agistublab |> as.integer()) |> 
   left_join(agilabels, by = join_by(agistub))
 # has more agistub info than we need but makes it easy to be sure we have the right stubs
 count(tmd2021, agistub, agistublab, agilo, agihi, agilabel)
 
-base_targets <- readr::read_csv(fs::path(DINTERMEDIATE, "base_targets.csv"))
+base_targets <- read_csv(fs::path(CDINTERMEDIATE, "base_targets.csv"))
 glimpse(base_targets)
 # tmp <- count(base_targets, soivname, basesoivname, description)
 
 ```
 
-## Variables shared to states
+## Variables shared to Congressional Districts
 
 ### tmd data
 
@@ -140,7 +139,7 @@ tmdsums
 ```
 
 
-### Use SOI data to share the target values created above to states
+### Use SOI data to share the target values created above to Congressional Districts
 
 With the SOI base targets data for 2021:
 
@@ -149,7 +148,7 @@ With the SOI base targets data for 2021:
 
 Calculate targets:
 
--   For each variable to be shared, by state and AGI range, target = tmd sum calculated previously x state's share of the US value of the SOI sharer variable
+-   For each variable to be shared, by area and AGI range, target = tmd sum calculated previously x area's share of the US value of the SOI sharer variable
 -   Construct target variable name to tell which tmd variable is shared by which SOI variable
 -   Write results to additional_targets.csv
 
@@ -157,16 +156,32 @@ Calculate targets:
 #| label: get-variable-shares
 #| output: false
 
+# drop US recs and construct faux US records because we don't have agistub for the real U.S. records
+usrecs <- base_targets |> 
+  filter(stabbr != "US") |> 
+  filter(soivname != "XTOT") |> 
+  summarise(target=sum(target),
+            .by=c(agistub, agilo, agihi, agilabel, soivname, basesoivname, scope, fstatus, count, description)) |> 
+  mutate(stabbr = "US", cd = "00", area = "US00")
+
 # note: by using the us record we include the (trivial) OA amounts, which 
 #   seems right - implicitly they are in the tmd data
 soivname_shares <- base_targets |> 
+  filter(!(stabbr == "US" & soivname != "XTOT")) |> 
+  bind_rows(usrecs) |>  
   filter(basesoivname %in% mappings$basesoivname) |> 
   mutate(soi_ussum=target[stabbr=="US"],
          soi_share=ifelse(soi_ussum==0, 0, target / soi_ussum),
             .by=c(basesoivname, count, scope, fstatus, agistub))
 
-check <- soivname_shares |> filter(stabbr=="US")
-check <- soivname_shares |> filter(stabbr=="NY")
+# check <- soivname_shares |> filter(stabbr=="US")
+# check2 <- soivname_shares |> filter(stabbr=="NY")
+# check2 <- soivname_shares |> filter(stabbr=="NY", area=="NY01", soivname=="a01700")
+# 
+# soivname_shares |> 
+#   filter(soivname=="a01700", stabbr != "US") |> 
+#   summarise(soi_share=sum(soi_share), .by=c(basesoivname, count, scope, fstatus, agistub, agilabel))
+
 
 soivname_targets <- soivname_shares |> 
   left_join(tmdsums |> 
@@ -176,14 +191,13 @@ soivname_targets <- soivname_shares |>
          basesoivname=paste0("tmd", str_sub(tmdvar, 2, -1), "_shared_by_soi", basesoivname),
          soivname=paste0(str_sub(soivname, 1, 1), basesoivname)) |> 
   mutate(target=if_else(agistub==0, sum(target[agistub != 0]), target),
-         .by=c(stabbr, tmdvar, basesoivname, scope, fstatus, count)) |> 
-  select(stabbr, area, count, scope, agilo, agihi, fstatus, target, basesoivname, soivname, description, agistub, agilabel, tmdvar)
+         .by=c(area, tmdvar, basesoivname, scope, fstatus, count))
 
-check <- soivname_targets |> filter(stabbr=="MN")
+check <- soivname_targets |> filter(area=="NY01")
 
 count(soivname_targets, tmdvar, basesoivname, soivname)
 
-write_csv(soivname_targets, fs::path(DINTERMEDIATE, "additional_targets.csv"))
+write_csv(soivname_targets, fs::path(CDINTERMEDIATE, "additional_targets.csv"))
 
 ```
 
