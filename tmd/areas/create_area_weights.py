@@ -35,7 +35,7 @@ PARAMS = {}
 
 # default target parameters:
 TARGET_RATIO_TOLERANCE = 0.0040  # what is considered hitting the target
-DUMP_ALL_TARGET_DEVIATIONS = True  # set to True only for diagnostic work
+DUMP_ALL_TARGET_DEVIATIONS = False  # set to True only for diagnostic work
 
 # default regularization parameters:
 DELTA_INIT_VALUE = 1.0e-9
@@ -45,8 +45,8 @@ DELTA_MAX_LOOPS = 1
 OPTIMIZE_FTOL = 1e-9
 OPTIMIZE_GTOL = 1e-9
 OPTIMIZE_MAXITER = 5000
-OPTIMIZE_IPRINT = 20  # 20 is a good diagnostic value; set to 0 for production
-OPTIMIZE_RESULTS = True  # set to True to see complete optimization results
+OPTIMIZE_IPRINT = 0  # 20 is a good diagnostic value; set to 0 for production
+OPTIMIZE_RESULTS = False  # set to True to see complete optimization results
 
 
 def valid_area(area: str):
@@ -683,7 +683,7 @@ if __name__ == "__main__":
         sys.exit(1)
     RCODE = create_area_weights_file(
         area_code,
-        write_log=False, # djb
+        write_log=False,
         write_file=True,
     )
     sys.exit(RCODE)
