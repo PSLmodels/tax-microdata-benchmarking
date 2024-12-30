@@ -16,7 +16,7 @@ format:
 book:
   title: "Examination report for Congressional Districts"
   date: now
-  date-format: "MMM D, YYYY  \nhh:mm a"
+  date-format: "MMM D, YYYY  hh:mm a"
   chapters:
     - index.qmd
     - data_preparation.qmd
