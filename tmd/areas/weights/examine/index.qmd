@@ -1,10 +1,38 @@
 ---
+engine: knitr
 output: html_document
+params:
+  area_type: "placeholder"
+  eval_data: FALSE
 editor_options: 
  chunk_output_type: console
 ---
 
 # Introduction
 
-TO COME.
+
+```{r}
+#| label: setup
+#| output: false
+
+source(here::here("R", "libraries.R"))
+source(here::here("R", "functions.R"))
+source(here::here("R", "functions_constants.R"))
+
+```
+
+
+```{r}
+#| label: constants
+#| output: false
+
+AREA_TYPE = params$area_type
+
+CONSTANTS <- get_constants(AREA_TYPE)
+CONSTANTS
+
+```
+
+
+Analysis of results for `r CONSTANTS$LONG_NAME`.
 

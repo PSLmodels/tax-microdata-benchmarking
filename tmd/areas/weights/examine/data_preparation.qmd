@@ -1,12 +1,14 @@
 ---
+params:
+  area_type: "placeholder"
+  eval_data: FALSE
+engine: knitr  
 output: html_document
 editor_options: 
  chunk_output_type: console
 ---
 
-# State data preparation
-
-## Setup
+# Data preparation
 
 ```{r}
 #| label: setup
@@ -18,17 +20,19 @@ source(here::here("R", "functions_constants.R"))
 
 ```
 
+
 ```{r}
 #| label: constants
 #| output: false
 
-AREA_TYPE = "state"
+AREA_TYPE = params$area_type
 
 CONSTANTS <- get_constants(AREA_TYPE)
 CONSTANTS
 
 ```
 
+Prepare data for `r CONSTANTS$LONG_NAME`.
 
 ## ONETIME: Get and save weights
 
@@ -36,7 +40,7 @@ Get and save a wide tibble of weights each time new weights are produced. Once t
 
 ```{r}
 #| label: ONETIME-save-weights
-#| eval: false
+#| eval: !expr params$eval_data
 #| output: false
 
 save_weights()
@@ -50,7 +54,7 @@ Supplement the weights with selected tmd variables and summarize. Repeat when we
 
 ```{r}
 #| label: ONETIME-save-enhanced-weighted-tmd-sums
-#| eval: false
+#| eval: !expr params$eval_data
 #| output: false
 
 TAXCALC_VARS <- c("XTOT", "c00100", "e00200", "e00300", "e01500", "e02400", "e26270", "e18400", "e18500", "iitax")
@@ -62,7 +66,7 @@ save_enhanced_weighted_sums(TAXCALC_VARS)
 
 ```{r}
 #| label: save-final-file
-#| eval: false
+#| eval: !expr params$eval_data
 #| output: false
 
 compfile <- get_combined_file()

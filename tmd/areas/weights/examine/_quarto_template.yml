@@ -14,7 +14,7 @@ format:
     code-fold: true   
 
 book:
-  title: "Examination report for Congressional Districts"
+  title: "{{book_title}}"
   date: now
   date-format: "MMM D, YYYY  hh:mm a"
   chapters:

@@ -3,7 +3,8 @@
 # folders to ignore
 .Rproj.user/
 /.quarto/
-_examine/
+_cd/
+_state/
 _freeze/
 site_libs/
 
