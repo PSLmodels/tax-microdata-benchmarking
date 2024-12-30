@@ -9,7 +9,7 @@
 # functions_constants.R
 get_constants <- function(area_type) {
   # Validate input
-  valid_area_types <- c("state", "cd", "test")
+  valid_area_types <- c("state", "cd")
   if (!area_type %in% valid_area_types) {
     stop("area_type must be one of: ", paste(valid_area_types, collapse = ", "))
   }
@@ -36,14 +36,20 @@ get_constants <- function(area_type) {
                              WEIGHTS_DIR = "/mnt/g/.shortcut-targets-by-id/1pEdofaxeQgEeDLM8NOpo0vOGL1jT8Qa1/AFPI_2024/Phase 6/states/",
                              RAW_DIR = fs::path(constants$TMDAREAS, "targets", "prepare", "prepare_states", "data", "data_raw"),
                              TARGETS_DIR = fs::path(constants$TMDAREAS, "targets", "prepare", "prepare_states", "data", "intermediate"),
-                             OUTPUT_DIR = here::here("data_state")
+                             OUTPUT_DIR = here::here("data_state"),
+                             LONG_NAME = "states",
+                             AREAS = c("AK", "MN", "NJ", "NM", "VA", "SC") |> 
+                               stringr::str_to_lower()
                            ),
                            "cd" = list(
                              WEIGHTS_DIR = "/mnt/g/.shortcut-targets-by-id/1pEdofaxeQgEeDLM8NOpo0vOGL1jT8Qa1/AFPI_2024/Phase 6/cds/",
                              RAW_DIR = fs::path(constants$TMDAREAS, "targets", "prepare", "prepare_cds", "data", "data_raw"),
                              TARGETS_DIR = fs::path(constants$TMDAREAS, "targets", "prepare", "prepare_cds", "data", "intermediate"),
                              OUTPUT_DIR = here::here("data_cd"),
-                             SESSION = 118
+                             SESSION = 118,
+                             LONG_NAME = "Congressional Districts",
+                             AREAS = c("AK00", "DE00", "ID01", "ID02", "ME02", "MT00", "ND00", "PA08", "SD00", "WY00") |> 
+                               stringr::str_to_lower()
                            )
   )
   

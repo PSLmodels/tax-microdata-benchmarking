@@ -1,12 +1,16 @@
 ---
+params:
+  area_type: "placeholder"
+  eval_data: FALSE
+engine: knitr  
 output: html_document
 editor_options: 
  chunk_output_type: console
 ---
 
-# Congressional District summary analysis
+# Summary analysis
 
-## Setup
+High-level tables
 
 ```{r}
 #| label: setup
@@ -18,17 +22,21 @@ source(here::here("R", "functions_constants.R"))
 
 ```
 
+
 ```{r}
 #| label: constants
 #| output: false
 
-AREA_TYPE <- "cd" # if want to redefine constants
+AREA_TYPE = params$area_type
 
 CONSTANTS <- get_constants(AREA_TYPE)
-# CONSTANTS
+CONSTANTS
 
 ```
 
+Summary analysis for `r CONSTANTS$LONG_NAME`.
+
+## Get `r CONSTANTS$LONG_NAME` data
 
 ```{r}
 #| label: get-data
@@ -37,7 +45,7 @@ CONSTANTS <- get_constants(AREA_TYPE)
 compfile_all <- readr::read_csv(fs::path(CONSTANTS$OUTPUT_DIR, "compfile.csv"),
                                              show_col_types = FALSE)
 
-areas <- unique(compfile_all$area) |> sort()
+# areas <- unique(compfile_all$area) |> sort()
 # for testing, choose a subset of compfile_all
 # compfile <- compfile_all |> 
 #   filter(area %in% areas[1:8])
@@ -159,12 +167,13 @@ tabdata <- compfile |>
               values_from = c(n, apdiff_median),
               values_fill = 0) |> 
   mutate(n_total = n_targeted + n_not_targeted) |> 
-  arrange(desc(apdiff_median_total))
+  arrange(desc(apdiff_median_total)) |> 
+  filter(row_number() <= 20)
 
 tabdata |> 
   gt()|> 
   tab_header("Summary results by area across variables we have mapped to SOI data",
-             subtitle = "Areas sorted by total absolute percentage difference") |> 
+             subtitle = "Top 20 areas sorted by total absolute percentage difference") |> 
   tab_spanner(
     md("Number of items by targeting status and area"),
     columns=c(n_targeted, n_not_targeted, n_total)) |> 

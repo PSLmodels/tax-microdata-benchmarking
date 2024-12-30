@@ -6,7 +6,9 @@
 
 areatab <- compfile |>
   filter(area == "{{area}}") |> 
+    filter(!((varname=="iitax") & (fstatus > 0 | count ==2 | agistub > 0))) |> 
   select(-basesoivname) |> 
+  select(-c(adiff, apdiff, target_used)) |> 
   mutate(across(c(sort, scope, count, fstatus, varname, agistub, agilabel),
                 \(x) as.factor(x)),
          across(c(target, wtdsum, diff),
@@ -20,7 +22,7 @@ areatab <- compfile |>
                                autoWidth = TRUE),
                 filter="top",
                 escape = FALSE) |>
-  formatCurrency(columns = c("target", "wtdsum", "diff"), currency="", digits=1) |> 
+  formatCurrency(columns = c("target", "wtdsum", "diff"), currency="", digits=1) |>
   formatPercentage(columns = c("pdiff"),  digits = 1)
 
 areatab
