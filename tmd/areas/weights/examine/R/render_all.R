@@ -10,6 +10,7 @@
 library(quarto)
 library(fs)
 library(stringr)
+library(tidyverse)
 
 generate_quarto_yaml <- function(book_title) {
   template <- readLines("_quarto_template.yml")
