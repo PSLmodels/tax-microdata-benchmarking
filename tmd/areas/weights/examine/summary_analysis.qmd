@@ -32,70 +32,24 @@ CONSTANTS
 
 ```
 
-Summary tables for `r CONSTANTS$LONG_NAME`.
+The results below for `r CONSTANTS$LONG_NAME` are for items we have mapped from the TMD PUF-based microdata to IRS-published SOI summary data for areas. Results are for targeted items, and untargeted items in mapped variables. For explanation of these terms see [Variables included in the analysis](variables_analyzed.qmd).
 
-## Get `r CONSTANTS$LONG_NAME` data
+Note that some tables below show median errors. By definition half of the errors will be larger than the median.
+
+Get `r CONSTANTS$LONG_NAME` data
 
 ```{r}
 #| label: get-data
 #| output: false
 
-compfile_all <- readr::read_csv(fs::path(CONSTANTS$OUTPUT_DIR, "compfile.csv"),
+compfile <- readr::read_csv(fs::path(CONSTANTS$OUTPUT_DIR, "compfile.csv"),
                                              show_col_types = FALSE)
 
-# areas <- unique(compfile_all$area) |> sort()
-# for testing, choose a subset of compfile_all
-# compfile <- compfile_all |> 
-#   filter(area %in% areas[1:8])
-
-compfile <- compfile_all
-
 ```
 
+## Overall summary
 
-## Variables included in the analysis
-
-```{r}
-#| label: vars-included
-
-vars_included <- compfile |> 
-  select(varname, basesoivname, description) |> 
-  distinct() 
-
-vars_included |> 
-  gt()
-
-```
-
-
-## Summary results for targeted items and untargeted items in mapped variables
-
-The results below are for items we have mapped from the TMD (our PUF-based microdata) to IRS-published SOI summary data for areas.
-
-### What it means for a variable to be mapped to SOI data
-
-When a TMD variable is mapped to SOI data, it means that we were able to develop *potential* area targets for the variable using SOI data. Whether to use those targets in optimization is a separate decision.
-
-A TMD variable is mapped if we have, after careful checking, determined that we can link a specific TMD variable to a specific SOI variable or to a related proxy.
-
-For example:
-
--   TMD variable c00100 (AGI) links directly to the SOI variable a00100.
--   TMD variable e01500 (Total pension income) does not have a directly corresponding variable in the SOI summary data. However, the SOI data do have a01700 (Taxable pension income), which we used as a proxy for linking. Each area's potential target is estimated by sharing total TMD value for e01500 (i.e., its weighted sum for the nation) to individual areas according to its share of the national sum of SOI a01700. (This is done separately for each AGI range.)
-
-Variables that we have linked to the SOI in one of these ways are included in the analysis below. 
-
-It will be possible to extend the analysis to addditional variables -- and to target additional variables -- but each requires careful checking to determine (1) whether an SOI variable is highly similar in concept to a TMD variable by checking IRS forms and other resources, and (2) how the magnitude of the SOI variable for the nation compares to the related TMD variable for the nation.
-
-### What it means for an item to be targeted
-
-Whether an item is targeted depends on how we defined targeting for a specific variable as well as our general rules of targeting. When we targeted specific variables, we generally targeted each AGI range separately. Because targeted all AGI ranges, we did not need to target a total for the variable. This makes the optimization more efficient than if we targeted the total.
-
-In some cases, we excluded one or more income ranges from targeting, usually because the target created challenges and we expected it to be unimportant to overall tax liability. Also, we generally applied a blanket rule and did not target area-variable-agi combinations where the reported SOI value was zero.
-
-Thus, it is possible to have mapped variables that are untargeted, and it is possible to have targeted variables that have one or more AGI ranges that are not targeted.
-
-### Overall summary by size of percentage difference
+### Summary by size of percentage difference
 
 ```{r}
 #| label: overall-summary
@@ -197,7 +151,9 @@ tabdata |>
 ```
 
 
-### Summary by variable -- All filing statuses and agi ranges combined
+### Summary by variable
+
+All filing statuses and agi ranges combined.
 
 ```{r}
 #| label: summary-by-variable
@@ -221,8 +177,6 @@ tabdata <- compfile |>
          .by=c(varname, basesoivname, description, scope, count))
 
 tabdata |> 
-  # rename(quantile=pdiff_id) |> 
-  # select(-varname) |> 
   DT::datatable(rownames = FALSE,
                 options = list(scrollX = TRUE, scrollY = TRUE, paging = TRUE, pageLength = 25,
                                autoWidth = TRUE),
@@ -261,7 +215,7 @@ ftab <- function(tabdf, header, subheader){
 ```
 
 
-### Selected results for agistub 0 -- total amounts for variables, whether targeted or not
+### Worst variable totals
 
 
 ```{r}
@@ -302,7 +256,7 @@ ftab(tabdf, header, subheader)
 ```
 
 
-### Selected results for targeted variables
+### Worst targeted items
 
 ```{r}
 #| label: top-20-pdiff-targeted
@@ -334,7 +288,7 @@ tabdf <-   compfile |>
   ungroup() |> 
   select(-group)
 
-header <- "Top 10 each worst dollar and count differences from target, targeted items"
+header <- "Top 10 each worst count and dollar differences differences from target, targeted items"
 subheader <- "Amounts in $ billions, counts in thousands"
 
 ftab(tabdf, header, subheader)
@@ -342,7 +296,7 @@ ftab(tabdf, header, subheader)
 ```
 
 
-### Selected results for untargeted variables and unused targets
+### Worst untargeted items
 
 ```{r}
 #| label: top-20-pdiff-untargeted
@@ -374,7 +328,7 @@ tabdf <-   compfile |>
   ungroup() |> 
   select(-group)
 
-header <- "Top 10 each worst dollar and count differences from potential target, untargeted items"
+header <- "Top 10 each worst count and dollar differences from potential target, untargeted items"
 subheader <- "Amounts in $ billions, counts in thousands"
 
 ftab(tabdf, header, subheader)
