@@ -177,6 +177,8 @@ tabdata <- compfile |>
          .by=c(varname, basesoivname, description, scope, count))
 
 tabdata |> 
+    mutate(across(c(scope, count, fstatus, varname, agistub, agilabel, description),
+                \(x) as.factor(x))) |> 
   DT::datatable(rownames = FALSE,
                 options = list(scrollX = TRUE, scrollY = TRUE, paging = TRUE, pageLength = 25,
                                autoWidth = TRUE),
