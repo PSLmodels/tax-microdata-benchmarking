@@ -1,7 +1,9 @@
-# Create one local web site with examination results for each area type (state,
-# cd, or both) passed to the function render_area_reports(). The most efficient
-# and effective way to do this appears to be to create a single site (in the
-# _site folder) and then copy it to an appropriately named folder.
+# render_all.R
+
+# For each area type (cd, state, or both) passed to the function
+# render_area_reports(), create a local web site with examination results. We do
+# this by creating a dummy site (in the _site folder) and copying it to an
+# area-type folder (_cd or _state).
 
 # Optionally deploy the web site to netlify.
 
@@ -18,7 +20,7 @@ generate_quarto_yaml <- function(book_title) {
   writeLines(rendered, "_quarto.yml")
 }
 
-render_area_reports <- function(area_types = c("state", "cd"), eval_data = TRUE, deploy = FALSE) {
+render_area_reports <- function(area_types = c("cd", "state"), eval_data = TRUE, deploy = FALSE) {
   
   for(area_type in area_types) {
     print(paste0("Area type: ", area_type))
@@ -26,8 +28,8 @@ render_area_reports <- function(area_types = c("state", "cd"), eval_data = TRUE,
     output_dir <- paste0("_", area_type)
     fs::dir_create(output_dir, recurse = TRUE)
     
-    if(area_type == "state") {suffix <- "states"} else
-      if(area_type == "cd") {suffix <- "Congressional Districts"}
+    if(area_type == "cd") {suffix <- "Congressional Districts"} else 
+      if(area_type == "state") {suffix <- "states"}
     
     book_title <- paste0("Examination report for ", suffix)
     generate_quarto_yaml(book_title)
@@ -47,8 +49,8 @@ render_area_reports <- function(area_types = c("state", "cd"), eval_data = TRUE,
     
     # Conditionally deploy to Netlify
     if(deploy){
-      siteid <- case_when(area_type=="state" ~ "4842eca7-3a3b-4183-8b73-5635ad95101d",
-                          area_type == "cd" ~ "573ad544-144b-4535-88cb-f2c41792fe84",
+      siteid <- case_when(area_type == "cd" ~ "573ad544-144b-4535-88cb-f2c41792fe84",
+                          area_type=="state" ~ "4842eca7-3a3b-4183-8b73-5635ad95101d",
                           .default = "ERROR")
       system2("netlify",
               args = c("deploy",

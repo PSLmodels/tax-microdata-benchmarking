@@ -1,12 +1,12 @@
-# initial WEIGHTSDIR /home/donboyd5/Documents/python_projects/scratch/phase5_salt
-# "\\wsl.localhost\Ubuntu-24.04\home\donboyd5\Documents\python_projects\backups\tmd_items_2024-12-20\states"
-# pp <- "/home/donboyd5/Documents/python_projects"
-# WEIGHTSDIR <- fs::path(pp, "backups/tmd_items_2024-12-20/states")
+# functions_constants.R
 
+# constants needed to switch between a run for Congressional Districts or for states
+
+# Absolute paths on the development machine for important folders - simply informational:
 # \\wsl.localhost\Ubuntu-24.04\home\donboyd5\Documents\python_projects\tax-microdata-benchmarking\tmd\areas\targets\prepare\prepare_states\data\intermediate
 # \\wsl.localhost\Ubuntu-24.04\home\donboyd5\Documents\python_projects\tax-microdata-benchmarking\tmd\areas\targets\prepare\prepare_cds\cds\intermediate
 
-# functions_constants.R
+
 get_constants <- function(area_type) {
   # Validate input
   valid_area_types <- c("state", "cd")
@@ -17,7 +17,6 @@ get_constants <- function(area_type) {
   # Common constants
   constants <- list(
     AREA_TYPE = area_type,
-    PHASE6_STATES = c("AK", "MN", "NJ", "NM", "VA"),
     TMDHOME = fs::path(here::here(), "..", "..", "..", ".."),
     TMDDIR = NULL,  # Will be derived
     TMDAREAS = NULL, # Will be derived
@@ -31,16 +30,19 @@ get_constants <- function(area_type) {
   
   # area_type-specific constants
   area_constants <- switch(area_type,
+                           # NOTE: WEIGHTS_DIR is system-specific. 
+                           # During development it was a local Google Drive folder in the Windows file system.
+                           
                            "state" = list(
-                             # local Google Drive folder
                              WEIGHTS_DIR = "/mnt/g/.shortcut-targets-by-id/1pEdofaxeQgEeDLM8NOpo0vOGL1jT8Qa1/AFPI_2024/Phase 6/states/",
                              RAW_DIR = fs::path(constants$TMDAREAS, "targets", "prepare", "prepare_states", "data", "data_raw"),
                              TARGETS_DIR = fs::path(constants$TMDAREAS, "targets", "prepare", "prepare_states", "data", "intermediate"),
                              OUTPUT_DIR = here::here("data_state"),
                              LONG_NAME = "states",
                              AREAS = c("AK", "MN", "NJ", "NM", "VA", "SC") |> 
-                               stringr::str_to_lower()
+                               stringr::str_to_lower() # Phase 6 states plus SC
                            ),
+                           
                            "cd" = list(
                              WEIGHTS_DIR = "/mnt/g/.shortcut-targets-by-id/1pEdofaxeQgEeDLM8NOpo0vOGL1jT8Qa1/AFPI_2024/Phase 6/cds/",
                              RAW_DIR = fs::path(constants$TMDAREAS, "targets", "prepare", "prepare_cds", "data", "data_raw"),

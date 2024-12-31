@@ -9,7 +9,7 @@ areatab <- compfile |>
     filter(!((varname=="iitax") & (fstatus > 0 | count ==2 | agistub > 0))) |> 
   select(-basesoivname) |> 
   select(-c(adiff, apdiff, target_used)) |> 
-  mutate(across(c(sort, scope, count, fstatus, varname, agistub, agilabel),
+  mutate(across(c(scope, count, fstatus, varname, agistub, agilabel, description),
                 \(x) as.factor(x)),
          across(c(target, wtdsum, diff),
                 \(x) case_when(varname == "XTOT" & count == 0 ~ x,

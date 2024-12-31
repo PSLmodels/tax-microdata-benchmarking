@@ -12,6 +12,10 @@ format:
   html:
     theme: cosmo
     code-fold: true   
+    toc: true
+    toc-location: right
+    toc-depth: 3
+    toc-expand: true
 
 book:
   title: "{{book_title}}"
@@ -20,6 +24,7 @@ book:
   chapters:
     - index.qmd
     - data_preparation.qmd
+    - variables_analyzed.qmd
     - summary_analysis.qmd
     - individual_reports.qmd
 
