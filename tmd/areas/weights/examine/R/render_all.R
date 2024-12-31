@@ -1,7 +1,9 @@
-# Create one local web site with examination results for each area type (state,
-# cd, or both) passed to the function render_area_reports(). The most efficient
-# and effective way to do this appears to be to create a single site (in the
-# _site folder) and then copy it to an appropriately named folder.
+# render_all.R
+
+# For each area type (cd, state, or both) passed to the function
+# render_area_reports(), create a local web site with examination results. We do
+# this by creating a dummy site (in the _site folder) and copying it to an
+# area-type folder (_cd or _state).
 
 # Optionally deploy the web site to netlify.
 
