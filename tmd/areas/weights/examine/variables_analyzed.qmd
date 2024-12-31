@@ -70,7 +70,7 @@ For example:
 
 Variables that we have linked to the SOI in one of these ways are included in the analysis below. 
 
-It is possible to extend the analysis to addditional variables -- and to target additional variables -- but each requires careful checking to determine (1) whether an SOI variable is highly similar in concept to a TMD variable by checking IRS forms and other resources, and (2) how the magnitude of the SOI variable for the nation compares to the related TMD variable for the nation.
+It is possible to extend the analysis to additional variables -- and to target additional variables -- but each requires careful checking to determine (1) whether an SOI variable is highly similar in concept to a TMD variable by checking IRS forms and other resources, and (2) how the magnitude of the SOI variable for the nation compares to the related TMD variable for the nation.
 
 ## What it means for an item to be targeted
 
