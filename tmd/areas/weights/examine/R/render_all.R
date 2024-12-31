@@ -18,7 +18,7 @@ generate_quarto_yaml <- function(book_title) {
   writeLines(rendered, "_quarto.yml")
 }
 
-render_area_reports <- function(area_types = c("state", "cd"), eval_data = TRUE, deploy = FALSE) {
+render_area_reports <- function(area_types = c("cd", "state"), eval_data = TRUE, deploy = FALSE) {
   
   for(area_type in area_types) {
     print(paste0("Area type: ", area_type))
