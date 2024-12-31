@@ -2,7 +2,7 @@
 
 # constants needed to switch between a run for Congressional Districts or for states
 
-# For During development, 
+# Absolute paths on the development machine for important folders - simply informational:
 # \\wsl.localhost\Ubuntu-24.04\home\donboyd5\Documents\python_projects\tax-microdata-benchmarking\tmd\areas\targets\prepare\prepare_states\data\intermediate
 # \\wsl.localhost\Ubuntu-24.04\home\donboyd5\Documents\python_projects\tax-microdata-benchmarking\tmd\areas\targets\prepare\prepare_cds\cds\intermediate
 
