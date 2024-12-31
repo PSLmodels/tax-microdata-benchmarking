@@ -10,8 +10,6 @@ editor_options:
 
 # Summary analysis
 
-High-level tables
-
 ```{r}
 #| label: setup
 #| output: false
@@ -34,7 +32,7 @@ CONSTANTS
 
 ```
 
-Summary analysis for `r CONSTANTS$LONG_NAME`.
+Summary tables for `r CONSTANTS$LONG_NAME`.
 
 ## Get `r CONSTANTS$LONG_NAME` data
 
@@ -72,16 +70,20 @@ vars_included |>
 
 ## Summary results for targeted items and untargeted items in mapped variables
 
-The results below are for items we have mapped to SOI data, whether targeted or not.
+The results below are for items we have mapped from the TMD (our PUF-based microdata) to SOI summary data. When a TMD variable is mapped to SOI data, it means that we were able to develop potential area targets for the variable. Whether to use those targets in optimization is a separate decision.
 
 ### What it means for a variable to be mapped to SOI data
 
-A variable is "mapped" if we have, after careful checking, determined that we can link a specific TMD variable to a specific SOI variable or to a related proxy. For example:
+A TMD variable is "mapped" if we have, after careful checking, determined that we can link a specific TMD variable to a specific SOI variable or to a related proxy. When we are able to link variables
+
+For example:
 
 -   TMD variable c00100 (AGI) links directly to the SOI variable a00100.
--   TMD variable e01500 (Total pension income) does not have a directly corresponding variable in the SOI summary data. However, the SOI data do have a01700 (Taxable pension income), which we used as a proxy for linking - when targeted, each area's target is estimated by sharing total TMD value for e01500 according to its share of the sum of a01700 across areas. (This is done separately for each AGI range.)
+-   TMD variable e01500 (Total pension income) does not have a directly corresponding variable in the SOI summary data. However, the SOI data do have a01700 (Taxable pension income), which we used as a proxy for linking. Each area's potential target is estimated by sharing total TMD value for e01500 (i.e., its weighted sum for the nation) to individual areas according to its share of the national sum of SOI a01700. (This is done separately for each AGI range.)
 
-So we consider both c00100 and e01500 mapped to the SOI and include them in the analysis below along with other variables in the table above that have a non-missing basesoivname.
+Variables that we have mapped to the SOI 
+
+Thus, c00100, e01500 and other variables that we have mapped to the SOI are included in the analysis below.
 
 ### What it means for an item to be targeted
 

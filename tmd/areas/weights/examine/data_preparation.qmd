@@ -47,9 +47,9 @@ save_weights()
 
 ```
 
-## ONETIME: Supplement the weights file with selected tmd variables and summarize
+## ONETIME: Supplement the weights file with selected TMD variables and summarize
 
-Supplement the weights with selected tmd variables and summarize. Repeat when weights change, or the tmd data change, or desired tmd variables change.
+Supplement the weights with selected TMD variables and summarize. Update when area weights change, or the national TMD data change, or if we choose to summarize additional TMD variables.
 
 
 ```{r}
