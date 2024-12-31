@@ -1,3 +1,3 @@
 # areas / weights
 
-Contains sub-national area weights files.
+Contains code to examine sub-national area weights files.
