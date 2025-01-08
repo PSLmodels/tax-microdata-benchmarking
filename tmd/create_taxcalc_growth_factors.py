@@ -41,16 +41,12 @@ def create_factors_file():
     gfdf.iloc[0, 1:] = 1.0
 
     # adjust some factors in order to calibrate tax revenue after FIRST_YEAR
-    # ... adjust 2022 factors to hit 2023 tax revenue targets:
-    # ...... adjustments to hit 2023 CBO PTAX target of 1580.0
-    gfdf.iat[2022 - FIRST_YEAR, AWAGE_INDEX] += 0.16
-    # ...... adjustments to hit 2023 CBO ITAX target of 2512.3
-    gfdf.iat[2022 - FIRST_YEAR, ASOCSEC_INDEX] += -0.19
-    gfdf.iat[2022 - FIRST_YEAR, ASCHCI_INDEX] += -0.30
-    gfdf.iat[2022 - FIRST_YEAR, ASCHEI_INDEX] += -0.30
-    gfdf.iat[2022 - FIRST_YEAR, ADIVS_INDEX] += -0.04
-    gfdf.iat[2022 - FIRST_YEAR, ACGNS_INDEX] += -0.04
-    gfdf.iat[2022 - FIRST_YEAR, AUCOMP_INDEX] += -0.50
+    # ... adjust 2022 factors to get closer to 2022 and 2023 targets:
+    gfdf.iat[2022 - FIRST_YEAR, AWAGE_INDEX] += +0.05
+    gfdf.iat[2022 - FIRST_YEAR, ADIVS_INDEX] += +0.04
+    gfdf.iat[2022 - FIRST_YEAR, ACGNS_INDEX] += +0.04
+    gfdf.iat[2022 - FIRST_YEAR, AUCOMP_INDEX] += -0.01
+    gfdf.iat[2022 - FIRST_YEAR, ASOCSEC_INDEX] += +0.10
 
     # add rows thru LAST_YEAR by copying values for last year in PUF file
     if LAST_YEAR > last_puf_year:
@@ -64,7 +60,6 @@ def create_factors_file():
     # write gfdf to CSV-formatted file
     gfdf.YEAR = gfdf.YEAR.astype(int)
     gfdf.to_csv(TGFFILE, index=False, float_format="%.6f")
-
 
 if __name__ == "__main__":
     create_factors_file()
