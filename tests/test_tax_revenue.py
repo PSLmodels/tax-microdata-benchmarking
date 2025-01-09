@@ -16,8 +16,7 @@ RELTOL_ITAX = {
     2026: 0.05  # caused by FY-vs-CY difference in TCJA reversion timing
 }
 DEFAULT_RELTOL_PTAX = 0.14
-RELTOL_PTAX = {
-}
+RELTOL_PTAX = {}
 
 
 DUMP = False  # True implies test always fails with complete output

@@ -63,5 +63,6 @@ def create_factors_file():
     gfdf.YEAR = gfdf.YEAR.astype(int)
     gfdf.to_csv(TGFFILE, index=False, float_format="%.6f")
 
+
 if __name__ == "__main__":
     create_factors_file()
