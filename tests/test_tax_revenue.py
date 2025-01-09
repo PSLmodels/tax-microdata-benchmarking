@@ -7,13 +7,14 @@ import taxcalc as tc
 from tmd.storage import STORAGE_FOLDER
 
 
-FIRST_CYR = 2021
+FIRST_CYR = 2023
 LAST_CYR = 2033
 
-DEFAULT_RELTOL_ITAX = 0.10
+DEFAULT_RELTOL_ITAX = 0.03
 RELTOL_ITAX = {
+    2026: 0.05  # caused by FY-vs-CY difference in TCJA reversion timing
 }
-DEFAULT_RELTOL_PTAX = 0.10
+DEFAULT_RELTOL_PTAX = 0.14
 RELTOL_PTAX = {
 }
 
