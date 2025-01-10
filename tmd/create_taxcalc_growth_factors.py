@@ -42,6 +42,11 @@ def create_factors_file():
 
     # adjust some factors in order to calibrate tax revenue after FIRST_YEAR
     # ... adjust 2022 PUF factors to get closer to published 2022 targets:
+    # ...  calendar year 2022 targets from
+    # ...  "Individual Income Tax Returns, Preliminary Data, Tax Year 2022"
+    # ...  by Michael Parisi, SOI Bulletin (Spring 2024),
+    # ...  which is at this URL:
+    # ...  https://www.irs.gov/pub/irs-soi/soi-a-inpre-id2401.pdf
     gfdf.iat[2022 - FIRST_YEAR, AWAGE_INDEX] += -0.01
     gfdf.iat[2022 - FIRST_YEAR, ADIVS_INDEX] += +0.04
     gfdf.iat[2022 - FIRST_YEAR, ACGNS_INDEX] += +0.04
@@ -49,6 +54,20 @@ def create_factors_file():
     gfdf.iat[2022 - FIRST_YEAR, ASCHEI_INDEX] += +0.07
     gfdf.iat[2022 - FIRST_YEAR, AUCOMP_INDEX] += -0.01
     gfdf.iat[2022 - FIRST_YEAR, ASOCSEC_INDEX] += +0.10
+    # ... using above adjustments, we have the following results:
+    #      2022 AMOUNTS in $B         SOI        TMD   (TMD/SOI-1)*100(%)
+    #      wage_and_salary       9648.553   9654.475   +0.1
+    #      ordin_dividends        420.403    420.299   -0.0
+    #      SchC_net_income        395.136    396.303   +0.3
+    #      SchE+partner_Scorp    1108.445   1114.474   +0.5
+    #      unemploy_compen         29.554     29.909   +1.2
+    #      taxable_soc_sec        471.017    473.755   +0.6
+    #      adj_gross_income     15142.763  14851.081   -1.9
+    #      taxable_income       11954.522  11842.505   -0.9
+    #      refundable_credits     106.380    116.717   +9.7
+    #      itax_liability        2285.496   2289.792   +0.2
+    # where itax_liability is calculated using only PUF-derived records
+    # and where negative itax amounts are ignored
 
     # add rows thru LAST_YEAR by copying values for last year in PUF file
     if LAST_YEAR > last_puf_year:
