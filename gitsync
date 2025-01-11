@@ -8,7 +8,7 @@ fi
 # synchronize local git repo with central GitHub repo
 git fetch upstream
 git merge upstream/master
-# git push origin master
+git push origin master
 exit 0
 
 # NOTE: to push branch to PR in GitHub repo, do this:
