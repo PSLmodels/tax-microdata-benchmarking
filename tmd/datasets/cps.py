@@ -302,21 +302,6 @@ class CPS(Dataset):
         cps.close()
 
 
-def add_silver_plan_cost(self, cps: h5py.File, year: int):
-    """Adds the second-lowest silver plan cost for each tax unit, based on geography.
-
-    Args:
-        cps (h5py.File): The CPS dataset file.
-        year (int): The year of the data.
-    """
-    from policyengine_us import Microsimulation
-
-    sim = Microsimulation(dataset=self)
-    slspc = sim.calc("second_lowest_silver_plan_cost", year).values
-
-    cps["second_lowest_silver_plan_cost"] = slspc
-
-
 def add_id_variables(
     cps: h5py.File,
     person: DataFrame,
