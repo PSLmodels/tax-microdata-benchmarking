@@ -218,14 +218,6 @@ def create_tc_dataset(pe_dataset: Type, year: int) -> pd.DataFrame:
     return df
 
 
-def create_tc_puf_2015():
-    return create_tc_dataset(PUF_2015, 2015)
-
-
-def create_tc_puf_2021():
-    return create_tc_dataset(PUF_2021, 2021)
-
-
 if __name__ == "__main__":
     create_tc_dataset(PUF_2015, 2015).to_csv(
         STORAGE_FOLDER / "output" / "tc_puf_2015.csv.gz", index=False
