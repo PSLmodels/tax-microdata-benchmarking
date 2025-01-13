@@ -18,3 +18,5 @@ tmd/storage/output/tax_expenditures
 
 # Local Netlify folder
 .netlify
+!tmd/storage/input/puf_2015.csv
+!tmd/storage/input/demographics_2015.csv
