@@ -12,9 +12,11 @@ To generate the microdata files:
 
 1. Run `export POLICYENGINE_GITHUB_MICRODATA_AUTH_TOKEN=***`
 2. Run `export PSL_TAX_MICRODATA_RELEASE_AUTH_TOKEN=***`
-3. Run `make data`
+3. Run `make test`
 
-The two tokens can be obtained from [Don Boyd](mailto:donboyd5@gmail.com).
+The `make test` command creates and tests the three `tmd*csv*` data
+files, which are located in the `tmd/storage/output` folder.  The two
+tokens can be obtained from [Don Boyd](mailto:donboyd5@gmail.com).
 
 ## Examination results
 
