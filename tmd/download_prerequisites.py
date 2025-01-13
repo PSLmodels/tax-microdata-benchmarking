@@ -1,9 +1,10 @@
 from tmd.utils.cloud import download_gh_release_asset
 from tmd.storage import STORAGE_FOLDER
+import logging
 
 
 def download_prerequisites():
-    puf_2015 = download_gh_release_asset(
+    """puf_2015 = download_gh_release_asset(
         repo="nikhilwoodruff/tax-microdata-benchmarking-releases",
         release_name="tmd-prerequisites",
         asset_name="puf_2015.csv",
@@ -19,6 +20,9 @@ def download_prerequisites():
 
     demographics_2015.to_csv(
         STORAGE_FOLDER / "input" / "demographics_2015.csv", index=False
+    )"""
+    logging.warn(
+        "Skipping data download- please make sure that tmd/storage/input/ contains puf_2015.csv and demographics_2015.csv to have this repo function correctly."
     )
 
 
