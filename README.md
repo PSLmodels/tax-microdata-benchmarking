@@ -19,7 +19,12 @@ To generate the TMD files from the PUF files, do this:
 2. Run `make data` in the repository's top-level folder
 
 The `make data` command creates and tests the three `tmd*csv*` data
-files, which are located in the `tmd/storage/output` folder.
+files, which are located in the `tmd/storage/output` folder.  Read
+[this
+documentation](https://taxcalc.pslmodels.org/usage/data.html#irs-public-use-data-tmd-csv)
+on how to use these three files with Tax-Calculator.  Also, you can
+look at the tests in this repository to see Python code that uses the
+TMD files with Tax-Calculator.
 
 ## Examination results
 
