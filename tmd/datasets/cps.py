@@ -276,8 +276,11 @@ class CPS(Dataset):
     data_format = Dataset.ARRAYS
 
     def generate(self):
-        """Generates the Current Population Survey dataset for PolicyEngine US microsimulations.
-        Technical documentation and codebook here: https://www2.census.gov/programs-surveys/cps/techdocs/cpsmar21.pdf
+        """
+        Generates a Current Population Survey dataset for PolicyEngine-US
+          microsimulations.
+        Technical documentation and codebook at this URL:
+          https://www2.census.gov/programs-surveys/cps/techdocs/cpsmar21.pdf
         """
 
         raw_data = self.raw_cps(require=True).load()

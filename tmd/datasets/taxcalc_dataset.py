@@ -1,5 +1,5 @@
 # Create a Tax-Calculator-compatible dataset from
-# any PolicyEngine hierarchical dataset.
+# any PolicyEngine-US hierarchical dataset.
 
 from typing import Type
 import yaml

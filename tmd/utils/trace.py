@@ -16,7 +16,7 @@ def trace1(loc: str, vdf: pd.DataFrame) -> None:
     Returns:
         None
     """
-    tracing = True
+    tracing = False
     if not tracing:
         return
     filer = vdf.data_source == 1

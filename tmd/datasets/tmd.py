@@ -26,7 +26,7 @@ def create_tmd_2021():
     nonfiler = ~(sim.calculate("tax_unit_is_filer", period=2022).values > 0)
     tc_cps_21 = tc_cps_21[nonfiler]
 
-    print("Combining PUF and CPS nonfilers...")
+    print("Combining PUF filers and CPS nonfilers...")
     combined = pd.concat([tc_puf_21, tc_cps_21], ignore_index=True)
 
     # ensure RECID values are unique

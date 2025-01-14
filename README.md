@@ -8,15 +8,18 @@ development will proceed in several phases.
 
 ## Usage instructions
 
-To generate the microdata files:
+In order to use the code in this repository, you need to license the
+2015 PUF from IRS/SOI.  Once you have done that, you will have two
+CSV-formatted files from IRS/SOI: `puf_2015.csv` and
+`demographics_2015.csv`.
 
-1. Run `export POLICYENGINE_GITHUB_MICRODATA_AUTH_TOKEN=***`
-2. Run `export PSL_TAX_MICRODATA_RELEASE_AUTH_TOKEN=***`
-3. Run `make data`
+To generate the TMD files from the PUF files, do this:
+
+1. Copy the two 2015 PUF files to the `tmd/storage/input` folder
+2. Run `make data` in the repository's top-level folder
 
 The `make data` command creates and tests the three `tmd*csv*` data
-files, which are located in the `tmd/storage/output` folder.  The two
-tokens can be obtained from [Don Boyd](mailto:donboyd5@gmail.com).
+files, which are located in the `tmd/storage/output` folder.
 
 ## Examination results
 
