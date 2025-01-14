@@ -1,7 +1,6 @@
 .PHONY=install
 install:
 	pip install -e .
-	python tmd/download_prerequisites.py
 
 .PHONY=clean
 clean:
@@ -60,10 +59,6 @@ data: install tmd_files test
 .PHONY=format
 format:
 	black . -l 79
-
-.PHONY=documentation
-documentation:
-	jb build docs/book
 
 .PHONY=reweighting-visualisation
 reweighting-visualisation:
