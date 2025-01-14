@@ -16,7 +16,7 @@ CSV-formatted files from IRS/SOI: `puf_2015.csv` and
 To generate the TMD files from the PUF files, do this:
 
 1. Copy the two 2015 PUF files to the `tmd/storage/input` folder
-2. Run `make data`
+2. Run `make data` in the repository's top-level folder
 
 The `make data` command creates and tests the three `tmd*csv*` data
 files, which are located in the `tmd/storage/output` folder.

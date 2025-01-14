@@ -275,7 +275,7 @@ class PUF(Dataset):
     data_format = Dataset.ARRAYS
 
     def generate(self, puf: pd.DataFrame, demographics: pd.DataFrame):
-        print("Importing PolicyEngine US variable metadata...")
+        print("Importing PolicyEngine-US variable metadata...")
 
         itmded_dump = False
         if itmded_dump:
