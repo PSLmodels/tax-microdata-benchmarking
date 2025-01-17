@@ -4,9 +4,9 @@ Phase 6 National and Selected State Data Examination Results
 **RESULTS AS OF 2025-01-16**
 
 In the table below, Phase 6 US and selected state TMD estimates for
-2022 are compared with IRS/SOI tabulations of 2022 sampled income tax
-returns.  See the Sources section below the table for details on the
-TMD and IRS/SOI estimates.
+2022 are compared with IRS/SOI tabulations of 2022 sampled federal
+income tax returns.  See the Sources section below the table for
+details on the TMD and IRS/SOI estimates.
 
 <br>
 
