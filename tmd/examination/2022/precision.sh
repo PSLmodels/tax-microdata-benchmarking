@@ -10,6 +10,7 @@ TMD=../..
 cp $TMD/storage/output/tmd*csv* .
 gunzip -f tmd.csv.gz
 STATES="ak mn nj nm sc va"
+STATES=""
 
 # === WEIGHTS ===
 for S in $STATES; do
@@ -26,7 +27,7 @@ done
 
 # === RESULTS ===
 cd $TMD/examination/2022
-TC_OPTIONS="--exact --dump --dvars precvars"
+TC_OPTIONS="--exact --dump --dvars precisionvars"
 echo Generating results for US ...
 tc tmd.csv 2022 $TC_OPTIONS | grep -v data
 python bootstrap_sampling.py tmd-22-#-#-#.csv
