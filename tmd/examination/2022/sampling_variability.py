@@ -38,7 +38,7 @@ def sampling_variability():
         pdiff = np.sort(pctdiff)
         print(f"BS:pctdiff median = {pdiff[499]:9.3f}")
         print(f"BS:pctdiff 95%_ci = {pdiff[24]:9.3f} , {pdiff[974]:9.3f}")
-    
+
     return 0
 
 
