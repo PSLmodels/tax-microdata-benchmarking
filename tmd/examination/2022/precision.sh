@@ -10,7 +10,6 @@ TMD=../..
 cp $TMD/storage/output/tmd*csv* .
 gunzip -f tmd.csv.gz
 STATES="ak mn nj nm sc va"
-STATES=""
 
 # === WEIGHTS ===
 for S in $STATES; do
