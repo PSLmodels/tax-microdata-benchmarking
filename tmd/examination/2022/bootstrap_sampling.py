@@ -8,7 +8,7 @@ import pandas as pd
 
 USAGE = "USAGE: python bootstrap_sampling.py tc_dump_output_csv_file_name\n"
 
-SS_FRAC = 1.0
+SS_FRAC = 1.00  # 0.1
 SS_RNSEED = 902345678
 
 BS_SAMPLES = 1000
@@ -54,7 +54,7 @@ def bootstrap_sampling(outfile):
     wght_cv = wght_stdv / wght_mean
     print(
         f"BS:wght num,mean,stdev,cv(%) = {BS_SAMPLES:4d}  "
-        f"{wght_mean:9.3f}  {wght_stdv:7.3f}  {100 * wght_cv:6.2f}"
+        f"{wght_mean:9.3f}  {wght_stdv:7.3f}  {100 * wght_cv:8.4f}"
     )
     if BS_CI and BS_SAMPLES == 1000:
         print(f"BS:wght median = {wght[499]:9.3f}")
@@ -64,7 +64,7 @@ def bootstrap_sampling(outfile):
     itax_cv = itax_stdv / itax_mean
     print(
         f"BS:itax num,mean,stdev,cv(%) = {BS_SAMPLES:4d}  "
-        f"{itax_mean:9.3f}  {itax_stdv:7.3f}  {100 * itax_cv:6.2f}"
+        f"{itax_mean:9.3f}  {itax_stdv:7.3f}  {100 * itax_cv:8.4f}"
     )
     if BS_CI and BS_SAMPLES == 1000:
         print(f"BS:itax median = {itax[499]:9.3f}")
