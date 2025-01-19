@@ -29,9 +29,14 @@ TMD files with Tax-Calculator.
 ## Examination results
 
 To assess, review the data examination results that compare federal
-agency tax estimates with those generated using the national microdata
-files created in each project phase:
+agency tax microsimulation estimates for 2023 and 2026 with those
+generated using the national microdata files created in each project
+phase:
 * [phase 1 results](./tmd/examination/results1.md)
 * [phase 2 results](./tmd/examination/results2.md)
 * [phase 3 results](./tmd/examination/results3.md)
 * [phase 4+ results](./tmd/examination/results4.md)
+
+2022 TMD estimates have also been compared with IRS/SOI data on actual
+income tax returns for 2022 in [this
+document](./tmd/examination/2022/results.md).
