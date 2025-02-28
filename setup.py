@@ -2,13 +2,13 @@ from setuptools import setup, find_packages
 
 setup(
     name="tmd",
-    version="0.7.0",
+    version="0.8.0",
     packages=find_packages(),
     python_requires=">=3.10,<3.13",
     install_requires=[
         "policyengine_us==1.55.0",
         "tables",  # required by policyengine_us
-        "taxcalc>=4.3.5",
+        "taxcalc>=4.4.1",
         "scikit-learn",
         "torch",
         "tensorboard",
