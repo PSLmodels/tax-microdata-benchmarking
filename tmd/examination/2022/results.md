@@ -26,8 +26,9 @@ details on the TMD and IRS/SOI estimates.
 
 **Sources**:
 
-The 2022 TMD estimates are generated using Tax-Calculator 4.5.0 by the
-[`generate_tmd_results.sh`](./generate_tmd_results.sh) script.
+The 2022 TMD estimates are generated using [Tax-Calculator
+4.5.0](https://github.com/PSLmodels/Tax-Calculator/blob/master/docs/about/releases.md)
+by the [`generate_tmd_results.sh`](./generate_tmd_results.sh) script.
 
 The SOI estimates are taken directly from the "All returns" "Total tax
 liability: Amount" cell (row 157, column B) in the [Tax Year 2022:
