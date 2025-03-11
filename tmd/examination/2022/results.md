@@ -1,7 +1,7 @@
 Phase 6 National and Selected State Data Examination Results
 ============================================================
 
-**RESULTS AS OF 2025-02-28**
+**RESULTS AS OF 2025-03-11**
 
 In the table below, Phase 6 US and selected state TMD estimates for
 2022 are compared with IRS/SOI tabulations of 2022 sampled federal
@@ -13,20 +13,20 @@ details on the TMD and IRS/SOI estimates.
 **CY2022 Total Income Tax Liability** ($ billion)<br>
 | Area |     TMD  |      SOI | PctDiff |
 | ---: |     ---: |     ---: |    ---: |
-| US   | 2289.792 | 2250.798 |    +1.7 |
+| US   | 2281.843 | 2250.798 |    +1.4 |
 |      |          |          |         |
-| AK   |    3.799 |    4.114 |    -7.7 |
-| MN   |   38.722 |   37.221 |    +4.0 |
-| NJ   |   82.933 |   84.148 |    -1.4 |
-| NM   |    7.416 |    7.840 |    -5.4 |
-| SC   |   24.706 |   25.518 |    -3.2 |
-| VA   |   61.399 |   61.516 |    -0.2 |
+| AK   |    3.788 |    4.114 |    -7.9 |
+| MN   |   38.616 |   37.221 |    +3.7 |
+| NJ   |   82.699 |   84.148 |    -1.7 |
+| NM   |    7.393 |    7.840 |    -5.7 |
+| SC   |   24.629 |   25.518 |    -3.5 |
+| VA   |   61.224 |   61.516 |    -0.5 |
 
 <br>
 
 **Sources**:
 
-The 2022 TMD estimates are generated using Tax-Calculator 4.4.1 by the
+The 2022 TMD estimates are generated using Tax-Calculator 4.5.0 by the
 [`generate_tmd_results.sh`](./generate_tmd_results.sh) script.
 
 The SOI estimates are taken directly from the "All returns" "Total tax

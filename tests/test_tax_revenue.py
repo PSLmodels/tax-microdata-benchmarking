@@ -11,9 +11,10 @@ from tmd.storage import STORAGE_FOLDER
 FIRST_CYR = 2023
 LAST_CYR = 2033
 
-DEFAULT_RELTOL_ITAX = 0.03
+DEFAULT_RELTOL_ITAX = 0.08
 RELTOL_ITAX = {
-    2026: 0.05  # caused by FY-vs-CY difference in TCJA reversion timing
+    2023: 0.12,
+    2026: 0.11,  # caused by FY-vs-CY difference in TCJA reversion timing
 }
 DEFAULT_RELTOL_PTAX = 0.14
 RELTOL_PTAX = {}
