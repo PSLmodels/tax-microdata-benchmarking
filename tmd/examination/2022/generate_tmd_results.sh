@@ -22,6 +22,7 @@ for S in $STATES; do
         mv -f weights/${S}_tmd_weights.csv.gz ../examination/2022
     popd > /dev/null
     awk -f log_extract.awk ${S}_local.log
+    zip state-weights.zip ${S}_tmd_weights.csv.gz
 done
 
 # === RESULTS ===

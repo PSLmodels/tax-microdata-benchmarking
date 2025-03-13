@@ -6,6 +6,8 @@ general-purpose validated microdata file for use in
 [Tax-Calculator](https://github.com/PSLmodels/Tax-Calculator).  The
 development will proceed in several phases.
 
+The current version is 1.0.0, which was released on 2025-03-11.
+
 ## Usage instructions
 
 In order to use the code in this repository, you need to license the
