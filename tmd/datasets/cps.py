@@ -173,7 +173,7 @@ class RawCPS(Dataset):
                 col for col in spm_unit_columns if col != "SPM_BBSUBVAL"
             ]
 
-        response = requests.get(url, stream=True)
+        response = requests.get(url, stream=True, verify=False)
         total_size_in_bytes = int(
             response.headers.get("content-length", 200e6)
         )
