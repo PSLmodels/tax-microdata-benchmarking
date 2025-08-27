@@ -18,3 +18,6 @@ tmd/storage/output/tax_expenditures
 
 # Local Netlify folder
 .netlify
+
+# Quarto output directories
+**/.quarto/
