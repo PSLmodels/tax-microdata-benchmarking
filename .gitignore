@@ -24,3 +24,6 @@ tmd/storage/output/tax_expenditures
 
 # Claude AI assistant files
 claude/
+
+# local environment
+venv/
