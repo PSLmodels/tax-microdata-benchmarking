@@ -25,13 +25,6 @@ def test_tax_exp_diffs(
         tmd_weights_path,
         tmd_growfactors_path,
     )
-    _ = get_tax_expenditure_results(
-        tmd_variables,
-        2021,  # input variables data year
-        2026,  # simulation year for tax expenditure estimates
-        tmd_weights_path,
-        tmd_growfactors_path,
-    )
     act_path = STORAGE_FOLDER / "output" / "tax_expenditures"
     exp_path = tests_folder / "expected_tax_expenditures"
     actdf = pd.read_csv(act_path, sep=" ", header=None)
