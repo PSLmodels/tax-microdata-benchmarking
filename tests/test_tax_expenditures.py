@@ -32,14 +32,6 @@ def test_tax_exp_diffs(
     assert actdf.shape == expdf.shape, "actdf and expdf are not the same shape"
     # compare actdf and expdf rows
     same = True
-    # ... compare 2026 itax revenue row using a larger relative diff tolerance
-    itax2026_index = int(len(expdf) / 2 + 1)
-    actval = actdf.iat[itax2026_index, 3]
-    expval = expdf.iat[itax2026_index, 3]
-    if not np.allclose(actval, expval, atol=0.0, rtol=0.09):
-        same = False
-    actdf.drop(index=itax2026_index, inplace=True)
-    expdf.drop(index=itax2026_index, inplace=True)
     # ... compare all other rows using a smaller relative diff tolerance
     actval = actdf.iloc[:, 3].to_numpy(dtype=np.float64)
     expval = expdf.iloc[:, 3].to_numpy(dtype=np.float64)
