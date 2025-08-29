@@ -1,5 +1,5 @@
 """
-Test 2023 and 2026 tax expenditures calculated using tmd files
+Test 2023 tax expenditures calculated using tmd files
 against expected tax expenditure values in the tests folder.
 """
 
