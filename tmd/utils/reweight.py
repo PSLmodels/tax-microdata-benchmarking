@@ -254,7 +254,7 @@ def reweight(
 
     print("...starting optimization with 2,000 iterations")
     optimization_start_time = time.time()
-    
+
     for i in tqdm(range(2_000), desc="Optimising weights"):
         optimizer.zero_grad()
         new_weights = weights * (
@@ -306,9 +306,11 @@ def reweight(
     optimization_end_time = time.time()
     optimization_duration = optimization_end_time - optimization_start_time
     iterations_per_second = 2000 / optimization_duration
-    
+
     print(f"...optimization completed in {optimization_duration:.1f} seconds")
-    print(f"...optimization speed: {iterations_per_second:.1f} iterations/second")
+    print(
+        f"...optimization speed: {iterations_per_second:.1f} iterations/second"
+    )
     print("...reweighting finished")
 
     # Move final weights back to CPU for numpy conversion
