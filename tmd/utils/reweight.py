@@ -59,6 +59,7 @@ def reweight(
     weight_multiplier_min: float = REWEIGHT_MULTIPLIER_MIN,
     weight_multiplier_max: float = REWEIGHT_MULTIPLIER_MAX,
     weight_deviation_penalty: float = REWEIGHT_DEVIATION_PENALTY,
+    use_gpu: bool = True,
 ):
     targets = pd.read_csv(STORAGE_FOLDER / "input" / "soi.csv")
 
@@ -178,10 +179,35 @@ def reweight(
 
         return loss_matrix.copy(), np.array(targets_array)
 
-    weights = torch.tensor(flat_file.s006.values, dtype=torch.float32)
+    # GPU Detection and Device Selection
+    gpu_available = torch.cuda.is_available()
+    use_gpu_actual = use_gpu and gpu_available
+
+    device = torch.device("cuda" if use_gpu_actual else "cpu")
+
+    if use_gpu_actual:
+        gpu_name = torch.cuda.get_device_name(0)
+        gpu_memory = torch.cuda.get_device_properties(0).total_memory / 1024**3
+        print(f"...GPU acceleration enabled: {gpu_name} ({gpu_memory:.1f} GB)")
+    elif use_gpu and not gpu_available:
+        print("...GPU requested but not available, using CPU")
+    elif not use_gpu and gpu_available:
+        print("...GPU available but disabled by user, using CPU")
+    else:
+        print("...GPU not available, using CPU")
+
+    rng_seed = 65748392
+    torch.manual_seed(rng_seed)  # set the random number seed for CPU
+    torch.cuda.manual_seed_all(rng_seed)  # set the seed for all GPUs
+
+    # Create tensors directly on the selected device to avoid non-leaf tensor issues
+    weights = torch.tensor(
+        flat_file.s006.values, dtype=torch.float32, device=device
+    )
     weight_multiplier = torch.tensor(
         np.ones_like(flat_file.s006.values),
         dtype=torch.float32,
+        device=device,
         requires_grad=True,
     )
     original_weights = weights.clone()
@@ -195,9 +221,11 @@ def reweight(
         except ValueError:
             print(f"Column {col} is not numeric")
     output_matrix_tensor = torch.tensor(
-        output_matrix.values, dtype=torch.float32
+        output_matrix.values, dtype=torch.float32, device=device
     )
-    target_array = torch.tensor(target_array, dtype=torch.float32)
+    target_array = torch.tensor(
+        target_array, dtype=torch.float32, device=device
+    )
 
     outputs = (weights * output_matrix_tensor.T).sum(axis=1)
     original_loss_value = (((outputs + 1) / (target_array + 1) - 1) ** 2).sum()
@@ -210,14 +238,12 @@ def reweight(
         if target_array[i] == 0:
             pass  # print(f"Column {output_matrix.columns[i]} has target 0")
 
-    rng_seed = 65748392
-    torch.manual_seed(rng_seed)  # set the random number seed for CPU
-    torch.cuda.manual_seed_all(rng_seed)  # set the seed for all GPUs
     optimizer = torch.optim.Adam([weight_multiplier], lr=1e-1)
 
     from torch.utils.tensorboard import SummaryWriter
     from tqdm import tqdm
     from datetime import datetime
+    import time
 
     writer = SummaryWriter(
         log_dir=STORAGE_FOLDER
@@ -225,6 +251,9 @@ def reweight(
         / "reweighting"
         / f"{time_period}_{datetime.now().isoformat()}"
     )
+
+    print("...starting optimization with 2,000 iterations")
+    optimization_start_time = time.time()
 
     for i in tqdm(range(2_000), desc="Optimising weights"):
         optimizer.zero_grad()
@@ -274,7 +303,17 @@ def reweight(
                 i,
             )
 
+    optimization_end_time = time.time()
+    optimization_duration = optimization_end_time - optimization_start_time
+    iterations_per_second = 2000 / optimization_duration
+
+    print(f"...optimization completed in {optimization_duration:.1f} seconds")
+    print(
+        f"...optimization speed: {iterations_per_second:.1f} iterations/second"
+    )
     print("...reweighting finished")
 
-    flat_file["s006"] = new_weights.detach().numpy()
+    # Move final weights back to CPU for numpy conversion
+    final_weights = new_weights.detach().cpu().numpy()
+    flat_file["s006"] = final_weights
     return flat_file
