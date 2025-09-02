@@ -1,0 +1,40 @@
+project:
+  type: book
+
+execute:
+  # Sets the execution directory for all R code to the project root.
+  # This makes all paths relative to the folder containing _quarto.yml.
+  execute-dir: project  
+  eval: true
+  echo: true
+  output: true
+  freeze: auto  # auto: during global project renders, re-render only when source changes
+
+book:
+  title: "Get IRS data for possible use as PUF targets"
+  subtitle: "Create csv file"
+  author: "Don Boyd"
+  date: today
+  date-format: long
+  chapters:
+    - index.qmd
+    - prepare.qmd
+
+format:
+  html:
+    theme: cosmo
+    code-fold: true    
+
+editor_options:
+  chunk_output_type: console
+
+
+# possibly use this at start of each doc
+# ---
+# output: html_document
+# editor_options: 
+#   chunk_output_type: console
+# ---
+
+  
+  
