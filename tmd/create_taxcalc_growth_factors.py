@@ -75,7 +75,7 @@ def create_factors_file():
         num_rows = LAST_YEAR - last_puf_year
         added = pd.DataFrame([last_row] * num_rows, columns=gfdf.columns)
         for idx in range(0, num_rows):
-            added.YEAR.iat[idx] = last_puf_year + idx + 1
+            added.at[idx, 'YEAR'] = last_puf_year + idx + 1
         gfdf = pd.concat([gfdf, added], ignore_index=True)
 
     # write gfdf to CSV-formatted file
