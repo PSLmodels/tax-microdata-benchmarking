@@ -4,6 +4,7 @@ covers the years from FIRST_YEAR through LAST_YEAR.
 """
 
 import pandas as pd
+import numpy as np
 from tmd.storage import STORAGE_FOLDER
 
 
@@ -74,8 +75,11 @@ def create_factors_file():
         last_row = gfdf.iloc[-1, :].copy()
         num_rows = LAST_YEAR - last_puf_year
         added = pd.DataFrame([last_row] * num_rows, columns=gfdf.columns)
-        for idx in range(0, num_rows):
-            added.YEAR.iat[idx] = last_puf_year + idx + 1
+        # ensure shape and index are as expected
+        added = added.reset_index(drop=True)  # guardrail
+        added.loc[:, "YEAR"] = np.arange(
+            last_puf_year + 1, last_puf_year + 1 + num_rows
+        )
         gfdf = pd.concat([gfdf, added], ignore_index=True)
 
     # write gfdf to CSV-formatted file
