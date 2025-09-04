@@ -31,9 +31,10 @@ source(fs::path(QDIR, "r", "functions.R"))
 
 dd <- fs::path(QDIR, "data")
 
-irsweb <- "https://www.irs.gov/pub/irs-soi/" # static files
-irsd <- path(dd, "2021")
-targfn <- "target_recipes.xlsx"
+# irsweb <- "https://www.irs.gov/pub/irs-soi/" # static files
+# irsd <- path(dd, "2021")
+# targfn <- "target_recipes.xlsx"
+targfn <- "target_recipes_v2.xlsx"
 
 ```
 
@@ -46,7 +47,7 @@ targfn <- "target_recipes.xlsx"
 df1 <- read_excel(fs::path(dd, targfn), sheet = "irs_downloads")
 
 # tabmeta has information about each Excel file we want to download
-tabmeta <- expand_grid(year = c(2015, 2021) |> as.integer(), df1) |>
+tabmeta <- expand_grid(year = c(2015, 2021:2022) |> as.integer(), df1) |>
   mutate(
     fname = paste0(str_sub(year, 3, 4), fname_base),
     upath = paste0(baseurl, fname)
@@ -92,7 +93,7 @@ f <- function(upath) {
 # tab <- "tab11"
 
 get_rowmap <- function(tab) {
-  # reads the target_recipes.xlsx file to
+  # reads the target recipes xlsx file to
   # get start and end row for key data for each year of a particular IRS spreadsheet
   # from its associated mapping tab in the recipes file
   # assumes dd (data directory) and targfn (targets filename) are in the environment
