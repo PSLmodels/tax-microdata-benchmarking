@@ -1,14 +1,12 @@
 project:
   type: book
+  execute-dir: project  
 
 execute:
-  # Sets the execution directory for all R code to the project root.
-  # This makes all paths relative to the folder containing _quarto.yml.
-  execute-dir: project  
   eval: true
   echo: true
   output: true
-  freeze: auto  # auto: during global project renders, re-render only when source changes
+  freeze: false  # auto: during global project renders, re-render only when source changes
 
 book:
   title: "Get IRS data for possible use as PUF targets"
@@ -19,6 +17,7 @@ book:
   chapters:
     - index.qmd
     - prepare.qmd
+    - examine.qmd
 
 format:
   html:
@@ -36,5 +35,9 @@ editor_options:
 #   chunk_output_type: console
 # ---
 
+# use qstop shortcut for this
+# ```{r stop_here, echo=FALSE}
+# knitr::knit_exit()
+# ```
   
   

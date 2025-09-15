@@ -3,6 +3,7 @@
 # folders
 _book/
 _freeze/
+site_libs/
 
 # file types
 ~*.xls*

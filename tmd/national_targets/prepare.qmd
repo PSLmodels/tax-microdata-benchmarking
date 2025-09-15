@@ -4,37 +4,35 @@ editor_options:
  chunk_output_type: console
 ---
 
-# Get files
+# Read "recipes", read IRS files, and save preliminary version of target data
 
-## Load packages
+This chapter reads the manually created "target recipes" xlsx file and reads the IRS xls* files identifed within.
+
+It then saves them as potential_targets_preliminary.rds, to be used for further investigation and testing to be sure they seem correct.
+
+## Setup
 
 ```{r}
 #| label: setup
 
-if (Sys.getenv("QUARTO_PROJECT_DIR") != "") {
-  # When rendering via quarto render
-  QDIR <- Sys.getenv("QUARTO_PROJECT_DIR")
-} else {
-  # When running interactively
-  QDIR <- here::here("tmd", "national_targets")
-}
+# QROOT <- normalizePath(
+#   file.path(getwd(), "tmd", "national_targets"),
+#   winslash = "/"
+# )
 
-source(fs::path(QDIR, "r", "libraries.R"))
-source(fs::path(QDIR, "r", "functions.R"))
+QROOT <- local({
+  root <- tryCatch(quarto::get_running_project_root(), error = function(e) NULL) # non-NULL only during render
+  if (!is.null(root)) {
+    normalizePath(root, winslash = "/") # use Quarto’s actual project root
+  } else {
+    normalizePath(file.path(getwd(), "tmd", "national_targets"), winslash = "/") # interactive default
+  }
+})
 
-```
+source(fs::path(QROOT, "setup.R"))
 
-## Define folder names and other constants
-
-```{r}
-#| label: constants
-
-dd <- fs::path(QDIR, "data")
-
-# irsweb <- "https://www.irs.gov/pub/irs-soi/" # static files
-# irsd <- path(dd, "2021")
-# targfn <- "target_recipes.xlsx"
-targfn <- "target_recipes_v2.xlsx"
+# note - will load the functions that help with reading excel files
+# also loads QROOT, DATADIR, and targfn
 
 ```
 
@@ -44,10 +42,14 @@ targfn <- "target_recipes_v2.xlsx"
 #| label: get-recipes
 #| output: false
 
-df1 <- read_excel(fs::path(dd, targfn), sheet = "irs_downloads")
+df1 <- read_excel(fs::path(DATADIR, targfn), sheet = "irs_downloads")
 
 # tabmeta has information about each Excel file we want to download
-tabmeta <- expand_grid(year = c(2015, 2021:2022) |> as.integer(), df1) |>
+tabmeta <- expand_grid(
+  year = c(2015, 2021:2022) |>
+    as.integer(),
+  df1
+) |>
   mutate(
     fname = paste0(str_sub(year, 3, 4), fname_base),
     upath = paste0(baseurl, fname)
@@ -59,115 +61,6 @@ tabmeta |>
 
 ```
 
-## ONETIME: Download the IRS spreadsheets (if the code chunk's eval option is set to TRUE)
-
-```{r}
-#| label: CAUTION-download-irs-spreadsheets
-#| eval: false # set eval to true to run this chunk
-
-# CAUTION: only re-download spreadsheets (set eval: true) if they have changed or been deleted
-
-tabmeta
-
-f <- function(upath) {
-  print(upath)
-  download.file(
-    url = upath,
-    destfile = path(irsd, path_file(upath)),
-    mode = "wb"
-  )
-}
-
-# uncomment the next line to download files
-# walk(tabmeta$upath, f) # walk through the list of paths, downloading and saving each file
-
-```
-
-## Functions to read IRS spreadsheets
-
-### Function to read mapping tab for an IRS spreadsheet (found in **target_recipes.xlsx**)
-
-```{r}
-#| label: irs-functions
-
-# tab <- "tab11"
-
-get_rowmap <- function(tab) {
-  # reads the target recipes xlsx file to
-  # get start and end row for key data for each year of a particular IRS spreadsheet
-  # from its associated mapping tab in the recipes file
-  # assumes dd (data directory) and targfn (targets filename) are in the environment
-  sheet <- paste0(tab, "_map")
-  read_excel(
-    path(dd, targfn),
-    sheet = sheet,
-    range = cellranger::cell_rows(1:3)
-  ) |>
-    pivot_longer(-rowtype, values_to = "xlrownum") |>
-    separate_wider_delim(name, delim = "_", names = c("datatype", "year")) |>
-    mutate(
-      table = tab,
-      year = as.integer(year),
-      xlrownum = as.integer(xlrownum)
-    ) |>
-    select(table, datatype, year, rowtype, xlrownum) |>
-    arrange(table, year, datatype, desc(rowtype))
-}
-
-xlcols <- function(n) {
-  # create a vector of letters in the order that Excel uses
-
-  # a helper function that allows us to put letter column names on a dataframe
-  #   that was read from an Excel file
-
-  # usage:
-  #   xlcols(53)
-  #   gets the letters for the first 53 columns in a spreadsheet
-  # only good for 1- and 2-letter columns, or 26 + 26 x 26 = 702 columns
-  xl_letters <- c(
-    LETTERS,
-    sapply(LETTERS, function(x) paste0(x, LETTERS, sep = ""))
-  )
-  return(xl_letters[1:n])
-}
-
-get_colmap <- function(tab) {
-  # reads the target_recipes.xlsx file to
-  # get columns of interest for each year of a particular IRS spreadsheet,
-  # from its associated mapping tab in the recipes file
-
-  # assumes dd (data directory), targfn (targets filename), and allcols are in the environment
-  sheet <- paste0(tab, "_map")
-  col_map <- read_excel(path(dd, targfn), sheet = sheet, skip = 3) |>
-    pivot_longer(
-      -c(vname, description, units, notes),
-      values_to = "xlcolumn"
-    ) |>
-    separate_wider_delim(name, delim = "_", names = c("datatype", "year")) |>
-    mutate(
-      table = tab,
-      year = as.integer(year),
-      xl_colnumber = match(xlcolumn, allcols)
-    ) |>
-    select(
-      table,
-      datatype,
-      year,
-      xl_colnumber,
-      xlcolumn,
-      vname,
-      description,
-      units,
-      notes
-    ) |>
-    filter(!is.na(xlcolumn), !is.na(vname)) |>
-    arrange(table, datatype, year, xl_colnumber)
-  col_map
-}
-
-# allcols <- xlcols(400); get_colmap("tab11")
-
-```
 
 ## Read IRS spreadsheets and save data frame of targets as csv file
 
@@ -175,26 +68,19 @@ get_colmap <- function(tab) {
 #| label: read-irs-spreadsheets
 #| output: false
 
-allcols <- xlcols(400) # get a large number of potential excel column names
-ht(allcols)
-
-get_rowmap("tab11")
-get_rowmap("tab21")
-
-
 # tabs <- c("tab11", "tab12")
 # tabs <- c("tab11", "tab12", "tab14")
 tabs <- c("tab11", "tab12", "tab14", "tab21")
 
 # get start and end rows for each file of interest
 tabrows <- tabs |>
-  purrr::map(get_rowmap) |>
+  purrr::map(\(tab) get_rowmap(tab, DATADIR, targfn)) |>
   list_rbind() |>
   pivot_wider(names_from = rowtype, values_from = xlrownum)
 tabrows
 
 tabcols <- tabs |>
-  purrr::map(get_colmap) |>
+  purrr::map(\(tab) get_colmap(tab, DATADIR, targfn)) |>
   list_rbind()
 tabcols
 
@@ -231,18 +117,16 @@ get_irsdata <- function(
 ) {
   # a single file, a single year, a single datatype (filers or taxable)
   # print(fname); print(datatype)
-  fpath <- fs::path(dd, year, fname)
+  fpath <- fs::path(DATADIR, year, fname)
 
   # read relevant rows, but all columns from the first column through the last in columns
   #   we cannot read just the desired columns, due to limitations of read_excel
-
-  # assumes irsd and allcols exist
 
   df1 <- read_excel(
     fpath,
     sheet = 1,
     range = cellranger::cell_limits(c(startrow, 1), c(endrow, maxcol)),
-    col_names = allcols[1:maxcol],
+    col_names = xlnum_to_col(1:maxcol),
     col_types = "text"
   )
 
@@ -293,33 +177,21 @@ ptargets <- ptargets_nested |>
   relocate(xlcolumn, xlrownum, .after = fname) |>
   arrange(table, year, vname, incsort)
 
-saveRDS(ptargets, fs::path(QDIR, "data", "potential_targets.rds"))
-
-ptargets |>
-  write_csv(fs::path(QDIR, "data", "potential_targets.csv"))
-
 # check for identical
 # sha256sum potential_targets_original.csv potential_targets.csv
 
 ```
 
-## Show potential targets {#sec-show-targets}
+
+## Save preliminary target data
 
 ```{r}
-#| label: show-targets
-#| output: true
-#| column: page
+#| label: save-raw-irs-data
+#| output: false
 
-ptargets <- readRDS(fs::path(QDIR, "data", "potential_targets.rds"))
+saveRDS(ptargets, fs::path(QROOT, "data", "potential_targets_preliminary.rds"))
 
-# datatable(ptargets, options = list(scrollX = TRUE, scrollY = '400px', paging = TRUE))
-
-datatable(
-  ptargets |>
-    select(-table_description),
-  options = list(scrollX = TRUE, scrollY = '1500px', pageLength = 20),
-  filter = "top"
-) |>
-  formatCurrency(columns = c("ptarget"), currency = "", digits = 0)
+ptargets |>
+  write_csv(fs::path(QROOT, "data", "potential_targets_preliminary.csv"))
 
 ```
