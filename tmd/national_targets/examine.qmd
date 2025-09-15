@@ -1,0 +1,348 @@
+---
+output: html_document
+editor_options: 
+ chunk_output_type: console
+---
+
+# Examine preliminary IRS targets to verify technical correctness
+
+This chapter reads and examines previously created data.
+
+## Setup
+
+```{r}
+#| label: setup
+
+# source(here::here("tmd", "national_targets", "setup.R"))
+QROOT <- local({
+  root <- tryCatch(quarto::get_running_project_root(), error = function(e) NULL) # non-NULL only during render
+  if (!is.null(root)) {
+    normalizePath(root, winslash = "/") # use Quarto’s actual project root
+  } else {
+    normalizePath(file.path(getwd(), "tmd", "national_targets"), winslash = "/") # interactive default
+  }
+})
+source(fs::path(QROOT, "setup.R"))
+
+```
+
+```{r}
+#| label: showtab-function
+
+show_tab <- function(tab, year, datatype = c("filers", "taxable")) {
+  # Build wide data and show it in a datatable
+  df <- ptargets |>
+    dplyr::filter(
+      table == tab,
+      year == {{ year }},
+      datatype %in% {{ datatype }}
+    ) |>
+    dplyr::select(table, datatype, vname, ptarget, xlcolumn, xlrownum) |>
+    dplyr::mutate(nxlcolumn = xlcol_to_num(xlcolumn)) |>
+    dplyr::arrange(nxlcolumn, xlrownum) |>
+    dplyr::select(-nxlcolumn) |>
+    tidyr::pivot_wider(
+      names_from = c(xlcolumn, vname, datatype),
+      values_from = ptarget
+    )
+
+  # Targets: R cols 3..last => JS zero-based 2..(n-1)
+  right_align_js_targets <- if (ncol(df) >= 3) 2:(ncol(df) - 1) else integer(0)
+  cols_to_fmt <- if (ncol(df) >= 3) 3:ncol(df) else integer(0)
+
+  # Build DT widget (no 'nowrap'; auto width; adjust on init; collapse scroll when short)
+  tbl <- DT::datatable(
+    df,
+    class = "display stripe cell-border",
+    rownames = FALSE,
+    options = list(
+      scrollX = TRUE,
+      scrollY = "400px",
+      scrollCollapse = TRUE, # <-- collapses extra vertical whitespace
+      pageLength = 30,
+      autoWidth = TRUE,
+      deferRender = TRUE,
+      columnDefs = list(
+        list(targets = right_align_js_targets, className = "dt-right")
+      ),
+      initComplete = htmlwidgets::JS(
+        "function(settings, json) {
+           var api = this.api();
+           // Let the header stretch and wrap; then sync widths
+           $(api.table().container()).find('.dataTables_scrollHeadInner, .dataTables_scrollHead table')
+             .css({'width':'100%'});
+           // Make sure widths are recalculated after styles apply
+           setTimeout(function(){ api.columns.adjust(); }, 0);
+           $(api.table().container()).css({'font-size': '9px'});
+         }"
+      )
+    ),
+    filter = "top"
+  )
+
+  if (length(cols_to_fmt)) {
+    tbl <- tbl |>
+      DT::formatCurrency(
+        columns = cols_to_fmt,
+        currency = "",
+        interval = 3,
+        mark = ",",
+        digits = 0
+      )
+  }
+
+  # Return TABLE + CSS together (this was missing)
+  htmltools::tagList(
+    tbl,
+    htmltools::tags$style(
+      htmltools::HTML(
+        "
+        /* Header wrapping for long labels */
+        .dataTables_wrapper .dataTables_scrollHead th,
+        table.dataTable thead th {
+          white-space: normal !important;
+          overflow-wrap: anywhere;
+          word-break: normal;
+          line-height: 1.2;
+          vertical-align: bottom;
+        }
+
+        /* Alignments */
+        th.dt-right { text-align: center !important; }
+        td.dt-right { text-align: right !important; }
+        .dataTables_filter input { text-align: right !important; }
+
+        /* Reduce row height (body + header) */
+        table.dataTable tbody td,
+        table.dataTable thead th {
+          padding-top: 2px !important;
+          padding-bottom: 2px !important;
+          line-height: 1.1 !important;
+        }
+
+        /* Smaller filter inputs (top filter row) */
+        table.dataTable thead input {
+          padding: 2px 4px !important;
+          font-size: 9px !important;
+          line-height: 1.1 !important;
+          height: auto !important;
+          box-sizing: border-box;
+        }
+        "
+      )
+    )
+  )
+}
+
+```
+
+## Get previously prepared data
+
+```{r}
+#| label: get-data
+
+ptargets <- readRDS(fs::path(
+  QROOT,
+  "data",
+  "potential_targets_preliminary.rds"
+))
+
+```
+
+## Examine 2022 values
+
+Because selecting values from several different IRS spreadsheets, from multiple locations in those spreadsheets, could lead to accidentally selecting values that are different from those intended, it's important to compare the resulting data to the intended data. I don't have an automated way to do it, but the tables below make it relatively easy to spot check values.
+
+The sections below show:
+
+-   A filterable datatable showing the data that was read from IRS spreadsheets, followed by
+-   One or more screenshots of intended values, from IRS spreadsheets
+
+Visually spot-check datatable vs. screenshots of totals.
+
+To keep the task manageable, we focus only on 2022 as it is the most important year. This should be updated or extended when new years are added.
+
+Some IRS spreadsheets require multiple screenshots to show all of the columns that are included in the data.
+
+### Table 1.1. All Returns: Selected Income and Tax Items, by Size and Accumulated Size of Adjusted Gross Income -- Filers only
+
+```{r}
+#| column: page
+
+show_tab("tab11", 2022)
+
+```
+
+::: column-page
+![](images/paste-5.png)
+:::
+
+### Table 1.2. All Returns: Adjusted Gross Income, Deductions, and Tax Items, by Size of Adjusted Gross Income and by Marital Status
+
+#### Filers
+
+```{r}
+#| column: page
+
+show_tab("tab12", 2022, "filers")
+
+```
+
+::: column-page
+![](images/paste-11.png)
+:::
+
+### Taxable returns
+
+```{r}
+#| column: page
+
+show_tab("tab12", 2022, "taxable")
+
+```
+
+::: column-page
+![](images/paste-12.png)
+:::
+
+## Table 1.4. All Returns: Sources of Income, Adjustments, and Tax Items, by Size of Adjusted Gross Income
+
+Many columns of data were ingested. The IRS spreadsheet is shown by groups of columns. They should be compared to the data read in.
+
+### Filers – data as read-in
+
+```{r}
+#| column: page
+
+show_tab("tab14", 2022, "filers")
+
+```
+
+### Filers screenshots
+
+#### Columns A-AI - Filers
+
+::: column-page
+![](images/paste-13.png)
+:::
+
+#### Columns AJ-BO - Filers
+
+::: column-page
+![](images/paste-14.png)
+:::
+
+#### Columns BP-CK - Filers
+
+::: column-page
+![](images/paste-15.png)
+:::
+
+#### Columns EF-ES - Filers
+
+::: column-page
+![](images/paste-16.png)
+:::
+
+### Taxable returns – data as read-in
+
+```{r}
+#| column: page
+
+show_tab("tab14", 2022, "taxable")
+
+```
+
+### Taxable returns screenshots
+
+#### Columns A-AI - Taxable returns
+
+::: column-page
+![](images/paste-17.png)
+:::
+
+#### Columns AJ-BO - Taxable returns
+
+::: column-page
+![](images/paste-18.png)
+:::
+
+#### Columns BP-CK - Taxable returns
+
+::: column-page
+![](images/paste-19.png)
+:::
+
+#### Columns EF-ES - Taxable returns
+
+::: column-page
+![](images/paste-20.png)
+:::
+
+## Table 2.1. Returns with Itemized Deductions: Sources of Income, Adjustments, Itemized Deductions by Type, Exemptions, and Tax Items, by Size of Adjusted Gross Income -- 2022
+
+For Table 2.1 we show the data for filers followed by the data for taxable returns, in 2 separate datatables. Then we show screenshots.
+
+### Filers and taxable returns -- data as read in
+
+```{r}
+#| column: page
+
+show_tab("tab21", 2022, "filers")
+show_tab("tab21", 2022, "taxable")
+
+```
+
+### Filers and taxable returns -- screenshots
+
+```{=html}
+<!-- ### A-CL
+
+::: column-page
+![](images/paste-21.png)
+:::
+
+### CS-DH
+
+::: column-page
+![](images/paste-22.png)
+::: -->
+```
+
+#### A-CJ
+
+::: column-page
+![](images/paste-23.png)
+:::
+
+#### CK-DH
+
+::: column-page
+![](images/paste-24.png)
+:::
+
+```{r stop_here, echo=FALSE}
+knitr::knit_exit()
+```
+
+## Compare totals and sums of details
+
+```{r}
+
+ptargets |>
+  mutate(inctype = ifelse(incsort == 1, "total", "detail")) |>
+  summarise(
+    n = n(),
+    ptarget = sum(ptarget),
+    .by = c(table, datatype, year, vname, inctype)
+  ) |>
+  pivot_wider(names_from = inctype, values_from = c(n, ptarget)) |>
+  mutate(
+    ptarget_diff = ptarget_total - ptarget_detail,
+    pdiff = ptarget_diff / ptarget_total
+  ) |>
+  arrange(desc(abs(pdiff)))
+
+```
+
+<!-- ## Show potential targets {#sec-show-targets} -->
