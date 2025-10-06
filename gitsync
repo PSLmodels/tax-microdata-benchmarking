@@ -6,10 +6,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 # synchronize local git repo with central GitHub repo
-git fetch origin
-git merge origin/master
-# git push origin master
-exit 0
+git pull origin master
 
 # NOTE: to push branch to PR in GitHub repo, do this:
-#  git push upsteam <branch-name>
+#  git push origin <branch-name>
