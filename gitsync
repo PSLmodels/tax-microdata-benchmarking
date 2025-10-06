@@ -6,8 +6,8 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 # synchronize local git repo with central GitHub repo
-git fetch upstream
-git merge upstream/master
+git fetch origin
+git merge origin/master
 # git push origin master
 exit 0
 
