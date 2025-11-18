@@ -5,7 +5,7 @@ different versions of the three TMD input files with the
 Tax-Calculator CLI.  The idea is to make an historical record of how
 2022-2035 results change as the TMD data are updated and improved.
 
-## Using `tmd21-files.zip` input files and Tax-Calculator 6.1.1
+## Using `tmd21-files.zip` input files and Tax-Calculator 6.2.0
 
 The private `tmd21-files.zip` file contains TMD input files generated
 at the end of the 2024 phase that used 2021 IRS statistics as targets.
@@ -52,5 +52,5 @@ Advance input data and policy to 2034
 Write tabular output to file run21-34.tables
 Advance input data and policy to 2035
 Write tabular output to file run21-35.tables
-Execution time is 19.3 seconds
+Execution time is 19.2 seconds
 ```
