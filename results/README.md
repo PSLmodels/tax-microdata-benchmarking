@@ -11,7 +11,7 @@ The private `tmd21-files.zip` file contains TMD input files generated
 at the end of the 2024 phase that used 2021 IRS statistics as targets.
 
 After unzipping the `tmd21-files.zip` file in this folder, the
-`run21-YY.tables` files (for YY=21,22,...,34,35) are generated as
+`run21-YY.tables` files (for YY=22,23,...,34,35) are generated as
 follows:
 
 ```
