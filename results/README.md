@@ -5,7 +5,7 @@ different versions of the three TMD input files with the
 Tax-Calculator CLI.  The idea is to make an historical record of how
 2022-2035 results change as the TMD data are updated and improved.
 
-## Using `tmd21-files.zip` input files and Tax-Calculator 6.0.0
+## Using `tmd21-files.zip` input files and Tax-Calculator 6.1.1
 
 The private `tmd21-files.zip` file contains TMD input files generated
 at the end of the 2024 phase that used 2021 IRS statistics as targets.
@@ -15,15 +15,15 @@ After unzipping the `tmd21-files.zip` file in this folder, the
 follows:
 
 ```
-(base) results> tc --version
-Tax-Calculator 6.0.0 on Python 3.12
+(base) results> tc --version              
+Tax-Calculator 6.1.1 on Python 3.13
 
 (base) results> ls -l tmd*csv*
 -rw-r--r--  1 mrh  staff     12611 Feb 11  2025 tmd_growfactors.csv
 -rw-r--r--  1 mrh  staff  52609134 Feb 11  2025 tmd_weights.csv.gz
 -rw-r--r--  1 mrh  staff  60903481 Feb 11  2025 tmd.csv
 
-(base) results> tc tmd.csv 2022 --numyears 14 --exact --tables --runid 21
+(base) results> tc tmd.csv 2022 --numyears 14 --exact --tables --runid 21     
 Read input data for 2021; input data were extrapolated to 2022
 Write tabular output to file run21-22.tables
 Advance input data and policy to 2023
@@ -52,5 +52,5 @@ Advance input data and policy to 2034
 Write tabular output to file run21-34.tables
 Advance input data and policy to 2035
 Write tabular output to file run21-35.tables
-Execution time is 19.2 seconds
+Execution time is 19.3 seconds
 ```
