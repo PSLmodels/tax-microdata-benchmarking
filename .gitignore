@@ -27,3 +27,4 @@ claude/
 
 # local environment
 venv/
+.venv/
