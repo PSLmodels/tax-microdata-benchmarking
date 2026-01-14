@@ -8,7 +8,8 @@ setup(
     install_requires=[
         "policyengine_us==1.55.0",
         "tables",  # required by policyengine_us
-        "taxcalc>=6.0.0",
+        "taxcalc>=6.3.0",
+        "behresp",  # required by taxcalc
         "scikit-learn",
         "torch",
         "tensorboard",
