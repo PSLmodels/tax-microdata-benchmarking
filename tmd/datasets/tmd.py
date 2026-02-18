@@ -1,3 +1,6 @@
+import sys
+import subprocess
+import tempfile
 import numpy as np
 import pandas as pd
 from policyengine_us import Microsimulation
@@ -7,7 +10,6 @@ from tmd.datasets.cps import CPS_2021, create_cps_2021
 from tmd.datasets.taxcalc_dataset import create_tc_dataset
 from tmd.utils.trace import trace1
 from tmd.utils.taxcalc_utils import add_taxcalc_outputs
-from tmd.utils.reweight import reweight
 
 
 def create_tmd_2021():
@@ -38,7 +40,7 @@ def create_tmd_2021():
     # ... drop CPS records with positive 2021 income tax amount
     idx = combined[((combined.data_source == 0) & (combined.iitax > 0))].index
     combined.drop(idx, inplace=True)
-    # ... scale CPS records weight in order to get correct population count
+    # ... scale CPS records weight to get correct population count
     scale = np.where(combined.data_source == 0, CPS_WEIGHTS_SCALE, 1.0)
     combined["s006"] *= scale
 
@@ -46,7 +48,33 @@ def create_tmd_2021():
 
     print("Reweighting...")
     combined["s006_original"] = combined["s006"].values
-    combined = reweight(combined, 2021)
+    # Run reweighting in a subprocess so that prior PyTorch
+    # operations (PolicyEngine Microsimulation) don't affect
+    # gradient computation. Without this, autograd accumulation
+    # order differs at machine epsilon, which compounds over
+    # many optimizer iterations on the flat loss surface.
+    with tempfile.TemporaryDirectory() as tmpdir:
+        snapshot_path = f"{tmpdir}/snapshot.csv.gz"
+        result_path = f"{tmpdir}/result.csv.gz"
+        combined.to_csv(snapshot_path, index=False)
+        subprocess.run(
+            [
+                sys.executable,
+                "-c",
+                "import pandas as pd; "
+                "import sys; sys.path.insert(0, '.'); "
+                "from tmd.utils.reweight import reweight; "
+                f"df = pd.read_csv('{snapshot_path}'); "
+                "df = reweight(df, 2021); "
+                f"df[['RECID','s006']].to_csv("
+                f"'{result_path}', index=False)",
+            ],
+            check=True,
+        )
+        reweighted = pd.read_csv(result_path)
+    combined["s006"] = combined.merge(
+        reweighted, on="RECID", suffixes=("_old", "")
+    )["s006"].values
 
     trace1("C", combined)
 
