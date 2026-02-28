@@ -22,6 +22,7 @@ tmd/storage/output/tmd.csv.gz: \
   tmd/utils/soi_replication.py \
   tmd/utils/soi_targets.py \
   tmd/utils/reweight.py \
+  tmd/utils/reweight_clarabel.py \
   tmd/utils/trace.py \
   tmd/create_taxcalc_input_variables.py
 	python tmd/create_taxcalc_input_variables.py

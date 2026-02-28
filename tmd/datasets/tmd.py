@@ -1,3 +1,4 @@
+import os
 import sys
 import subprocess
 import tempfile
@@ -48,11 +49,38 @@ def create_tmd_2021():
 
     print("Reweighting...")
     combined["s006_original"] = combined["s006"].values
+    # Solver selection via environment variables:
+    #   default:            Clarabel QP (constrained, reproducible)
+    #   PYTORCH_REWEIGHT=1: PyTorch L-BFGS (original penalty-based)
+    #   SCIPY_REWEIGHT=1:   scipy L-BFGS-B (penalty-based backup)
+    use_pytorch = os.environ.get("PYTORCH_REWEIGHT", "").lower() in (
+        "1",
+        "true",
+        "yes",
+    )
+    use_scipy = os.environ.get("SCIPY_REWEIGHT", "").lower() in (
+        "1",
+        "true",
+        "yes",
+    )
+    if use_pytorch:
+        reweight_import = "from tmd.utils.reweight import reweight"
+        reweight_call = "reweight(df, 2021)"
+        print("...using penalty-based solver (PyTorch L-BFGS)")
+    elif use_scipy:
+        reweight_import = "from tmd.utils.reweight import reweight_lbfgsb"
+        reweight_call = "reweight_lbfgsb(df, 2021)"
+        print("...using penalty-based solver (scipy L-BFGS-B)")
+    else:
+        reweight_import = (
+            "from tmd.utils.reweight_clarabel"
+            " import reweight_clarabel"
+        )
+        reweight_call = "reweight_clarabel(df, 2021)"
+        print("...using constrained QP solver (Clarabel)")
     # Run reweighting in a subprocess so that prior PyTorch
     # operations (PolicyEngine Microsimulation) don't affect
-    # gradient computation. Without this, autograd accumulation
-    # order differs at machine epsilon, which compounds over
-    # many optimizer iterations on the flat loss surface.
+    # the optimizer state.
     with tempfile.TemporaryDirectory() as tmpdir:
         snapshot_path = f"{tmpdir}/snapshot.csv.gz"
         result_path = f"{tmpdir}/result.csv.gz"
@@ -63,9 +91,9 @@ def create_tmd_2021():
                 "-c",
                 "import pandas as pd; "
                 "import sys; sys.path.insert(0, '.'); "
-                "from tmd.utils.reweight import reweight; "
+                f"{reweight_import}; "
                 f"df = pd.read_csv('{snapshot_path}'); "
-                "df = reweight(df, 2021); "
+                f"df = {reweight_call}; "
                 f"df[['RECID','s006']].to_csv("
                 f"'{result_path}', index=False)",
             ],
