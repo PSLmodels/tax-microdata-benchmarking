@@ -115,6 +115,7 @@ def test_obbba_deduction_tax_benefits(
     bdf = baseline_sim.dataframe(output_variables)
     # estimate effects of each new OBBBA deduction
     diffs = []  # list of act-vs-exp differences
+    # Tolerances equal the rounding step used in actual_results():
     abs_tolerance = {
         "totben": 0.01,  # to handle round(x, 2) logic
         "affpct": 0.01,  # to handle round(x, 2) logic
@@ -137,7 +138,10 @@ def test_obbba_deduction_tax_benefits(
             exp = info[f"exp_{stat}"]
             a_tol = abs_tolerance[stat]
             if not np.allclose([act], [exp], atol=a_tol):
-                diff = f"DIFF:{ded},{stat},act,exp,atol= {act} {exp} {a_tol}"
+                diff = (
+                    f"DIFF:{ded},{stat},act,exp,atol="
+                    f" {act} {exp} {a_tol}"
+                )
                 diffs.append(diff)
         # delete reform Policy and Calculator objects
         del reform_policy
