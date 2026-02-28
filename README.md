@@ -6,14 +6,14 @@ general-purpose validated microdata file for use in
 [Tax-Calculator](https://github.com/PSLmodels/Tax-Calculator).  The
 development will proceed in several phases.
 
-The **current version is 1.1.0**, which was released February 22, 2026,
+The **current version is 1.2.0**, which was released March 1, 2026,
 and includes the following significant improvements:
 - impute values for three variables used in new OBBBA deductions:
 [#397](https://github.com/PSLmodels/tax-microdata-benchmarking/pull/397)
-- improve the reweighting algorithm:
-[#407](https://github.com/PSLmodels/tax-microdata-benchmarking/pull/407)
 - fix long-standing bug in IRS PUF data handling:
 [#408](https://github.com/PSLmodels/tax-microdata-benchmarking/pull/408)
+- vastly improve the reweighting algorithm:
+[#416](https://github.com/PSLmodels/tax-microdata-benchmarking/pull/416)
 
 
 ## Usage instructions

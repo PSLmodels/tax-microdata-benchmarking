@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="tmd",
-    version="1.1.0",
+    version="1.2.0",
     packages=find_packages(),
     python_requires=">=3.10,<3.13",
     install_requires=[
@@ -10,11 +10,11 @@ setup(
         "tables",  # required by policyengine_us
         "taxcalc>=6.4.0",
         "behresp",  # required by taxcalc
+        "clarabel",
         "scikit-learn",
         "torch",
         "tensorboard",
         "scipy",
-        "clarabel",
         "jax",
         "black>=26.1.0",
         "pycodestyle>=2.14.0",
