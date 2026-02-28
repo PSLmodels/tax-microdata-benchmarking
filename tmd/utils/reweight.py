@@ -498,3 +498,236 @@ def reweight(
     print("...reweighting finished")
     flat_file["s006"] = final_weights
     return flat_file
+
+
+def reweight_lbfgsb(
+    flat_file,
+    time_period=TAX_YEAR,
+    weight_multiplier_min=REWEIGHT_MULTIPLIER_MIN,
+    weight_multiplier_max=REWEIGHT_MULTIPLIER_MAX,
+    weight_deviation_penalty=REWEIGHT_DEVIATION_PENALTY,
+    verbose=None,
+):
+    """Reweight using scipy L-BFGS-B (Fortran, projected-gradient bounds).
+
+    Uses the same penalty-based objective as the PyTorch L-BFGS solver
+    but with scipy's L-BFGS-B which has proper projected-gradient
+    bounds (no clamping plateau problem), analytical gradient, and
+    float64 precision throughout.
+
+    Parameters
+    ----------
+    flat_file : pd.DataFrame
+        Input data with s006 weights column.
+    time_period : int
+        Tax year for targets.
+    weight_multiplier_min, weight_multiplier_max : float
+        Bounds on weight multipliers.
+    weight_deviation_penalty : float
+        Penalty for weight deviation from original.
+    verbose : bool or None
+        Print full diagnostics.  None = check VERBOSE_REWEIGHT env var.
+
+    Returns
+    -------
+    pd.DataFrame
+        flat_file with updated s006 weights.
+    """
+    # pylint: disable=import-outside-toplevel
+    import os
+    from scipy.optimize import minimize as scipy_minimize
+
+    # pylint: enable=import-outside-toplevel
+
+    if verbose is None:
+        verbose = os.environ.get("VERBOSE_REWEIGHT", "").lower() in (
+            "1",
+            "true",
+            "yes",
+        )
+
+    targets = pd.read_csv(STORAGE_FOLDER / "input" / "soi.csv")
+    if time_period not in targets.Year.unique():
+        raise ValueError(f"Year {time_period} not in targets.")
+
+    print(f"...scipy L-BFGS-B reweighting for year {time_period}")
+    print(f"...weight deviation penalty: {weight_deviation_penalty}")
+    print(
+        f"...weight multiplier bounds: "
+        f"[{weight_multiplier_min}, {weight_multiplier_max}]"
+    )
+
+    original_unscaled_weights = flat_file.s006.values.copy()
+
+    # Prescaling (same as reweight())
+    soi_filer_total_row = targets[
+        (targets.Year == time_period)
+        & (targets.Variable == "count")
+        & (targets["Filing status"] == "All")
+        & (targets["AGI lower bound"] == -np.inf)
+        & (targets["AGI upper bound"] == np.inf)
+        & (~targets["Taxable only"])
+    ]
+    if len(soi_filer_total_row) == 1:
+        target_filer_total = soi_filer_total_row["Value"].values[0]
+        soi_df = tc_to_soi(flat_file.copy(), time_period)
+        filer_mask = soi_df["is_tax_filer"].values.astype(bool)
+        current_filer_total = (flat_file.s006.values * filer_mask).sum()
+        prescale = target_filer_total / current_filer_total
+        flat_file["s006"] *= prescale
+        print(
+            f"...pre-scaled weights: "
+            f"target filers={target_filer_total:,.0f}, "
+            f"current filers={current_filer_total:,.0f}, "
+            f"scale={prescale:.6f}"
+        )
+    else:
+        print(
+            "WARNING: Could not find unique SOI filer total, "
+            "skipping weight pre-scaling"
+        )
+
+    output_matrix, target_array = build_loss_matrix(
+        flat_file, targets, time_period
+    )
+    print(f"Targeting {len(target_array)} SOI statistics")
+
+    w0_np = flat_file.s006.values.astype(np.float64)
+    A_np = output_matrix.values.astype(np.float64)
+    t_np = target_array.astype(np.float64)
+
+    # Build scaled matrix: B[i,j] = w0[i] * A[i,j] / (t[j] + 1)
+    scale = 1.0 / (t_np + 1.0)
+    B = w0_np[:, None] * A_np * scale[None, :]
+    c = t_np * scale
+
+    # Initial loss for penalty scaling
+    residual0 = B.T @ np.ones(len(w0_np)) - c
+    L0 = np.dot(residual0, residual0)
+    print(f"...initial loss: {L0:.10f}")
+
+    # Penalty coefficient per multiplier
+    w0_sq_sum = np.sum(w0_np**2)
+    lam = weight_deviation_penalty * L0 * (w0_np**2) / w0_sq_sum
+
+    n_calls = [0]
+    iter_state = {"last_loss": None, "last_grad": None}
+
+    def objective_and_grad(m):
+        n_calls[0] += 1
+        residual = B.T @ m - c
+        target_loss = np.dot(residual, residual)
+        dev = m - 1.0
+        penalty_loss = np.dot(lam, dev**2)
+        loss = target_loss + penalty_loss
+        grad = 2.0 * (B @ residual) + 2.0 * lam * dev
+        iter_state["last_loss"] = loss
+        iter_state["last_grad"] = np.max(np.abs(grad))
+        return loss, grad
+
+    def scipy_callback(_xk):
+        nit = n_calls[0]
+        loss = iter_state["last_loss"]
+        gnorm = iter_state["last_grad"]
+        if verbose and (nit <= 5 or nit % 50 == 0):
+            print(
+                f"    iter {nit:>5d}: "
+                f"loss={loss:.10f}, "
+                f"grad={gnorm:.2e}",
+                flush=True,
+            )
+
+    m0 = np.ones(len(w0_np), dtype=np.float64)
+    bounds = [(weight_multiplier_min, weight_multiplier_max)] * len(m0)
+
+    print("...starting scipy L-BFGS-B optimization")
+    t_start = time.time()
+
+    result = scipy_minimize(
+        objective_and_grad,
+        m0,
+        method="L-BFGS-B",
+        jac=True,
+        bounds=bounds,
+        callback=scipy_callback,
+        options={
+            "maxiter": 4000,
+            "ftol": 0,
+            "gtol": 1e-5,
+            "maxcor": 10,
+            "disp": False,
+        },
+    )
+
+    elapsed = time.time() - t_start
+
+    m_final = result.x
+    final_weights = w0_np * np.clip(
+        m_final, weight_multiplier_min, weight_multiplier_max
+    )
+
+    print(
+        f"...optimization completed in {elapsed:.1f} seconds "
+        f"({result.nit} iterations, "
+        f"{n_calls[0]} function evals)"
+    )
+    print(
+        f"...result: success={result.success}, " f"message='{result.message}'"
+    )
+    print(f"...final loss: {result.fun:.10f}")
+    print(
+        f"...final weights: total={final_weights.sum():.2f}, "
+        f"mean={final_weights.mean():.6f}, "
+        f"sdev={final_weights.std():.6f}"
+    )
+
+    # Target accuracy
+    outputs_np = final_weights @ A_np
+    rel_errors = np.abs((outputs_np + 1) / (t_np + 1) - 1)
+    print(f"...target accuracy ({len(t_np)} targets):")
+    print(f"    mean |relative error|: {rel_errors.mean():.6f}")
+    print(f"    max  |relative error|: {rel_errors.max():.6f}")
+
+    # Worst 10 targets
+    worst_idx = np.argsort(rel_errors)[::-1][:10]
+    print("    worst targets:")
+    target_labels = list(output_matrix.columns)
+    for idx in worst_idx:
+        print(
+            f"      {rel_errors[idx] * 100:7.3f}% " f"| {target_labels[idx]}"
+        )
+
+    if verbose:
+        # Reproducibility fingerprint
+        print("...REPRODUCIBILITY FINGERPRINT:")
+        print(
+            f"    weights: n={len(final_weights)}, "
+            f"total={final_weights.sum():.6f}, "
+            f"mean={final_weights.mean():.6f}, "
+            f"sdev={final_weights.std():.6f}"
+        )
+        print(
+            f"    weights: min={final_weights.min():.6f}, "
+            f"p25={np.percentile(final_weights, 25):.6f}, "
+            f"p50={np.median(final_weights):.6f}, "
+            f"p75={np.percentile(final_weights, 75):.6f}, "
+            f"max={final_weights.max():.6f}"
+        )
+        print(f"    sum(weights^2)=" f"{np.sum(final_weights**2):.6f}")
+
+        # Weight change distribution
+        ratio = final_weights / np.where(
+            original_unscaled_weights == 0,
+            1e-10,
+            original_unscaled_weights,
+        )
+        print("...weight changes (vs pre-optimization weights):")
+        print(
+            f"    ratio: min={ratio.min():.6f}, "
+            f"median={np.median(ratio):.6f}, "
+            f"max={ratio.max():.6f}"
+        )
+
+    print("...scipy L-BFGS-B reweighting finished")
+    flat_file["s006"] = final_weights
+    return flat_file

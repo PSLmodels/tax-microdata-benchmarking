@@ -20,3 +20,8 @@ REWEIGHT_DEVIATION_PENALTY = 0.01
 # penalty value of 1.0 says "this is as important as everything else"
 # penalty value of 0.0 imposes no penalty
 # uses L2 norm: sum((new - original)^2) / sum(original^2)
+
+# Parameters for Clarabel QP constrained reweighting (reweight_clarabel.py):
+CLARABEL_CONSTRAINT_TOL = 0.005  # relative tolerance on constraints (+-0.5%)
+CLARABEL_SLACK_PENALTY = 1e6  # elastic penalty for constraint violations
+CLARABEL_MAX_ITER = 1000  # maximum solver iterations

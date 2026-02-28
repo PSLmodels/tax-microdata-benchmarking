@@ -41,9 +41,9 @@ def test_obbba_deduction_tax_benefits(
     deductions = {
         "OTM": {  # new OBBBA overtime income deduction
             "reform_dict": {"OvertimeIncomeDed_c": {simyear: [0, 0, 0, 0, 0]}},
-            "exp_totben": 23.95,
-            "exp_affpct": 8.90,
-            "exp_affben": 1401,
+            "exp_totben": 23.83,
+            "exp_affpct": 8.87,
+            "exp_affben": 1397,
             # The OTM imputation calibration parameters used in the
             # create_taxcalc_imputed_variables.py module were
             # specified so that the affpct statistic is close to 8.8%
@@ -55,9 +55,9 @@ def test_obbba_deduction_tax_benefits(
         },
         "TIP": {  # new OBBBA tip income deduction
             "reform_dict": {"TipIncomeDed_c": {simyear: 0}},
-            "exp_totben": 6.93,
+            "exp_totben": 6.85,
             "exp_affpct": 2.61,
-            "exp_affben": 1380,
+            "exp_affben": 1370,
             # The TIP imputation calibration parameters used in the
             # create_taxcalc_imputed_variables.py module were
             # specified so that the affpct statistic is close to 2.6%
@@ -86,9 +86,9 @@ def test_obbba_deduction_tax_benefits(
                 "AutoLoanInterestDed_c": {simyear: 0},
                 "SeniorDed_c": {simyear: 0},
             },
-            "exp_totben": 54.86,
+            "exp_totben": 54.77,
             "exp_affpct": 28.06,
-            "exp_affben": 1018,
+            "exp_affben": 1015,
             # The affpct statistic and the affben statistic are
             # reasonably close to the Tax Policy Center estimates
             # of 29.6% and $1081, respectively, as reported at
@@ -115,6 +115,7 @@ def test_obbba_deduction_tax_benefits(
     bdf = baseline_sim.dataframe(output_variables)
     # estimate effects of each new OBBBA deduction
     diffs = []  # list of act-vs-exp differences
+    # Tolerances equal the rounding step used in actual_results():
     abs_tolerance = {
         "totben": 0.01,  # to handle round(x, 2) logic
         "affpct": 0.01,  # to handle round(x, 2) logic
@@ -137,7 +138,9 @@ def test_obbba_deduction_tax_benefits(
             exp = info[f"exp_{stat}"]
             a_tol = abs_tolerance[stat]
             if not np.allclose([act], [exp], atol=a_tol):
-                diff = f"DIFF:{ded},{stat},act,exp,atol= {act} {exp} {a_tol}"
+                diff = (
+                    f"DIFF:{ded},{stat},act,exp,atol=" f" {act} {exp} {a_tol}"
+                )
                 diffs.append(diff)
         # delete reform Policy and Calculator objects
         del reform_policy

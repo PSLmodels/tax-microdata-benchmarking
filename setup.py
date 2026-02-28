@@ -14,6 +14,7 @@ setup(
         "torch",
         "tensorboard",
         "scipy",
+        "clarabel",
         "jax",
         "black>=26.1.0",
         "pycodestyle>=2.14.0",
