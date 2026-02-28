@@ -83,7 +83,7 @@ PYLINT_OPTIONS = --disable=$(PYLINT_DISABLE) --score=no --jobs=4 \
 
 .PHONY=lint
 lint:
-	@pycodestyle --ignore=E731,E712,W503 .
+	@pycodestyle --ignore=E203,E731,E712,W503 .
 	@pylint $(PYLINT_OPTIONS) .
 
 .PHONY=reweighting-visualisation

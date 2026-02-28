@@ -42,7 +42,7 @@ def test_weights(tmd_variables):
     # n must be exact
     assert (
         actual["n"] == expect["n"]
-    ), f"n mismatch: actual={actual['n']}, expected={expect['n']}"
+    ), f"n mismatch: actual={actual["n"]}, expected={expect["n"]}"
     # all float stats checked with np.allclose defaults
     float_stats = [
         "total",

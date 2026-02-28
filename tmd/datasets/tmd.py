@@ -73,8 +73,7 @@ def create_tmd_2021():
         print("...using penalty-based solver (scipy L-BFGS-B)")
     else:
         reweight_import = (
-            "from tmd.utils.reweight_clarabel"
-            " import reweight_clarabel"
+            "from tmd.utils.reweight_clarabel import reweight_clarabel"
         )
         reweight_call = "reweight_clarabel(df, 2021)"
         print("...using constrained QP solver (Clarabel)")

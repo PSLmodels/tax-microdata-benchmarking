@@ -139,8 +139,7 @@ def test_obbba_deduction_tax_benefits(
             a_tol = abs_tolerance[stat]
             if not np.allclose([act], [exp], atol=a_tol):
                 diff = (
-                    f"DIFF:{ded},{stat},act,exp,atol="
-                    f" {act} {exp} {a_tol}"
+                    f"DIFF:{ded},{stat},act,exp,atol=" f" {act} {exp} {a_tol}"
                 )
                 diffs.append(diff)
         # delete reform Policy and Calculator objects

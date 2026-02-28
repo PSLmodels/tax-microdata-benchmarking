@@ -236,7 +236,7 @@ def _print_diagnostics(
     n_tc = info.get("n_target_constraints")
     if duals is not None and n_tc is not None and n_tc > 0:
         dual_upper = duals[:n_tc]
-        dual_lower = duals[n_tc:2 * n_tc]
+        dual_lower = duals[n_tc : 2 * n_tc]
         dual_per_target = np.maximum(np.abs(dual_upper), np.abs(dual_lower))
         cost_per_pp = dual_per_target * np.maximum(np.abs(targets), 1.0) * 0.01
         ranked = np.argsort(cost_per_pp)[::-1]
@@ -521,7 +521,7 @@ def reweight_clarabel(
     # Extract duals (convert back from scaled space)
     duals = np.array(result.z)
     duals[:m] /= target_scale
-    duals[m:2 * m] /= target_scale
+    duals[m : 2 * m] /= target_scale
 
     info = {
         "status": 0 if "Solved" in status_str else 1,
@@ -535,8 +535,8 @@ def reweight_clarabel(
     # Extract solution
     y_opt = np.array(result.x)
     x_opt = y_opt[:n_records]
-    s_lo = y_opt[n_records:n_records + m]
-    s_hi = y_opt[n_records + m:]
+    s_lo = y_opt[n_records : n_records + m]
+    s_hi = y_opt[n_records + m :]
 
     x_opt = np.clip(x_opt, multiplier_min, multiplier_max)
 
