@@ -573,7 +573,7 @@ def create_area_weights_file(
         iprint = OPTIMIZE_IPRINT
     else:
         iprint = PARAMS.get("iprint", OPTIMIZE_IPRINT)
-    # ... define callback for diagnostic output (replaces deprecated iprint option)
+    # ... define callback for diagnostic output to replace deprecated iprint
     _iter_count = 0
 
     def _diagnostic_callback(intermediate_result):
