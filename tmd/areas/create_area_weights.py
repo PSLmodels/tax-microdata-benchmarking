@@ -46,7 +46,7 @@ DELTA_MAX_LOOPS = 1
 OPTIMIZE_FTOL = 1e-9
 OPTIMIZE_GTOL = 1e-9
 OPTIMIZE_MAXITER = 5000
-OPTIMIZE_IPRINT = 0  # 20 is a good diagnostic value; set to 0 for production
+OPTIMIZE_IPRINT = 0  # 20 is a good diagnostic value; set to 0 for no output
 OPTIMIZE_RESULTS = False  # set to True to see complete optimization results
 
 
@@ -568,17 +568,28 @@ def create_area_weights_file(
     else:
         out.write("  and there is only one REGULARIZATION LOOP\n")
     out.write(f"  and where target_matrix.shape= {target_matrix.shape}\n")
-    # ... specify possibly customized value of iprint
+    # ... specify possibly customized value of iprint for diagnostic callback
     if write_log:
         iprint = OPTIMIZE_IPRINT
     else:
         iprint = PARAMS.get("iprint", OPTIMIZE_IPRINT)
+    # ... define callback for diagnostic output to replace deprecated iprint
+    _iter_count = 0
+
+    def _diagnostic_callback(intermediate_result):
+        nonlocal _iter_count
+        _iter_count += 1
+        if iprint > 0 and _iter_count % iprint == 0:
+            fval = intermediate_result.fun
+            out.write(f"    iter {_iter_count}: fval={fval:.6e}\n")
+
     # ... reduce value of regularization delta if not all targets are hit
     loop = 1
     delta = DELTA_INIT_VALUE
     wght0 = np.ones(num_weights)
     while loop <= max_loop:
         time0 = time.time()
+        _iter_count = 0
         res = minimize(
             fun=JIT_FVAL_AND_GRAD,  # objective function and its gradient
             x0=wght0,  # initial guess for weight ratios
@@ -590,9 +601,8 @@ def create_area_weights_file(
                 "maxiter": OPTIMIZE_MAXITER,
                 "ftol": OPTIMIZE_FTOL,
                 "gtol": OPTIMIZE_GTOL,
-                "iprint": iprint,
-                "disp": False if iprint == 0 else None,
             },
+            callback=_diagnostic_callback if iprint > 0 else None,
         )
         time1 = time.time()
         wght_area = res.x * wght_us
