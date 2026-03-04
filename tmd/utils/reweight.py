@@ -52,7 +52,7 @@ def fmt(x):
     if x < 1e6:
         return f"{x / 1e3:.0f}k"
     if x < 1e9:
-        return f"{x / 1e6:.0f}m"
+        return f"{x / 1e6:.1f}m"
     return f"{x / 1e9:.1f}bn"
 
 
@@ -141,7 +141,8 @@ def build_loss_matrix(df, targets, time_period):
 
         lob = row["AGI lower bound"]
         hib = row["AGI upper bound"]
-        agi_range_label = f"{fmt(lob)}-{fmt(hib)}"
+        left = "(" if lob == -np.inf else "["
+        agi_range_label = f"{left}{fmt(lob)}, {fmt(hib)})"
         taxable_label = (
             "taxable" if row["Taxable only"] else "all" + " returns"
         )
