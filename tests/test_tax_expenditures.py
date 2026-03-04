@@ -32,7 +32,7 @@ def test_tax_exp_diffs(
         exp = expfile.readlines()
     assert len(act) == len(exp), "number of act and exp rows differ"
     a_tol = 0.1  # handles :.1f rounding of tax expenditures
-    r_tol = 5e-5  # larger than the np.allclose default value of 1e-5
+    r_tol = 1e-5  # np.allclose default value is 1e-5
     diffs = []
     for rowidx, act_row in enumerate(act):
         atok = act_row.split()
