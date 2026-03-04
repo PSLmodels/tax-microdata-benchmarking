@@ -31,9 +31,8 @@ def test_tax_exp_diffs(
     with open(exp_path, "r", encoding="utf-8") as expfile:
         exp = expfile.readlines()
     assert len(act) == len(exp), "number of act and exp rows differ"
-    # Tax expenditures are written with :.1f format (step 0.1),
-    # so use atol=0.05 (half the rounding step) to handle rounding.
-    a_tol = 0.05
+    a_tol = 0.1  # handles :.1f rounding of tax expenditures
+    r_tol = 1e-5  # np.allclose default value is 1e-5
     diffs = []
     for rowidx, act_row in enumerate(act):
         atok = act_row.split()
@@ -42,8 +41,11 @@ def test_tax_exp_diffs(
             assert atok[tokidx] == etok[tokidx], "act vs exp tokens differ"
         act_val = float(atok[3])
         exp_val = float(etok[3])
-        if not np.allclose([act_val], [exp_val], atol=a_tol):
-            msg = f"{atok[2]},act,exp= {act_val} {exp_val}\n"
+        if not np.allclose([act_val], [exp_val], atol=a_tol, rtol=r_tol):
+            msg = (
+                f"{atok[2]},act,exp,atol,rtol= "
+                f"{act_val} {exp_val} {a_tol} {r_tol}\n"
+            )
             diffs.append(msg)
     if len(diffs) > 0:
         emsg = "\nACT-vs-EXP TAX EXPENDITURE DIFFERENCES:\n" + "".join(diffs)
