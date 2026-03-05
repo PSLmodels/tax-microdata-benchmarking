@@ -1,0 +1,480 @@
+{
+  "_comment": "IRS var_name (from potential_targets_preliminary.csv) to PUF code and TMD variable name mapping. For gain/loss variables, tmd_name_gt0/lt0 give the soi.csv names for positive/negative splits. Updated 2026-03-04.",
+  "agi": {
+    "puf_code": "E00100",
+    "combination_rule": null,
+    "tmd_name": "adjusted_gross_income",
+    "tmd_name_count": "count",
+    "notes": "Adjusted Gross Income (AGI). E00100 (raw input) validates against pufsums. TC uses C00100. The var_type='count' rows for agi provide total return counts (soi.csv 'count' variable).",
+    "irs_locations": {
+      "2015": "15in11si.xls_D10",
+      "2021": "21in11si.xls_D10",
+      "2022": "22in11si.xls_D10"
+    }
+  },
+  "wages": {
+    "puf_code": "E00200",
+    "combination_rule": null,
+    "tmd_name": "employment_income",
+    "notes": "Wages and salaries",
+    "irs_locations": {
+      "2015": "15in14ar.xls_G9",
+      "2021": "21in14ar.xls_G9",
+      "2022": "22in14ar.xls_G9"
+    }
+  },
+  "taxint": {
+    "puf_code": "E00300",
+    "combination_rule": null,
+    "tmd_name": "taxable_interest_income",
+    "notes": "Taxable interest income",
+    "irs_locations": {
+      "2015": "15in14ar.xls_I9",
+      "2021": "21in14ar.xls_I9",
+      "2022": "22in14ar.xls_U9"
+    }
+  },
+  "exemptint": {
+    "puf_code": "E00400",
+    "combination_rule": null,
+    "tmd_name": "exempt_interest",
+    "notes": "Tax-exempt interest income",
+    "irs_locations": {
+      "2015": "15in14ar.xls_K9",
+      "2021": "21in14ar.xls_K9",
+      "2022": "22in14ar.xls_W9"
+    }
+  },
+  "orddiv": {
+    "puf_code": "E00600",
+    "combination_rule": null,
+    "tmd_name": "ordinary_dividends",
+    "notes": "Ordinary dividends",
+    "irs_locations": {
+      "2015": "15in14ar.xls_M9",
+      "2021": "21in14ar.xls_M9",
+      "2022": "22in14ar.xls_Y9"
+    }
+  },
+  "qualdiv": {
+    "puf_code": "E00650",
+    "combination_rule": null,
+    "tmd_name": "qualified_dividends",
+    "notes": "Qualified dividends",
+    "irs_locations": {
+      "2015": "15in14ar.xls_O9",
+      "2021": "21in14ar.xls_O9",
+      "2022": "22in14ar.xls_AA9"
+    }
+  },
+  "busprofincome": {
+    "puf_code": "E00900",
+    "combination_rule": "separate_targeting",
+    "tmd_name_gt0": "business_net_profits",
+    "tmd_name_lt0": "business_net_losses",
+    "notes": "Business/profession net profit/loss. IRS has gt0 and lt0 separately. IRS gt0-lt0 = soi2015 exactly.",
+    "irs_locations": {
+      "2015_gt0": "15in14ar.xls_U9",
+      "2015_lt0": "15in14ar.xls_W9",
+      "2021_gt0": "21in14ar.xls_U9",
+      "2021_lt0": "21in14ar.xls_W9",
+      "2022_gt0": "22in14ar.xls_AG9",
+      "2022_lt0": "22in14ar.xls_AI9"
+    }
+  },
+  "cgtaxable": {
+    "puf_code": "E01000",
+    "combination_rule": "separate_targeting",
+    "tmd_name_gt0": "capital_gains_gross",
+    "tmd_name_lt0": "capital_gains_losses",
+    "notes": "Net capital gain/loss in AGI. IRS has gt0 and lt0 separately. IRS gt0-lt0 = soi2015 within $1,000. TC uses C01000.",
+    "irs_locations": {
+      "2015_gt0": "15in14ar.xls_AA9",
+      "2015_lt0": "15in14ar.xls_AC9",
+      "2021_gt0": "21in14ar.xls_AA9",
+      "2021_lt0": "21in14ar.xls_AC9",
+      "2022_gt0": "22in14ar.xls_AM9",
+      "2022_lt0": "22in14ar.xls_AO9"
+    }
+  },
+  "cgdist": {
+    "puf_code": "E01100",
+    "combination_rule": null,
+    "tmd_name": "capital_gains_distributions",
+    "notes": "Capital gain distributions reported on Form 1040",
+    "irs_locations": {
+      "2015": "15in14ar.xls_Y9",
+      "2021": "21in14ar.xls_Y9",
+      "2022": "22in14ar.xls_AK9"
+    }
+  },
+  "iradist": {
+    "puf_code": "E01400",
+    "combination_rule": null,
+    "tmd_name": "ira_distributions",
+    "notes": "IRA distributions. IRS 2015 = E01400 soi2015 exactly.",
+    "irs_locations": {
+      "2015": "15in14ar.xls_AI9",
+      "2021": "21in14ar.xls_AI9",
+      "2022": "22in14ar.xls_AU9"
+    }
+  },
+  "pensions": {
+    "puf_code": "E01500",
+    "combination_rule": null,
+    "tmd_name": "total_pension_income",
+    "notes": "Total pension income (before exclusion)",
+    "irs_locations": {
+      "2015": "15in14ar.xls_AK9",
+      "2021": "21in14ar.xls_AK9",
+      "2022": "22in14ar.xls_AW9"
+    }
+  },
+  "pensions_taxable": {
+    "puf_code": "E01700",
+    "combination_rule": null,
+    "tmd_name": "taxable_pension_income",
+    "notes": "Taxable pensions and annuities (included in AGI)",
+    "irs_locations": {
+      "2015": "15in14ar.xls_AM9",
+      "2021": "21in14ar.xls_AM9",
+      "2022": "22in14ar.xls_AY9"
+    }
+  },
+  "unempcomp": {
+    "puf_code": "E02300",
+    "combination_rule": null,
+    "tmd_name": "unemployment_compensation",
+    "notes": "Unemployment compensation (in AGI)",
+    "irs_locations": {
+      "2015": "15in14ar.xls_BQ9",
+      "2021": "21in14ar.xls_BU9",
+      "2022": "22in14ar.xls_CG9"
+    }
+  },
+  "socsectot": {
+    "puf_code": "E02400",
+    "combination_rule": null,
+    "tmd_name": "total_social_security",
+    "notes": "Total Social Security benefits",
+    "irs_locations": {
+      "2015": "15in14ar.xls_BS9",
+      "2021": "21in14ar.xls_BW9",
+      "2022": "22in14ar.xls_CI9"
+    }
+  },
+  "socsectaxable": {
+    "puf_code": "E02500",
+    "combination_rule": null,
+    "tmd_name": "taxable_social_security",
+    "notes": "Taxable Social Security benefits. TC uses C02500.",
+    "irs_locations": {
+      "2015": "15in14ar.xls_BU9",
+      "2021": "21in14ar.xls_BY9",
+      "2022": "22in14ar.xls_CK9"
+    }
+  },
+  "ti": {
+    "puf_code": "E04800",
+    "combination_rule": null,
+    "tmd_name": "taxable_income",
+    "notes": "Taxable income. TC uses C04800.",
+    "irs_locations": {
+      "2015": "15in12ms.xls_J9",
+      "2021": "21in12ms.xls_I9",
+      "2022": "22in12ms.xls_I9"
+    }
+  },
+  "taxbc": {
+    "puf_code": "E05800",
+    "combination_rule": null,
+    "tmd_name": "income_tax_before_credits",
+    "notes": "Income tax before credits. TC uses C05800.",
+    "irs_locations": {
+      "2015": "15in14ar.xls_EI9",
+      "2021": "21in14ar.xls_EI9",
+      "2022": "22in14ar.xls_ES9"
+    }
+  },
+  "tottax": {
+    "puf_code": "E06500",
+    "combination_rule": null,
+    "tmd_name": "tottax",
+    "notes": "Total income tax (SOI definition). IRS 2015 = E06500 soi2015 exactly. TC equivalent: C09200 - REFUND. Note: soi.csv passes this through as 'tottax' (not renamed by soi_targets.py).",
+    "irs_locations": {
+      "2015": "15in12ms.xls_N9",
+      "2021": "21in12ms.xls_M9",
+      "2022": "22in12ms.xls_M9"
+    }
+  },
+  "taxac": {
+    "puf_code": "E08800",
+    "combination_rule": null,
+    "tmd_name": "income_tax_after_credits",
+    "notes": "Income tax after credits (SOI definition). puf_to_soi uses E08800. TC equivalent: IITAX.",
+    "irs_locations": {
+      "2015": "15in12ms.xls_L9",
+      "2021": "21in12ms.xls_K9",
+      "2022": "22in12ms.xls_K9"
+    }
+  },
+  "partnerscorpincome": {
+    "puf_code": "E26270",
+    "combination_rule": "separate_targeting",
+    "tmd_name_gt0": "partnership_and_s_corp_income",
+    "tmd_name_lt0": "partnership_and_s_corp_losses",
+    "notes": "Combined partnership and S corp net income/loss. IRS gt0-lt0 = E26270 soi2015 exactly. Part of Schedule E. Note: soi_targets.py aggregates partnerincome+scorpincome into this variable for 2021.",
+    "irs_locations": {
+      "2015_gt0": "15in14ar.xls_BE9",
+      "2015_lt0": "15in14ar.xls_BG9"
+    }
+  },
+  "partnerincome": {
+    "puf_code": "E26270",
+    "combination_rule": "separate_targeting",
+    "tmd_name_gt0": "partnership_and_s_corp_income",
+    "tmd_name_lt0": "partnership_and_s_corp_losses",
+    "notes": "Partnership income only (2021/2022 only, not in 2015). Subset of E26270. soi_targets.py combines partnerincome+scorpincome into partnership_and_s_corp_income/losses.",
+    "irs_locations": {
+      "2021_gt0": "21in14ar.xls_BE9",
+      "2021_lt0": "21in14ar.xls_BG9",
+      "2022_gt0": "22in14ar.xls_BQ9",
+      "2022_lt0": "22in14ar.xls_BS9"
+    }
+  },
+  "scorpincome": {
+    "puf_code": "E26270",
+    "combination_rule": "separate_targeting",
+    "tmd_name_gt0": "s_corporation_net_income",
+    "tmd_name_lt0": "s_corporation_net_losses",
+    "notes": "S corporation income only (2021/2022 only, not in 2015). Subset of E26270. In soi_targets.py, scorpincome values are added to partnership_and_s_corp_income/losses.",
+    "irs_locations": {
+      "2021_gt0": "21in14ar.xls_BI9",
+      "2021_lt0": "21in14ar.xls_BK9",
+      "2022_gt0": "22in14ar.xls_BU9",
+      "2022_lt0": "22in14ar.xls_BW9"
+    }
+  },
+  "rentroyalty": {
+    "puf_code": "E25850",
+    "puf_code_loss": "E25860",
+    "combination_rule": "separate_codes",
+    "tmd_name_gt0": "rent_and_royalty_net_income",
+    "tmd_name_lt0": "rent_and_royalty_net_losses",
+    "notes": "Rent/royalty income/loss. Separate PUF codes for income (E25850) and loss (E25860). E25850 has 10x documentation error. IRS values don't match PUF codes exactly (definitional differences). Needs manual review for targeting strategy.",
+    "irs_locations": {
+      "2015_gt0": "15in14ar.xls_BA9",
+      "2015_lt0": "15in14ar.xls_BC9",
+      "2021_gt0": "21in14ar.xls_BA9",
+      "2021_lt0": "21in14ar.xls_BC9",
+      "2022_gt0": "22in14ar.xls_BM9",
+      "2022_lt0": "22in14ar.xls_BO9"
+    }
+  },
+  "estateincome": {
+    "puf_code": "E26390",
+    "puf_code_loss": "E26400",
+    "combination_rule": "separate_codes",
+    "tmd_name_gt0": "estate_income",
+    "tmd_name_lt0": "estate_losses",
+    "notes": "Estate/trust income/loss. Separate PUF codes. IRS net = PUF net exactly, but individual gt0/lt0 differ symmetrically ($1.44B).",
+    "irs_locations": {
+      "2015_gt0": "15in14ar.xls_BI9",
+      "2015_lt0": "15in14ar.xls_BK9",
+      "2021_gt0": "21in14ar.xls_BM9",
+      "2021_lt0": "21in14ar.xls_BO9",
+      "2022_gt0": "22in14ar.xls_BY9",
+      "2022_lt0": "22in14ar.xls_CA9"
+    }
+  },
+  "exemption": {
+    "puf_code": null,
+    "combination_rule": null,
+    "tmd_name": "exemptions",
+    "notes": "Personal exemption amount. No direct E-code in pufsums. pe_to_soi uses pe('exemptions'). Eliminated after TCJA (2018+). Only relevant for 2015.",
+    "irs_locations": {
+      "2015": "15in14ar.xls_DY9"
+    }
+  },
+  "exemptions_n": {
+    "puf_code": "XTOT",
+    "combination_rule": null,
+    "tmd_name": "count_of_exemptions",
+    "notes": "Number of exemptions claimed. XTOT in PUF. Not in pufsums.csv so cannot validate against soi2015. var_type='number' in potential_targets."
+  },
+  "amt": {
+    "puf_code": null,
+    "tc_code": "C09600",
+    "combination_rule": null,
+    "tmd_name": "alternative_minimum_tax",
+    "notes": "Alternative minimum tax. TC computed variable C09600. No E-code in PUF. IRS 2015 = $31.2B.",
+    "irs_locations": {
+      "2015": "15in14ar.xls_EE9",
+      "2021": "21in14ar.xls_EE9",
+      "2022": "22in14ar.xls_EO9"
+    }
+  },
+  "qbid": {
+    "puf_code": null,
+    "tc_code": "QBIDED",
+    "combination_rule": null,
+    "tmd_name": "qualified_business_income_deduction",
+    "notes": "Qualified business income deduction (Section 199A). TC variable QBIDED. Only available 2018+ (post-TCJA). potential_targets has 2021/2022 only.",
+    "irs_locations": {
+      "2021": "21in14ar.xls_DY9",
+      "2022": "22in14ar.xls_EI9"
+    }
+  },
+  "itemded": {
+    "puf_code": null,
+    "tc_code": "C21060",
+    "combination_rule": null,
+    "tmd_name": "itemized_deductions",
+    "notes": "Total itemized deductions. TC computed variable C21060. No E-code in PUF. pe_to_soi uses pe('itemized_taxable_income_deductions').",
+    "irs_locations": {
+      "2015": "15in12ms.xls_F9",
+      "2021": "21in12ms.xls_E9",
+      "2022": "22in12ms.xls_E9"
+    }
+  },
+  "sd": {
+    "puf_code": null,
+    "tc_code": "C04200",
+    "combination_rule": null,
+    "tmd_name": "standard_deduction",
+    "notes": "Standard deduction amount. TC computed variable C04200. No E-code in PUF.",
+    "irs_locations": {
+      "2015": "15in12ms.xls_H9",
+      "2021": "21in12ms.xls_G9",
+      "2022": "22in12ms.xls_G9"
+    }
+  },
+  "id_salt": {
+    "puf_code": "E18400",
+    "combination_rule": null,
+    "tmd_name": "state_and_local_tax_deductions",
+    "notes": "State and local income/sales tax deduction (Schedule A). E18400 = id_pit + id_gst. Has 10x documentation error in pufsums. IRS 2015 vs E18400 adj: essentially exact.",
+    "irs_locations": {
+      "2015": "15in21id.xls_BT10",
+      "2021": "21in21id.xls_BR10",
+      "2022": "22in21id.xls_CD10"
+    }
+  },
+  "id_retax": {
+    "puf_code": "E18500",
+    "combination_rule": null,
+    "tmd_name": "itemized_real_estate_tax_deductions",
+    "notes": "Real estate tax deduction (Schedule A). Has 10x documentation error in pufsums. IRS 2015 vs E18500 adj: essentially exact.",
+    "irs_locations": {
+      "2015": "15in21id.xls_BZ10",
+      "2021": "21in21id.xls_BZ10",
+      "2022": "22in21id.xls_CL10"
+    }
+  },
+  "id_intpaid": {
+    "puf_code": "E19200",
+    "combination_rule": null,
+    "tmd_name": "interest_paid_deductions",
+    "notes": "Total interest paid deduction (Schedule A). Includes mortgage + investment interest. Has 10x documentation error. IRS 2015 vs E19200 adj: essentially exact.",
+    "irs_locations": {
+      "2015": "15in21id.xls_CF10",
+      "2021": "21in21id.xls_CH10",
+      "2022": "22in21id.xls_CT10"
+    }
+  },
+  "id_contributions": {
+    "puf_code": "E19700",
+    "combination_rule": null,
+    "tmd_name": "charitable_contributions_deductions",
+    "notes": "Charitable contributions deduction (Schedule A). Has 10x documentation error. IRS 2015 vs E19700 adj: essentially exact.",
+    "irs_locations": {
+      "2015": "15in21id.xls_CT10",
+      "2021": "21in21id.xls_CX10",
+      "2022": "22in21id.xls_DH10"
+    }
+  },
+  "id_medical_uncapped": {
+    "puf_code": "E17500",
+    "combination_rule": null,
+    "tmd_name": "medical_expense_deductions_uncapped",
+    "notes": "Medical/dental expenses before AGI floor (Schedule A). Has 10x documentation error. IRS 2015 vs E17500 adj: essentially exact.",
+    "irs_locations": {
+      "2015": "15in21id.xls_BN10",
+      "2021": "21in21id.xls_BL10",
+      "2022": "22in21id.xls_BX10"
+    }
+  },
+  "id_medical_capped": {
+    "puf_code": null,
+    "tc_code": "C17000",
+    "combination_rule": null,
+    "tmd_name": "medical_expense_deductions_capped",
+    "notes": "Medical/dental expenses after AGI floor. TC computed variable C17000. No E-code for capped amount.",
+    "irs_locations": {
+      "2015": "15in21id.xls_BL10",
+      "2021": "21in21id.xls_BJ10",
+      "2022": "22in21id.xls_BV10"
+    }
+  },
+  "id_mortgage": {
+    "puf_code": null,
+    "combination_rule": null,
+    "tmd_name": "mortgage_interest_deductions",
+    "notes": "Mortgage interest deduction. SUBSET of E19200 (total interest paid). IRS 2015 = $283.0B vs E19200 = $304.5B. No separate PUF code; PUF combines mortgage + investment interest in E19200.",
+    "irs_locations": {
+      "2015": "15in21id.xls_CH10",
+      "2021": "21in21id.xls_CJ10",
+      "2022": "22in21id.xls_CX10"
+    }
+  },
+  "id_pit": {
+    "puf_code": null,
+    "combination_rule": null,
+    "tmd_name": "itemized_state_income_tax_deductions",
+    "notes": "State/local personal income tax deduction. SUBSET of E18400. IRS 2015 id_pit ($335.1B) + id_gst ($17.6B) = id_salt ($352.7B) = E18400. No separate PUF code.",
+    "irs_locations": {
+      "2015": "15in21id.xls_BV10",
+      "2021": "21in21id.xls_BV10",
+      "2022": "22in21id.xls_CH10"
+    }
+  },
+  "id_gst": {
+    "puf_code": null,
+    "combination_rule": null,
+    "tmd_name": "itemized_general_sales_tax_deduction",
+    "notes": "General sales tax deduction. SUBSET of E18400. Filers choose either income tax (id_pit) OR sales tax (id_gst) on Schedule A. No separate PUF code.",
+    "irs_locations": {
+      "2015": "15in21id.xls_BX10",
+      "2021": "21in21id.xls_BX10",
+      "2022": "22in21id.xls_CJ10"
+    }
+  },
+  "id_taxpaid": {
+    "puf_code": null,
+    "tc_code": "C18300",
+    "combination_rule": null,
+    "tmd_name": "itemized_taxes_paid_deductions",
+    "notes": "Total taxes paid deduction (Schedule A). IRS 2015 = $553.0B > E18400+E18500 ($541.3B) by $11.7B (includes personal property taxes etc). TC uses C18300.",
+    "irs_locations": {
+      "2015": "15in21id.xls_BR10",
+      "2021": "21in21id.xls_BP10",
+      "2022": "22in21id.xls_CB10"
+    }
+  },
+  "id_pitgst": {
+    "puf_code": null,
+    "combination_rule": null,
+    "tmd_name": "idpitgst",
+    "notes": "State income and sales tax combined. Only in potential_targets for 2021/2022. Also unmapped (passes through) in old soi_targets.py pipeline.",
+    "irs_locations": {
+      "2021": "21in21id.xls_BT10",
+      "2022": "22in21id.xls_CF10"
+    }
+  },
+  "id": {
+    "puf_code": null,
+    "combination_rule": null,
+    "tmd_name": null,
+    "notes": "Count of itemized deduction filers. Only var_type='count' rows in potential_targets. Not a targeted variable in soi.csv."
+  }
+}
