@@ -16,9 +16,10 @@ Key differences from old pipeline:
 """
 
 import json
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
-from pathlib import Path
 
 DATA_DIR = Path(__file__).parent / "data"
 
@@ -92,7 +93,7 @@ SOI_COLUMNS = [
 
 def load_mapping():
     """Load irs_to_puf_map.json."""
-    with open(DATA_DIR / "irs_to_puf_map.json") as f:
+    with open(DATA_DIR / "irs_to_puf_map.json", encoding="utf-8") as f:
         raw = json.load(f)
     # Remove the _comment entry
     return {k: v for k, v in raw.items() if k != "_comment"}
@@ -118,14 +119,12 @@ def get_tmd_variable_name(mapping, var_name, var_type, value_filter):
     if combo in ("separate_targeting", "separate_codes"):
         if value_filter in ("gt0",):
             return entry.get("tmd_name_gt0")
-        elif value_filter in ("lt0",):
+        if value_filter in ("lt0",):
             return entry.get("tmd_name_lt0")
-        else:
-            # 'all' or 'nz' filter not applicable for gain/loss vars
-            return None
-    else:
-        tmd_name = entry.get("tmd_name")
-        return tmd_name  # may be None (e.g., "id" variable)
+        # 'all' or 'nz' filter not applicable for gain/loss vars
+        return None
+    tmd_name = entry.get("tmd_name")
+    return tmd_name  # may be None (e.g., "id" variable)
 
 
 def convert_potential_targets_to_soi(years=None, year_exclude_vars=None):
@@ -133,8 +132,9 @@ def convert_potential_targets_to_soi(years=None, year_exclude_vars=None):
 
     Args:
         years: List of years to include, or None for all available.
-        year_exclude_vars: Dict mapping year → list of IRS var_names to
-            exclude for that year (e.g., {2022: ["rentroyalty", "estateincome"]}).
+        year_exclude_vars: Dict mapping year to list of IRS
+            var_names to exclude for that year
+            (e.g., {2022: ["rentroyalty", "estateincome"]}).
 
     Returns:
         DataFrame in soi.csv format.
@@ -147,8 +147,10 @@ def convert_potential_targets_to_soi(years=None, year_exclude_vars=None):
 
     # Apply year-specific variable exclusions
     if year_exclude_vars:
-        for yr, exclude_list in year_exclude_vars.items():
-            pt = pt[~((pt.year == yr) & (pt.var_name.isin(exclude_list)))]
+        for excl_year, exclude_list in year_exclude_vars.items():
+            pt = pt[
+                ~((pt.year == excl_year) & (pt.var_name.isin(exclude_list)))
+            ]
 
     rows = []
     skipped_vars = set()
@@ -237,7 +239,10 @@ def convert_potential_targets_to_soi(years=None, year_exclude_vars=None):
     df = df.groupby(dedup_cols).first().reset_index()
     after = len(df)
     if before != after:
-        print(f"De-duplicated: {before} → {after} rows ({before - after} removed)")
+        print(
+            f"De-duplicated: {before} -> {after} rows "
+            f"({before - after} removed)"
+        )
 
     # Partner + S-corp aggregation:
     # For years with separate partnerincome/scorpincome (2021, 2022),
@@ -366,18 +371,28 @@ def compare_with_existing_soi(new_df, existing_soi_path, year=2021):
 
         if len(match) == 0:
             missing_count += 1
+            var = erow["Variable"]
+            agi_lo = erow["AGI lower bound"]
+            agi_hi = erow["AGI upper bound"]
+            fs = erow["Filing status"]
+            cnt = erow["Count"]
             print(
-                f"  MISSING: {erow['Variable']} "
-                f"AGI=[{erow['AGI lower bound']},{erow['AGI upper bound']}) "
-                f"FS={erow['Filing status']} Count={erow['Count']}"
+                f"  MISSING: {var} "
+                f"AGI=[{agi_lo},{agi_hi}) "
+                f"FS={fs} Count={cnt}"
             )
         elif abs(match.iloc[0]["Value"] - erow["Value"]) > 0.5:
             mismatch_count += 1
+            var = erow["Variable"]
+            agi_lo = erow["AGI lower bound"]
+            agi_hi = erow["AGI upper bound"]
+            new_val = match.iloc[0]["Value"]
+            old_val = erow["Value"]
             print(
-                f"  MISMATCH: {erow['Variable']} "
-                f"AGI=[{erow['AGI lower bound']},{erow['AGI upper bound']}) "
-                f"existing={erow['Value']} new={match.iloc[0]['Value']} "
-                f"diff={match.iloc[0]['Value'] - erow['Value']}"
+                f"  MISMATCH: {var} "
+                f"AGI=[{agi_lo},{agi_hi}) "
+                f"existing={old_val} new={new_val} "
+                f"diff={new_val - old_val}"
             )
         else:
             match_count += 1
