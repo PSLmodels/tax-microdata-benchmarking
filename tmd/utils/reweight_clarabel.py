@@ -41,8 +41,9 @@ from scipy.sparse import (
 import clarabel
 from tmd.storage import STORAGE_FOLDER
 from tmd.utils.soi_replication import tc_to_soi
-from tmd.utils.reweight import build_loss_matrix, TAX_YEAR
+from tmd.utils.reweight import build_loss_matrix
 from tmd.imputation_assumptions import (
+    TAXYEAR,
     REWEIGHT_MULTIPLIER_MIN,
     REWEIGHT_MULTIPLIER_MAX,
     CLARABEL_CONSTRAINT_TOL,
@@ -325,7 +326,7 @@ def _print_diagnostics(
 
 def reweight_clarabel(
     flat_file,
-    time_period=TAX_YEAR,
+    time_period=TAXYEAR,
     multiplier_min=REWEIGHT_MULTIPLIER_MIN,
     multiplier_max=REWEIGHT_MULTIPLIER_MAX,
     constraint_tol=CLARABEL_CONSTRAINT_TOL,
