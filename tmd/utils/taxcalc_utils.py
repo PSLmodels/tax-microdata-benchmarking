@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 import taxcalc as tc
 from tmd.storage import STORAGE_FOLDER
+from tmd.imputation_assumptions import TAXYEAR
 
 with open(
     STORAGE_FOLDER / "input" / "tc_variable_metadata.yaml",
@@ -113,7 +114,7 @@ def get_tax_expenditure_results(
     weights_file_path: pathlib.Path,
     growfactors_file_path: pathlib.Path,
 ) -> dict:
-    assert input_data_year == 2021
+    assert input_data_year == TAXYEAR
     assert simulation_year in [2023, 2026]
     baseline = add_taxcalc_outputs(
         flat_file,

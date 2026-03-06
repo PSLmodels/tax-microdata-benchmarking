@@ -6,6 +6,7 @@ import pytest
 import taxcalc as tc
 from tmd.storage import STORAGE_FOLDER
 from tmd.create_taxcalc_input_variables import TAXYEAR
+from tests.conftest import create_tmd_records
 
 
 def test_no_negative_weights(tmd_variables):
@@ -39,11 +40,10 @@ def test_income_tax():
 
     # use national tmd files to compute various TAXYEAR income tax statistics
     pol = tc.Policy()
-    rec = tc.Records.tmd_constructor(
-        data_path=(STORAGE_FOLDER / "output" / "tmd.csv.gz"),
-        weights_path=(STORAGE_FOLDER / "output" / "tmd_weights.csv.gz"),
-        growfactors=(STORAGE_FOLDER / "output" / "tmd_growfactors.csv"),
-        exact_calculations=True,
+    rec = create_tmd_records(
+        data_path=STORAGE_FOLDER / "output" / "tmd.csv.gz",
+        weights_path=STORAGE_FOLDER / "output" / "tmd_weights.csv.gz",
+        growfactors_path=STORAGE_FOLDER / "output" / "tmd_growfactors.csv",
     )
     sim = tc.Calculator(policy=pol, records=rec)
     sim.advance_to_year(TAXYEAR)
