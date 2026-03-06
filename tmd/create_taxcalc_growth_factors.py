@@ -48,13 +48,18 @@ def create_factors_file():
     # ...  by Michael Parisi, SOI Bulletin (Spring 2024),
     # ...  which is at this URL:
     # ...  https://www.irs.gov/pub/irs-soi/soi-a-inpre-id2401.pdf
-    gfdf.iat[2022 - FIRST_YEAR, AWAGE_INDEX] += -0.01
-    gfdf.iat[2022 - FIRST_YEAR, ADIVS_INDEX] += +0.04
-    gfdf.iat[2022 - FIRST_YEAR, ACGNS_INDEX] += +0.04
-    gfdf.iat[2022 - FIRST_YEAR, ASCHCI_INDEX] += -0.05
-    gfdf.iat[2022 - FIRST_YEAR, ASCHEI_INDEX] += +0.07
-    gfdf.iat[2022 - FIRST_YEAR, AUCOMP_INDEX] += -0.01
-    gfdf.iat[2022 - FIRST_YEAR, ASOCSEC_INDEX] += +0.10
+    # These adjustments calibrate 2021→2022 growth factors.
+    # When FIRST_YEAR >= 2022, the 2022 row is the baseline (all ones)
+    # and these adjustments don't apply (reweighting handles 2022
+    # calibration directly via SOI targets).
+    if FIRST_YEAR < 2022:
+        gfdf.iat[2022 - FIRST_YEAR, AWAGE_INDEX] += -0.01
+        gfdf.iat[2022 - FIRST_YEAR, ADIVS_INDEX] += +0.04
+        gfdf.iat[2022 - FIRST_YEAR, ACGNS_INDEX] += +0.04
+        gfdf.iat[2022 - FIRST_YEAR, ASCHCI_INDEX] += -0.05
+        gfdf.iat[2022 - FIRST_YEAR, ASCHEI_INDEX] += +0.07
+        gfdf.iat[2022 - FIRST_YEAR, AUCOMP_INDEX] += -0.01
+        gfdf.iat[2022 - FIRST_YEAR, ASOCSEC_INDEX] += +0.10
     # ... using above adjustments, we have the following results:
     #      2022 AMOUNTS in $B         SOI        TMD   (TMD/SOI-1)*100(%)
     #      wage_and_salary       9648.553   9654.475   +0.1
