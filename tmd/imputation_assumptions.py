@@ -2,6 +2,8 @@
 Central location for data imputation assumptions.
 """
 
+TAXYEAR = 2021  # single source of truth for the target tax year
+
 IMPUTATION_RF_RNG_SEED = 1928374  # random number seed used by RandomForest
 
 IMPUTATION_BETA_RNG_SEED = 37465  # random number seed used for Beta variates

@@ -5,7 +5,7 @@ import tempfile
 import numpy as np
 import pandas as pd
 from policyengine_us import Microsimulation
-from tmd.imputation_assumptions import CPS_WEIGHTS_SCALE
+from tmd.imputation_assumptions import CPS_WEIGHTS_SCALE, TAXYEAR
 from tmd.datasets.puf import PUF_2021, create_pe_puf_2021
 from tmd.datasets.cps import CPS_2021, create_cps_2021
 from tmd.datasets.taxcalc_dataset import create_tc_dataset
@@ -19,8 +19,8 @@ def create_tmd_2021():
     create_cps_2021()
     create_pe_puf_2021()
 
-    tc_puf_21 = create_tc_dataset(PUF_2021, 2021)
-    tc_cps_21 = create_tc_dataset(CPS_2021, 2021)
+    tc_puf_21 = create_tc_dataset(PUF_2021, TAXYEAR)
+    tc_cps_21 = create_tc_dataset(CPS_2021, TAXYEAR)
 
     # identify CPS nonfilers using 2022 filing rules
     # (because 2021 had large COVID-related anomalies)
@@ -36,9 +36,9 @@ def create_tmd_2021():
 
     trace1("A", combined)
 
-    print("Adding Tax-Calculator outputs for 2021...")
-    combined = add_taxcalc_outputs(combined, 2021, 2021)
-    # ... drop CPS records with positive 2021 income tax amount
+    print(f"Adding Tax-Calculator outputs for {TAXYEAR}...")
+    combined = add_taxcalc_outputs(combined, TAXYEAR, TAXYEAR)
+    # ... drop CPS records with positive income tax amount
     idx = combined[((combined.data_source == 0) & (combined.iitax > 0))].index
     combined.drop(idx, inplace=True)
     # ... scale CPS records weight to get correct population count
@@ -65,17 +65,17 @@ def create_tmd_2021():
     )
     if use_pytorch:
         reweight_import = "from tmd.utils.reweight import reweight"
-        reweight_call = "reweight(df, 2021)"
+        reweight_call = f"reweight(df, {TAXYEAR})"
         print("...using penalty-based solver (PyTorch L-BFGS)")
     elif use_scipy:
         reweight_import = "from tmd.utils.reweight import reweight_lbfgsb"
-        reweight_call = "reweight_lbfgsb(df, 2021)"
+        reweight_call = f"reweight_lbfgsb(df, {TAXYEAR})"
         print("...using penalty-based solver (scipy L-BFGS-B)")
     else:
         reweight_import = (
             "from tmd.utils.reweight_clarabel import reweight_clarabel"
         )
-        reweight_call = "reweight_clarabel(df, 2021)"
+        reweight_call = f"reweight_clarabel(df, {TAXYEAR})"
         print("...using constrained QP solver (Clarabel)")
     # Run reweighting in a subprocess so that prior PyTorch
     # operations (PolicyEngine Microsimulation) don't affect

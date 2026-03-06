@@ -8,6 +8,7 @@ from tmd.storage import STORAGE_FOLDER
 from tmd.create_taxcalc_input_variables import TAXYEAR
 from tmd.areas import AREAS_FOLDER
 from tmd.areas.create_area_weights import create_area_weights_file
+from tests.conftest import create_tmd_records
 
 YEAR = TAXYEAR
 
@@ -23,11 +24,10 @@ def test_area_xx(tests_folder):
     # compare actual vs expected results for faux area xx
     # ... instantiate Tax-Calculator object for area
     pol = tc.Policy()
-    rec = tc.Records.tmd_constructor(
-        data_path=(STORAGE_FOLDER / "output" / "tmd.csv.gz"),
-        weights_path=(AREAS_FOLDER / "weights" / "xx_tmd_weights.csv.gz"),
-        growfactors=(STORAGE_FOLDER / "output" / "tmd_growfactors.csv"),
-        exact_calculations=True,
+    rec = create_tmd_records(
+        data_path=STORAGE_FOLDER / "output" / "tmd.csv.gz",
+        weights_path=AREAS_FOLDER / "weights" / "xx_tmd_weights.csv.gz",
+        growfactors_path=STORAGE_FOLDER / "output" / "tmd_growfactors.csv",
     )
     sim = tc.Calculator(policy=pol, records=rec)
     # ... calculate tax variables for YEAR
