@@ -289,6 +289,13 @@ class RawCPS_2021(RawCPS):
     file_path = STORAGE_FOLDER / "input" / "raw_cps_2021.h5"
 
 
+class RawCPS_2022(RawCPS):
+    time_period = 2022
+    name = "raw_cps_2022"
+    label = "Raw CPS 2022"
+    file_path = STORAGE_FOLDER / "input" / "raw_cps_2022.h5"
+
+
 class CPS(Dataset):
     name = "cps"
     label = "CPS"
@@ -315,7 +322,7 @@ class CPS(Dataset):
 
         add_id_variables(cps, person, tax_unit, family, spm_unit, household)
         add_personal_variables(cps, person)
-        add_personal_income_variables(cps, person)
+        add_personal_income_variables(cps, person, self.time_period)
         add_previous_year_income(self, cps)
         add_spm_variables(cps, spm_unit)
         add_household_variables(cps, household)
@@ -467,7 +474,9 @@ def add_personal_variables(cps: h5py.File, person: DataFrame) -> None:
     cps["is_full_time_college_student"] = person.A_HSCOL == 2
 
 
-def add_personal_income_variables(cps: h5py.File, person: DataFrame):
+def add_personal_income_variables(
+    cps: h5py.File, person: DataFrame, time_period: int = 2021
+):
     """
     Add income variables.
 
@@ -592,11 +601,31 @@ def add_personal_income_variables(cps: h5py.File, person: DataFrame):
     # Disregard reported pension contributions from people
     #    who report neither wage and salary nor self-employment income.
     # Assume no 403(b) or 457 contributions for now.
-    LIMIT_401K_2022 = 20_500
-    LIMIT_401K_CATCH_UP_2022 = 6_500
-    LIMIT_IRA_2022 = 6_000
-    LIMIT_IRA_CATCH_UP_2022 = 1_000
-    CATCH_UP_AGE_2022 = 50
+    # Retirement contribution limits by year (IRS limits for the tax year)
+    RETIREMENT_LIMITS = {
+        2021: {
+            "limit_401k": 19_500,
+            "limit_401k_catch_up": 6_500,
+            "limit_ira": 6_000,
+            "limit_ira_catch_up": 1_000,
+        },
+        2022: {
+            "limit_401k": 20_500,
+            "limit_401k_catch_up": 6_500,
+            "limit_ira": 6_000,
+            "limit_ira_catch_up": 1_000,
+        },
+        2023: {
+            "limit_401k": 22_500,
+            "limit_401k_catch_up": 7_500,
+            "limit_ira": 6_500,
+            "limit_ira_catch_up": 1_000,
+        },
+    }
+    CATCH_UP_AGE = 50
+    rlimits = RETIREMENT_LIMITS.get(
+        time_period, RETIREMENT_LIMITS[2022]
+    )
     retirement_contributions = person.RETCB_VAL
     cps["self_employed_pension_contributions"] = np.where(
         person.SEMP_VAL > 0, retirement_contributions, 0
@@ -606,9 +635,15 @@ def add_personal_income_variables(cps: h5py.File, person: DataFrame):
         0,
     )
     # Compute the 401(k) limit for the person's age.
-    catch_up_eligible = person.A_AGE >= CATCH_UP_AGE_2022
-    limit_401k = LIMIT_401K_2022 + catch_up_eligible * LIMIT_401K_CATCH_UP_2022
-    limit_ira = LIMIT_IRA_2022 + catch_up_eligible * LIMIT_IRA_CATCH_UP_2022
+    catch_up_eligible = person.A_AGE >= CATCH_UP_AGE
+    limit_401k = (
+        rlimits["limit_401k"]
+        + catch_up_eligible * rlimits["limit_401k_catch_up"]
+    )
+    limit_ira = (
+        rlimits["limit_ira"]
+        + catch_up_eligible * rlimits["limit_ira_catch_up"]
+    )
     cps["traditional_401k_contributions"] = np.where(
         person.WSAL_VAL > 0,
         np.minimum(remaining_retirement_contributions, limit_401k),
@@ -790,8 +825,20 @@ class CPS_2021(CPS):
     time_period = 2021
 
 
+class CPS_2022(CPS):
+    name = "cps_2022"
+    label = "CPS 2022"
+    raw_cps = RawCPS_2022
+    file_path = STORAGE_FOLDER / "output" / "cps_2022.h5"
+    time_period = 2022
+
+
 def create_cps_2021():
     CPS_2021().generate()
+
+
+def create_cps_2022():
+    CPS_2022().generate()
 
 
 if __name__ == "__main__":

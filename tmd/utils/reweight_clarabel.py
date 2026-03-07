@@ -400,7 +400,7 @@ def reweight_clarabel(
         filer_mask = soi_df["is_tax_filer"].values.astype(bool)
         current_filer_total = (flat_file.s006.values * filer_mask).sum()
         prescale = target_filer_total / current_filer_total
-        flat_file["s006"] *= prescale
+        flat_file.loc[filer_mask, "s006"] *= prescale
         print(
             f"...prescale factor: {prescale:.6f} "
             f"(target={target_filer_total:,.0f}, "

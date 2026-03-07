@@ -88,7 +88,7 @@ def test_obbba_deduction_tax_benefits(
                 "SeniorDed_c": {simyear: 0},
             },
             "exp_totben": 54.77,
-            "exp_affpct": 28.06,
+            "exp_affpct": 28.08,
             "exp_affben": 1015,
             # The affpct statistic and the affben statistic are
             # reasonably close to the Tax Policy Center estimates
@@ -165,8 +165,8 @@ def test_imputed_variable_distribution(tmd_variables):
         },
         "tip_income": {"mean": 1606.104987214547, "sdev": 95550.08249632413},
         "auto_loan_interest": {
-            "mean": 116.41451060127145,
-            "sdev": 354.21466485958564,
+            "mean": 116.38063359022622,
+            "sdev": 353.9137720043263,
         },
     }
     diffs = []

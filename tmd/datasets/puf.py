@@ -479,6 +479,13 @@ class PUF_2021(PUF):
     file_path = STORAGE_FOLDER / "output" / "pe_puf_2021.h5"
 
 
+class PUF_2022(PUF):
+    label = "PUF 2022"
+    name = "puf_2022"
+    time_period = 2022
+    file_path = STORAGE_FOLDER / "output" / "pe_puf_2022.h5"
+
+
 def create_pe_puf_2015():
     puf = pd.read_csv(STORAGE_FOLDER / "input" / "puf_2015.csv")
     demographics = pd.read_csv(
@@ -494,6 +501,15 @@ def create_pe_puf_2021():
         STORAGE_FOLDER / "input" / "demographics_2015.csv"
     )
     pe_puf = PUF_2021()
+    pe_puf.generate(puf, demographics)
+
+
+def create_pe_puf_2022():
+    puf = pd.read_csv(STORAGE_FOLDER / "input" / "puf_2015.csv")
+    demographics = pd.read_csv(
+        STORAGE_FOLDER / "input" / "demographics_2015.csv"
+    )
+    pe_puf = PUF_2022()
     pe_puf.generate(puf, demographics)
 
 

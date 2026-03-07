@@ -6,35 +6,59 @@ import numpy as np
 import pandas as pd
 from policyengine_us import Microsimulation
 from tmd.imputation_assumptions import CPS_WEIGHTS_SCALE, TAXYEAR
-from tmd.datasets.puf import PUF_2021, create_pe_puf_2021
-from tmd.datasets.cps import CPS_2021, create_cps_2021
+from tmd.datasets.puf import (
+    PUF_2021,
+    PUF_2022,
+    create_pe_puf_2021,
+    create_pe_puf_2022,
+)
+from tmd.datasets.cps import (
+    CPS_2021,
+    CPS_2022,
+    create_cps_2021,
+    create_cps_2022,
+)
 from tmd.datasets.taxcalc_dataset import create_tc_dataset
 from tmd.utils.trace import trace1
 from tmd.utils.taxcalc_utils import add_taxcalc_outputs
 
 
 def create_tmd_2021():
-    # always create CPS_2021 and PUF_2021
-    # (because imputation assumptions may have changed)
-    create_cps_2021()
-    create_pe_puf_2021()
+    # Select dataset classes based on TAXYEAR
+    if TAXYEAR <= 2021:
+        cps_class, create_cps = CPS_2021, create_cps_2021
+        puf_class, create_puf = PUF_2021, create_pe_puf_2021
+    else:
+        cps_class, create_cps = CPS_2022, create_cps_2022
+        puf_class, create_puf = PUF_2022, create_pe_puf_2022
 
-    tc_puf_21 = create_tc_dataset(PUF_2021, TAXYEAR)
-    tc_cps_21 = create_tc_dataset(CPS_2021, TAXYEAR)
+    # always regenerate CPS and PUF
+    # (because imputation assumptions may have changed)
+    create_cps()
+    create_puf()
+
+    tc_puf = create_tc_dataset(puf_class, TAXYEAR)
+    tc_cps = create_tc_dataset(cps_class, TAXYEAR)
 
     # identify CPS nonfilers using 2022 filing rules
     # (because 2021 had large COVID-related anomalies)
-    sim = Microsimulation(dataset=CPS_2021)
+    sim = Microsimulation(dataset=cps_class)
     nonfiler = ~(sim.calculate("tax_unit_is_filer", period=2022).values > 0)
-    tc_cps_21 = tc_cps_21[nonfiler]
+    tc_cps = tc_cps[nonfiler]
 
     print("Combining PUF filers and CPS nonfilers...")
-    combined = pd.concat([tc_puf_21, tc_cps_21], ignore_index=True)
+    combined = pd.concat([tc_puf, tc_cps], ignore_index=True)
 
     # ensure RECID values are unique
     combined["RECID"] = np.arange(1, len(combined) + 1, dtype=int)
 
     trace1("A", combined)
+
+    # Enforce Tax-Calculator consistency constraints after uprating.
+    # Different growth factors for total vs taxable components can
+    # cause total < taxable after uprating from the 2015 base year.
+    combined["e01500"] = np.maximum(combined["e01500"], combined["e01700"])
+    combined["e00600"] = np.maximum(combined["e00600"], combined["e00650"])
 
     print(f"Adding Tax-Calculator outputs for {TAXYEAR}...")
     combined = add_taxcalc_outputs(combined, TAXYEAR, TAXYEAR)
