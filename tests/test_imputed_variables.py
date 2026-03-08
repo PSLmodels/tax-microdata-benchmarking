@@ -7,6 +7,7 @@ auto_loan_interest.
 import numpy as np
 import pytest
 import taxcalc as tc
+from tests.conftest import create_tmd_records
 
 
 def test_obbba_deduction_tax_benefits(
@@ -102,11 +103,10 @@ def test_obbba_deduction_tax_benefits(
         "iitax",  # income tax liability
     ]
     # create Tax-Calculator Records object
-    recs = tc.Records.tmd_constructor(
-        tmd_variables_path,
-        tmd_weights_path,
-        tmd_growfactors_path,
-        exact_calculations=True,
+    recs = create_tmd_records(
+        data_path=tmd_variables_path,
+        weights_path=tmd_weights_path,
+        growfactors_path=tmd_growfactors_path,
     )
     # create baseline_sim Calculator object for simyear and get its output
     baseline_sim = tc.Calculator(policy=tc.Policy(), records=recs)

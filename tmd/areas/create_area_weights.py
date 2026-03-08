@@ -21,7 +21,7 @@ import jax
 import jax.numpy as jnp
 from jax.experimental.sparse import BCOO
 from tmd.storage import STORAGE_FOLDER
-from tmd.create_taxcalc_input_variables import TAXYEAR
+from tmd.imputation_assumptions import TAXYEAR
 from tmd.areas import AREAS_FOLDER
 
 FIRST_YEAR = TAXYEAR

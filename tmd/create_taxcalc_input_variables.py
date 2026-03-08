@@ -5,6 +5,7 @@ Construct tmd.csv, a Tax-Calculator-style input variable file for TAXYEAR.
 import taxcalc as tc
 from tmd.datasets.tmd import create_tmd_2021
 from tmd.imputation_assumptions import (
+    TAXYEAR,
     IMPUTATION_RF_RNG_SEED,
     IMPUTATION_BETA_RNG_SEED,
     ITMDED_GROW_RATE,
@@ -14,7 +15,6 @@ from tmd.imputation_assumptions import (
 )
 from tmd.storage import STORAGE_FOLDER
 
-TAXYEAR = 2021
 DUMP_ALL_UNROUNDED_VARIABLES = False
 
 

@@ -11,12 +11,11 @@ import torch
 from tmd.storage import STORAGE_FOLDER
 from tmd.utils.soi_replication import tc_to_soi
 from tmd.imputation_assumptions import (
+    TAXYEAR,
     REWEIGHT_MULTIPLIER_MIN,
     REWEIGHT_MULTIPLIER_MAX,
     REWEIGHT_DEVIATION_PENALTY,
 )
-
-TAX_YEAR = 2021  # set equal to TAXYEAR in create_taxcalc_input_variables.py
 
 INCOME_RANGES = [
     -np.inf,
@@ -203,7 +202,7 @@ def _drop_impossible_targets(loss_matrix, targets_arr):
 
 def reweight(
     flat_file: pd.DataFrame,
-    time_period: int = TAX_YEAR,
+    time_period: int = TAXYEAR,
     weight_multiplier_min: float = REWEIGHT_MULTIPLIER_MIN,
     weight_multiplier_max: float = REWEIGHT_MULTIPLIER_MAX,
     weight_deviation_penalty: float = REWEIGHT_DEVIATION_PENALTY,
@@ -503,7 +502,7 @@ def reweight(
 
 def reweight_lbfgsb(
     flat_file,
-    time_period=TAX_YEAR,
+    time_period=TAXYEAR,
     weight_multiplier_min=REWEIGHT_MULTIPLIER_MIN,
     weight_multiplier_max=REWEIGHT_MULTIPLIER_MAX,
     weight_deviation_penalty=REWEIGHT_DEVIATION_PENALTY,

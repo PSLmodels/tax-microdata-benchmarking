@@ -12,7 +12,7 @@ import sqlite3
 from typing import Tuple, List, Dict
 import numpy as np
 import pandas as pd
-from tmd.create_taxcalc_input_variables import TAXYEAR
+from tmd.imputation_assumptions import TAXYEAR
 from tmd.storage import STORAGE_FOLDER
 from tmd.utils.mice import MICE
 
