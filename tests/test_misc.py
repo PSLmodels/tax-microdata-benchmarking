@@ -24,10 +24,10 @@ def test_partnership_s_corp_income(tmd_variables):
 def test_population(tmd_variables):
     weight = tmd_variables.s006
     people = tmd_variables.XTOT
-    population = (weight * people).sum()
+    population = (weight * people).sum() * 1e-6
     assert (
-        abs(population / 1e6 / 331.894 - 1) < 0.02
-    ), "Population not within 2% of 331.9 million"
+        abs(population / 331.894 - 1) < 0.005
+    ), f"Population ({population:.3f}) not within 0.5% of 331.9 million"
     # target 2021 (July 1) population is 331.894 million from this URL:
     # https://www.census.gov/newsroom/press-releases/2021/
     #       2021-population-estimates.html
@@ -59,17 +59,17 @@ def test_income_tax():
     compare("wght_sum", wght.sum(), 184e6, 0.01)
     hiagi = agi >= 1e6
     compare("wght_sum_hiagi", (wght * hiagi).sum(), 0.875e6, 0.01)
-    compare("wght_itax_sum", (wght * itax).sum(), 1692e9, 0.01)
+    compare("wght_itax_sum", (wght * itax).sum(), 1661e9, 0.01)
     compare("wght_itax_sum_hiagi", ((wght * itax) * hiagi).sum(), 911e9, 0.01)
     # count weighted number of tax units with zero agi by filing status
     agi0 = agi == 0
-    compare("wght_sum_agi0_fs0", (wght * agi0).sum(), 16.22e6, 0.01)
+    compare("wght_sum_agi0_fs0", (wght * agi0).sum(), 13.75e6, 0.01)
     mars1 = mars == 1
-    compare("wght_sum_agi0_fs1", (wght * mars1 * agi0).sum(), 12.01e6, 0.01)
+    compare("wght_sum_agi0_fs1", (wght * mars1 * agi0).sum(), 10.60e6, 0.01)
     mars2 = mars == 2
-    compare("wght_sum_agi0_fs2", (wght * mars2 * agi0).sum(), 2.00e6, 0.01)
+    compare("wght_sum_agi0_fs2", (wght * mars2 * agi0).sum(), 1.20e6, 0.01)
     mars4 = mars == 4
-    compare("wght_sum_agi0_fs4", (wght * mars4 * agi0).sum(), 1.53e6, 0.01)
+    compare("wght_sum_agi0_fs4", (wght * mars4 * agi0).sum(), 1.76e6, 0.01)
     # count weighted number of PUF tax units with zero agi by filing status
     puf = sim.array("data_source") == 1
     pwght = puf * wght

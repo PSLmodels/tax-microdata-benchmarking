@@ -4,10 +4,9 @@ import subprocess
 import tempfile
 import numpy as np
 import pandas as pd
-from policyengine_us import Microsimulation
 from tmd.imputation_assumptions import CPS_WEIGHTS_SCALE
 from tmd.datasets.puf import create_tc_puf
-from tmd.datasets.cps import CPS_2021, create_cps_2021
+from tmd.datasets.cps import create_tc_cps, create_cps_2021
 from tmd.datasets.taxcalc_dataset import create_tc_dataset
 from tmd.utils.trace import trace1
 from tmd.utils.taxcalc_utils import add_taxcalc_outputs
@@ -20,14 +19,9 @@ def create_tmd_dataframe(taxyear: int) -> pd.DataFrame:
     # always create_tc_puf and create_tc_cps because
     # imputation assumptions may have changed
     tc_puf = create_tc_puf(taxyear)
-    create_cps_2021()
-    tc_cps = create_tc_dataset(CPS_2021, taxyear)
-
-    # identify CPS nonfilers using 2022 filing rules
-    # (because 2021 had large COVID-related anomalies)
-    sim = Microsimulation(dataset=CPS_2021)
-    nonfiler = ~(sim.calculate("tax_unit_is_filer", period=2022).values > 0)
-    tc_cps = tc_cps[nonfiler]
+    # TODO: create_cps_2021()
+    tc_cps, nonfiler = create_tc_cps(taxyear)
+    tc_cps = tc_cps[nonfiler].reset_index(drop=True)
 
     print("Combining PUF filers and CPS nonfilers...")
     combined = pd.concat([tc_puf, tc_cps], ignore_index=True)
