@@ -5,7 +5,7 @@ Tests of tmd/areas/create_area_weights.py script.
 import yaml
 import taxcalc as tc
 from tmd.storage import STORAGE_FOLDER
-from tmd.create_taxcalc_input_variables import TAXYEAR
+from tmd.imputation_assumptions import TAXYEAR
 from tmd.areas import AREAS_FOLDER
 from tmd.areas.create_area_weights import create_area_weights_file
 from tests.conftest import create_tmd_records

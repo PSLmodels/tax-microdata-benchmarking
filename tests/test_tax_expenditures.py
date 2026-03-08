@@ -6,7 +6,7 @@ against expected tax expenditure values in the tests folder.
 import pytest
 import numpy as np
 from tmd.storage import STORAGE_FOLDER
-from tmd.create_taxcalc_input_variables import TAXYEAR
+from tmd.imputation_assumptions import TAXYEAR
 from tmd.utils.taxcalc_utils import get_tax_expenditure_results
 
 

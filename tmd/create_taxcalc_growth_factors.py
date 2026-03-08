@@ -6,7 +6,7 @@ covers the years from FIRST_YEAR through LAST_YEAR.
 import pandas as pd
 import numpy as np
 from tmd.storage import STORAGE_FOLDER
-from tmd.create_taxcalc_input_variables import TAXYEAR
+from tmd.imputation_assumptions import TAXYEAR
 
 FIRST_YEAR = TAXYEAR
 LAST_YEAR = 2074

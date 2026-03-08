@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 import taxcalc as tc
 from tmd.storage import STORAGE_FOLDER, CACHED_TAXCALC_VARIABLES
-from tmd.create_taxcalc_input_variables import TAXYEAR
+from tmd.imputation_assumptions import TAXYEAR
 
 INFILE_PATH = STORAGE_FOLDER / "output" / "tmd.csv.gz"
 WTFILE_PATH = STORAGE_FOLDER / "output" / "tmd_weights.csv.gz"
