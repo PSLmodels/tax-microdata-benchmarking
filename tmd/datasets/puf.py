@@ -304,7 +304,7 @@ def create_tc_puf(taxyear: int) -> pd.DataFrame:
     # build Tax-Calculator (TC) variable dictionary
     print(f"Building Tax-Calculator dataset for {taxyear}...")
 
-    # mapping from TC variable name to PE-named column in preprocessed PUF:
+    # mapping from TC variable name to PE-named column in pre-processed PUF:
     #  for person-level variables, the tax-unit total is scaled by
     #  person_scale (= head_frac + (1-head_frac)*is_joint) to match
     #  policyengine_us pipeline's sum-over-nondependents aggregation.
@@ -410,9 +410,9 @@ def create_tc_puf(taxyear: int) -> pd.DataFrame:
         "other_credits",
         "w2_wages_from_qualified_business",
     }
-    # Tax-Calculator names that are not financial amounts (no person_scale)
-    NO_SCALE = {"RECID", "S006", "XTOT"}
 
+    # create dictionary that will be used to create Tax-Calculator DataFrame
+    NO_SCALE = {"RECID", "S006", "XTOT"}
     var = {}
     for tcname, pename in tc_to_pe.items():
         if tcname in NO_SCALE:
@@ -422,12 +422,12 @@ def create_tc_puf(taxyear: int) -> pd.DataFrame:
         else:
             var[tcname] = puf[pename].values
 
-    # raw PUF variables
+    # ... raw PUF variables
     var["f2441"] = f2441_raw
     var["EIC"] = eic_raw
     var["MARS"] = mars_raw
 
-    # zero-valued variables
+    # ... zero-valued variables
     zeros = np.zeros(n, dtype=int)
     for tcname in [
         "a_lineno",
@@ -455,7 +455,7 @@ def create_tc_puf(taxyear: int) -> pd.DataFrame:
     ]:
         var[tcname] = zeros
 
-    # computed variables
+    # ... computed variables
     var["E00600"] = (
         puf["non_qualified_dividend_income"].values
         + puf["qualified_dividend_income"].values
@@ -474,7 +474,7 @@ def create_tc_puf(taxyear: int) -> pd.DataFrame:
         + puf["farm_rent_income"].values
     ) * person_scale
 
-    # head/spouse splits
+    # ... head/spouse splits
     var["e00200p"] = e00200p
     var["e00200s"] = e00200s
     var["e00900p"] = e00900p
@@ -484,7 +484,7 @@ def create_tc_puf(taxyear: int) -> pd.DataFrame:
     var["pencon_p"] = pencon_p
     var["pencon_s"] = pencon_s
 
-    # demographics
+    # ... demographics
     var["age_head"] = age_head
     var["age_spouse"] = age_spouse
     var["blind_head"] = zeros
@@ -497,9 +497,10 @@ def create_tc_puf(taxyear: int) -> pd.DataFrame:
     var["n24"] = n24
     var["elderly_dependents"] = elderly_dependents
 
-    df = pd.DataFrame(var)
+    # ... create Tax-Calculator DataFrame
+    tcdf = pd.DataFrame(var)
 
-    # correct variable name casing for Tax-Calculator
+    # correct variable name casing for Tax-Calculator via renaming
     with open(
         STORAGE_FOLDER / "input" / "tc_variable_metadata.yaml",
         "r",
@@ -507,11 +508,12 @@ def create_tc_puf(taxyear: int) -> pd.DataFrame:
     ) as yfile:
         tc_variable_metadata = yaml.safe_load(yfile)
     renames = {}
-    for variable in df.columns:
+    for variable in tcdf.columns:
         if variable.upper() in tc_variable_metadata["read"]:
             renames[variable] = variable.upper()
         elif variable.lower() in tc_variable_metadata["read"]:
             renames[variable] = variable.lower()
-    df.rename(columns=renames, inplace=True)
+    tcdf.rename(columns=renames, inplace=True)
 
-    return df
+    # return the Tax-Calculator DataFrame
+    return tcdf
