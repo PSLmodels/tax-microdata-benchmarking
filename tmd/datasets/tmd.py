@@ -13,7 +13,7 @@ from tmd.utils.trace import trace1
 from tmd.utils.taxcalc_utils import add_taxcalc_outputs
 
 
-def create_tmd_dataframe(taxyear):
+def create_tmd_dataframe(taxyear: int) -> pd.DataFrame:
     """
     Create DataFrame for given taxyear containing PUF filers and CPS nonfilers.
     """
