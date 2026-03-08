@@ -10,13 +10,11 @@ from tmd.imputation_assumptions import (
     IMPUTATION_RF_RNG_SEED,
     IMPUTATION_BETA_RNG_SEED,
     W2_WAGES_SCALE,
+    FILER_AGE_HEAD_RNG_SEED,
+    FILER_AGE_SPOUSE_RNG_SEED,
+    DEP_AGE_RNG_SEED,
+    EARN_SPLIT_RNG_SEED,
 )
-
-FILER_AGE_RNG = np.random.default_rng(seed=64963751)
-SPOUSE_GENDER_RNG = np.random.default_rng(seed=83746519)
-DEP_AGE_RNG = np.random.default_rng(seed=24354657)
-DEP_GENDER_RNG = np.random.default_rng(seed=74382916)
-EARN_SPLIT_RNG = np.random.default_rng(seed=18374659)
 
 
 def impute_missing_demographics(
@@ -78,41 +76,6 @@ def impute_missing_demographics(
     )
 
     return puf_combined
-
-
-def decode_age_filer(age_range: int) -> int:
-    if age_range == 0:
-        return 40
-    AGERANGE_FILER_DECODE = {
-        1: 18,
-        2: 26,
-        3: 35,
-        4: 45,
-        5: 55,
-        6: 65,
-        7: 80,
-    }
-    lower = AGERANGE_FILER_DECODE[age_range]
-    upper = AGERANGE_FILER_DECODE[age_range + 1]
-    return FILER_AGE_RNG.integers(low=lower, high=upper, endpoint=False)
-
-
-def decode_age_dependent(age_range: int) -> int:
-    if age_range == 0:
-        return 0
-    AGERANGE_DEPENDENT_DECODE = {
-        0: 0,
-        1: 0,
-        2: 5,
-        3: 13,
-        4: 17,
-        5: 19,
-        6: 25,
-        7: 30,
-    }
-    lower = AGERANGE_DEPENDENT_DECODE[age_range]
-    upper = AGERANGE_DEPENDENT_DECODE[age_range + 1]
-    return DEP_AGE_RNG.integers(low=lower, high=upper, endpoint=False)
 
 
 def preprocess_puf(puf: pd.DataFrame) -> pd.DataFrame:
@@ -210,11 +173,12 @@ def create_tc_puf(taxyear: int) -> pd.DataFrame:
     directly from raw PUF data, without using PolicyEngine (PE) Dataset or
     hierarchical data files.
     """
-    # fresh RNG objects (same seeds as module-level RNGs used in PUF class)
-    filer_age_rng_head = np.random.default_rng(seed=64963751)
-    filer_age_rng_spouse = np.random.default_rng(seed=64963753)
-    dep_age_rng = np.random.default_rng(seed=24354657)
-    earn_split_rng = np.random.default_rng(seed=18374659)
+    filer_age_rng_head = np.random.default_rng(seed=FILER_AGE_HEAD_RNG_SEED)
+    filer_age_rng_spouse = np.random.default_rng(
+        seed=FILER_AGE_SPOUSE_RNG_SEED
+    )
+    dep_age_rng = np.random.default_rng(seed=DEP_AGE_RNG_SEED)
+    earn_split_rng = np.random.default_rng(seed=EARN_SPLIT_RNG_SEED)
 
     # read and prepare raw PUF data
     print("Reading raw PUF 2015 data...")

@@ -10,6 +10,12 @@ IMPUTATION_BETA_RNG_SEED = 37465  # random number seed used for Beta variates
 
 W2_WAGES_SCALE = 0.15  # parameter used to impute pass-through W-2 wages
 
+# RNG seeds used for demographic decoding and earnings splits in puf.py:
+FILER_AGE_HEAD_RNG_SEED = 64963751
+FILER_AGE_SPOUSE_RNG_SEED = 64963753
+DEP_AGE_RNG_SEED = 24354657
+EARN_SPLIT_RNG_SEED = 18374659
+
 ITMDED_GROW_RATE = 0.02  # annual growth rate in itemized deduction amounts
 # grow rate applied to inflate 2015 amounts to 2021 amounts in uprate_puf.py
 
