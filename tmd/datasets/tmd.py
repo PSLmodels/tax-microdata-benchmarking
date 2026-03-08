@@ -5,39 +5,40 @@ import tempfile
 import numpy as np
 import pandas as pd
 from policyengine_us import Microsimulation
-from tmd.imputation_assumptions import CPS_WEIGHTS_SCALE, TAXYEAR
-from tmd.datasets.puf import PUF_2021, create_pe_puf_2021
+from tmd.imputation_assumptions import CPS_WEIGHTS_SCALE
+from tmd.datasets.puf import create_tc_puf
 from tmd.datasets.cps import CPS_2021, create_cps_2021
 from tmd.datasets.taxcalc_dataset import create_tc_dataset
 from tmd.utils.trace import trace1
 from tmd.utils.taxcalc_utils import add_taxcalc_outputs
 
 
-def create_tmd_2021():
-    # always create CPS_2021 and PUF_2021
-    # (because imputation assumptions may have changed)
+def create_tmd_dataframe(taxyear):
+    """
+    Create DataFrame for given taxyear containing PUF filers and CPS nonfilers.
+    """
+    # always create_tc_puf and create_tc_cps because
+    # imputation assumptions may have changed
+    tc_puf = create_tc_puf(taxyear)
     create_cps_2021()
-    create_pe_puf_2021()
-
-    tc_puf_21 = create_tc_dataset(PUF_2021, TAXYEAR)
-    tc_cps_21 = create_tc_dataset(CPS_2021, TAXYEAR)
+    tc_cps = create_tc_dataset(CPS_2021, taxyear)
 
     # identify CPS nonfilers using 2022 filing rules
     # (because 2021 had large COVID-related anomalies)
     sim = Microsimulation(dataset=CPS_2021)
     nonfiler = ~(sim.calculate("tax_unit_is_filer", period=2022).values > 0)
-    tc_cps_21 = tc_cps_21[nonfiler]
+    tc_cps = tc_cps[nonfiler]
 
     print("Combining PUF filers and CPS nonfilers...")
-    combined = pd.concat([tc_puf_21, tc_cps_21], ignore_index=True)
+    combined = pd.concat([tc_puf, tc_cps], ignore_index=True)
 
     # ensure RECID values are unique
     combined["RECID"] = np.arange(1, len(combined) + 1, dtype=int)
 
     trace1("A", combined)
 
-    print(f"Adding Tax-Calculator outputs for {TAXYEAR}...")
-    combined = add_taxcalc_outputs(combined, TAXYEAR, TAXYEAR)
+    print(f"Adding Tax-Calculator outputs for {taxyear}...")
+    combined = add_taxcalc_outputs(combined, taxyear, taxyear)
     # ... drop CPS records with positive income tax amount
     idx = combined[((combined.data_source == 0) & (combined.iitax > 0))].index
     combined.drop(idx, inplace=True)
@@ -65,17 +66,17 @@ def create_tmd_2021():
     )
     if use_pytorch:
         reweight_import = "from tmd.utils.reweight import reweight"
-        reweight_call = f"reweight(df, {TAXYEAR})"
+        reweight_call = f"reweight(df, {taxyear})"
         print("...using penalty-based solver (PyTorch L-BFGS)")
     elif use_scipy:
         reweight_import = "from tmd.utils.reweight import reweight_lbfgsb"
-        reweight_call = f"reweight_lbfgsb(df, {TAXYEAR})"
+        reweight_call = f"reweight_lbfgsb(df, {taxyear})"
         print("...using penalty-based solver (scipy L-BFGS-B)")
     else:
         reweight_import = (
             "from tmd.utils.reweight_clarabel import reweight_clarabel"
         )
-        reweight_call = f"reweight_clarabel(df, {TAXYEAR})"
+        reweight_call = f"reweight_clarabel(df, {taxyear})"
         print("...using constrained QP solver (Clarabel)")
     # Run reweighting in a subprocess so that prior PyTorch
     # operations (PolicyEngine Microsimulation) don't affect
@@ -108,7 +109,3 @@ def create_tmd_2021():
     combined = combined.reindex(sorted(combined.columns), axis=1)
 
     return combined
-
-
-if __name__ == "__main__":
-    tmd = create_tmd_2021()

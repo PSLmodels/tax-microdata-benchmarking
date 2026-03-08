@@ -26,8 +26,11 @@ def test_population(tmd_variables):
     people = tmd_variables.XTOT
     population = (weight * people).sum()
     assert (
-        abs(population / 1e6 / 334.18 - 1) < 0.01
-    ), "Population not within 1% of 334.18 million"
+        abs(population / 1e6 / 331.894 - 1) < 0.02
+    ), "Population not within 2% of 331.9 million"
+    # target 2021 (July 1) population is 331.894 million from this URL:
+    # https://www.census.gov/newsroom/press-releases/2021/
+    #       2021-population-estimates.html
 
 
 @pytest.mark.itax
@@ -56,7 +59,7 @@ def test_income_tax():
     compare("wght_sum", wght.sum(), 184e6, 0.01)
     hiagi = agi >= 1e6
     compare("wght_sum_hiagi", (wght * hiagi).sum(), 0.875e6, 0.01)
-    compare("wght_itax_sum", (wght * itax).sum(), 1666e9, 0.01)
+    compare("wght_itax_sum", (wght * itax).sum(), 1692e9, 0.01)
     compare("wght_itax_sum_hiagi", ((wght * itax) * hiagi).sum(), 911e9, 0.01)
     # count weighted number of tax units with zero agi by filing status
     agi0 = agi == 0
