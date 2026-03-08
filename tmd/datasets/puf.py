@@ -1,10 +1,7 @@
 import yaml
 import numpy as np
 import pandas as pd
-from tqdm import tqdm
 from microdf import MicroDataFrame
-from policyengine_core.data import Dataset
-from policyengine_us.system import system
 from tmd.storage import STORAGE_FOLDER
 from tmd.datasets.uprate_puf import uprate_puf
 from tmd.utils.imputation import Imputation
@@ -121,8 +118,6 @@ def decode_age_dependent(age_range: int) -> int:
 def preprocess_puf(puf: pd.DataFrame) -> pd.DataFrame:
     # rescale weights
     puf.S006 = puf.S006 / 100
-    # remove aggregate records    ????????? ALREADY DONE ????????????
-    # puf = puf[puf.MARS != 0]  # ????????? ALREADY DONE ????????????
     filing_status = puf.MARS.map(
         {
             1: "SINGLE",
@@ -209,370 +204,11 @@ def preprocess_puf(puf: pd.DataFrame) -> pd.DataFrame:
     return puf
 
 
-FINANCIAL_SUBSET = [
-    # "adjusted_gross_income",
-    "alimony_expense",
-    "alimony_income",
-    "casualty_loss",
-    "cdcc_relevant_expenses",
-    "charitable_cash_donations",
-    "charitable_non_cash_donations",
-    "domestic_production_ald",
-    "early_withdrawal_penalty",
-    "educator_expense",
-    "employment_income",
-    "estate_income",
-    "farm_income",
-    "farm_rent_income",
-    "health_savings_account_ald",
-    "interest_deduction",
-    "long_term_capital_gains",
-    "long_term_capital_gains_on_collectibles",
-    "medical_expense",
-    "misc_deduction",
-    "non_qualified_dividend_income",
-    "non_sch_d_capital_gains",
-    "partnership_s_corp_income",
-    "qualified_dividend_income",
-    "qualified_tuition_expenses",
-    "real_estate_taxes",
-    "rental_income",
-    "self_employment_income",
-    "self_employed_health_insurance_ald",
-    "self_employed_pension_contribution_ald",
-    "short_term_capital_gains",
-    "social_security",
-    "state_and_local_sales_or_income_tax",
-    "student_loan_interest",
-    "taxable_interest_income",
-    "taxable_pension_income",
-    "taxable_unemployment_compensation",
-    "taxable_ira_distributions",
-    "tax_exempt_interest_income",
-    "tax_exempt_pension_income",
-    "traditional_ira_contributions",
-    "unrecaptured_section_1250_gain",
-    "foreign_tax_credit",
-    "amt_foreign_tax_credit",
-    "miscellaneous_income",
-    "salt_refund_income",
-    "investment_income_elected_form_4952",
-    "general_business_credit",
-    "prior_year_minimum_tax_credit",
-    "excess_withheld_payroll_tax",
-    "american_opportunity_credit",
-    "energy_efficient_home_improvement_credit",
-    "other_credits",
-    "savers_credit",
-    "recapture_of_investment_credit",
-    "qualified_retirement_penalty",
-    "unreported_payroll_tax",
-    "w2_wages_from_qualified_business",
-]
-
-
-class PUF(Dataset):
-    time_period = None
-    data_format = Dataset.ARRAYS
-
-    def generate(
-        self,
-        puf: pd.DataFrame,
-        demographics: pd.DataFrame,
-    ):  # pylint: disable=arguments-differ
-
-        print("Importing PolicyEngine-US variable metadata...")
-
-        itmded_dump = False
-        if itmded_dump:
-            IDVARS = ["E17500", "E18400", "E18500", "E19200", "E19800"]
-            wght = puf.S006 / 100.0
-            for var in IDVARS:
-                print(f"%%15:{var}= {(puf[var] * wght).sum() * 1e-9:.3f}")
-
-        if self.time_period > 2015:
-            puf = uprate_puf(puf, 2015, self.time_period)
-
-        if itmded_dump:
-            wght = puf.S006 / 100.0
-            for var in IDVARS:
-                print(f"%%21:{var}= {(puf[var] * wght).sum() * 1e-9:.3f}")
-
-        puf = puf[puf.MARS != 0]
-
-        print("Pre-processing PUF...")
-        original_recid = puf.RECID.values.copy()
-        puf = preprocess_puf(puf)
-        print("Imputing missing PUF demographics...")
-        puf = impute_missing_demographics(puf, demographics)
-
-        # Sort in original PUF order
-        puf = puf.set_index("RECID").loc[original_recid].reset_index()
-        puf = puf.fillna(0)
-        self.variable_to_entity = {
-            variable: var.entity.key
-            for variable, var in system.variables.items()
-        }
-
-        VARIABLES = [
-            "person_id",
-            "tax_unit_id",
-            "marital_unit_id",
-            "spm_unit_id",
-            "family_id",
-            "household_id",
-            "person_tax_unit_id",
-            "person_marital_unit_id",
-            "person_spm_unit_id",
-            "person_family_id",
-            "person_household_id",
-            "age",
-            "household_weight",
-            "is_male",
-            "filing_status",
-            "is_tax_unit_head",
-            "is_tax_unit_spouse",
-            "is_tax_unit_dependent",
-        ] + FINANCIAL_SUBSET
-
-        self.holder = {variable: [] for variable in VARIABLES}
-
-        i = 0
-        self.earn_splits = []
-        for _, row in tqdm(
-            puf.iterrows(),
-            total=len(puf),
-            desc="Constructing hierarchical PUF",
-        ):
-            i += 1
-            exemptions = row["exemptions_count"]
-            tax_unit_id = row["household_id"]
-            self.add_tax_unit(row, tax_unit_id)
-            self.add_filer(row, tax_unit_id)
-            exemptions -= 1
-            if row["filing_status"] == "JOINT":
-                self.add_spouse(row, tax_unit_id)
-                exemptions -= 1
-
-            for j in range(min(3, exemptions)):
-                self.add_dependent(row, tax_unit_id, j)
-
-        groups_assumed_to_be_tax_unit_like = [
-            "family",
-            "spm_unit",
-            "household",
-        ]
-
-        for group in groups_assumed_to_be_tax_unit_like:
-            self.holder[f"{group}_id"] = self.holder["tax_unit_id"]
-            self.holder[f"person_{group}_id"] = self.holder[
-                "person_tax_unit_id"
-            ]
-
-        for key in self.holder:
-            if key == "filing_status":
-                self.holder[key] = np.array(self.holder[key]).astype("S")
-            else:
-                self.holder[key] = np.array(self.holder[key]).astype(float)
-                assert not np.isnan(self.holder[key]).any(), f"{key} has NaNs."
-
-        self.save_dataset(self.holder)
-
-    def add_tax_unit(self, row, tax_unit_id):
-        self.holder["tax_unit_id"].append(tax_unit_id)
-
-        for key in FINANCIAL_SUBSET:
-            if self.variable_to_entity[key] == "tax_unit":
-                self.holder[key].append(row[key])
-
-        earnings_split = round(row["EARNSPLIT"])
-        if earnings_split > 0:
-            SPLIT_DECODES = {
-                1: 0.0,
-                2: 0.25,
-                3: 0.75,
-                4: 1.0,
-            }
-            lower = SPLIT_DECODES[earnings_split]
-            upper = SPLIT_DECODES[earnings_split + 1]
-            frac = (upper - lower) * EARN_SPLIT_RNG.random() + lower
-            self.earn_splits.append(1.0 - frac)
-        else:
-            self.earn_splits.append(1.0)
-
-        self.holder["filing_status"].append(row["filing_status"])
-
-    def add_filer(self, row, tax_unit_id):
-        person_id = int(tax_unit_id * 1e2 + 1)
-        self.holder["person_id"].append(person_id)
-        self.holder["person_tax_unit_id"].append(tax_unit_id)
-        self.holder["person_marital_unit_id"].append(person_id)
-        self.holder["marital_unit_id"].append(person_id)
-        self.holder["is_tax_unit_head"].append(True)
-        self.holder["is_tax_unit_spouse"].append(False)
-        self.holder["is_tax_unit_dependent"].append(False)
-
-        self.holder["age"].append(decode_age_filer(round(row["AGERANGE"])))
-
-        self.holder["household_weight"].append(row["household_weight"])
-        self.holder["is_male"].append(row["GENDER"] == 1)
-
-        for key in FINANCIAL_SUBSET:
-            if self.variable_to_entity[key] == "person":
-                self.holder[key].append(row[key] * self.earn_splits[-1])
-
-    def add_spouse(self, row, tax_unit_id):
-        person_id = int(tax_unit_id * 1e2 + 2)
-        self.holder["person_id"].append(person_id)
-        self.holder["person_tax_unit_id"].append(tax_unit_id)
-        self.holder["person_marital_unit_id"].append(person_id - 1)
-        self.holder["is_tax_unit_head"].append(False)
-        self.holder["is_tax_unit_spouse"].append(True)
-        self.holder["is_tax_unit_dependent"].append(False)
-
-        self.holder["age"].append(
-            decode_age_filer(round(row["AGERANGE"]))
-        )  # Assume same age as filer for now
-
-        # 96% of joint filers are opposite-gender
-
-        is_opposite_gender = SPOUSE_GENDER_RNG.random() < 0.96
-        opposite_gender_code = 0 if row["GENDER"] == 1 else 1
-        same_gender_code = 1 - opposite_gender_code
-        self.holder["is_male"].append(
-            opposite_gender_code if is_opposite_gender else same_gender_code
-        )
-
-        for key in FINANCIAL_SUBSET:
-            if self.variable_to_entity[key] == "person":
-                self.holder[key].append(row[key] * (1 - self.earn_splits[-1]))
-
-    def add_dependent(self, row, tax_unit_id, dependent_id):
-        person_id = int(tax_unit_id * 1e2 + 3 + dependent_id)
-        self.holder["person_id"].append(person_id)
-        self.holder["person_tax_unit_id"].append(tax_unit_id)
-        self.holder["person_marital_unit_id"].append(person_id)
-        self.holder["marital_unit_id"].append(person_id)
-        self.holder["is_tax_unit_head"].append(False)
-        self.holder["is_tax_unit_spouse"].append(False)
-        self.holder["is_tax_unit_dependent"].append(True)
-
-        age = decode_age_dependent(round(row[f"AGEDP{dependent_id + 1}"]))
-        self.holder["age"].append(age)
-
-        for key in FINANCIAL_SUBSET:
-            if self.variable_to_entity[key] == "person":
-                self.holder[key].append(0)
-
-        self.holder["is_male"].append(DEP_GENDER_RNG.choice([0, 1]))
-
-
-class PUF_2015(PUF):
-    label = "PUF 2015"
-    name = "puf_2015"
-    time_period = 2015
-    file_path = STORAGE_FOLDER / "output" / "pe_puf_2015.h5"
-
-
-class PUF_2021(PUF):
-    label = "PUF 2021"
-    name = "puf_2021"
-    time_period = 2021
-    file_path = STORAGE_FOLDER / "output" / "pe_puf_2021.h5"
-
-
-def create_pe_puf_2015():
-    puf = pd.read_csv(STORAGE_FOLDER / "input" / "puf_2015.csv")
-    demographics = pd.read_csv(
-        STORAGE_FOLDER / "input" / "demographics_2015.csv"
-    )
-    pe_puf = PUF_2015()
-    pe_puf.generate(puf, demographics)
-
-
-def create_pe_puf_2021():
-    puf = pd.read_csv(STORAGE_FOLDER / "input" / "puf_2015.csv")
-    demographics = pd.read_csv(
-        STORAGE_FOLDER / "input" / "demographics_2015.csv"
-    )
-    pe_puf = PUF_2021()
-    pe_puf.generate(puf, demographics)
-
-
-# Hardcoded entity classifications for FINANCIAL_SUBSET variables.
-# This avoids a dependency on policyengine_us.system for entity metadata.
-_PERSON_LEVEL_VARS = {
-    "alimony_expense",
-    "alimony_income",
-    "casualty_loss",
-    "charitable_cash_donations",
-    "charitable_non_cash_donations",
-    "early_withdrawal_penalty",
-    "educator_expense",
-    "employment_income",
-    "estate_income",
-    "farm_income",
-    "farm_rent_income",
-    "long_term_capital_gains",
-    "long_term_capital_gains_on_collectibles",
-    "medical_expense",
-    "non_qualified_dividend_income",
-    "non_sch_d_capital_gains",
-    "partnership_s_corp_income",
-    "qualified_dividend_income",
-    "qualified_tuition_expenses",
-    "real_estate_taxes",
-    "rental_income",
-    "self_employment_income",
-    "short_term_capital_gains",
-    "social_security",
-    "student_loan_interest",
-    "taxable_interest_income",
-    "taxable_pension_income",
-    "taxable_unemployment_compensation",
-    "taxable_ira_distributions",
-    "tax_exempt_interest_income",
-    "tax_exempt_pension_income",
-    "traditional_ira_contributions",
-    "amt_foreign_tax_credit",
-    "miscellaneous_income",
-    "salt_refund_income",
-    "investment_income_elected_form_4952",
-    "general_business_credit",
-    "prior_year_minimum_tax_credit",
-    "excess_withheld_payroll_tax",
-    "other_credits",
-    "w2_wages_from_qualified_business",
-}
-
-_TAX_UNIT_LEVEL_VARS = {
-    "cdcc_relevant_expenses",
-    "domestic_production_ald",
-    "health_savings_account_ald",
-    "interest_deduction",
-    "misc_deduction",
-    "self_employed_health_insurance_ald",
-    "self_employed_pension_contribution_ald",
-    "state_and_local_sales_or_income_tax",
-    "unrecaptured_section_1250_gain",
-    "foreign_tax_credit",
-    "american_opportunity_credit",
-    "energy_efficient_home_improvement_credit",
-    "savers_credit",
-    "recapture_of_investment_credit",
-    "qualified_retirement_penalty",
-    "unreported_payroll_tax",
-}
-
-
-def create_tc_puf(taxyear):
+def create_tc_puf(taxyear: int) -> pd.DataFrame:
     """
     Create a Tax-Calculator-compatible PUF DataFrame for the given taxyear
     directly from raw PUF data, without using PolicyEngine (PE) Dataset or
     hierarchical data files.
-
-    Produces the same DataFrame as create_pe_puf_{year}() followed by
-    create_tc_dataset(PUF_{year}, taxyear).
     """
     # fresh RNG objects (same seeds as module-level RNGs used in PUF class)
     filer_age_rng_head = np.random.default_rng(seed=64963751)
@@ -767,7 +403,49 @@ def create_tc_puf(taxyear):
         "e09700": "recapture_of_investment_credit",
         "e09800": "unreported_payroll_tax",
     }
-
+    PERSON_LEVEL_VARS = {
+        "alimony_expense",
+        "alimony_income",
+        "casualty_loss",
+        "charitable_cash_donations",
+        "charitable_non_cash_donations",
+        "early_withdrawal_penalty",
+        "educator_expense",
+        "employment_income",
+        "estate_income",
+        "farm_income",
+        "farm_rent_income",
+        "long_term_capital_gains",
+        "long_term_capital_gains_on_collectibles",
+        "medical_expense",
+        "non_qualified_dividend_income",
+        "non_sch_d_capital_gains",
+        "partnership_s_corp_income",
+        "qualified_dividend_income",
+        "qualified_tuition_expenses",
+        "real_estate_taxes",
+        "rental_income",
+        "self_employment_income",
+        "short_term_capital_gains",
+        "social_security",
+        "student_loan_interest",
+        "taxable_interest_income",
+        "taxable_pension_income",
+        "taxable_unemployment_compensation",
+        "taxable_ira_distributions",
+        "tax_exempt_interest_income",
+        "tax_exempt_pension_income",
+        "traditional_ira_contributions",
+        "amt_foreign_tax_credit",
+        "miscellaneous_income",
+        "salt_refund_income",
+        "investment_income_elected_form_4952",
+        "general_business_credit",
+        "prior_year_minimum_tax_credit",
+        "excess_withheld_payroll_tax",
+        "other_credits",
+        "w2_wages_from_qualified_business",
+    }
     # Tax-Calculator names that are not financial amounts (no person_scale)
     NO_SCALE = {"RECID", "S006", "XTOT"}
 
@@ -775,7 +453,7 @@ def create_tc_puf(taxyear):
     for tcname, pename in tc_to_pe.items():
         if tcname in NO_SCALE:
             var[tcname] = puf[pename].values
-        elif pename in _PERSON_LEVEL_VARS:
+        elif pename in PERSON_LEVEL_VARS:
             var[tcname] = puf[pename].values * person_scale
         else:
             var[tcname] = puf[pename].values
@@ -873,8 +551,3 @@ def create_tc_puf(taxyear):
     df.rename(columns=renames, inplace=True)
 
     return df
-
-
-if __name__ == "__main__":
-    create_pe_puf_2015()
-    create_pe_puf_2021()

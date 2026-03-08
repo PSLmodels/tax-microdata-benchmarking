@@ -10,7 +10,6 @@ import pandas as pd
 from policyengine_us.system import system
 from policyengine_us import Microsimulation
 from tmd.storage import STORAGE_FOLDER
-from tmd.datasets.puf import PUF_2015, PUF_2021
 from tmd.utils.pension_contributions import impute_pretax_pension_contributions
 
 
@@ -219,12 +218,3 @@ def create_tc_dataset(pe_dataset: Type, year: int) -> pd.DataFrame:
     df.rename(columns=renames, inplace=True)
 
     return df
-
-
-if __name__ == "__main__":
-    create_tc_dataset(PUF_2015, 2015).to_csv(
-        STORAGE_FOLDER / "output" / "tc_puf_2015.csv.gz", index=False
-    )
-    create_tc_dataset(PUF_2021, 2021).to_csv(
-        STORAGE_FOLDER / "output" / "tc_puf_2021.csv.gz", index=False
-    )
