@@ -281,12 +281,12 @@ def create_tc_puf(taxyear: int) -> pd.DataFrame:
 
     # head/spouse income splits
     emp_income = puf["employment_income"].values
-    se_income = puf["self_employment_income"].values
-    farm_inc = puf["farm_income"].values
     e00200p = emp_income * head_frac
     e00200s = emp_income * (1.0 - head_frac) * is_joint
+    se_income = puf["self_employment_income"].values
     e00900p = se_income * head_frac
     e00900s = se_income * (1.0 - head_frac) * is_joint
+    farm_inc = puf["farm_income"].values
     e02100p = farm_inc * head_frac
     e02100s = farm_inc * (1.0 - head_frac) * is_joint
 
@@ -407,8 +407,6 @@ def create_tc_puf(taxyear: int) -> pd.DataFrame:
         "general_business_credit",
         "prior_year_minimum_tax_credit",
         "excess_withheld_payroll_tax",
-        "other_credits",
-        "w2_wages_from_qualified_business",
     }
 
     # create dictionary that will be used to create Tax-Calculator DataFrame
