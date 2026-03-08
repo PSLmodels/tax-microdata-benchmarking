@@ -8,54 +8,19 @@ clean:
 	rm -f tmd/storage/output/cached*
 	rm -f tmd/storage/output/preimpute_tmd.csv.gz
 
-tmd/storage/output/tmd.csv.gz: \
-  setup.py \
-  tmd/imputation_assumptions.py \
-  tmd/datasets/tmd.py \
-  tmd/datasets/puf.py \
-  tmd/datasets/cps.py \
-  tmd/datasets/taxcalc_dataset.py \
-  tmd/utils/taxcalc_utils.py \
-  tmd/utils/imputation.py \
-  tmd/utils/is_tax_filer.py \
-  tmd/utils/pension_contributions.py \
-  tmd/utils/soi_replication.py \
-  tmd/utils/soi_targets.py \
-  tmd/utils/reweight.py \
-  tmd/utils/reweight_clarabel.py \
-  tmd/utils/trace.py \
-  tmd/create_taxcalc_input_variables.py
+tmd/storage/output/tmd.csv.gz:
 	python tmd/create_taxcalc_input_variables.py
 
-tmd/storage/output/tmd_weights.csv.gz: \
-  tmd/storage/input/cbo_population_forecast.yaml \
-  tmd/storage/output/tmd.csv.gz \
-  tmd/create_taxcalc_input_variables.py \
-  tmd/create_taxcalc_sampling_weights.py
+tmd/storage/output/tmd_weights.csv.gz:
 	python tmd/create_taxcalc_sampling_weights.py
 
-tmd/storage/output/tmd_growfactors.csv: \
-  tmd/storage/input/puf_growfactors.csv \
-  tmd/create_taxcalc_input_variables.py \
-  tmd/create_taxcalc_growth_factors.py
+tmd/storage/output/tmd_growfactors.csv:
 	python tmd/create_taxcalc_growth_factors.py
 
-tmd/storage/output/cached_files: \
-  tmd/storage/output/tmd.csv.gz \
-  tmd/storage/output/tmd_weights.csv.gz \
-  tmd/storage/output/tmd_growfactors.csv \
-  tmd/storage/__init__.py \
-  tmd/create_taxcalc_input_variables.py \
-  tmd/create_taxcalc_cached_files.py
+tmd/storage/output/cached_files:
 	python tmd/create_taxcalc_cached_files.py
 
-tmd/storage/output/preimpute_tmd.csv.gz: \
-  setup.py \
-  tmd/storage/output/tmd.csv.gz \
-  tmd/storage/output/tmd_growfactors.csv \
-  tmd/utils/mice.py \
-  tmd/create_taxcalc_input_variables.py \
-  tmd/create_taxcalc_imputed_variables.py
+tmd/storage/output/preimpute_tmd.csv.gz:
 	python tmd/create_taxcalc_imputed_variables.py
 
 .PHONY=tmd_files
@@ -85,7 +50,3 @@ PYLINT_OPTIONS = --disable=$(PYLINT_DISABLE) --score=no --jobs=4 \
 lint:
 	@pycodestyle --ignore=E203,E731,E712,W503 .
 	@pylint $(PYLINT_OPTIONS) .
-
-.PHONY=reweighting-visualisation
-reweighting-visualisation:
-	tensorboard --logdir=tmd/storage/output/reweighting
