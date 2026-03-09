@@ -418,9 +418,18 @@ def create_tc_puf(taxyear: int) -> pd.DataFrame:
         else:
             var[tcname] = puf[pename].values
 
-    # ... raw PUF variables
-    var["f2441"] = f2441_raw
-    var["EIC"] = eic_raw
+    # ... calculate EIC variable using dependent ages
+    eic_age_elig = np.minimum(
+        sum((dep_ages[j] < 19) * dep_exists[j] for j in range(3)),
+        3,
+    )
+    var["EIC"] = np.where(eic_raw > 0, eic_raw, eic_age_elig)
+
+    # ... calculate f2441 variable using dependent ages
+    cdcc_age_elig = sum((dep_ages[j] < 13) * dep_exists[j] for j in range(3))
+    var["f2441"] = np.where(f2441_raw > 0, f2441_raw, cdcc_age_elig)
+
+    # ... raw PUF variable
     var["MARS"] = mars_raw
 
     # ... zero-valued variables
