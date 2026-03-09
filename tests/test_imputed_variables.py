@@ -70,8 +70,8 @@ def test_obbba_deduction_tax_benefits(
         },
         "ALI": {  # new OBBBA auto loan interest deduction
             "reform_dict": {"AutoLoanInterestDed_c": {simyear: 0}},
-            "exp_totben": 1.75,
-            "exp_affpct": 10.25,
+            "exp_totben": 1.72,
+            "exp_affpct": 10.27,
             "exp_affben": 87,
             # The ALI imputation calibration parameters used in the
             # create_taxcalc_imputed_variables.py module do not
@@ -87,9 +87,9 @@ def test_obbba_deduction_tax_benefits(
                 "AutoLoanInterestDed_c": {simyear: 0},
                 "SeniorDed_c": {simyear: 0},
             },
-            "exp_totben": 54.85,
-            "exp_affpct": 27.97,
-            "exp_affben": 1013,
+            "exp_totben": 54.81,
+            "exp_affpct": 28.02,
+            "exp_affben": 1010,
             # The affpct statistic and the affben statistic are
             # reasonably close to the Tax Policy Center estimates
             # of 29.6% and $1081, respectively, as reported at
@@ -165,8 +165,8 @@ def test_imputed_variable_distribution(tmd_variables):
         },
         "tip_income": {"mean": 1799.7697955546664, "sdev": 89639.4314038063},
         "auto_loan_interest": {
-            "mean": 119.50919026554708,
-            "sdev": 359.4637844696493,
+            "mean": 119.47046067257378,
+            "sdev": 358.3344640660809,
         },
     }
     diffs = []

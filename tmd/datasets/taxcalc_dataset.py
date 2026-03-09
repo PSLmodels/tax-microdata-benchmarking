@@ -10,7 +10,7 @@ import pandas as pd
 from policyengine_us.system import system
 from policyengine_us import Microsimulation
 from tmd.storage import STORAGE_FOLDER
-from tmd.utils.pension_contributions import impute_pretax_pension_contributions
+from tmd.utils.pension_contributions import impute_pension_contributions
 
 
 def create_tc_dataset(pe_dataset: Type, year: int) -> pd.DataFrame:
@@ -169,9 +169,9 @@ def create_tc_dataset(pe_dataset: Type, year: int) -> pd.DataFrame:
     farm_income = pe_sim.calculate("farm_income").values
     if creating_puf:
         ei_df = pd.DataFrame({"employment_income": employment_income})
-        pc_df = impute_pretax_pension_contributions(ei_df)
-        uncapped_pretax_pencon = pc_df.pretax_pension_contributions
-        pretax_pencon = np.minimum(employment_income, uncapped_pretax_pencon)
+        pc_df = impute_pension_contributions(year, ei_df)
+        uncapped_pencon = pc_df.pension_contributions
+        pencon = np.minimum(employment_income, uncapped_pencon)
     df["e00200p"] = map_to_tax_unit(employment_income * head)
     df["e00200s"] = map_to_tax_unit(employment_income * spouse)
     df["e00900p"] = map_to_tax_unit(self_employment_income * head)
@@ -179,8 +179,8 @@ def create_tc_dataset(pe_dataset: Type, year: int) -> pd.DataFrame:
     df["e02100p"] = map_to_tax_unit(farm_income * head)
     df["e02100s"] = map_to_tax_unit(farm_income * spouse)
     if creating_puf:
-        df["pencon_p"] = map_to_tax_unit(pretax_pencon * head)
-        df["pencon_s"] = map_to_tax_unit(pretax_pencon * spouse)
+        df["pencon_p"] = map_to_tax_unit(pencon * head)
+        df["pencon_s"] = map_to_tax_unit(pencon * spouse)
     else:
         df["pencon_p"] = np.zeros_like(df.e00200p)
         df["pencon_s"] = np.zeros_like(df.e00200s)

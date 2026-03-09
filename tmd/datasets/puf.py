@@ -5,7 +5,7 @@ from microdf import MicroDataFrame
 from tmd.storage import STORAGE_FOLDER
 from tmd.datasets.uprate_puf import uprate_puf
 from tmd.utils.imputation import Imputation
-from tmd.utils.pension_contributions import impute_pretax_pension_contributions
+from tmd.utils.pension_contributions import impute_pension_contributions
 from tmd.imputation_assumptions import (
     IMPUTATION_RF_RNG_SEED,
     IMPUTATION_BETA_RNG_SEED,
@@ -291,13 +291,13 @@ def create_tc_puf(taxyear: int) -> pd.DataFrame:
     e02100s = farm_inc * (1.0 - head_frac) * is_joint
 
     # pension contributions
-    print("Imputing pretax pension contributions...")
+    print("Imputing pension contributions...")
     head_emp = emp_income * head_frac
     spouse_emp = emp_income * (1.0 - head_frac) * is_joint
     all_emp = np.concatenate([head_emp, spouse_emp])
     ei_df = pd.DataFrame({"employment_income": all_emp})
-    pc_df = impute_pretax_pension_contributions(ei_df)
-    pencon_all = np.minimum(all_emp, pc_df.pretax_pension_contributions.values)
+    pc_df = impute_pension_contributions(taxyear, ei_df)
+    pencon_all = np.minimum(all_emp, pc_df.pension_contributions.values)
     pencon_p = pencon_all[:n]
     pencon_s = pencon_all[n:]
 
