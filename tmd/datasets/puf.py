@@ -169,9 +169,8 @@ def preprocess_puf(puf: pd.DataFrame) -> pd.DataFrame:
 
 def create_tc_puf(taxyear: int) -> pd.DataFrame:
     """
-    Create a Tax-Calculator-compatible PUF DataFrame for the given taxyear
-    directly from raw PUF data, without using PolicyEngine (PE) Dataset or
-    hierarchical data files.
+    Create a Tax-Calculator-compatible PUF DataFrame for
+    the given taxyear directly from raw PUF data.
     """
     filer_age_rng_head = np.random.default_rng(seed=FILER_AGE_HEAD_RNG_SEED)
     filer_age_rng_spouse = np.random.default_rng(
@@ -306,8 +305,7 @@ def create_tc_puf(taxyear: int) -> pd.DataFrame:
 
     # mapping from TC variable name to PE-named column in pre-processed PUF:
     #  for person-level variables, the tax-unit total is scaled by
-    #  person_scale (= head_frac + (1-head_frac)*is_joint) to match
-    #  policyengine_us pipeline's sum-over-nondependents aggregation.
+    #  person_scale (= head_frac + (1-head_frac)*is_joint)
     tc_to_pe = {
         "RECID": "household_id",
         "S006": "household_weight",

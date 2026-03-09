@@ -882,8 +882,10 @@ def _download_raw_cps(taxyear: int) -> str:
     return h5path
 
 
-def _load_raw_person(taxyear: int) -> pd.DataFrame:
-    """Load the person table from the cached raw CPS HDF5 file."""
+def load_raw_person(taxyear: int) -> pd.DataFrame:
+    """
+    Load the person table from the cached raw CPS HDF5 file.
+    """
     h5path = _download_raw_cps(taxyear)
     with pd.HDFStore(str(h5path), mode="r") as storage:
         return storage["person"]
@@ -968,7 +970,7 @@ def create_tc_cps(taxyear: int) -> pd.DataFrame:
     Create a Tax-Calculator-compatible CPS DataFrame for the given taxyear
     without using PolicyEngine Dataset or hierarchical data files.
     """
-    person = _load_raw_person(taxyear)
+    person = load_raw_person(taxyear)
     print(f"Creating tc CPS dataset for year {taxyear}...")
 
     # load imputation parameters

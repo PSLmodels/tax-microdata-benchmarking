@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from tmd.datasets.cps import _load_raw_person
+from tmd.datasets.cps import load_raw_person
 from tmd.utils.imputation import Imputation
 from tmd.imputation_assumptions import (
     IMPUTATION_RF_RNG_SEED,
@@ -26,7 +26,7 @@ def impute_pension_contributions(
     Impute pension contributions onto PUF records using
     CPS person-level data from the cached raw CPS HDF5 file.
     """
-    person = _load_raw_person(taxyear)
+    person = load_raw_person(taxyear)
 
     # get year-specific 401(k) limits
     if taxyear not in _401K_LIMITS:
