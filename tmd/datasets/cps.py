@@ -1,6 +1,5 @@
 import os
 from io import BytesIO
-from typing import Type
 from zipfile import ZipFile
 import yaml
 import requests
@@ -9,12 +8,9 @@ import pandas as pd
 from pandas import DataFrame, Series
 from tqdm import tqdm
 import h5py
-from policyengine_core.data import Dataset
 from tmd.storage import STORAGE_FOLDER
 
 AGED_RNG = np.random.default_rng(seed=374651932)
-
-
 TAX_UNIT_COLUMNS = [
     "ACTC_CRD",
     "AGI",
@@ -27,7 +23,6 @@ TAX_UNIT_COLUMNS = [
     "STATETAX_B",
     "TAX_INC",
 ]
-
 SPM_UNIT_COLUMNS = [
     "ACTC",
     "BBSUBVAL",
@@ -135,193 +130,6 @@ PERSON_COLUMNS = [
     "HRSWK",
     "WKSWORK",
 ]
-
-
-class RawCPS(Dataset):
-    name = "raw_cps"
-    label = "Raw CPS"
-    time_period = None
-    data_format = Dataset.TABLES
-
-    def generate(self) -> pd.DataFrame:
-        # Generates the raw CPS dataset.
-        # Files are named for a year after the year the survey represents.
-        # For example, the 2020 CPS was administered in March 2021, so it's
-        # named 2021.
-        file_year = int(self.time_period) + 1
-        file_year_code = str(file_year)[-2:]
-
-        CPS_URL_BY_YEAR = {
-            2018: (
-                "https://www2.census.gov/programs-surveys/cps/datasets/"
-                "2019/march/asecpub19csv.zip"
-            ),
-            2019: (
-                "https://www2.census.gov/programs-surveys/cps/datasets/"
-                "2020/march/asecpub20csv.zip"
-            ),
-            2020: (
-                "https://www2.census.gov/programs-surveys/cps/datasets/"
-                "2021/march/asecpub21csv.zip"
-            ),
-            2021: (
-                "https://www2.census.gov/programs-surveys/cps/datasets/"
-                "2022/march/asecpub22csv.zip"
-            ),
-            2022: (
-                "https://www2.census.gov/programs-surveys/cps/datasets/"
-                "2023/march/asecpub23csv.zip"
-            ),
-        }
-
-        if self.time_period not in CPS_URL_BY_YEAR:
-            raise ValueError(
-                f"No raw CPS data URL known for year {self.time_period}."
-            )
-
-        url = CPS_URL_BY_YEAR[self.time_period]
-
-        spm_unit_columns = SPM_UNIT_COLUMNS
-        if self.time_period <= 2020:
-            spm_unit_columns = [
-                col for col in spm_unit_columns if col != "SPM_BBSUBVAL"
-            ]
-
-        response = requests.get(
-            url,
-            stream=True,
-            verify=False,
-            timeout=(20, 600),
-        )
-        total_size_in_bytes = int(
-            response.headers.get("content-length", 200e6)
-        )
-        progress_bar = tqdm(
-            total=total_size_in_bytes,
-            unit="iB",
-            unit_scale=True,
-            desc="Downloading ASEC",
-        )
-        if response.status_code == 404:
-            raise FileNotFoundError(
-                "Received a 404 response when fetching the data."
-            )
-        try:
-            with BytesIO() as file, pd.HDFStore(
-                self.file_path, mode="w"
-            ) as storage:
-                content_length_actual = 0
-                for data in response.iter_content(int(1e6)):
-                    progress_bar.update(len(data))
-                    content_length_actual += len(data)
-                    file.write(data)
-                progress_bar.set_description("Downloaded ASEC")
-                progress_bar.total = content_length_actual
-                progress_bar.close()
-                zipfile = ZipFile(file)  # pylint: disable=consider-using-with
-                if file_year_code == "19":
-                    # In the 2018 CPS, the file is within prod/data/2019
-                    # instead of at the top level.
-                    file_prefix = "cpspb/asec/prod/data/2019/"
-                else:
-                    file_prefix = ""
-                with zipfile.open(
-                    f"{file_prefix}pppub{file_year_code}.csv"
-                ) as f:
-                    storage["person"] = pd.read_csv(
-                        f,
-                        usecols=PERSON_COLUMNS
-                        + spm_unit_columns
-                        + TAX_UNIT_COLUMNS,
-                    ).fillna(0)
-                    person = storage["person"]
-                with zipfile.open(
-                    f"{file_prefix}ffpub{file_year_code}.csv"
-                ) as f:
-                    person_family_id = person.PH_SEQ * 10 + person.PF_SEQ
-                    family = pd.read_csv(f).fillna(0)
-                    family_id = family.FH_SEQ * 10 + family.FFPOS
-                    family = family[family_id.isin(person_family_id)]
-                    storage["family"] = family
-                with zipfile.open(
-                    f"{file_prefix}hhpub{file_year_code}.csv"
-                ) as f:
-                    person_household_id = person.PH_SEQ
-                    household = pd.read_csv(f).fillna(0)
-                    household_id = household.H_SEQ
-                    household = household[
-                        household_id.isin(person_household_id)
-                    ]
-                    storage["household"] = household
-                storage["tax_unit"] = RawCPS._create_tax_unit_table(person)
-                storage["spm_unit"] = RawCPS._create_spm_unit_table(
-                    person, self.time_period
-                )
-        except Exception as e:
-            raise ValueError(
-                "Attempted to extract and save the CSV files, "
-                f"but encountered an error: {e} "
-                "(removed the intermediate dataset)."
-            ) from e
-
-    @staticmethod
-    def _create_tax_unit_table(person: pd.DataFrame) -> pd.DataFrame:
-        tax_unit_df = person[TAX_UNIT_COLUMNS].groupby(person.TAX_ID).sum()
-        tax_unit_df["TAX_ID"] = tax_unit_df.index
-        return tax_unit_df
-
-    @staticmethod
-    def _create_spm_unit_table(
-        person: pd.DataFrame, time_period: int
-    ) -> pd.DataFrame:
-        spm_unit_columns = SPM_UNIT_COLUMNS
-        if time_period <= 2020:
-            spm_unit_columns = [
-                col for col in spm_unit_columns if col != "SPM_BBSUBVAL"
-            ]
-        return person[spm_unit_columns].groupby(person.SPM_ID).first()
-
-
-class RawCPS_2021(RawCPS):
-    time_period = 2021
-    name = "raw_cps_2021"
-    label = "Raw CPS 2021"
-    file_path = STORAGE_FOLDER / "input" / "raw_cps_2021.h5"
-
-
-class CPS(Dataset):
-    name = "cps"
-    label = "CPS"
-    raw_cps: Type[RawCPS] = None
-    previous_year_raw_cps: Type[RawCPS] = None
-    data_format = Dataset.ARRAYS
-
-    def generate(self):
-        # Generates a Current Population Survey dataset for PE-US microsims
-        # Technical documentation and codebook at this URL:
-        #  https://www2.census.gov/programs-surveys/cps/techdocs/cpsmar21.pdf
-        raw_data = self.raw_cps(  # pylint: disable=not-callable
-            require=True
-        ).load()
-        cps = h5py.File(self.file_path, mode="w")
-
-        ENTITIES = ("person", "tax_unit", "family", "spm_unit", "household")
-        person, tax_unit, family, spm_unit, household = [
-            raw_data[entity] for entity in ENTITIES
-        ]
-
-        add_id_variables(cps, person, tax_unit, family, spm_unit, household)
-        add_personal_variables(cps, person)
-        add_personal_income_variables(cps, person)
-        add_previous_year_income(self, cps)
-        add_spm_variables(cps, spm_unit)
-        add_household_variables(cps, household)
-
-        raw_data.close()
-        cps.close()
-
-        cps = h5py.File(self.file_path, mode="a")
-        cps.close()
 
 
 def add_id_variables(
@@ -779,18 +587,6 @@ def add_previous_year_income(self, cps: h5py.File) -> None:
     ].values
 
 
-class CPS_2021(CPS):
-    name = "cps_2021"
-    label = "CPS 2021"
-    raw_cps = RawCPS_2021
-    file_path = STORAGE_FOLDER / "output" / "cps_2021.h5"
-    time_period = 2021
-
-
-def create_cps_2021():
-    CPS_2021().generate()
-
-
 TC_CPS_AGED_RNG = np.random.default_rng(seed=374651932)
 
 CPS_URL_BY_YEAR = {
@@ -882,9 +678,9 @@ def _download_raw_cps(taxyear: int) -> str:
     return h5path
 
 
-def load_raw_person(taxyear: int) -> pd.DataFrame:
+def load_raw_cps_person_data(taxyear: int) -> pd.DataFrame:
     """
-    Load the person table from the cached raw CPS HDF5 file.
+    Load the person data from the cached raw CPS HDF5 file.
     """
     h5path = _download_raw_cps(taxyear)
     with pd.HDFStore(str(h5path), mode="r") as storage:
@@ -968,9 +764,9 @@ def _derive_age(person: pd.DataFrame) -> np.ndarray:
 def create_tc_cps(taxyear: int) -> pd.DataFrame:
     """
     Create a Tax-Calculator-compatible CPS DataFrame for the given taxyear
-    without using PolicyEngine Dataset or hierarchical data files.
+    directly from the Census raw CPS data.
     """
-    person = load_raw_person(taxyear)
+    person = load_raw_cps_person_data(taxyear)
     print(f"Creating tc CPS dataset for year {taxyear}...")
 
     # load imputation parameters
@@ -1310,7 +1106,3 @@ def create_tc_cps(taxyear: int) -> pd.DataFrame:
 
     # return Tax-Calculator DataFrame and nonfiler boolean Series
     return tcdf, nonfiler
-
-
-if __name__ == "__main__":
-    create_cps_2021()
