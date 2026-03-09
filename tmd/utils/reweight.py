@@ -17,29 +17,6 @@ from tmd.imputation_assumptions import (
     REWEIGHT_DEVIATION_PENALTY,
 )
 
-INCOME_RANGES = [
-    -np.inf,
-    1,
-    5e3,
-    1e4,
-    1.5e4,
-    2e4,
-    2.5e4,
-    3e4,
-    4e4,
-    5e4,
-    7.5e4,
-    1e5,
-    2e5,
-    5e5,
-    1e6,
-    1.5e6,
-    2e6,
-    5e6,
-    1e7,
-    np.inf,
-]
-
 
 def fmt(x):
     if x == -np.inf:
