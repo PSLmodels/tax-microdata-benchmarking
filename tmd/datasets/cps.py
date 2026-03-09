@@ -144,7 +144,7 @@ class RawCPS(Dataset):
     data_format = Dataset.TABLES
 
     def generate(self) -> pd.DataFrame:
-        """Generates the raw CPS dataset."""
+        # Generates the raw CPS dataset.
         # Files are named for a year after the year the survey represents.
         # For example, the 2020 CPS was administered in March 2021, so it's
         # named 2021.
@@ -297,12 +297,9 @@ class CPS(Dataset):
     data_format = Dataset.ARRAYS
 
     def generate(self):
-        """
-        Generates a Current Population Survey dataset for PolicyEngine-US
-          microsimulations.
-        Technical documentation and codebook at this URL:
-          https://www2.census.gov/programs-surveys/cps/techdocs/cpsmar21.pdf
-        """
+        # Generates a Current Population Survey dataset for PE-US microsims
+        # Technical documentation and codebook at this URL:
+        #  https://www2.census.gov/programs-surveys/cps/techdocs/cpsmar21.pdf
         raw_data = self.raw_cps(  # pylint: disable=not-callable
             require=True
         ).load()
@@ -870,7 +867,7 @@ def _download_raw_cps(taxyear: int) -> str:
         progress_bar.set_description("Downloaded ASEC")
         progress_bar.total = content_length_actual
         progress_bar.close()
-        zipfile = ZipFile(file)
+        zipfile = ZipFile(file)  # pylint: disable=consider-using-with
         if file_year_code == "19":
             file_prefix = "cpspb/asec/prod/data/2019/"
         else:

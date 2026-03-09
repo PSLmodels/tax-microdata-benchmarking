@@ -6,8 +6,7 @@ import numpy as np
 import pandas as pd
 from tmd.imputation_assumptions import CPS_WEIGHTS_SCALE
 from tmd.datasets.puf import create_tc_puf
-from tmd.datasets.cps import create_tc_cps, create_cps_2021
-from tmd.datasets.taxcalc_dataset import create_tc_dataset
+from tmd.datasets.cps import create_tc_cps
 from tmd.utils.trace import trace1
 from tmd.utils.taxcalc_utils import add_taxcalc_outputs
 
@@ -16,10 +15,9 @@ def create_tmd_dataframe(taxyear: int) -> pd.DataFrame:
     """
     Create DataFrame for given taxyear containing PUF filers and CPS nonfilers.
     """
-    # always create_tc_puf and create_tc_cps because
-    # imputation assumptions may have changed
+    # always create_tc_puf and create_tc_cps
+    # (because imputation assumptions may have changed)
     tc_puf = create_tc_puf(taxyear)
-    # TODO: create_cps_2021()
     tc_cps, nonfiler = create_tc_cps(taxyear)
     tc_cps = tc_cps[nonfiler].reset_index(drop=True)
 
