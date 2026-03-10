@@ -128,7 +128,6 @@ PERSON_COLUMNS = [
     "WKSWORK",
 ]
 
-
 TC_CPS_AGED_RNG = np.random.default_rng(seed=374651932)
 
 CPS_URL_BY_YEAR = {
@@ -303,7 +302,42 @@ def _derive_age(person: pd.DataFrame) -> np.ndarray:
     )
 
 
-def create_tc_cps(taxyear: int) -> pd.DataFrame:
+def _is_tax_filer(tcdf: pd.DataFrame, taxyear: int) -> pd.Series:
+    # identify nonfilers using 2022 IRS filing thresholds
+    # (use 2022 rules because 2021 had large COVID-related anomalies)
+    gross_income = (
+        tcdf["e00200"].abs()
+        + tcdf["e00300"].abs()
+        + tcdf["e00600"].abs()
+        + tcdf["e00800"].abs()
+        + tcdf["e00900"].abs()
+        + tcdf["e01400"].abs()
+        + tcdf["e01500"].abs()
+        + tcdf["e02100"].abs()
+        + tcdf["e02300"].abs()
+        + tcdf["e02400"].abs()
+        + tcdf["p22250"].abs()
+        + tcdf["p23250"].abs()
+    )
+    head_aged = tcdf["age_head"] >= 65
+    spouse_aged = tcdf["age_spouse"] >= 65
+    mars = tcdf["MARS"]
+    # 2022 IRS filing thresholds by MARS and age
+    threshold = pd.Series(np.zeros(len(tcdf)), dtype=float)
+    threshold[mars == 1] = np.where(head_aged[mars == 1], 14700, 12950)
+    threshold[mars == 2] = np.where(
+        head_aged[mars == 2] & spouse_aged[mars == 2],
+        28700,
+        np.where(head_aged[mars == 2] | spouse_aged[mars == 2], 27300, 25900),
+    )
+    threshold[mars == 3] = 5
+    threshold[mars == 4] = np.where(head_aged[mars == 4], 21150, 19400)
+    threshold[mars == 5] = np.where(head_aged[mars == 5], 27300, 25900)
+    filer = gross_income >= threshold
+    return filer
+
+
+def create_tc_cps(taxyear: int) -> (pd.DataFrame, pd.Series):
     """
     Create a Tax-Calculator-compatible CPS DataFrame for the given taxyear
     directly from the Census raw CPS data.
@@ -614,37 +648,9 @@ def create_tc_cps(taxyear: int) -> pd.DataFrame:
     nonzero_wt = tcdf["s006"] > 0
     tcdf = tcdf[nonzero_wt].reset_index(drop=True)
 
-    # identify nonfilers using 2022 IRS filing thresholds
-    # (use 2022 rules because 2021 had large COVID-related anomalies)
-    gross_income = (
-        tcdf["e00200"].abs()
-        + tcdf["e00300"].abs()
-        + tcdf["e00600"].abs()
-        + tcdf["e00800"].abs()
-        + tcdf["e00900"].abs()
-        + tcdf["e01400"].abs()
-        + tcdf["e01500"].abs()
-        + tcdf["e02100"].abs()
-        + tcdf["e02300"].abs()
-        + tcdf["e02400"].abs()
-        + tcdf["p22250"].abs()
-        + tcdf["p23250"].abs()
-    )
-    head_aged = tcdf["age_head"] >= 65
-    spouse_aged = tcdf["age_spouse"] >= 65
-    mars = tcdf["MARS"]
-    # 2022 IRS filing thresholds by MARS and age
-    threshold = pd.Series(np.zeros(len(tcdf)), dtype=float)
-    threshold[mars == 1] = np.where(head_aged[mars == 1], 14700, 12950)
-    threshold[mars == 2] = np.where(
-        head_aged[mars == 2] & spouse_aged[mars == 2],
-        28700,
-        np.where(head_aged[mars == 2] | spouse_aged[mars == 2], 27300, 25900),
-    )
-    threshold[mars == 3] = 5
-    threshold[mars == 4] = np.where(head_aged[mars == 4], 21150, 19400)
-    threshold[mars == 5] = np.where(head_aged[mars == 5], 27300, 25900)
-    nonfiler = gross_income < threshold
+    # identify tax filers and nonfilers
+    filer = _is_tax_filer(tcdf, taxyear)
+    nonfiler = ~filer
 
     # return Tax-Calculator DataFrame and nonfiler boolean Series
     return tcdf, nonfiler
