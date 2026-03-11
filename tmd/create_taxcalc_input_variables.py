@@ -29,17 +29,17 @@ def create_variable_file(write_file=True):
     print(f"  ASSUMED ITMDED_GROW_RATE = {ITMDED_GROW_RATE:.3f}")
     print(f"  ASSUMED W2_WAGES_SCALE = {W2_WAGES_SCALE:.5f}")
     print(f"  WEIGHT_DEVIATION_PENALTY = {REWEIGHT_DEVIATION_PENALTY:.3f}")
-    print(f"  ASSUMED CPS_WEIGHTS_SCALE = {CPS_WEIGHTS_SCALE:.2f}")
+    print(f"  ASSUMED CPS_WEIGHTS_SCALE = {CPS_WEIGHTS_SCALE[TAXYEAR]:.2f}")
     vdf = create_tmd_dataframe(TAXYEAR)
     vdf.FLPDYR = TAXYEAR
     vdf.agi_bin = 0
     # optionally dump all input and output variables unrounded
     if write_file and DUMP_ALL_UNROUNDED_VARIABLES:
         fname = STORAGE_FOLDER / "allvars_unrounded_2021.csv"
-        print(f"Writing PUF+CPS file... [{fname}]")
+        print(f"Writing unrounded PUF+CPS file... [{fname}]")
         vdf.to_csv(fname, index=False)
     # streamline dataframe so that it includes only input variables
-    print("Removing output variables from PUF+CPS DataFrame...")
+    print("Removing output variables from PUF+CPS dataframe...")
     rec = tc.Records(
         data=vdf,
         start_year=TAXYEAR,
