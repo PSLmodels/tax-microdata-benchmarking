@@ -1,5 +1,5 @@
 """
-Constrained QP reweighting using Clarabel solver.
+Constrained quadratic programming (QP) reweighting using Clarabel solver.
 
 Finds weight multipliers (x) that keep weights as close to their
 original values as possible while requiring that weighted totals match
@@ -69,7 +69,8 @@ def fmt(x):
 
 
 def build_loss_matrix(df, targets, time_period):
-    """Build loss matrix and target array for reweighting.
+    """
+    Build loss matrix and target array for reweighting.
 
     Returns (loss_matrix, targets_array) where loss_matrix is a
     DataFrame with one column per target and targets_array is the
@@ -191,7 +192,8 @@ def build_loss_matrix(df, targets, time_period):
 
 
 def _drop_impossible_targets(loss_matrix, targets_arr):
-    """Drop targets where all data values are zero.
+    """
+    Drop targets where all data values are zero.
 
     No reweighting can produce nonzero estimates from all-zero data,
     so these targets must be excluded before optimization.
@@ -270,8 +272,11 @@ def _print_diagnostics(
     elapsed,
     verbose,
 ):
-    """Print solver results.  Always prints a compact production
-    summary; prints full diagnostics when verbose is True."""
+    """
+    Print solver results.
+    Always prints a compact production summary;
+    prints full diagnostics when verbose is True.
+    """
     n = len(x_opt)
     m = len(targets)
     final_weights = prescaled_weights * x_opt
@@ -285,7 +290,7 @@ def _print_diagnostics(
     print(f"...solve time: {solve_time:.1f}s ({n_iter} iterations)")
     print(f"...solver status: {status_msg}")
 
-    # --- Target accuracy (always printed) ---
+    # target accuracy (always printed)
     achieved = np.asarray(B_csc.T @ x_opt).ravel()
     abs_errors = np.abs(achieved - targets)
     rel_errors = abs_errors / np.maximum(np.abs(targets), 1.0)
@@ -297,7 +302,7 @@ def _print_diagnostics(
     if n_violated > 0:
         print(f"    VIOLATED: {n_violated}/{m} targets")
 
-    # --- Worst 10 targets (always printed) ---
+    # worst 10 targets (always printed)
     worst_idx = np.argsort(rel_errors)[::-1][:10]
     print("    worst targets:")
     for idx in worst_idx:
@@ -309,7 +314,7 @@ def _print_diagnostics(
             f"| {label}"
         )
 
-    # --- Final weight stats (always printed) ---
+    # final weight stats (always printed)
     print(
         f"...final weights: total={final_weights.sum():.2f}, "
         f"mean={final_weights.mean():.6f}, "
@@ -321,7 +326,7 @@ def _print_diagnostics(
 
     # === Verbose-only output below ===
 
-    # Reproducibility fingerprint
+    # reproducibility fingerprint
     print("...REPRODUCIBILITY FINGERPRINT:")
     print(
         f"    weights: n={len(final_weights)}, "
@@ -342,7 +347,7 @@ def _print_diagnostics(
         f"{np.sum((x_opt - 1.0) ** 2):.10f}"
     )
 
-    # Accuracy bins
+    # accuracy bins
     pct_bins = [0.001, 0.005, 0.01, 0.05, 0.10]
     for threshold in pct_bins:
         n_within = int((rel_errors <= threshold + 1e-9).sum())
@@ -352,7 +357,7 @@ def _print_diagnostics(
             f"({n_within / m * 100:.1f}%)"
         )
 
-    # Constraint status
+    # constraint status
     at_lower = np.abs(achieved - cl) < 1e-4 * (np.abs(cl) + 1.0)
     at_upper = np.abs(achieved - cu) < 1e-4 * (np.abs(cu) + 1.0)
     binding = at_lower | at_upper
@@ -367,7 +372,7 @@ def _print_diagnostics(
     print(f"    binding (at boundary): {n_binding}")
     print(f"    violated: {n_violated_v}")
 
-    # Elastic slack report
+    # elastic slack report
     total_slack = s_lo + s_hi
     n_active_slack = int(np.sum(total_slack > 1e-6))
     if n_active_slack > 0:
@@ -391,7 +396,7 @@ def _print_diagnostics(
     else:
         print("...all constraints satisfied without slack")
 
-    # Dual-based constraint cost analysis
+    # dual-based constraint cost analysis
     duals = info.get("dual_constraints")
     n_tc = info.get("n_target_constraints")
     if duals is not None and n_tc is not None and n_tc > 0:
@@ -439,7 +444,7 @@ def _print_diagnostics(
         f"max|err|={rel_errors.max():.6f}"
     )
 
-    # Weight change distribution
+    # weight change distribution
     ratio = final_weights / np.where(
         original_weights == 0, 1e-10, original_weights
     )
@@ -472,7 +477,7 @@ def _print_diagnostics(
             f"({count / len(abs_pct) * 100:.1f}%)"
         )
 
-    # Multiplier distribution
+    # multiplier distribution
     print("...multiplier distribution:")
     print(
         f"    min={x_opt.min():.6f}, "
@@ -494,7 +499,8 @@ def reweight(
     verbose=None,
     tolerance_overrides=None,
 ):
-    """Reweight using Clarabel constrained QP solver.
+    """
+    Reweight using Clarabel constrained QP solver.
 
     Finds weight multipliers that minimize total weight distortion
     while requiring that all SOI targets are met within the specified
@@ -507,7 +513,7 @@ def reweight(
     flat_file : pd.DataFrame
         Input data with s006 weights column.
     time_period : int
-        Tax year for targets.
+        TAXYEAR for targets.
     multiplier_min, multiplier_max : float
         Bounds on weight multipliers.
     constraint_tol : float
@@ -538,13 +544,13 @@ def reweight(
     if time_period not in targets.Year.unique():
         raise ValueError(f"Year {time_period} not in targets.")
 
-    print(f"...Clarabel QP reweighting for year {time_period}")
+    print(f"...constrained QP reweighting for year {time_period}")
     print(f"...constraint tolerance: +-{constraint_tol * 100:.1f}%")
     print(f"...multiplier bounds: [{multiplier_min}, {multiplier_max}]")
 
     original_unscaled_weights = flat_file.s006.values.copy()
 
-    # --- Prescaling ---
+    # prescaling
     soi_filer_total_row = targets[
         (targets.Year == time_period)
         & (targets.Variable == "count")
@@ -571,7 +577,7 @@ def reweight(
             "skipping weight pre-scaling"
         )
 
-    # --- Build constraint matrix ---
+    # build constraint matrix
     output_matrix, target_array = build_loss_matrix(
         flat_file, targets, time_period
     )
@@ -597,7 +603,7 @@ def reweight(
         f"nnz={nnz:,}, density={density:.2f}%"
     )
 
-    # --- Constraint bounds ---
+    # constraint bounds
     cl, cu = _compute_constraint_bounds(
         target_array,
         constraint_tol,
@@ -607,33 +613,33 @@ def reweight(
         verbose,
     )
 
-    # --- Build QP ---
+    # build QP
     m = n_targets
     n_total = n_records + 2 * m  # x + s_lo + s_hi
 
-    # Diagonal Hessian: 2 for x, 2*M for slacks
+    # diagonal Hessian: 2 for x, 2*M for slacks
     hess_diag = np.empty(n_total)
     hess_diag[:n_records] = 2.0
     hess_diag[n_records:] = 2.0 * slack_penalty
     P = spdiags(hess_diag, format="csc")
 
-    # Linear term: -2 for x (from expanding (x-1)^2), 0 for slacks
+    # linear term: -2 for x (from expanding (x-1)^2), 0 for slacks
     q = np.zeros(n_total)
     q[:n_records] = -2.0
 
-    # Extended constraint matrix: [B^T | I_M | -I_M]
+    # extended constraint matrix: [B^T | I_M | -I_M]
     B_T = B_csc.T.tocsc()
     I_M = speye(m, format="csc")
     A_full = hstack([B_T, I_M, -I_M], format="csc")
 
-    # Constraint scaling for numerical conditioning
+    # constraint scaling for numerical conditioning
     target_scale = np.maximum(np.abs(target_array), 1.0)
     D_inv = spdiags(1.0 / target_scale)
     A_scaled = (D_inv @ A_full).tocsc()
     cl_scaled = cl / target_scale
     cu_scaled = cu / target_scale
 
-    # Variable bounds
+    # variable bounds
     var_lb = np.empty(n_total)
     var_ub = np.empty(n_total)
     var_lb[:n_records] = multiplier_min
@@ -641,7 +647,7 @@ def reweight(
     var_lb[n_records:] = 0.0
     var_ub[n_records:] = 1e20
 
-    # Clarabel form: Ax + s = b, s in NonnegativeCone (i.e. Ax <= b)
+    # clarabel form: Ax + s = b, s in NonnegativeCone (i.e. Ax <= b)
     I_n = speye(n_total, format="csc")
     A_clar = vstack(
         [
@@ -665,20 +671,17 @@ def reweight(
     settings.tol_gap_rel = 1e-7
     settings.tol_feas = 1e-7
 
-    # --- Solve ---
-    print("...starting Clarabel solver")
+    # solve
+    print("...starting solver")
     t_start = time.time()
 
-    solver = clarabel.DefaultSolver(
-        P, q, A_clar, b_clar, cones, settings
-    )  # noqa
-    # pylint: enable=no-member
+    solver = clarabel.DefaultSolver(P, q, A_clar, b_clar, cones, settings)
     result = solver.solve()
 
     elapsed = time.time() - t_start
     status_str = str(result.status)
 
-    # Extract duals (convert back from scaled space)
+    # extract duals (convert back from scaled space)
     duals = np.array(result.z)
     duals[:m] /= target_scale
     duals[m : 2 * m] /= target_scale
@@ -692,7 +695,7 @@ def reweight(
         "n_target_constraints": m,
     }
 
-    # Extract solution
+    # extract solution
     y_opt = np.array(result.x)
     x_opt = y_opt[:n_records]
     s_lo = y_opt[n_records : n_records + m]
@@ -700,7 +703,7 @@ def reweight(
 
     x_opt = np.clip(x_opt, multiplier_min, multiplier_max)
 
-    # --- Diagnostics ---
+    # diagnostics
     _print_diagnostics(
         x_opt,
         s_lo,
@@ -717,6 +720,6 @@ def reweight(
         verbose,
     )
 
-    # --- Apply new weights ---
+    # apply new weights to flat_file and return
     flat_file["s006"] = w0 * x_opt
     return flat_file
