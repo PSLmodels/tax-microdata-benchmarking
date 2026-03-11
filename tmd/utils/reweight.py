@@ -1,21 +1,57 @@
 """
-This module provides utilities for reweighting a flat file
-to match AGI targets.
+Constrained quadratic programming (QP) reweighting using Clarabel solver.
+
+Finds weight multipliers (x) that keep weights as close to their
+original values as possible while requiring that weighted totals match
+SOI targets within a specified tolerance (default +/-0.5%).
+
+Formulation (Quadratic Program):
+    minimize    sum((x_i - 1)^2)         [minimal weight distortion]
+    subject to  t_j*(1-eps) <= (Bx)_j <= t_j*(1+eps)  [target bounds]
+                x_min <= x_i <= x_max    [multiplier bounds]
+
+With elastic slack variables for graceful infeasibility handling:
+    minimize    sum((x_i - 1)^2) + M * sum(s^2)
+    subject to  lb_j <= (Bx)_j + s_lo_j - s_hi_j <= ub_j
+                s >= 0
+
+The slack variables let the solver find a solution even when some
+targets cannot be exactly satisfied.  A large penalty M (default 1e6)
+means the solver tries very hard to satisfy all constraints, but if
+a constraint is geometrically impossible it will report which ones
+needed slack rather than failing entirely.
+
+Constraint scaling: each constraint row is divided by |target_j| so
+the right-hand side values are near 1.0 instead of ~1e8.  This does
+not change the feasible region but roughly halves the iteration count
+by improving numerical conditioning.
 """
 
+import os
 import time
 import warnings
 import numpy as np
 import pandas as pd
-import torch
+from scipy.sparse import (
+    csc_matrix,
+    diags as spdiags,
+    eye as speye,
+    hstack,
+    vstack,
+)
+import clarabel
 from tmd.storage import STORAGE_FOLDER
 from tmd.utils.soi_replication import tc_to_soi
 from tmd.imputation_assumptions import (
     TAXYEAR,
     REWEIGHT_MULTIPLIER_MIN,
     REWEIGHT_MULTIPLIER_MAX,
-    REWEIGHT_DEVIATION_PENALTY,
+    CLARABEL_CONSTRAINT_TOL,
+    CLARABEL_SLACK_PENALTY,
+    CLARABEL_MAX_ITER,
 )
+
+_ABS_TOL_FLOOR = 0.0
 
 
 def fmt(x):
@@ -33,7 +69,8 @@ def fmt(x):
 
 
 def build_loss_matrix(df, targets, time_period):
-    """Build loss matrix and target array for reweighting.
+    """
+    Build loss matrix and target array for reweighting.
 
     Returns (loss_matrix, targets_array) where loss_matrix is a
     DataFrame with one column per target and targets_array is the
@@ -155,7 +192,8 @@ def build_loss_matrix(df, targets, time_period):
 
 
 def _drop_impossible_targets(loss_matrix, targets_arr):
-    """Drop targets where all data values are zero.
+    """
+    Drop targets where all data values are zero.
 
     No reweighting can produce nonzero estimates from all-zero data,
     so these targets must be excluded before optimization.
@@ -177,251 +215,238 @@ def _drop_impossible_targets(loss_matrix, targets_arr):
     return loss_matrix.copy(), targets_arr
 
 
-def reweight(
-    flat_file: pd.DataFrame,
-    time_period: int = TAXYEAR,
-    weight_multiplier_min: float = REWEIGHT_MULTIPLIER_MIN,
-    weight_multiplier_max: float = REWEIGHT_MULTIPLIER_MAX,
-    weight_deviation_penalty: float = REWEIGHT_DEVIATION_PENALTY,
-    use_gpu: bool = True,
+def _compute_constraint_bounds(
+    targets,
+    rel_tol,
+    abs_tol_floor,
+    target_labels=None,
+    tolerance_overrides=None,
+    verbose=False,
 ):
-    targets = pd.read_csv(STORAGE_FOLDER / "input" / "soi.csv")
+    """Compute per-constraint lower and upper bounds.
 
-    if time_period not in targets.Year.unique():
-        raise ValueError(f"Year {time_period} not in targets.")
-    print(f"...reweighting for year {time_period}")
-    print(f"...weight deviation penalty: {weight_deviation_penalty}")
-    print(
-        f"...weight multiplier bounds: "
-        f"[{weight_multiplier_min}, {weight_multiplier_max}]"
-    )
+    For each target t_j, the bounds are:
+        t_j - |t_j| * rel_tol  <=  achieved_j  <=  t_j + |t_j| * rel_tol
 
-    # Save original unscaled weights for final comparison
-    original_unscaled_weights = flat_file.s006.values.copy()
+    Negative targets are handled correctly (tolerance is on |t_j|).
 
-    # GPU Detection and Device Selection
-    gpu_available = torch.cuda.is_available()
-    use_gpu_actual = use_gpu and gpu_available
+    tolerance_overrides is an optional dict mapping substring patterns
+    to relative tolerances.  For example, {"unemployment_compensation": 0.05}
+    widens UC targets to +/-5% while everything else uses rel_tol.
+    """
+    abs_targets = np.abs(targets)
 
-    device = torch.device("cuda" if use_gpu_actual else "cpu")
+    rel_tols = np.full(len(targets), rel_tol)
+    if tolerance_overrides and target_labels is not None:
+        for pattern, override_tol in tolerance_overrides.items():
+            n_matched = 0
+            for j, label in enumerate(target_labels):
+                if pattern in label:
+                    rel_tols[j] = override_tol
+                    n_matched += 1
+            if n_matched > 0 and verbose:
+                print(
+                    f"...tolerance override: '{pattern}' -> "
+                    f"+-{override_tol * 100:.1f}% "
+                    f"({n_matched} targets)"
+                )
 
-    if use_gpu_actual:
-        gpu_name = torch.cuda.get_device_name(0)
-        gpu_mem = torch.cuda.get_device_properties(0).total_memory / 1024**3
-        print(f"...GPU acceleration enabled: {gpu_name} ({gpu_mem:.1f} GB)")
-    elif use_gpu and not gpu_available:
-        print("...GPU requested but not available, using CPU")
-    elif not use_gpu and gpu_available:
-        print("...GPU available but disabled by user, using CPU")
-    else:
-        print("...GPU not available, using CPU")
+    tol_band = np.maximum(abs_targets * rel_tols, abs_tol_floor)
+    cl = targets - tol_band
+    cu = targets + tol_band
+    return cl, cu
 
-    # Reset GPU state for reproducibility: prior PyTorch operations
-    # (e.g., PolicyEngine Microsimulation) can leave the GPU in a
-    # state that causes non-deterministic results.
-    if device.type == "cuda":
-        torch.cuda.synchronize()
-        torch.cuda.empty_cache()
 
-    rng_seed = 65748392
-    torch.manual_seed(rng_seed)
-    torch.cuda.manual_seed_all(rng_seed)
+def _print_diagnostics(
+    x_opt,
+    s_lo,
+    s_hi,
+    B_csc,
+    targets,
+    cl,
+    cu,
+    prescaled_weights,
+    original_weights,
+    target_labels,
+    info,
+    elapsed,
+    verbose,
+):
+    """
+    Print solver results.
+    Always prints a compact production summary;
+    prints full diagnostics when verbose is True.
+    """
+    n = len(x_opt)
+    m = len(targets)
+    final_weights = prescaled_weights * x_opt
 
-    # Pre-multiply weights so the filer total matches the SOI
-    # target. This gives the optimizer a better starting point and
-    # ensures the weight deviation penalty only penalizes
-    # redistributive changes, not the overall level shift.
-    soi_filer_total_row = targets[
-        (targets.Year == time_period)
-        & (targets.Variable == "count")
-        & (targets["Filing status"] == "All")
-        & (targets["AGI lower bound"] == -np.inf)
-        & (targets["AGI upper bound"] == np.inf)
-        & (~targets["Taxable only"])
-    ]
-    if len(soi_filer_total_row) == 1:
-        target_filer_total = soi_filer_total_row["Value"].values[0]
-        soi_df = tc_to_soi(flat_file.copy(), time_period)
-        filer_mask = soi_df["is_tax_filer"].values.astype(bool)
-        current_filer_total = (flat_file.s006.values * filer_mask).sum()
-        prescale = target_filer_total / current_filer_total
-        flat_file["s006"] *= prescale
+    status_msg = info.get("status_msg", b"unknown")
+    if isinstance(status_msg, bytes):
+        status_msg = status_msg.decode()
+
+    n_iter = info.get("clarabel_iter", "?")
+    solve_time = info.get("clarabel_solve_time", elapsed)
+    print(f"...solve time: {solve_time:.1f}s ({n_iter} iterations)")
+    print(f"...solver status: {status_msg}")
+
+    # target accuracy (always printed)
+    achieved = np.asarray(B_csc.T @ x_opt).ravel()
+    abs_errors = np.abs(achieved - targets)
+    rel_errors = abs_errors / np.maximum(np.abs(targets), 1.0)
+
+    print(f"...target accuracy ({m} targets):")
+    print(f"    mean |relative error|: {rel_errors.mean():.6f}")
+    print(f"    max  |relative error|: {rel_errors.max():.6f}")
+    n_violated = int((rel_errors > CLARABEL_CONSTRAINT_TOL + 1e-9).sum())
+    if n_violated > 0:
+        print(f"    VIOLATED: {n_violated}/{m} targets")
+
+    # worst 10 targets (always printed)
+    worst_idx = np.argsort(rel_errors)[::-1][:10]
+    print("    worst targets:")
+    for idx in worst_idx:
+        label = target_labels[idx]
         print(
-            f"...pre-scaled weights: "
-            f"target filers={target_filer_total:,.0f}, "
-            f"current filers={current_filer_total:,.0f}, "
-            f"scale={prescale:.6f}"
-        )
-    else:
-        print(
-            "WARNING: Could not find unique SOI filer total, "
-            "skipping weight pre-scaling"
+            f"      {rel_errors[idx] * 100:7.3f}% "
+            f"| target={targets[idx]:15.0f} "
+            f"| achieved={achieved[idx]:15.0f} "
+            f"| {label}"
         )
 
-    # Create tensors directly on the selected device
-    # to avoid non-leaf tensor issues
-    weights = torch.tensor(
-        flat_file.s006.values, dtype=torch.float64, device=device
-    )
-    weight_multiplier = torch.tensor(
-        np.ones_like(flat_file.s006.values),
-        dtype=torch.float64,
-        device=device,
-        requires_grad=True,
-    )
-    original_weights = weights.clone()
-    output_matrix, target_array = build_loss_matrix(
-        flat_file, targets, time_period
-    )
-
-    print(f"Targeting {len(target_array)} SOI statistics")
-
-    # Diagnostic: input data summary
-    input_weights = flat_file.s006.values
-    print(
-        f"...input records: {len(flat_file)}, "
-        f"columns: {len(flat_file.columns)}"
-    )
-    print(
-        f"...input weights: total={input_weights.sum():.2f}, "
-        f"mean={input_weights.mean():.6f}, "
-        f"sdev={input_weights.std():.6f}"
-    )
-
-    # print out non-numeric columns
-    for col in output_matrix.columns:
-        try:
-            torch.tensor(output_matrix[col].values, dtype=torch.float64)
-        except ValueError:
-            print(f"Column {col} is not numeric")
-    output_matrix_tensor = torch.tensor(
-        output_matrix.values, dtype=torch.float64, device=device
-    )
-    target_array = torch.tensor(
-        target_array, dtype=torch.float64, device=device
-    )
-
-    outputs = (weights * output_matrix_tensor.T).sum(axis=1)
-    original_loss_value = (((outputs + 1) / (target_array + 1) - 1) ** 2).sum()
-    print(f"...initial loss: {original_loss_value.item():.10f}")
-
-    # L-BFGS optimizer: quasi-Newton method with line search.
-    # Converges much faster than Adam for this smooth problem.
-    # The closure function is called multiple times per step
-    # (line search).
-    max_lbfgs_iter = 800
-    optimizer = torch.optim.LBFGS(
-        [weight_multiplier],
-        max_iter=20,  # max line-search iterations per step
-        history_size=10,  # past gradients for Hessian approx
-        line_search_fn="strong_wolfe",
-    )
-
-    step_count = 0
-    loss_value = None
-
-    def closure():
-        nonlocal loss_value
-        optimizer.zero_grad()
-        new_weights = weights * torch.clamp(
-            weight_multiplier,
-            min=weight_multiplier_min,
-            max=weight_multiplier_max,
-        )
-        outputs = (new_weights * output_matrix_tensor.T).sum(axis=1)
-        weight_deviation = (
-            ((new_weights - original_weights) ** 2).sum()
-            / (original_weights**2).sum()
-            * weight_deviation_penalty
-            * original_loss_value
-        )
-        loss_value = (
-            ((outputs + 1) / (target_array + 1) - 1) ** 2
-        ).sum() + weight_deviation
-        loss_value.backward()
-        return loss_value
-
-    print(f"...starting L-BFGS optimization (up to {max_lbfgs_iter} steps)")
-    optimization_start_time = time.time()
-
-    for step_count in range(1, max_lbfgs_iter + 1):
-        optimizer.step(closure)
-        current_loss = loss_value.item()
-        grad_norm = (
-            weight_multiplier.grad.norm().item()
-            if weight_multiplier.grad is not None
-            else float("inf")
-        )
-        if step_count % 10 == 0 or step_count <= 5:
-            print(
-                f"    step {step_count:>4d}: loss={current_loss:.10f}, "
-                f"grad={grad_norm:.2e}"
-            )
-        # Convergence check: gradient norm is the proper first-order
-        # optimality condition (vs loss-change which can falsely trigger
-        # when the Hessian approximation is poor and steps are tiny)
-        if grad_norm < 1e-5:
-            print(
-                f"    converged at step {step_count} "
-                f"(grad norm {grad_norm:.2e} < 1e-5)"
-            )
-            break
-
-    # Recompute final weights and outputs after optimization
-    new_weights = weights * torch.clamp(
-        weight_multiplier,
-        min=weight_multiplier_min,
-        max=weight_multiplier_max,
-    )
-    outputs = (new_weights * output_matrix_tensor.T).sum(axis=1)
-
-    optimization_end_time = time.time()
-    optimization_duration = optimization_end_time - optimization_start_time
-
-    final_loss = loss_value.item()
-    print(
-        f"...optimization completed in "
-        f"{optimization_duration:.1f} seconds "
-        f"({step_count} steps)"
-    )
-    print(f"...final loss: {final_loss:.10f}")
-
-    # Move final weights back to CPU for numpy conversion
-    final_weights = new_weights.detach().cpu().numpy()
+    # final weight stats (always printed)
     print(
         f"...final weights: total={final_weights.sum():.2f}, "
         f"mean={final_weights.mean():.6f}, "
         f"sdev={final_weights.std():.6f}"
     )
 
-    # Target hit statistics
-    rel_errors = (
-        ((outputs + 1) / (target_array + 1) - 1).detach().cpu().numpy()
+    if not verbose:
+        return
+
+    # === Verbose-only output below ===
+
+    # reproducibility fingerprint
+    print("...REPRODUCIBILITY FINGERPRINT:")
+    print(
+        f"    weights: n={len(final_weights)}, "
+        f"total={final_weights.sum():.6f}, "
+        f"mean={final_weights.mean():.6f}, "
+        f"sdev={final_weights.std():.6f}"
     )
-    abs_rel_errors = np.abs(rel_errors)
-    print(f"...target accuracy ({len(target_array)} targets):")
-    print(f"    mean |relative error|: " f"{abs_rel_errors.mean():.6f}")
-    print(f"    max  |relative error|: " f"{abs_rel_errors.max():.6f}")
-    pct_bins = [0.001, 0.01, 0.05, 0.10]
+    print(
+        f"    weights: min={final_weights.min():.6f}, "
+        f"p25={np.percentile(final_weights, 25):.6f}, "
+        f"p50={np.median(final_weights):.6f}, "
+        f"p75={np.percentile(final_weights, 75):.6f}, "
+        f"max={final_weights.max():.6f}"
+    )
+    print(f"    sum(weights^2)={np.sum(final_weights ** 2):.6f}")
+    print(
+        f"    objective (weight deviation): "
+        f"{np.sum((x_opt - 1.0) ** 2):.10f}"
+    )
+
+    # accuracy bins
+    pct_bins = [0.001, 0.005, 0.01, 0.05, 0.10]
     for threshold in pct_bins:
-        n_within = (abs_rel_errors <= threshold).sum()
+        n_within = int((rel_errors <= threshold + 1e-9).sum())
         print(
             f"    within {threshold * 100:5.1f}%: "
-            f"{n_within:>4d}/{len(target_array)} "
-            f"({n_within / len(target_array) * 100:.1f}%)"
+            f"{n_within:>4d}/{m} "
+            f"({n_within / m * 100:.1f}%)"
         )
-    # Show worst 10 targets
-    worst_idx = np.argsort(abs_rel_errors)[::-1][:10]
-    print("    worst targets:")
-    for idx in worst_idx:
-        label = output_matrix.columns[idx]
-        print(f"      {abs_rel_errors[idx] * 100:7.3f}% | {label}")
 
-    # Weight change distribution (vs original unscaled weights)
+    # constraint status
+    at_lower = np.abs(achieved - cl) < 1e-4 * (np.abs(cl) + 1.0)
+    at_upper = np.abs(achieved - cu) < 1e-4 * (np.abs(cu) + 1.0)
+    binding = at_lower | at_upper
+    violated_lo = achieved < cl - 1e-6 * (np.abs(cl) + 1.0)
+    violated_hi = achieved > cu + 1e-6 * (np.abs(cu) + 1.0)
+    violated = violated_lo | violated_hi
+    n_binding = int(binding.sum())
+    n_violated_v = int(violated.sum())
+    n_interior = m - n_binding - n_violated_v
+    print(f"...constraint status ({m} constraints):")
+    print(f"    interior (slack): {n_interior}")
+    print(f"    binding (at boundary): {n_binding}")
+    print(f"    violated: {n_violated_v}")
+
+    # elastic slack report
+    total_slack = s_lo + s_hi
+    n_active_slack = int(np.sum(total_slack > 1e-6))
+    if n_active_slack > 0:
+        print(
+            f"...elastic slack active on " f"{n_active_slack}/{m} constraints:"
+        )
+        slack_idx = np.where(total_slack > 1e-6)[0]
+        slack_order = slack_idx[np.argsort(total_slack[slack_idx])[::-1]]
+        for idx in slack_order[:20]:
+            label = target_labels[idx]
+            pct_err = rel_errors[idx] * 100
+            print(
+                f"      slack={total_slack[idx]:12.2f} "
+                f"| err={pct_err:7.3f}% "
+                f"| target={targets[idx]:15.0f} "
+                f"| achieved={achieved[idx]:15.0f} "
+                f"| {label}"
+            )
+        if len(slack_order) > 20:
+            print(f"      ... and {len(slack_order) - 20} more")
+    else:
+        print("...all constraints satisfied without slack")
+
+    # dual-based constraint cost analysis
+    duals = info.get("dual_constraints")
+    n_tc = info.get("n_target_constraints")
+    if duals is not None and n_tc is not None and n_tc > 0:
+        dual_upper = duals[:n_tc]
+        dual_lower = duals[n_tc : 2 * n_tc]
+        dual_per_target = np.maximum(np.abs(dual_upper), np.abs(dual_lower))
+        cost_per_pp = dual_per_target * np.maximum(np.abs(targets), 1.0) * 0.01
+        ranked = np.argsort(cost_per_pp)[::-1]
+        n_show = min(15, len(ranked))
+        print(
+            f"...constraint cost analysis " f"(top {n_show} most expensive):"
+        )
+        print(
+            "    Marginal cost = approx objective reduction "
+            "if tolerance relaxed by 1pp"
+        )
+        for rank, idx in enumerate(ranked[:n_show]):
+            label = target_labels[idx]
+            side = (
+                "upper"
+                if np.abs(dual_upper[idx]) >= np.abs(dual_lower[idx])
+                else "lower"
+            )
+            print(
+                f"    {rank + 1:3d}. "
+                f"cost/pp={cost_per_pp[idx]:10.4f} "
+                f"| dual={dual_per_target[idx]:.6f} "
+                f"| side={side:5s} "
+                f"| err={rel_errors[idx] * 100:7.3f}% "
+                f"| {label}"
+            )
+
+    # x0 vs solution improvement
+    achieved_x0 = np.asarray(B_csc.T @ np.ones(n)).ravel()
+    rel_err_x0 = np.abs(achieved_x0 - targets) / np.maximum(
+        np.abs(targets), 1.0
+    )
+    print("...constraint improvement (x0 vs solution):")
+    print(
+        f"    x0:  mean|err|={rel_err_x0.mean():.6f}, "
+        f"max|err|={rel_err_x0.max():.6f}"
+    )
+    print(
+        f"    sol: mean|err|={rel_errors.mean():.6f}, "
+        f"max|err|={rel_errors.max():.6f}"
+    )
+
+    # weight change distribution
     ratio = final_weights / np.where(
-        original_unscaled_weights == 0,
-        1e-10,
-        original_unscaled_weights,
+        original_weights == 0, 1e-10, original_weights
     )
     abs_pct = np.abs(ratio - 1) * 100
     print("...weight changes (vs pre-optimization weights):")
@@ -445,77 +470,69 @@ def reweight(
     ]
     print("    distribution of |% change|:")
     for i in range(len(bins) - 1):
-        count = ((abs_pct >= bins[i]) & (abs_pct < bins[i + 1])).sum()
+        count = int(((abs_pct >= bins[i]) & (abs_pct < bins[i + 1])).sum())
         print(
             f"      {labels[i]:>10s}: "
             f"{count:>7,} "
             f"({count / len(abs_pct) * 100:.1f}%)"
         )
 
-    # Reproducibility fingerprint: compare these values across
-    # machines to verify near-identical results (agreement to
-    # ~4-6 significant figures = good)
-    print("...REPRODUCIBILITY FINGERPRINT:")
+    # multiplier distribution
+    print("...multiplier distribution:")
     print(
-        f"    weights: n={len(final_weights)}, "
-        f"total={final_weights.sum():.6f}, "
-        f"mean={final_weights.mean():.6f}, "
-        f"sdev={final_weights.std():.6f}"
+        f"    min={x_opt.min():.6f}, "
+        f"p5={np.percentile(x_opt, 5):.6f}, "
+        f"median={np.median(x_opt):.6f}, "
+        f"p95={np.percentile(x_opt, 95):.6f}, "
+        f"max={x_opt.max():.6f}"
     )
-    print(
-        f"    weights: min={final_weights.min():.6f}, "
-        f"p25={np.percentile(final_weights, 25):.6f}, "
-        f"p50={np.median(final_weights):.6f}, "
-        f"p75={np.percentile(final_weights, 75):.6f}, "
-        f"max={final_weights.max():.6f}"
-    )
-    print(f"    sum(weights^2)=" f"{np.sum(final_weights**2):.6f}")
-    print(f"    final loss: {final_loss:.10f}")
-
-    print("...reweighting finished")
-    flat_file["s006"] = final_weights
-    return flat_file
 
 
-def reweight_lbfgsb(
+def reweight(
     flat_file,
     time_period=TAXYEAR,
-    weight_multiplier_min=REWEIGHT_MULTIPLIER_MIN,
-    weight_multiplier_max=REWEIGHT_MULTIPLIER_MAX,
-    weight_deviation_penalty=REWEIGHT_DEVIATION_PENALTY,
+    multiplier_min=REWEIGHT_MULTIPLIER_MIN,
+    multiplier_max=REWEIGHT_MULTIPLIER_MAX,
+    constraint_tol=CLARABEL_CONSTRAINT_TOL,
+    slack_penalty=CLARABEL_SLACK_PENALTY,
+    max_iter=CLARABEL_MAX_ITER,
     verbose=None,
+    tolerance_overrides=None,
 ):
-    """Reweight using scipy L-BFGS-B (Fortran, projected-gradient bounds).
+    """
+    Reweight using Clarabel constrained QP solver.
 
-    Uses the same penalty-based objective as the PyTorch L-BFGS solver
-    but with scipy's L-BFGS-B which has proper projected-gradient
-    bounds (no clamping plateau problem), analytical gradient, and
-    float64 precision throughout.
+    Finds weight multipliers that minimize total weight distortion
+    while requiring that all SOI targets are met within the specified
+    tolerance.  Uses elastic slack variables so the solver always
+    returns a solution, reporting which constraints (if any) could
+    not be satisfied.
 
     Parameters
     ----------
     flat_file : pd.DataFrame
         Input data with s006 weights column.
     time_period : int
-        Tax year for targets.
-    weight_multiplier_min, weight_multiplier_max : float
+        TAXYEAR for targets.
+    multiplier_min, multiplier_max : float
         Bounds on weight multipliers.
-    weight_deviation_penalty : float
-        Penalty for weight deviation from original.
+    constraint_tol : float
+        Relative tolerance on target constraints (default +/-0.5%).
+    slack_penalty : float
+        Penalty for constraint violations via elastic slack.
+    max_iter : int
+        Maximum solver iterations.
     verbose : bool or None
         Print full diagnostics.  None = check VERBOSE_REWEIGHT env var.
+    tolerance_overrides : dict, optional
+        Per-constraint tolerance overrides.  Maps substring patterns
+        to relative tolerances.
 
     Returns
     -------
     pd.DataFrame
         flat_file with updated s006 weights.
     """
-    # pylint: disable=import-outside-toplevel
-    import os
-    from scipy.optimize import minimize as scipy_minimize
-
-    # pylint: enable=import-outside-toplevel
-
     if verbose is None:
         verbose = os.environ.get("VERBOSE_REWEIGHT", "").lower() in (
             "1",
@@ -527,16 +544,13 @@ def reweight_lbfgsb(
     if time_period not in targets.Year.unique():
         raise ValueError(f"Year {time_period} not in targets.")
 
-    print(f"...scipy L-BFGS-B reweighting for year {time_period}")
-    print(f"...weight deviation penalty: {weight_deviation_penalty}")
-    print(
-        f"...weight multiplier bounds: "
-        f"[{weight_multiplier_min}, {weight_multiplier_max}]"
-    )
+    print(f"...constrained QP reweighting for year {time_period}")
+    print(f"...constraint tolerance: +-{constraint_tol * 100:.1f}%")
+    print(f"...multiplier bounds: [{multiplier_min}, {multiplier_max}]")
 
     original_unscaled_weights = flat_file.s006.values.copy()
 
-    # Prescaling (same as reweight())
+    # prescaling
     soi_filer_total_row = targets[
         (targets.Year == time_period)
         & (targets.Variable == "count")
@@ -553,10 +567,9 @@ def reweight_lbfgsb(
         prescale = target_filer_total / current_filer_total
         flat_file["s006"] *= prescale
         print(
-            f"...pre-scaled weights: "
-            f"target filers={target_filer_total:,.0f}, "
-            f"current filers={current_filer_total:,.0f}, "
-            f"scale={prescale:.6f}"
+            f"...prescale factor: {prescale:.6f} "
+            f"(target={target_filer_total:,.0f}, "
+            f"current={current_filer_total:,.0f})"
         )
     else:
         print(
@@ -564,147 +577,149 @@ def reweight_lbfgsb(
             "skipping weight pre-scaling"
         )
 
+    # build constraint matrix
     output_matrix, target_array = build_loss_matrix(
         flat_file, targets, time_period
     )
-    print(f"Targeting {len(target_array)} SOI statistics")
+    target_labels = list(output_matrix.columns)
+    n_records = len(flat_file)
+    n_targets = len(target_array)
 
-    w0_np = flat_file.s006.values.astype(np.float64)
-    A_np = output_matrix.values.astype(np.float64)
-    t_np = target_array.astype(np.float64)
+    print(f"...targets: {n_targets}, records: {n_records}")
 
-    # Build scaled matrix: B[i,j] = w0[i] * A[i,j] / (t[j] + 1)
-    scale = 1.0 / (t_np + 1.0)
-    B = w0_np[:, None] * A_np * scale[None, :]
-    c = t_np * scale
+    w0 = flat_file.s006.values.copy()
 
-    # Initial loss for penalty scaling
-    residual0 = B.T @ np.ones(len(w0_np)) - c
-    L0 = np.dot(residual0, residual0)
-    print(f"...initial loss: {L0:.10f}")
+    # B[i,j] = w0[i] * A[i,j]
+    A_csc = csc_matrix(output_matrix.values)
+    del output_matrix
+    B_csc = spdiags(w0) @ A_csc
+    del A_csc
 
-    # Penalty coefficient per multiplier
-    w0_sq_sum = np.sum(w0_np**2)
-    lam = weight_deviation_penalty * L0 * (w0_np**2) / w0_sq_sum
+    nnz = B_csc.nnz
+    density = nnz / (n_records * n_targets) * 100
+    print(
+        f"...constraint matrix: "
+        f"{n_records}x{n_targets}, "
+        f"nnz={nnz:,}, density={density:.2f}%"
+    )
 
-    n_calls = [0]
-    iter_state = {"last_loss": None, "last_grad": None}
+    # constraint bounds
+    cl, cu = _compute_constraint_bounds(
+        target_array,
+        constraint_tol,
+        _ABS_TOL_FLOOR,
+        target_labels,
+        tolerance_overrides,
+        verbose,
+    )
 
-    def objective_and_grad(m):
-        n_calls[0] += 1
-        residual = B.T @ m - c
-        target_loss = np.dot(residual, residual)
-        dev = m - 1.0
-        penalty_loss = np.dot(lam, dev**2)
-        loss = target_loss + penalty_loss
-        grad = 2.0 * (B @ residual) + 2.0 * lam * dev
-        iter_state["last_loss"] = loss
-        iter_state["last_grad"] = np.max(np.abs(grad))
-        return loss, grad
+    # build QP
+    m = n_targets
+    n_total = n_records + 2 * m  # x + s_lo + s_hi
 
-    def scipy_callback(_xk):
-        nit = n_calls[0]
-        loss = iter_state["last_loss"]
-        gnorm = iter_state["last_grad"]
-        if verbose and (nit <= 5 or nit % 50 == 0):
-            print(
-                f"    iter {nit:>5d}: "
-                f"loss={loss:.10f}, "
-                f"grad={gnorm:.2e}",
-                flush=True,
-            )
+    # diagonal Hessian: 2 for x, 2*M for slacks
+    hess_diag = np.empty(n_total)
+    hess_diag[:n_records] = 2.0
+    hess_diag[n_records:] = 2.0 * slack_penalty
+    P = spdiags(hess_diag, format="csc")
 
-    m0 = np.ones(len(w0_np), dtype=np.float64)
-    bounds = [(weight_multiplier_min, weight_multiplier_max)] * len(m0)
+    # linear term: -2 for x (from expanding (x-1)^2), 0 for slacks
+    q = np.zeros(n_total)
+    q[:n_records] = -2.0
 
-    print("...starting scipy L-BFGS-B optimization")
+    # extended constraint matrix: [B^T | I_M | -I_M]
+    B_T = B_csc.T.tocsc()
+    I_M = speye(m, format="csc")
+    A_full = hstack([B_T, I_M, -I_M], format="csc")
+
+    # constraint scaling for numerical conditioning
+    target_scale = np.maximum(np.abs(target_array), 1.0)
+    D_inv = spdiags(1.0 / target_scale)
+    A_scaled = (D_inv @ A_full).tocsc()
+    cl_scaled = cl / target_scale
+    cu_scaled = cu / target_scale
+
+    # variable bounds
+    var_lb = np.empty(n_total)
+    var_ub = np.empty(n_total)
+    var_lb[:n_records] = multiplier_min
+    var_ub[:n_records] = multiplier_max
+    var_lb[n_records:] = 0.0
+    var_ub[n_records:] = 1e20
+
+    # clarabel form: Ax + s = b, s in NonnegativeCone (i.e. Ax <= b)
+    I_n = speye(n_total, format="csc")
+    A_clar = vstack(
+        [
+            A_scaled,
+            -A_scaled,
+            I_n,
+            -I_n,
+        ],
+        format="csc",
+    )
+    b_clar = np.concatenate([cu_scaled, -cl_scaled, var_ub, -var_lb])
+
+    m_constraints = len(b_clar)
+    # pylint: disable=no-member
+    cones = [clarabel.NonnegativeConeT(m_constraints)]
+
+    settings = clarabel.DefaultSettings()
+    settings.verbose = verbose
+    settings.max_iter = max_iter
+    settings.tol_gap_abs = 1e-7
+    settings.tol_gap_rel = 1e-7
+    settings.tol_feas = 1e-7
+
+    # solve
+    print("...starting solver")
     t_start = time.time()
 
-    result = scipy_minimize(
-        objective_and_grad,
-        m0,
-        method="L-BFGS-B",
-        jac=True,
-        bounds=bounds,
-        callback=scipy_callback,
-        options={
-            "maxiter": 4000,
-            "ftol": 0,
-            "gtol": 1e-5,
-            "maxcor": 10,
-            "disp": False,
-        },
-    )
+    solver = clarabel.DefaultSolver(P, q, A_clar, b_clar, cones, settings)
+    result = solver.solve()
 
     elapsed = time.time() - t_start
+    status_str = str(result.status)
 
-    m_final = result.x
-    final_weights = w0_np * np.clip(
-        m_final, weight_multiplier_min, weight_multiplier_max
+    # extract duals (convert back from scaled space)
+    duals = np.array(result.z)
+    duals[:m] /= target_scale
+    duals[m : 2 * m] /= target_scale
+
+    info = {
+        "status": 0 if "Solved" in status_str else 1,
+        "status_msg": status_str.encode(),
+        "clarabel_iter": result.iterations,
+        "clarabel_solve_time": result.solve_time,
+        "dual_constraints": duals,
+        "n_target_constraints": m,
+    }
+
+    # extract solution
+    y_opt = np.array(result.x)
+    x_opt = y_opt[:n_records]
+    s_lo = y_opt[n_records : n_records + m]
+    s_hi = y_opt[n_records + m :]
+
+    x_opt = np.clip(x_opt, multiplier_min, multiplier_max)
+
+    # diagnostics
+    _print_diagnostics(
+        x_opt,
+        s_lo,
+        s_hi,
+        B_csc,
+        target_array,
+        cl,
+        cu,
+        w0,
+        original_unscaled_weights,
+        target_labels,
+        info,
+        elapsed,
+        verbose,
     )
 
-    print(
-        f"...optimization completed in {elapsed:.1f} seconds "
-        f"({result.nit} iterations, "
-        f"{n_calls[0]} function evals)"
-    )
-    print(
-        f"...result: success={result.success}, " f"message='{result.message}'"
-    )
-    print(f"...final loss: {result.fun:.10f}")
-    print(
-        f"...final weights: total={final_weights.sum():.2f}, "
-        f"mean={final_weights.mean():.6f}, "
-        f"sdev={final_weights.std():.6f}"
-    )
-
-    # Target accuracy
-    outputs_np = final_weights @ A_np
-    rel_errors = np.abs((outputs_np + 1) / (t_np + 1) - 1)
-    print(f"...target accuracy ({len(t_np)} targets):")
-    print(f"    mean |relative error|: {rel_errors.mean():.6f}")
-    print(f"    max  |relative error|: {rel_errors.max():.6f}")
-
-    # Worst 10 targets
-    worst_idx = np.argsort(rel_errors)[::-1][:10]
-    print("    worst targets:")
-    target_labels = list(output_matrix.columns)
-    for idx in worst_idx:
-        print(
-            f"      {rel_errors[idx] * 100:7.3f}% " f"| {target_labels[idx]}"
-        )
-
-    if verbose:
-        # Reproducibility fingerprint
-        print("...REPRODUCIBILITY FINGERPRINT:")
-        print(
-            f"    weights: n={len(final_weights)}, "
-            f"total={final_weights.sum():.6f}, "
-            f"mean={final_weights.mean():.6f}, "
-            f"sdev={final_weights.std():.6f}"
-        )
-        print(
-            f"    weights: min={final_weights.min():.6f}, "
-            f"p25={np.percentile(final_weights, 25):.6f}, "
-            f"p50={np.median(final_weights):.6f}, "
-            f"p75={np.percentile(final_weights, 75):.6f}, "
-            f"max={final_weights.max():.6f}"
-        )
-        print(f"    sum(weights^2)=" f"{np.sum(final_weights**2):.6f}")
-
-        # Weight change distribution
-        ratio = final_weights / np.where(
-            original_unscaled_weights == 0,
-            1e-10,
-            original_unscaled_weights,
-        )
-        print("...weight changes (vs pre-optimization weights):")
-        print(
-            f"    ratio: min={ratio.min():.6f}, "
-            f"median={np.median(ratio):.6f}, "
-            f"max={ratio.max():.6f}"
-        )
-
-    print("...scipy L-BFGS-B reweighting finished")
-    flat_file["s006"] = final_weights
+    # apply new weights to flat_file and return
+    flat_file["s006"] = w0 * x_opt
     return flat_file

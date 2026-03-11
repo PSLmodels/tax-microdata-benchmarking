@@ -24,11 +24,6 @@ CPS_WEIGHTS_SCALE = {2021: 2.10, 2022: 1.0}  # used to scale CPS weights
 # parameters used in creation of national sampling weights:
 REWEIGHT_MULTIPLIER_MIN = 0.1
 REWEIGHT_MULTIPLIER_MAX = 10.0
-REWEIGHT_DEVIATION_PENALTY = 0.01
-# penalty value of 1.0 says "this is as important as everything else"
-# penalty value of 0.0 imposes no penalty
-# uses L2 norm: sum((new - original)^2) / sum(original^2)
-
 # parameters for constrained-quadratic-programming reweighting:
 CLARABEL_CONSTRAINT_TOL = 0.005  # relative tolerance on constraints (+-0.5%)
 CLARABEL_SLACK_PENALTY = 1e6  # elastic penalty for constraint violations
