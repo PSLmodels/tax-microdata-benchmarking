@@ -36,10 +36,8 @@ def create_tmd_dataframe(taxyear: int) -> pd.DataFrame:
 
     print("Reweighting...")
     combined["s006_original"] = combined["s006"].values
-    reweight_import = (
-        "from tmd.utils.reweight_clarabel import reweight_clarabel"
-    )
-    reweight_call = f"reweight_clarabel(df, {taxyear})"
+    reweight_import = "from tmd.utils.reweight import reweight"
+    reweight_call = f"reweight(df, {taxyear})"
     # Run reweighting in a subprocess so that prior PyTorch
     # operations (PolicyEngine Microsimulation) don't affect
     # the optimizer state.

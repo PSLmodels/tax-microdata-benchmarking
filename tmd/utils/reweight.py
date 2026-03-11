@@ -483,7 +483,7 @@ def _print_diagnostics(
     )
 
 
-def reweight_clarabel(
+def reweight(
     flat_file,
     time_period=TAXYEAR,
     multiplier_min=REWEIGHT_MULTIPLIER_MIN,
