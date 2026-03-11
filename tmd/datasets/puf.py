@@ -5,7 +5,7 @@ from microdf import MicroDataFrame
 from tmd.storage import STORAGE_FOLDER
 from tmd.datasets.uprate_puf import uprate_puf
 from tmd.utils.imputation import Imputation
-from tmd.utils.pension_contributions import impute_pretax_pension_contributions
+from tmd.utils.pension_contributions import impute_pension_contributions
 from tmd.imputation_assumptions import (
     IMPUTATION_RF_RNG_SEED,
     IMPUTATION_BETA_RNG_SEED,
@@ -169,9 +169,8 @@ def preprocess_puf(puf: pd.DataFrame) -> pd.DataFrame:
 
 def create_tc_puf(taxyear: int) -> pd.DataFrame:
     """
-    Create a Tax-Calculator-compatible PUF DataFrame for the given taxyear
-    directly from raw PUF data, without using PolicyEngine (PE) Dataset or
-    hierarchical data files.
+    Create a Tax-Calculator-compatible PUF DataFrame for
+    the given taxyear directly from raw PUF data.
     """
     filer_age_rng_head = np.random.default_rng(seed=FILER_AGE_HEAD_RNG_SEED)
     filer_age_rng_spouse = np.random.default_rng(
@@ -291,13 +290,13 @@ def create_tc_puf(taxyear: int) -> pd.DataFrame:
     e02100s = farm_inc * (1.0 - head_frac) * is_joint
 
     # pension contributions
-    print("Imputing pretax pension contributions...")
+    print("Imputing pension contributions...")
     head_emp = emp_income * head_frac
     spouse_emp = emp_income * (1.0 - head_frac) * is_joint
     all_emp = np.concatenate([head_emp, spouse_emp])
     ei_df = pd.DataFrame({"employment_income": all_emp})
-    pc_df = impute_pretax_pension_contributions(ei_df)
-    pencon_all = np.minimum(all_emp, pc_df.pretax_pension_contributions.values)
+    pc_df = impute_pension_contributions(taxyear, ei_df)
+    pencon_all = np.minimum(all_emp, pc_df.pension_contributions.values)
     pencon_p = pencon_all[:n]
     pencon_s = pencon_all[n:]
 
@@ -306,8 +305,7 @@ def create_tc_puf(taxyear: int) -> pd.DataFrame:
 
     # mapping from TC variable name to PE-named column in pre-processed PUF:
     #  for person-level variables, the tax-unit total is scaled by
-    #  person_scale (= head_frac + (1-head_frac)*is_joint) to match
-    #  policyengine_us pipeline's sum-over-nondependents aggregation.
+    #  person_scale (= head_frac + (1-head_frac)*is_joint)
     tc_to_pe = {
         "RECID": "household_id",
         "S006": "household_weight",
@@ -420,9 +418,18 @@ def create_tc_puf(taxyear: int) -> pd.DataFrame:
         else:
             var[tcname] = puf[pename].values
 
-    # ... raw PUF variables
-    var["f2441"] = f2441_raw
-    var["EIC"] = eic_raw
+    # ... calculate EIC variable using dependent ages
+    eic_age_elig = np.minimum(
+        sum((dep_ages[j] < 19) * dep_exists[j] for j in range(3)),
+        3,
+    )
+    var["EIC"] = np.where(eic_raw > 0, eic_raw, eic_age_elig)
+
+    # ... calculate f2441 variable using dependent ages
+    cdcc_age_elig = sum((dep_ages[j] < 13) * dep_exists[j] for j in range(3))
+    var["f2441"] = np.where(f2441_raw > 0, f2441_raw, cdcc_age_elig)
+
+    # ... raw PUF variable
     var["MARS"] = mars_raw
 
     # ... zero-valued variables

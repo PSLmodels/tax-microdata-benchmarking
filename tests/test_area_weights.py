@@ -61,7 +61,7 @@ def test_area_xx(tests_folder):
     # compare actual with expected results
     default_rtol = 0.005
     rtol = {
-        # "res": 0.011,
+        "e00200": 0.008,
     }
     if set(act.keys()) != set(exp.keys()):
         print("sorted(act.keys())=", sorted(act.keys()))

@@ -10,10 +10,6 @@ import numpy as np
 BS_SAMPLES = 1000
 BS_RNSEED = 192837465
 
-ITX_MEAN = 2300
-TMD_CV = 0.0034
-SOI_CV = 0.0102
-
 USAGE = "USAGE: python sampling_variability.py ASSUMPTIONS_YAML_FILE_NAME\n"
 
 
