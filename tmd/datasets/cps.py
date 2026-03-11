@@ -178,7 +178,7 @@ def _download_raw_cps(taxyear: int) -> str:
         spm_unit_columns = [
             col for col in spm_unit_columns if col != "SPM_BBSUBVAL"
         ]
-    print(f"Downloading raw CPS ASEC for {taxyear}...")
+    print(f"Downloading raw {taxyear} CPS ASEC data...")
     response = requests.get(
         url,
         stream=True,
@@ -367,7 +367,7 @@ def create_tc_cps(taxyear: int) -> (pd.DataFrame, pd.Series):
     directly from the Census raw CPS data.
     """
     person = load_raw_cps_person_data(taxyear)
-    print(f"Creating tc CPS dataset for year {taxyear}...")
+    print(f"Creating CPS dataframe for year {taxyear}...")
 
     # load imputation parameters
     yamlfilename = os.path.join(

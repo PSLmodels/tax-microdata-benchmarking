@@ -19,7 +19,7 @@ EARN_SPLIT_RNG_SEED = 18374659
 ITMDED_GROW_RATE = 0.02  # annual growth rate in itemized deduction amounts
 # grow rate applied to inflate 2015 amounts to 2021 amounts in uprate_puf.py
 
-CPS_WEIGHTS_SCALE = 2.10  # used to scale weights in CPS subsample
+CPS_WEIGHTS_SCALE = {2021: 2.10, 2022: 1.0}  # used to scale CPS weights
 
 # parameters used in creation of national sampling weights:
 REWEIGHT_MULTIPLIER_MIN = 0.1
@@ -29,7 +29,18 @@ REWEIGHT_DEVIATION_PENALTY = 0.01
 # penalty value of 0.0 imposes no penalty
 # uses L2 norm: sum((new - original)^2) / sum(original^2)
 
-# Parameters for Clarabel QP constrained reweighting (reweight_clarabel.py):
+# parameters for constrained-quadratic-programming reweighting:
 CLARABEL_CONSTRAINT_TOL = 0.005  # relative tolerance on constraints (+-0.5%)
 CLARABEL_SLACK_PENALTY = 1e6  # elastic penalty for constraint violations
 CLARABEL_MAX_ITER = 1000  # maximum solver iterations
+
+# parameters for MICE imputation of missing OBBBA deduction variables
+# ... overtime_income:
+OTM_convert_zero_prob = {2021: 0.082, 2022: 0.0}
+OTM_scale = {2021: 2.4, 2022: 1.0}
+# ... tip_income:
+TIP_convert_zero_prob = {2021: 0.015, 2022: 0.0}
+TIP_scale = {2021: 1.0, 2022: 1.0}
+# ... auto_loan_interest:
+ALI_convert_zero_prob = {2021: 0.100, 2022: 0.0}
+ALI_scale = {2021: 4.0, 2022: 1.0}

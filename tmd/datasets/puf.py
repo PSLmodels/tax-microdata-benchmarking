@@ -180,7 +180,7 @@ def create_tc_puf(taxyear: int) -> pd.DataFrame:
     earn_split_rng = np.random.default_rng(seed=EARN_SPLIT_RNG_SEED)
 
     # read and prepare raw PUF data
-    print("Reading raw PUF 2015 data...")
+    print("Reading raw 2015 PUF data...")
     puf = pd.read_csv(STORAGE_FOLDER / "input" / "puf_2015.csv")
     demographics = pd.read_csv(
         STORAGE_FOLDER / "input" / "demographics_2015.csv"
@@ -196,7 +196,7 @@ def create_tc_puf(taxyear: int) -> pd.DataFrame:
     f2441_raw = puf["F2441"].values.copy()
     mars_raw = puf["MARS"].values.copy()
 
-    print("Pre-processing PUF...")
+    print("Pre-processing PUF data...")
     original_recid = puf.RECID.values.copy()
     puf = preprocess_puf(puf)
 
@@ -301,7 +301,7 @@ def create_tc_puf(taxyear: int) -> pd.DataFrame:
     pencon_s = pencon_all[n:]
 
     # build Tax-Calculator (TC) variable dictionary
-    print(f"Building Tax-Calculator dataset for {taxyear}...")
+    print(f"Building Tax-Calculator input dataframe for {taxyear}...")
 
     # mapping from TC variable name to PE-named column in pre-processed PUF:
     #  for person-level variables, the tax-unit total is scaled by

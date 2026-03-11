@@ -12,7 +12,15 @@ import sqlite3
 from typing import Tuple, List, Dict
 import numpy as np
 import pandas as pd
-from tmd.imputation_assumptions import TAXYEAR
+from tmd.imputation_assumptions import (
+    TAXYEAR,
+    OTM_convert_zero_prob,
+    OTM_scale,
+    TIP_convert_zero_prob,
+    TIP_scale,
+    ALI_convert_zero_prob,
+    ALI_scale,
+)
 from tmd.storage import STORAGE_FOLDER
 from tmd.utils.mice import MICE
 
@@ -559,8 +567,16 @@ def create_sipp_imputed_tmd(
         verbose=verbose,  # if True, write impute progress to stdout
         seed=192837465,
         # post-MICE imputation adjustment parameters:
-        convert_zero_prob=[0.082, 0.015],  # convert zero to nonzero with prob
-        scale=[2.4, 1.0],  # multiplicative scaling done after convert
+        # ... convert zero to nonzero with prob
+        convert_zero_prob=[
+            OTM_convert_zero_prob[TAXYEAR],
+            TIP_convert_zero_prob[TAXYEAR],
+        ],
+        # ... multiplicative scaling done after convert
+        scale=[
+            OTM_scale[TAXYEAR],
+            TIP_scale[TAXYEAR],
+        ],
     )
     iarray = mice.impute(mdf.to_numpy())
     idf = pd.DataFrame(iarray, columns=mdf.columns)
@@ -602,8 +618,10 @@ def create_cex_imputed_tmd(
         verbose=verbose,  # if True, write impute progress to stdout
         seed=192837465,
         # post-MICE imputation adjustment parameters:
-        convert_zero_prob=[0.100],  # convert zero to nonzero with prob
-        scale=[4.0],  # multiplicative scaling done after convert
+        # ... convert zero to nonzero with prob
+        convert_zero_prob=[ALI_convert_zero_prob[TAXYEAR]],
+        # ... multiplicative scaling done after convert
+        scale=[ALI_scale[TAXYEAR]],
     )
     iarray = mice.impute(mdf.to_numpy())
     idf = pd.DataFrame(iarray, columns=mdf.columns)
@@ -624,7 +642,7 @@ def create_augmented_file(
     auto_loan_interest variables, which do exist in the unaugmented file
     but are zero for each tax unit.
     """
-    print("Preparing data for imputation...")
+    print("Preparing external data for imputing missing variables...")
 
     # create SIPP dataframe for imputing missing TMD
     # overtime_income and tip_income variables
