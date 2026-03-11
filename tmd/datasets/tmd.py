@@ -1,4 +1,3 @@
-import os
 import sys
 import subprocess
 import tempfile
@@ -37,34 +36,10 @@ def create_tmd_dataframe(taxyear: int) -> pd.DataFrame:
 
     print("Reweighting...")
     combined["s006_original"] = combined["s006"].values
-    # Solver selection via environment variables:
-    #   default:            Clarabel QP (constrained, reproducible)
-    #   PYTORCH_REWEIGHT=1: PyTorch L-BFGS (original penalty-based)
-    #   SCIPY_REWEIGHT=1:   scipy L-BFGS-B (penalty-based backup)
-    use_pytorch = os.environ.get("PYTORCH_REWEIGHT", "").lower() in (
-        "1",
-        "true",
-        "yes",
+    reweight_import = (
+        "from tmd.utils.reweight_clarabel import reweight_clarabel"
     )
-    use_scipy = os.environ.get("SCIPY_REWEIGHT", "").lower() in (
-        "1",
-        "true",
-        "yes",
-    )
-    if use_pytorch:
-        reweight_import = "from tmd.utils.reweight import reweight"
-        reweight_call = f"reweight(df, {taxyear})"
-        print("...using penalty-based solver (PyTorch L-BFGS)")
-    elif use_scipy:
-        reweight_import = "from tmd.utils.reweight import reweight_lbfgsb"
-        reweight_call = f"reweight_lbfgsb(df, {taxyear})"
-        print("...using penalty-based solver (scipy L-BFGS-B)")
-    else:
-        reweight_import = (
-            "from tmd.utils.reweight_clarabel import reweight_clarabel"
-        )
-        reweight_call = f"reweight_clarabel(df, {taxyear})"
-        print("...using constrained QP solver (Clarabel)")
+    reweight_call = f"reweight_clarabel(df, {taxyear})"
     # Run reweighting in a subprocess so that prior PyTorch
     # operations (PolicyEngine Microsimulation) don't affect
     # the optimizer state.

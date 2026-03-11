@@ -7,7 +7,10 @@ import numpy as np
 import pandas as pd
 import pytest
 from tmd.storage import STORAGE_FOLDER
-from tmd.utils.reweight import _drop_impossible_targets, build_loss_matrix
+from tmd.utils.reweight_clarabel import (
+    _drop_impossible_targets,
+    build_loss_matrix,
+)
 
 
 def test_drop_impossible_targets_removes_all_zero_column():

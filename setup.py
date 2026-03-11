@@ -9,7 +9,6 @@ setup(
         "taxcalc>=6.4.0",
         "clarabel",
         "scikit-learn",
-        "torch",
         "scipy",
         "jax",
         "black>=26.1.0",

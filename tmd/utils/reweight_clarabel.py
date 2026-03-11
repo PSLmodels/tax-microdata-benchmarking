@@ -29,6 +29,7 @@ by improving numerical conditioning.
 
 import os
 import time
+import warnings
 import numpy as np
 import pandas as pd
 from scipy.sparse import (
@@ -41,7 +42,6 @@ from scipy.sparse import (
 import clarabel
 from tmd.storage import STORAGE_FOLDER
 from tmd.utils.soi_replication import tc_to_soi
-from tmd.utils.reweight import build_loss_matrix
 from tmd.imputation_assumptions import (
     TAXYEAR,
     REWEIGHT_MULTIPLIER_MIN,
@@ -52,6 +52,165 @@ from tmd.imputation_assumptions import (
 )
 
 _ABS_TOL_FLOOR = 0.0
+
+
+def fmt(x):
+    if x == -np.inf:
+        return "-inf"
+    if x == np.inf:
+        return "inf"
+    if x < 1e3:
+        return f"{x:.0f}"
+    if x < 1e6:
+        return f"{x / 1e3:.0f}k"
+    if x < 1e9:
+        return f"{x / 1e6:.1f}m"
+    return f"{x / 1e9:.1f}bn"
+
+
+def build_loss_matrix(df, targets, time_period):
+    """Build loss matrix and target array for reweighting.
+
+    Returns (loss_matrix, targets_array) where loss_matrix is a
+    DataFrame with one column per target and targets_array is the
+    corresponding SOI target values.
+    """
+    columns = {}
+    df = tc_to_soi(df, time_period)
+    agi = df["adjusted_gross_income"].values
+    filer = df["is_tax_filer"].values
+    targets_array = []
+    soi_subset = targets
+    soi_subset = soi_subset[soi_subset.Year == time_period]
+    agi_level_targeted_variables = [
+        "adjusted_gross_income",
+        "count",
+        "employment_income",
+        "business_net_profits",
+        "capital_gains_gross",
+        "ordinary_dividends",
+        "partnership_and_s_corp_income",
+        "qualified_dividends",
+        "taxable_interest_income",
+        "total_pension_income",
+        "total_social_security",
+    ]
+    aggregate_level_targeted_variables = [
+        "business_net_losses",
+        "capital_gains_distributions",
+        "capital_gains_losses",
+        # "estate_income",  # all zeros in tc_to_soi (not in Tax-Calculator)
+        # "estate_losses",  # all zeros in tc_to_soi (not in Tax-Calculator)
+        "exempt_interest",
+        "ira_distributions",
+        "partnership_and_s_corp_losses",
+        # "rent_and_royalty_net_income",  # all zeros in tc_to_soi (not in TC)
+        # "rent_and_royalty_net_losses",  # all zeros in tc_to_soi (not in TC)
+        "taxable_pension_income",
+        "taxable_social_security",
+        "unemployment_compensation",
+    ]
+    aggregate_level_targeted_variables = [
+        variable
+        for variable in aggregate_level_targeted_variables
+        if variable in df.columns
+    ]
+    soi_subset = soi_subset[
+        soi_subset.Variable.isin(agi_level_targeted_variables)
+        & (
+            (soi_subset["AGI lower bound"] != -np.inf)
+            | (soi_subset["AGI upper bound"] != np.inf)
+        )
+        | (
+            soi_subset.Variable.isin(aggregate_level_targeted_variables)
+            & (soi_subset["AGI lower bound"] == -np.inf)
+            & (soi_subset["AGI upper bound"] == np.inf)
+        )
+    ]
+    for _, row in soi_subset.iterrows():
+        if row["Taxable only"]:
+            continue  # exclude "taxable returns" statistics
+
+        mask = (
+            (agi >= row["AGI lower bound"])
+            * (agi < row["AGI upper bound"])
+            * filer
+        ) > 0
+
+        if row["Filing status"] == "Single":
+            mask *= df["filing_status"].values == "SINGLE"
+        elif row["Filing status"] == "Married Filing Jointly/Surviving Spouse":
+            mask *= df["filing_status"].values == "JOINT"
+        elif row["Filing status"] == "Head of Household":
+            mask *= df["filing_status"].values == "HEAD_OF_HOUSEHOLD"
+        elif row["Filing status"] == "Married Filing Separately":
+            mask *= df["filing_status"].values == "SEPARATE"
+
+        values = df[row["Variable"]].values
+
+        if row["Count"]:
+            values = (values > 0).astype(float)
+
+        lob = row["AGI lower bound"]
+        hib = row["AGI upper bound"]
+        left = "(" if lob == -np.inf else "["
+        agi_range_label = f"{left}{fmt(lob)}, {fmt(hib)})"
+        taxable_label = (
+            "taxable" if row["Taxable only"] else "all" + " returns"
+        )
+        filing_status_label = row["Filing status"]
+
+        variable_label = row["Variable"].replace("_", " ")
+
+        if row["Count"] and not row["Variable"] == "count":
+            label = (
+                f"{variable_label}/count/AGI in "
+                f"{agi_range_label}/{taxable_label}/"
+                f"{filing_status_label}"
+            )
+        elif row["Variable"] == "count":
+            label = (
+                f"{variable_label}/count/AGI in "
+                f"{agi_range_label}/{taxable_label}/"
+                f"{filing_status_label}"
+            )
+        else:
+            label = (
+                f"{variable_label}/total/AGI in "
+                f"{agi_range_label}/{taxable_label}/"
+                f"{filing_status_label}"
+            )
+
+        if label not in columns:
+            columns[label] = mask * values
+            targets_array.append(row["Value"])
+
+    loss_matrix = pd.DataFrame(columns)
+    targets_arr = np.array(targets_array)
+    return _drop_impossible_targets(loss_matrix, targets_arr)
+
+
+def _drop_impossible_targets(loss_matrix, targets_arr):
+    """Drop targets where all data values are zero.
+
+    No reweighting can produce nonzero estimates from all-zero data,
+    so these targets must be excluded before optimization.
+
+    Returns (filtered_loss_matrix, filtered_targets_arr).
+    """
+    all_zero_mask = (loss_matrix.values == 0).all(axis=0)
+    if all_zero_mask.any():
+        impossible_labels = loss_matrix.columns[all_zero_mask].tolist()
+        label_list = "\n  - ".join(impossible_labels)
+        warnings.warn(
+            f"Dropping {len(impossible_labels)} impossible targets "
+            f"(all data values are zero):\n  - {label_list}",
+            UserWarning,
+            stacklevel=2,
+        )
+        loss_matrix = loss_matrix.loc[:, ~all_zero_mask]
+        targets_arr = targets_arr[~all_zero_mask]
+    return loss_matrix.copy(), targets_arr
 
 
 def _compute_constraint_bounds(
