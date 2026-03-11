@@ -3,7 +3,7 @@ Construct tmd.csv, a Tax-Calculator-style input variable file for TAXYEAR.
 """
 
 import taxcalc as tc
-from tmd.datasets.tmd import create_tmd_2021
+from tmd.datasets.tmd import create_tmd_dataframe
 from tmd.imputation_assumptions import (
     TAXYEAR,
     IMPUTATION_RF_RNG_SEED,
@@ -30,7 +30,7 @@ def create_variable_file(write_file=True):
     print(f"  ASSUMED W2_WAGES_SCALE = {W2_WAGES_SCALE:.5f}")
     print(f"  WEIGHT_DEVIATION_PENALTY = {REWEIGHT_DEVIATION_PENALTY:.3f}")
     print(f"  ASSUMED CPS_WEIGHTS_SCALE = {CPS_WEIGHTS_SCALE:.5f}")
-    vdf = create_tmd_2021()
+    vdf = create_tmd_dataframe(TAXYEAR)
     vdf.FLPDYR = TAXYEAR
     vdf.agi_bin = 0
     # optionally dump all input and output variables unrounded

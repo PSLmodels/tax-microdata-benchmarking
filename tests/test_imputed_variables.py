@@ -42,9 +42,9 @@ def test_obbba_deduction_tax_benefits(
     deductions = {
         "OTM": {  # new OBBBA overtime income deduction
             "reform_dict": {"OvertimeIncomeDed_c": {simyear: [0, 0, 0, 0, 0]}},
-            "exp_totben": 23.83,
-            "exp_affpct": 8.87,
-            "exp_affben": 1397,
+            "exp_totben": 23.89,
+            "exp_affpct": 8.83,
+            "exp_affben": 1408,
             # The OTM imputation calibration parameters used in the
             # create_taxcalc_imputed_variables.py module were
             # specified so that the affpct statistic is close to 8.8%
@@ -56,9 +56,9 @@ def test_obbba_deduction_tax_benefits(
         },
         "TIP": {  # new OBBBA tip income deduction
             "reform_dict": {"TipIncomeDed_c": {simyear: 0}},
-            "exp_totben": 6.85,
+            "exp_totben": 6.92,
             "exp_affpct": 2.61,
-            "exp_affben": 1370,
+            "exp_affben": 1383,
             # The TIP imputation calibration parameters used in the
             # create_taxcalc_imputed_variables.py module were
             # specified so that the affpct statistic is close to 2.6%
@@ -87,8 +87,8 @@ def test_obbba_deduction_tax_benefits(
                 "AutoLoanInterestDed_c": {simyear: 0},
                 "SeniorDed_c": {simyear: 0},
             },
-            "exp_totben": 54.77,
-            "exp_affpct": 28.06,
+            "exp_totben": 54.90,
+            "exp_affpct": 28.11,
             "exp_affben": 1015,
             # The affpct statistic and the affben statistic are
             # reasonably close to the Tax Policy Center estimates
@@ -160,13 +160,13 @@ def test_imputed_variable_distribution(tmd_variables):
     imputed_var_names = ["overtime_income", "tip_income", "auto_loan_interest"]
     expect = {
         "overtime_income": {
-            "mean": 10761.07964271762,
-            "sdev": 270629.2735673272,
+            "mean": 10507.248428454735,
+            "sdev": 266612.2182930321,
         },
-        "tip_income": {"mean": 1606.104987214547, "sdev": 95550.08249632413},
+        "tip_income": {"mean": 1475.237387683347, "sdev": 62730.241880329384},
         "auto_loan_interest": {
-            "mean": 116.41451060127145,
-            "sdev": 354.21466485958564,
+            "mean": 116.98125244166637,
+            "sdev": 355.2740493346611,
         },
     }
     diffs = []
