@@ -19,7 +19,7 @@ EARN_SPLIT_RNG_SEED = 18374659
 ITMDED_GROW_RATE = 0.02  # annual growth rate in itemized deduction amounts
 # grow rate applied to inflate 2015 amounts to 2021 amounts in uprate_puf.py
 
-CPS_WEIGHTS_SCALE = 0.5806  # used to scale CPS-subsample population
+CPS_WEIGHTS_SCALE = 2.10  # used to scale weights in CPS subsample
 
 # parameters used in creation of national sampling weights:
 REWEIGHT_MULTIPLIER_MIN = 0.1

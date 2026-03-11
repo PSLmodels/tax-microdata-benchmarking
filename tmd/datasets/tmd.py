@@ -34,7 +34,7 @@ def create_tmd_dataframe(taxyear: int) -> pd.DataFrame:
     # ... drop CPS records with positive income tax amount
     idx = combined[((combined.data_source == 0) & (combined.iitax > 0))].index
     combined.drop(idx, inplace=True)
-    # ... scale CPS records weight to get correct population count
+    # ... scale CPS records weight to get sensible population count
     scale = np.where(combined.data_source == 0, CPS_WEIGHTS_SCALE, 1.0)
     combined["s006"] *= scale
 

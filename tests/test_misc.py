@@ -56,20 +56,20 @@ def test_income_tax():
     itax = sim.array("iitax")
     mars = sim.array("MARS")
     # check various income tax statistics
-    compare("wght_sum", wght.sum(), 184e6, 0.01)
+    compare("wght_sum", wght.sum(), 194e6, 0.01)
     hiagi = agi >= 1e6
     compare("wght_sum_hiagi", (wght * hiagi).sum(), 0.875e6, 0.01)
-    compare("wght_itax_sum", (wght * itax).sum(), 1661e9, 0.01)
+    compare("wght_itax_sum", (wght * itax).sum(), 1690e9, 0.01)
     compare("wght_itax_sum_hiagi", ((wght * itax) * hiagi).sum(), 911e9, 0.01)
     # count weighted number of tax units with zero agi by filing status
     agi0 = agi == 0
-    compare("wght_sum_agi0_fs0", (wght * agi0).sum(), 13.75e6, 0.01)
+    compare("wght_sum_agi0_fs0", (wght * agi0).sum(), 28.32e6, 0.01)
     mars1 = mars == 1
-    compare("wght_sum_agi0_fs1", (wght * mars1 * agi0).sum(), 10.60e6, 0.01)
+    compare("wght_sum_agi0_fs1", (wght * mars1 * agi0).sum(), 27.17e6, 0.01)
     mars2 = mars == 2
-    compare("wght_sum_agi0_fs2", (wght * mars2 * agi0).sum(), 1.20e6, 0.01)
+    compare("wght_sum_agi0_fs2", (wght * mars2 * agi0).sum(), 1.05e6, 0.01)
     mars4 = mars == 4
-    compare("wght_sum_agi0_fs4", (wght * mars4 * agi0).sum(), 1.76e6, 0.01)
+    compare("wght_sum_agi0_fs4", (wght * mars4 * agi0).sum(), 0.063e6, 0.01)
     # count weighted number of PUF tax units with zero agi by filing status
     puf = sim.array("data_source") == 1
     pwght = puf * wght

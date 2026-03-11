@@ -6,6 +6,7 @@ import requests
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
+import taxcalc as tc
 from tmd.storage import STORAGE_FOLDER
 
 TAX_UNIT_COLUMNS = [
@@ -303,37 +304,60 @@ def _derive_age(person: pd.DataFrame) -> np.ndarray:
 
 
 def _is_tax_filer(tcdf: pd.DataFrame, taxyear: int) -> pd.Series:
-    # identify nonfilers using 2022 IRS filing thresholds
-    # (use 2022 rules because 2021 had large COVID-related anomalies)
-    gross_income = (
-        tcdf["e00200"].abs()
-        + tcdf["e00300"].abs()
-        + tcdf["e00600"].abs()
-        + tcdf["e00800"].abs()
-        + tcdf["e00900"].abs()
-        + tcdf["e01400"].abs()
-        + tcdf["e01500"].abs()
-        + tcdf["e02100"].abs()
-        + tcdf["e02300"].abs()
-        + tcdf["e02400"].abs()
-        + tcdf["p22250"].abs()
-        + tcdf["p23250"].abs()
+    """
+    This function approximates the tax filer logic used by the Census
+    ASEC Tax Model, documentation for which is at this URL:
+    https://www.census.gov/content/dam/Census/library/working-papers/2022/demo/
+            sehsd-wp2022-18.pdf
+
+    From page 15 of that documentation, we have this text:
+     The CPS ASEC Tax Model defines a set of filing requirements.
+     The tax model assumes a tax unit files a return if it meets
+     at least one of the following requirements:
+     (1) income above IRS filing threshold determined by age and filing status;
+     (2) positive Earned Income Tax Credit (EITC);
+     (3) positive self-employment income;
+     (4) gross income less than $0;
+     (5) self-employment income less than $0;
+     (6) positive Additional Child Tax Credit;
+     (7) positive self-employment income for either spouse; or
+     (8) has total income above $2,000.
+    """
+    assert taxyear in [2021, 2022]
+    income = (
+        tcdf["e00200"]
+        + tcdf["e00300"]
+        + tcdf["e00600"]
+        + tcdf["e00800"]
+        + tcdf["e00900"]
+        + tcdf["e01400"]
+        + tcdf["e01500"]
+        + tcdf["e02100"]
+        + tcdf["e02300"]
+        + tcdf["e02400"]
+        + tcdf["p22250"]
+        + tcdf["p23250"]
     )
-    head_aged = tcdf["age_head"] >= 65
-    spouse_aged = tcdf["age_spouse"] >= 65
-    mars = tcdf["MARS"]
-    # 2022 IRS filing thresholds by MARS and age
-    threshold = pd.Series(np.zeros(len(tcdf)), dtype=float)
-    threshold[mars == 1] = np.where(head_aged[mars == 1], 14700, 12950)
-    threshold[mars == 2] = np.where(
-        head_aged[mars == 2] & spouse_aged[mars == 2],
-        28700,
-        np.where(head_aged[mars == 2] | spouse_aged[mars == 2], 27300, 25900),
+    rec = tc.Records(
+        data=tcdf,
+        start_year=taxyear,
+        gfactors=None,
+        weights=None,
+        adjust_ratios=None,
+        exact_calculations=True,
+        weights_scale=1.0,
     )
-    threshold[mars == 3] = 5
-    threshold[mars == 4] = np.where(head_aged[mars == 4], 21150, 19400)
-    threshold[mars == 5] = np.where(head_aged[mars == 5], 27300, 25900)
-    filer = gross_income >= threshold
+    pol = tc.Policy()
+    calc = tc.Calculator(records=rec, policy=pol)
+    calc.advance_to_year(taxyear)
+    calc.calc_all()
+    output = calc.dataframe(["eitc", "ctc_refundable"])
+    filer = income > 2000  # req (1) and (8)
+    filer |= output["eitc"] > 0  # req (2)
+    filer |= (tcdf["e00900p"] > 0) | (tcdf["e00900s"] > 0)  # req (3) and (7)
+    filer |= income < 0  # req (4)
+    filer |= tcdf["e00900"] < 0  # req (5)
+    filer |= output["ctc_refundable"] > 0  # req (6)
     return filer
 
 

@@ -13,6 +13,7 @@ def tc_to_soi(puf: pd.DataFrame, year: int) -> pd.DataFrame:
         exact_calculations=True,
     )
     calculator = tc.Calculator(policy=pol, records=rec)
+    calculator.advance_to_year(year)
     calculator.calc_all()
     pdf = calculator.dataframe(None, all_vars=True)
 
