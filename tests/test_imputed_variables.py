@@ -44,9 +44,9 @@ def test_obbba_deduction_tax_benefits(
     deductions = {
         "OTM": {  # new OBBBA overtime income deduction
             "reform_dict": {"OvertimeIncomeDed_c": {simyear: [0, 0, 0, 0, 0]}},
-            "exp_totben": 24.93,
-            "exp_affpct": 8.75,
-            "exp_affben": 1404,
+            "exp_totben": 24.15,
+            "exp_affpct": 8.83,
+            "exp_affben": 1394,
             # The OTM imputation calibration parameters used in the
             # create_taxcalc_imputed_variables.py module were
             # specified so that the affpct statistic is close to 8.8%
@@ -58,8 +58,8 @@ def test_obbba_deduction_tax_benefits(
         },
         "TIP": {  # new OBBBA tip income deduction
             "reform_dict": {"TipIncomeDed_c": {simyear: 0}},
-            "exp_totben": 7.33,
-            "exp_affpct": 2.58,
+            "exp_totben": 7.15,
+            "exp_affpct": 2.60,
             "exp_affben": 1404,
             # The TIP imputation calibration parameters used in the
             # create_taxcalc_imputed_variables.py module were
@@ -72,9 +72,9 @@ def test_obbba_deduction_tax_benefits(
         },
         "ALI": {  # new OBBBA auto loan interest deduction
             "reform_dict": {"AutoLoanInterestDed_c": {simyear: 0}},
-            "exp_totben": 9.53,
-            "exp_affpct": 13.74,
-            "exp_affben": 343,
+            "exp_totben": 8.47,
+            "exp_affpct": 12.72,
+            "exp_affben": 339,
             # The ALI imputation calibration parameters used in the
             # create_taxcalc_imputed_variables.py module do not
             # adjust the MICE-imputed values of auto_loan_interest
@@ -89,9 +89,9 @@ def test_obbba_deduction_tax_benefits(
                 "AutoLoanInterestDed_c": {simyear: 0},
                 "SeniorDed_c": {simyear: 0},
             },
-            "exp_totben": 64.32,
-            "exp_affpct": 29.76,
-            "exp_affben": 1066,
+            "exp_totben": 62.26,
+            "exp_affpct": 29.53,
+            "exp_affben": 1075,
             # The affpct statistic and the affben statistic are
             # reasonably close to the Tax Policy Center estimates
             # of 29.6% and $1081, respectively, as reported at
@@ -166,13 +166,13 @@ def test_imputed_variable_distribution(tmd_variables):
     imputed_var_names = ["overtime_income", "tip_income", "auto_loan_interest"]
     expect = {
         "overtime_income": {
-            "mean": 11153.316667766288,
-            "sdev": 216580.04586559813,
+            "mean": 10926.399756608498,
+            "sdev": 244140.52454601254,
         },
-        "tip_income": {"mean": 1875.376612910827, "sdev": 66463.77874404969},
+        "tip_income": {"mean": 1831.940201866311, "sdev": 74864.37880543614},
         "auto_loan_interest": {
-            "mean": 671.1757354119344,
-            "sdev": 1663.1059943932603,
+            "mean": 595.9118402534244,
+            "sdev": 1586.3540912472167,
         },
     }
     diffs = []

@@ -19,16 +19,14 @@ EARN_SPLIT_RNG_SEED = 18374659
 ITMDED_GROW_RATE = 0.02  # annual growth rate in itemized deduction amounts
 # grow rate applied to inflate 2015 amounts to 2021 amounts in uprate_puf.py
 
-CPS_FILER_MIN_INCOME = 2000
-
-EITC_CLAIM_THD = {2021: 0, 2022: 0}
+CPS_FILER_MIN_INCOME = 8600
+EITC_CLAIM_THD = {2021: 1800, 2022: 0}
 ACTC_CLAIM_THD = {2021: 0, 2022: 0}
 CREDIT_CLAIMING = {
     "eitc_claim_thd": {f"{TAXYEAR}": EITC_CLAIM_THD[TAXYEAR]},
     "actc_claim_thd": {f"{TAXYEAR}": ACTC_CLAIM_THD[TAXYEAR]},
 }
-
-CPS_WEIGHTS_SCALE = {2021: 2.10, 2022: 1.0}  # for scaling CPS nonfiler weights
+CPS_WEIGHTS_SCALE = {2021: 1.0, 2022: 1.0}  # for scaling CPS nonfiler weights
 
 
 # parameters used in creation of national sampling weights:
@@ -41,11 +39,11 @@ CLARABEL_MAX_ITER = 1000  # maximum solver iterations
 
 # parameters for MICE imputation of missing OBBBA deduction variables
 # ... overtime_income:
-OTM_convert_zero_prob = {2021: 0.082, 2022: 0.0}
+OTM_convert_zero_prob = {2021: 0.077, 2022: 0.0}
 OTM_scale = {2021: 2.4, 2022: 1.0}
 # ... tip_income:
-TIP_convert_zero_prob = {2021: 0.015, 2022: 0.0}
+TIP_convert_zero_prob = {2021: 0.014, 2022: 0.0}
 TIP_scale = {2021: 1.0, 2022: 1.0}
 # ... auto_loan_interest:
-ALI_convert_zero_prob = {2021: 0.100, 2022: 0.0}
+ALI_convert_zero_prob = {2021: 0.060, 2022: 0.0}
 ALI_scale = {2021: 4.0, 2022: 1.0}

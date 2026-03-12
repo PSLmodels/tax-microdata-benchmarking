@@ -353,13 +353,15 @@ def _is_tax_filer(tcdf: pd.DataFrame, taxyear: int) -> pd.Series:
     calc = tc.Calculator(records=rec, policy=pol)
     calc.advance_to_year(taxyear)
     calc.calc_all()
-    output = calc.dataframe(["eitc", "ctc_refundable"])
+    output = calc.dataframe(["eitc", "c11070"])
     filer = income > CPS_FILER_MIN_INCOME  # req (1) and (8)
     filer |= output["eitc"] > 0  # req (2)
     filer |= (tcdf["e00900p"] > 0) | (tcdf["e00900s"] > 0)  # req (3) and (7)
     filer |= income < 0  # req (4)
     filer |= tcdf["e00900"] < 0  # req (5)
-    filer |= output["ctc_refundable"] > 0  # req (6)
+    if taxyear != 2021:
+        # skip because CTC was more generous and fully refundable in 2021
+        filer |= output["c11070"] > 0  # req (6)
     return filer
 
 

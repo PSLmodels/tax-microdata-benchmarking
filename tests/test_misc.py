@@ -27,7 +27,7 @@ def test_population(tmd_variables):
     people = tmd_variables.XTOT
     pop = (weight * people).sum() * 1e-6
     exp_pop = {2021: 331.9, 2022: 333.3}
-    r_tol = 0.005
+    r_tol = 0.001
     assert abs(pop / exp_pop[TAXYEAR] - 1) < r_tol, (
         f"{TAXYEAR} population ({pop:.2f}) not within {(r_tol * 100):.1f}% "
         f"of expected {exp_pop[TAXYEAR]:.2f} million"
