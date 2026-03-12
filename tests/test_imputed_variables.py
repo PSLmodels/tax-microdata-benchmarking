@@ -7,6 +7,7 @@ auto_loan_interest.
 import numpy as np
 import pytest
 import taxcalc as tc
+from tmd.imputation_assumptions import CREDIT_CLAIMING
 from tests.conftest import create_tmd_records
 
 
@@ -110,7 +111,9 @@ def test_obbba_deduction_tax_benefits(
         growfactors_path=tmd_growfactors_path,
     )
     # create baseline_sim Calculator object for simyear and get its output
-    baseline_sim = tc.Calculator(policy=tc.Policy(), records=recs)
+    pol = tc.Policy()
+    pol.implement_reform(CREDIT_CLAIMING)
+    baseline_sim = tc.Calculator(policy=pol, records=recs)
     baseline_sim.advance_to_year(simyear)
     baseline_sim.calc_all()
     bdf = baseline_sim.dataframe(output_variables)
@@ -126,6 +129,7 @@ def test_obbba_deduction_tax_benefits(
     for ded, info in deductions.items():
         # create reform Calculator object for simyear
         reform_policy = tc.Policy()
+        reform_policy.implement_reform(CREDIT_CLAIMING)
         reform_policy.implement_reform(info["reform_dict"])
         reform_sim = tc.Calculator(policy=reform_policy, records=recs)
         reform_sim.advance_to_year(simyear)

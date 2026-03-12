@@ -19,7 +19,17 @@ EARN_SPLIT_RNG_SEED = 18374659
 ITMDED_GROW_RATE = 0.02  # annual growth rate in itemized deduction amounts
 # grow rate applied to inflate 2015 amounts to 2021 amounts in uprate_puf.py
 
-CPS_WEIGHTS_SCALE = {2021: 2.10, 2022: 1.0}  # used to scale CPS weights
+CPS_FILER_MIN_INCOME = 2000
+
+EITC_CLAIM_THD = {2021: 0, 2022: 0}
+ACTC_CLAIM_THD = {2021: 0, 2022: 0}
+CREDIT_CLAIMING = {
+    "eitc_claim_thd": {f"{TAXYEAR}": EITC_CLAIM_THD[TAXYEAR]},
+    "actc_claim_thd": {f"{TAXYEAR}": ACTC_CLAIM_THD[TAXYEAR]},
+}
+
+CPS_WEIGHTS_SCALE = {2021: 2.10, 2022: 1.0}  # for scaling CPS nonfiler weights
+
 
 # parameters used in creation of national sampling weights:
 REWEIGHT_MULTIPLIER_MIN = 0.1
