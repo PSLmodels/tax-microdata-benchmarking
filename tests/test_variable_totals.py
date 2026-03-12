@@ -10,7 +10,6 @@ from tmd.storage import STORAGE_FOLDER
 
 
 @pytest.mark.skip(reason="See issue #410: expected values need updating")
-@pytest.mark.vartotals
 def test_variable_totals(tests_folder, tmd_variables):
     vpath = STORAGE_FOLDER / "input" / "tc_variable_metadata.yaml"
     with open(vpath, "r", encoding="utf-8") as f:

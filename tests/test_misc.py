@@ -21,6 +21,7 @@ def test_partnership_s_corp_income(tmd_variables):
     ), "Partnership/S-Corp income not within 10% of 975 billion dollars"
 
 
+@pytest.mark.pop
 def test_population(tmd_variables):
     weight = tmd_variables.s006
     people = tmd_variables.XTOT
