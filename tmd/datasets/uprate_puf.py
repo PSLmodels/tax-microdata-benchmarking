@@ -152,7 +152,7 @@ def uprate_puf(puf, from_year, to_year):
             # print("%% NEW_VAR_GROWTH:", variable, growth)
         puf[puf_variable] *= growth
 
-    # Positive and negative split variables
+    # positive and negative split variables
     for variable, puf_variable in SOI_TO_PUF_POS_ONLY_RENAMES.items():
         growth = get_growth(variable, from_year, to_year)
         puf.loc[puf[puf_variable] > 0, puf_variable] *= growth
@@ -161,14 +161,17 @@ def uprate_puf(puf, from_year, to_year):
         growth = get_growth(variable, from_year, to_year)
         puf.loc[puf[puf_variable] < 0, puf_variable] *= growth
 
-    # Remaining variables, uprate purely by AGI growth
+    # remaining variables, uprate purely by AGI growth
     # (for now, because I'm not sure how to handle the deductions,
     #  credits, and incomes separately)
     for variable in REMAINING_VARIABLES:
         growth = get_growth("adjusted_gross_income", from_year, to_year)
         puf[variable] *= growth
 
-    # Uprate the weights
+    # ensure total pensions >= taxable pensions after independent uprating
+    puf["E01500"] = np.maximum(puf["E01500"], puf["E01700"])
+
+    # uprate the weights
     returns_start = get_soi_aggregate("count", from_year, True)
     returns_end = get_soi_aggregate("count", to_year, True)
     puf.S006 *= returns_end / returns_start
