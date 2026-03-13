@@ -5,7 +5,7 @@ Tests of tmd/areas/create_area_weights.py script.
 import yaml
 import taxcalc as tc
 from tmd.storage import STORAGE_FOLDER
-from tmd.imputation_assumptions import TAXYEAR
+from tmd.imputation_assumptions import TAXYEAR, CREDIT_CLAIMING
 from tmd.areas import AREAS_FOLDER
 from tmd.areas.create_area_weights import create_area_weights_file
 from tests.conftest import create_tmd_records
@@ -24,6 +24,7 @@ def test_area_xx(tests_folder):
     # compare actual vs expected results for faux area xx
     # ... instantiate Tax-Calculator object for area
     pol = tc.Policy()
+    pol.implement_reform(CREDIT_CLAIMING)
     rec = create_tmd_records(
         data_path=STORAGE_FOLDER / "output" / "tmd.csv.gz",
         weights_path=AREAS_FOLDER / "weights" / "xx_tmd_weights.csv.gz",

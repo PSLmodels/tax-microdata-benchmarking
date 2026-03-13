@@ -19,7 +19,22 @@ EARN_SPLIT_RNG_SEED = 18374659
 ITMDED_GROW_RATE = 0.02  # annual growth rate in itemized deduction amounts
 # grow rate applied to inflate 2015 amounts to 2021 amounts in uprate_puf.py
 
-CPS_WEIGHTS_SCALE = {2021: 2.10, 2022: 1.0}  # used to scale CPS weights
+# parameters used to identify CPS nonfilers:
+FILER_MIN_INCOME = {
+    2021: 8600,
+    2022: 2000,
+}
+EITC_CLAIM_THD = {
+    2021: 1800,  # reduces 2023 EITC from $82.3b to $71.6b, a claim rate of 87%
+    2022: 0,
+}
+ACTC_CLAIM_THD = {2021: 0, 2022: 0}  # always leave 2021 value at zero
+CPS_FILER_MIN_INCOME = FILER_MIN_INCOME[TAXYEAR]
+CREDIT_CLAIMING = {
+    "eitc_claim_thd": {f"{TAXYEAR}": EITC_CLAIM_THD[TAXYEAR]},
+    "actc_claim_thd": {f"{TAXYEAR}": ACTC_CLAIM_THD[TAXYEAR]},
+}
+CPS_WEIGHTS_SCALE = {2021: 1.0, 2022: 1.0}  # for scaling CPS nonfiler weights
 
 # parameters used in creation of national sampling weights:
 REWEIGHT_MULTIPLIER_MIN = 0.1
@@ -29,13 +44,13 @@ CLARABEL_CONSTRAINT_TOL = 0.005  # relative tolerance on constraints (+-0.5%)
 CLARABEL_SLACK_PENALTY = 1e6  # elastic penalty for constraint violations
 CLARABEL_MAX_ITER = 1000  # maximum solver iterations
 
-# parameters for MICE imputation of missing OBBBA deduction variables
+# parameters for MICE imputation of missing OBBBA deduction variables:
 # ... overtime_income:
-OTM_convert_zero_prob = {2021: 0.082, 2022: 0.0}
+OTM_convert_zero_prob = {2021: 0.077, 2022: 0.0}
 OTM_scale = {2021: 2.4, 2022: 1.0}
 # ... tip_income:
-TIP_convert_zero_prob = {2021: 0.015, 2022: 0.0}
+TIP_convert_zero_prob = {2021: 0.014, 2022: 0.0}
 TIP_scale = {2021: 1.0, 2022: 1.0}
 # ... auto_loan_interest:
-ALI_convert_zero_prob = {2021: 0.100, 2022: 0.0}
+ALI_convert_zero_prob = {2021: 0.060, 2022: 0.0}
 ALI_scale = {2021: 4.0, 2022: 1.0}

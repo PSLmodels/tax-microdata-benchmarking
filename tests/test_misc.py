@@ -5,7 +5,7 @@ Miscellaneous tests of tmd.csv variable weighted totals.
 import pytest
 import taxcalc as tc
 from tmd.storage import STORAGE_FOLDER
-from tmd.imputation_assumptions import TAXYEAR
+from tmd.imputation_assumptions import TAXYEAR, CREDIT_CLAIMING
 from tests.conftest import create_tmd_records
 
 
@@ -21,12 +21,13 @@ def test_partnership_s_corp_income(tmd_variables):
     ), "Partnership/S-Corp income not within 10% of 975 billion dollars"
 
 
+@pytest.mark.pop
 def test_population(tmd_variables):
     weight = tmd_variables.s006
     people = tmd_variables.XTOT
     pop = (weight * people).sum() * 1e-6
     exp_pop = {2021: 331.9, 2022: 333.3}
-    r_tol = 0.005
+    r_tol = 0.001
     assert abs(pop / exp_pop[TAXYEAR] - 1) < r_tol, (
         f"{TAXYEAR} population ({pop:.2f}) not within {(r_tol * 100):.1f}% "
         f"of expected {exp_pop[TAXYEAR]:.2f} million"
@@ -47,6 +48,7 @@ def test_income_tax():
 
     # use national tmd files to compute various TAXYEAR income tax statistics
     pol = tc.Policy()
+    pol.implement_reform(CREDIT_CLAIMING)
     rec = create_tmd_records(
         data_path=STORAGE_FOLDER / "output" / "tmd.csv.gz",
         weights_path=STORAGE_FOLDER / "output" / "tmd_weights.csv.gz",

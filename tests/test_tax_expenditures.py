@@ -10,7 +10,7 @@ from tmd.imputation_assumptions import TAXYEAR
 from tmd.utils.taxcalc_utils import get_tax_expenditure_results
 
 
-@pytest.mark.taxexpdiffs
+@pytest.mark.taxexp
 def test_tax_exp_diffs(
     tests_folder,
     tmd_variables,

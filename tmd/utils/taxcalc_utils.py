@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 import taxcalc as tc
 from tmd.storage import STORAGE_FOLDER
-from tmd.imputation_assumptions import TAXYEAR
+from tmd.imputation_assumptions import TAXYEAR, CREDIT_CLAIMING
 
 with open(
     STORAGE_FOLDER / "input" / "tc_variable_metadata.yaml",
@@ -84,10 +84,11 @@ def add_taxcalc_outputs(
         exact_calculations=True,
         weights_scale=1.0,
     )
-    policy = tc.Policy()
+    pol = tc.Policy()
+    pol.implement_reform(CREDIT_CLAIMING)
     if reform:
-        policy.implement_reform(reform)
-    simulation = tc.Calculator(records=rec, policy=policy)
+        pol.implement_reform(reform)
+    simulation = tc.Calculator(records=rec, policy=pol)
     simulation.advance_to_year(simulation_year)
     simulation.calc_all()
     output = simulation.dataframe(None, all_vars=True)
