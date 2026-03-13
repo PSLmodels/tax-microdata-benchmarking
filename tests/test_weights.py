@@ -78,5 +78,6 @@ def test_weights(tmd_variables):
                 f"expected={expect[expyr][stat]}"
             )
     if diffs:
-        msg = "Weight fingerprint mismatch:\n" + "\n".join(diffs)
+        msghead = f"WEIGHT FINGERPRINT MISMATCH USING {TAXYEAR} DATA:\n"
+        msg = msghead + "\n".join(diffs)
         raise ValueError(msg)

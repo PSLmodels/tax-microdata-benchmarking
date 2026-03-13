@@ -216,7 +216,9 @@ def test_imputed_variable_distribution(tmd_variables):
                 )
                 diffs.append(diff)
     if diffs:
-        emsg = "\nIMPUTED VARIABLE DISTRIBUTION ACT-vs-EXP DIFFS:"
-        for line in diffs:
-            emsg += "\n" + line
-        raise ValueError(emsg)
+        msghead = (
+            "\nIMPUTED VARIABLE DISTRIBUTION ACT-vs-EXP DIFFS "
+            f"USING {TAXYEAR} DATA:\n"
+        )
+        msg = msghead + "\n".join(diffs)
+        raise ValueError(msg)
