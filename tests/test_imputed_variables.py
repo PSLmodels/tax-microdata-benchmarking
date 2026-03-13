@@ -7,7 +7,7 @@ auto_loan_interest.
 import numpy as np
 import pytest
 import taxcalc as tc
-from tmd.imputation_assumptions import CREDIT_CLAIMING
+from tmd.imputation_assumptions import TAXYEAR, CREDIT_CLAIMING
 from tests.conftest import create_tmd_records
 
 
@@ -44,9 +44,9 @@ def test_obbba_deduction_tax_benefits(
     deductions = {
         "OTM": {  # new OBBBA overtime income deduction
             "reform_dict": {"OvertimeIncomeDed_c": {simyear: [0, 0, 0, 0, 0]}},
-            "exp_totben": 24.15,
-            "exp_affpct": 8.83,
-            "exp_affben": 1394,
+            "exp_totben_2021": 24.15,
+            "exp_affpct_2021": 8.83,
+            "exp_affben_2021": 1394,
             # The OTM imputation calibration parameters used in the
             # create_taxcalc_imputed_variables.py module were
             # specified so that the affpct statistic is close to 8.8%
@@ -58,9 +58,9 @@ def test_obbba_deduction_tax_benefits(
         },
         "TIP": {  # new OBBBA tip income deduction
             "reform_dict": {"TipIncomeDed_c": {simyear: 0}},
-            "exp_totben": 7.15,
-            "exp_affpct": 2.60,
-            "exp_affben": 1404,
+            "exp_totben_2021": 7.15,
+            "exp_affpct_2021": 2.60,
+            "exp_affben_2021": 1404,
             # The TIP imputation calibration parameters used in the
             # create_taxcalc_imputed_variables.py module were
             # specified so that the affpct statistic is close to 2.6%
@@ -72,9 +72,9 @@ def test_obbba_deduction_tax_benefits(
         },
         "ALI": {  # new OBBBA auto loan interest deduction
             "reform_dict": {"AutoLoanInterestDed_c": {simyear: 0}},
-            "exp_totben": 8.47,
-            "exp_affpct": 12.72,
-            "exp_affben": 339,
+            "exp_totben_2021": 8.47,
+            "exp_affpct_2021": 12.72,
+            "exp_affben_2021": 339,
             # The ALI imputation calibration parameters used in the
             # create_taxcalc_imputed_variables.py module do not
             # adjust the MICE-imputed values of auto_loan_interest
@@ -89,9 +89,9 @@ def test_obbba_deduction_tax_benefits(
                 "AutoLoanInterestDed_c": {simyear: 0},
                 "SeniorDed_c": {simyear: 0},
             },
-            "exp_totben": 62.26,
-            "exp_affpct": 29.53,
-            "exp_affben": 1075,
+            "exp_totben_2021": 62.26,
+            "exp_affpct_2021": 29.53,
+            "exp_affben_2021": 1075,
             # The affpct statistic and the affben statistic are
             # reasonably close to the Tax Policy Center estimates
             # of 29.6% and $1081, respectively, as reported at
@@ -141,7 +141,7 @@ def test_obbba_deduction_tax_benefits(
         # compare act results with exp results for each statistic
         for stat in ["totben", "affpct", "affben"]:
             act = act_res[stat]
-            exp = info[f"exp_{stat}"]
+            exp = info[f"exp_{stat}_{TAXYEAR}"]
             a_tol = abs_tolerance[stat] * tolerance_scale
             if not np.allclose([act], [exp], atol=a_tol):
                 diff = (
@@ -152,7 +152,10 @@ def test_obbba_deduction_tax_benefits(
         del reform_policy
         del reform_sim
     if diffs:
-        emsg = "\nIMPUTED VARIABLE DEDUCTION BENEFIT ACT-vs-EXP DIFFS:"
+        emsg = (
+            "\nIMPUTED VARIABLE DEDUCTION BENEFIT ACT-vs-EXP DIFFS "
+            f"USING {TAXYEAR} DATA:"
+        )
         for line in diffs:
             emsg += "\n" + line
         raise ValueError(emsg)
@@ -166,13 +169,34 @@ def test_imputed_variable_distribution(tmd_variables):
     imputed_var_names = ["overtime_income", "tip_income", "auto_loan_interest"]
     expect = {
         "overtime_income": {
-            "mean": 10926.399756608498,
-            "sdev": 244140.52454601254,
+            "tmd2021": {
+                "mean": 10926.399756608498,
+                "sdev": 244140.52454601254,
+            },
+            "tmd2022": {
+                "mean": 10926.4,
+                "sdev": 244140.5,
+            },
         },
-        "tip_income": {"mean": 1831.940201866311, "sdev": 74864.37880543614},
+        "tip_income": {
+            "tmd2021": {
+                "mean": 1831.940201866311,
+                "sdev": 74864.37880543614,
+            },
+            "tmd2022": {
+                "mean": 1831.9,
+                "sdev": 74864.4,
+            },
+        },
         "auto_loan_interest": {
-            "mean": 595.9118402534244,
-            "sdev": 1586.3540912472167,
+            "tmd2021": {
+                "mean": 595.9118402534244,
+                "sdev": 1586.3540912472167,
+            },
+            "tmd2022": {
+                "mean": 595.9,
+                "sdev": 1586.4,
+            },
         },
     }
     diffs = []
@@ -184,7 +208,7 @@ def test_imputed_variable_distribution(tmd_variables):
         actual = {"mean": varray.mean(), "sdev": varray.std()}
         for stat in ["mean", "sdev"]:
             act = actual[stat]
-            exp = expect[ivname][stat]
+            exp = expect[ivname][f"tmd{TAXYEAR}"][stat]
             if not np.allclose([act], [exp]):
                 diff = (
                     f"IMPUTED_VAR_DIFF:{ivname},{stat},act,exp= "
