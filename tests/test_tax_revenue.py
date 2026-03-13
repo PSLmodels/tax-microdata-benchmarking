@@ -30,10 +30,10 @@ def test_tax_revenue(
     tests_folder, tmd_variables, tmd_weights_path, tmd_growfactors_path
 ):
     # read expected fiscal year revenues and convert to calendar year revenues
-    epath = tests_folder / "expected_itax_revenue.yaml"
+    epath = tests_folder / f"expected_itax_rev_{TAXYEAR}_data.yaml"
     with open(epath, "r", encoding="utf-8") as f:
         fy_itax = yaml.safe_load(f)
-    epath = tests_folder / "expected_ptax_revenue.yaml"
+    epath = tests_folder / f"expected_ptax_rev_{TAXYEAR}_data.yaml"
     with open(epath, "r", encoding="utf-8") as f:
         fy_ptax = yaml.safe_load(f)
     exp_itax = {}

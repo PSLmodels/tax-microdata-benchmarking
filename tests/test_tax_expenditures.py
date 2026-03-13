@@ -27,7 +27,7 @@ def test_tax_exp_diffs(
     act_path = STORAGE_FOLDER / "output" / "tax_expenditures"
     with open(act_path, "r", encoding="utf-8") as actfile:
         act = actfile.readlines()
-    exp_path = tests_folder / f"expected_tax_expenditures_{TAXYEAR}_data"
+    exp_path = tests_folder / f"expected_tax_exp_{TAXYEAR}_data"
     with open(exp_path, "r", encoding="utf-8") as expfile:
         exp = expfile.readlines()
     assert len(act) == len(exp), "number of act and exp rows differ"
