@@ -27,7 +27,7 @@ def test_tax_exp_diffs(
     act_path = STORAGE_FOLDER / "output" / "tax_expenditures"
     with open(act_path, "r", encoding="utf-8") as actfile:
         act = actfile.readlines()
-    exp_path = tests_folder / "expected_tax_expenditures"
+    exp_path = tests_folder / f"expected_tax_exp_{TAXYEAR}_data"
     with open(exp_path, "r", encoding="utf-8") as expfile:
         exp = expfile.readlines()
     assert len(act) == len(exp), "number of act and exp rows differ"
@@ -44,9 +44,12 @@ def test_tax_exp_diffs(
         if not np.allclose([act_val], [exp_val], atol=a_tol, rtol=r_tol):
             msg = (
                 f"{atok[2]},act,exp,atol,rtol= "
-                f"{act_val} {exp_val} {a_tol} {r_tol}\n"
+                f"{act_val} {exp_val} {a_tol} {r_tol}"
             )
             diffs.append(msg)
-    if len(diffs) > 0:
-        emsg = "\nACT-vs-EXP TAX EXPENDITURE DIFFERENCES:\n" + "".join(diffs)
-        raise ValueError(emsg)
+    if diffs:
+        msg = (
+            "\nACT-vs-EXP TAX EXPENDITURE DIFFERENCES "
+            f"USING {TAXYEAR} DATA:\n"
+        )
+        raise ValueError(msg + "\n".join(diffs))

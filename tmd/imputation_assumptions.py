@@ -8,7 +8,10 @@ IMPUTATION_RF_RNG_SEED = 1928374  # random number seed used by RandomForest
 
 IMPUTATION_BETA_RNG_SEED = 37465  # random number seed used for Beta variates
 
-W2_WAGES_SCALE = 0.15  # parameter used to impute pass-through W-2 wages
+W2_WAGES_RATIO = {  # parameter used to impute pass-through W-2 wages
+    2021: 0.15,
+    2022: 0.15,
+}
 
 # RNG seeds used for demographic decoding and earnings splits in puf.py:
 FILER_AGE_HEAD_RNG_SEED = 64963751

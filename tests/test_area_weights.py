@@ -56,7 +56,7 @@ def test_area_xx(tests_folder):
         "e18500": (wght * vdf.e18500).sum() * 1e-9,
     }
     # ... read expected results into exp dictionary
-    exp_path = tests_folder / "test_area_weights_expect.yaml"
+    exp_path = tests_folder / f"expected_area_wgt_{TAXYEAR}_data.yaml"
     with open(exp_path, "r", encoding="utf-8") as efile:
         exp = yaml.safe_load(efile.read())
     # compare actual with expected results

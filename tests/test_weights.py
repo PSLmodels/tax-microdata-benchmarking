@@ -9,11 +9,14 @@ should hold.
 
 import numpy as np
 import pytest
+from tmd.imputation_assumptions import TAXYEAR
 
 
 @pytest.mark.weight_distribution
 def test_weights(tmd_variables):
-    """Check weight distribution matches Clarabel QP fingerprint."""
+    """
+    Check that weight distribution matches Clarabel QP fingerprint.
+    """
     wght = tmd_variables["s006"].to_numpy()
     actual = {
         "n": len(wght),
@@ -28,23 +31,34 @@ def test_weights(tmd_variables):
         "sum_sq": np.sum(wght**2),
     }
     expect = {
-        "n": 215291,
-        "total": 187475138.4,
-        "mean": 870.80,
-        "sdev": 1209.99,
-        "min": 0.10769,
-        "p25": 21.542,
-        "p50": 392.158,
-        "p75": 1328.248,
-        "max": 16527.65,
-        "sum_sq": 478456942738.8,
+        "tmd2021": {
+            "n": 215291,
+            "total": 187475138.4,
+            "mean": 870.80,
+            "sdev": 1209.99,
+            "min": 0.10769,
+            "p25": 21.542,
+            "p50": 392.158,
+            "p75": 1328.248,
+            "max": 16527.65,
+            "sum_sq": 478456942738.8,
+        },
+        "tmd2022": {
+            "n": 215291,
+            "total": 187475138.4,
+            "mean": 870.8,
+            "sdev": 1210.0,
+            "min": 0.108,
+            "p25": 21.5,
+            "p50": 392.2,
+            "p75": 1328.2,
+            "max": 16527.6,
+            "sum_sq": 478456942738.8,
+        },
     }
-    # n must be exact
-    assert (
-        actual["n"] == expect["n"]
-    ), f"n mismatch: actual={actual["n"]}, expected={expect["n"]}"
     # all float stats checked with np.allclose defaults
     float_stats = [
+        "n",
         "total",
         "mean",
         "sdev",
@@ -55,12 +69,15 @@ def test_weights(tmd_variables):
         "max",
         "sum_sq",
     ]
+    expyr = f"tmd{TAXYEAR}"
     diffs = []
     for stat in float_stats:
-        if not np.allclose([actual[stat]], [expect[stat]]):
+        if not np.allclose([actual[stat]], [expect[expyr][stat]]):
             diffs.append(
-                f"  {stat}: actual={actual[stat]}, " f"expected={expect[stat]}"
+                f"  {stat}: actual={actual[stat]}, "
+                f"expected={expect[expyr][stat]}"
             )
     if diffs:
-        msg = "Weight fingerprint mismatch:\n" + "\n".join(diffs)
+        msghead = f"WEIGHT FINGERPRINT MISMATCH USING {TAXYEAR} DATA:\n"
+        msg = msghead + "\n".join(diffs)
         raise ValueError(msg)

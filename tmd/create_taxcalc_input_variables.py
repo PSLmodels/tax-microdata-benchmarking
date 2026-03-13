@@ -9,7 +9,7 @@ from tmd.imputation_assumptions import (
     IMPUTATION_RF_RNG_SEED,
     IMPUTATION_BETA_RNG_SEED,
     ITMDED_GROW_RATE,
-    W2_WAGES_SCALE,
+    W2_WAGES_RATIO,
     CPS_WEIGHTS_SCALE,
 )
 from tmd.storage import STORAGE_FOLDER
@@ -26,7 +26,7 @@ def create_variable_file(write_file=True):
     print(f"  IMPUTATION_RF_RNG_SEED = {IMPUTATION_RF_RNG_SEED}")
     print(f"  IMPUTATION_BETA_RNG_SEED = {IMPUTATION_BETA_RNG_SEED}")
     print(f"  ASSUMED ITMDED_GROW_RATE = {ITMDED_GROW_RATE:.3f}")
-    print(f"  ASSUMED W2_WAGES_SCALE = {W2_WAGES_SCALE:.5f}")
+    print(f"  ASSUMED W2_WAGES_RATIO = {W2_WAGES_RATIO[TAXYEAR]:.5f}")
     print(f"  ASSUMED CPS_WEIGHTS_SCALE = {CPS_WEIGHTS_SCALE[TAXYEAR]:.2f}")
     vdf = create_tmd_dataframe(TAXYEAR)
     vdf.FLPDYR = TAXYEAR
