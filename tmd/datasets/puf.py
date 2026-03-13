@@ -7,9 +7,10 @@ from tmd.datasets.uprate_puf import uprate_puf
 from tmd.utils.imputation import Imputation
 from tmd.utils.pension_contributions import impute_pension_contributions
 from tmd.imputation_assumptions import (
+    TAXYEAR,
     IMPUTATION_RF_RNG_SEED,
     IMPUTATION_BETA_RNG_SEED,
-    W2_WAGES_SCALE,
+    W2_WAGES_RATIO,
     FILER_AGE_HEAD_RNG_SEED,
     FILER_AGE_SPOUSE_RNG_SEED,
     DEP_AGE_RNG_SEED,
@@ -159,7 +160,7 @@ def preprocess_puf(puf: pd.DataFrame) -> pd.DataFrame:
         # Ignore k1bx14s and k1bx14p (partner self-employment income included
         #                             in partnership and S-corp income)
         # "adjusted_gross_income": puf.E00100,
-        "w2_wages_from_qualified_business": (qbi * W2_WAGES_SCALE),
+        "w2_wages_from_qualified_business": (qbi * W2_WAGES_RATIO[TAXYEAR]),
     }
     newdf = pd.DataFrame(newvars)
     # add new renamed variables to original puf dataframe
