@@ -18,36 +18,6 @@ with open(
     taxcalc_variable_metadata = yaml.safe_load(yfile)
 
 
-def get_tc_variable_description(variable: str) -> str:
-    """
-    Get the description of a Tax-Calculator variable.
-
-    Args:
-        variable (str): The name of the variable.
-
-    Returns:
-        str: The description of the variable.
-    """
-    if variable in taxcalc_variable_metadata.get("read", {}):
-        return taxcalc_variable_metadata["read"][variable]["desc"]
-    return taxcalc_variable_metadata["calc"][variable]["desc"]
-
-
-def get_tc_is_input(variable: str) -> bool:
-    """
-    Get the type (whether input or not) of a Tax-Calculator variable.
-
-    Args:
-        variable (str): The name of the variable.
-
-    Returns:
-        bool: Whether the variable is an input.
-    """
-    if variable in taxcalc_variable_metadata.get("read", {}):
-        return True
-    return False
-
-
 def add_taxcalc_outputs(
     flat_file: pd.DataFrame,
     input_data_year: int,
