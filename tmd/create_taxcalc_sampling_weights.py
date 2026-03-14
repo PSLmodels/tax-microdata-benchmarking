@@ -10,7 +10,7 @@ from tmd.storage import STORAGE_FOLDER
 from tmd.imputation_assumptions import TAXYEAR
 
 FIRST_YEAR = TAXYEAR
-LAST_YEAR = 2074
+LAST_YEAR = TAXYEAR + 53
 VARFILE = STORAGE_FOLDER / "output" / "tmd.csv.gz"
 POPFILE = STORAGE_FOLDER / "input" / "cbo_population_forecast.yaml"
 WGTFILE = STORAGE_FOLDER / "output" / "tmd_weights.csv.gz"
