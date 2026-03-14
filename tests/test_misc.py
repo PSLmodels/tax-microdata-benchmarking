@@ -27,11 +27,6 @@ def test_population(tmd_variables):
     people = tmd_variables.XTOT
     pop = (weight * people).sum() * 1e-6
     exp_pop = {2021: 331.9, 2022: 334.0}
-    r_tol = 0.001
-    assert abs(pop / exp_pop[TAXYEAR] - 1) < r_tol, (
-        f"{TAXYEAR} population ({pop:.2f}) not within {(r_tol * 100):.1f}% "
-        f"of expected {exp_pop[TAXYEAR]:.2f} million"
-    )
     # target 2021 (July 1) population is 331.894 million from this URL:
     # https://www.census.gov/newsroom/press-releases/2021/
     #       2021-population-estimates.html
@@ -40,6 +35,11 @@ def test_population(tmd_variables):
     # to December 1, 2026 (NA-EST2025-POP)" table which is at this URL:
     # https://www.census.gov/data/tables/time-series/demo/popest/
     #         2020s-national-total.html
+    r_tol = 0.001
+    assert abs(pop / exp_pop[TAXYEAR] - 1) < r_tol, (
+        f"{TAXYEAR} population ({pop:.2f}) not within {(r_tol * 100):.1f}% "
+        f"of expected {exp_pop[TAXYEAR]:.2f} million"
+    )
 
 
 @pytest.mark.skip

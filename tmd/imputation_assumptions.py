@@ -2,7 +2,7 @@
 Central location for data imputation assumptions.
 """
 
-TAXYEAR = 2021  # single source of truth for the target tax year
+TAXYEAR = 2022  # single source of truth for the target tax year
 
 IMPUTATION_RF_RNG_SEED = 1928374  # random number seed used by RandomForest
 
@@ -10,7 +10,7 @@ IMPUTATION_BETA_RNG_SEED = 37465  # random number seed used for Beta variates
 
 W2_WAGES_RATIO = {  # parameter used to impute pass-through W-2 wages
     2021: 0.15,
-    2022: 0.15,
+    2022: 0.17,
 }
 
 # RNG seeds used for demographic decoding and earnings splits in puf.py:
@@ -25,13 +25,16 @@ ITMDED_GROW_RATE = 0.02  # annual growth rate in itemized deduction amounts
 # parameters used to identify CPS nonfilers:
 FILER_MIN_INCOME = {
     2021: 8600,
-    2022: 2000,
+    2022: 10000,
 }
 EITC_CLAIM_THD = {
     2021: 1800,  # reduces 2023 EITC from $82.3b to $71.6b, a claim rate of 87%
-    2022: 0,
+    2022: 1400,  # reduces 2023 EITC from $79.1b to $71.4b, a claim rate of 90%
 }
-ACTC_CLAIM_THD = {2021: 0, 2022: 0}  # always leave 2021 value at zero
+ACTC_CLAIM_THD = {
+    2021: 0,  # always leave 2021 value at zero
+    2022: 1500,
+}
 CPS_FILER_MIN_INCOME = FILER_MIN_INCOME[TAXYEAR]
 CREDIT_CLAIMING = {
     "eitc_claim_thd": {f"{TAXYEAR}": EITC_CLAIM_THD[TAXYEAR]},
