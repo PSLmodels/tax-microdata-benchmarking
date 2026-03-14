@@ -6,7 +6,7 @@ setup(
     packages=find_packages(),
     python_requires=">=3.11,<3.14",
     install_requires=[
-        "taxcalc>=6.4.0",
+        "taxcalc>=6.4.1",
         "clarabel",
         "scikit-learn",
         "scipy",
