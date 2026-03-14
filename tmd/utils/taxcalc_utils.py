@@ -2,7 +2,9 @@
 This module provides utilities for working with Tax-Calculator.
 """
 
+import json
 import pathlib
+import urllib.request
 import yaml
 import numpy as np
 import pandas as pd
@@ -10,42 +12,37 @@ import taxcalc as tc
 from tmd.storage import STORAGE_FOLDER
 from tmd.imputation_assumptions import TAXYEAR, CREDIT_CLAIMING
 
+TC_VARIABLES_URL = (
+    "https://raw.githubusercontent.com/PSLmodels/Tax-Calculator"
+    "/master/taxcalc/records_variables.json"
+)
+
+
+def update_tc_variable_metadata():
+    """
+    Fetch the latest records_variables.json from the Tax-Calculator
+    GitHub repo and write it as tc_variable_metadata.yaml file.
+    """
+    with urllib.request.urlopen(TC_VARIABLES_URL) as response:
+        records_variables = json.loads(response.read().decode("utf-8"))
+    output_path = STORAGE_FOLDER / "input" / "tc_variable_metadata.yaml"
+    with open(output_path, "w", encoding="utf-8") as f:
+        yaml.dump(
+            records_variables,
+            f,
+            default_flow_style=False,
+            sort_keys=True,
+            allow_unicode=True,
+            width=79,
+        )
+
+
 with open(
     STORAGE_FOLDER / "input" / "tc_variable_metadata.yaml",
     "r",
     encoding="utf-8",
 ) as yfile:
     taxcalc_variable_metadata = yaml.safe_load(yfile)
-
-
-def get_tc_variable_description(variable: str) -> str:
-    """
-    Get the description of a Tax-Calculator variable.
-
-    Args:
-        variable (str): The name of the variable.
-
-    Returns:
-        str: The description of the variable.
-    """
-    if variable in taxcalc_variable_metadata.get("read", {}):
-        return taxcalc_variable_metadata["read"][variable]["desc"]
-    return taxcalc_variable_metadata["calc"][variable]["desc"]
-
-
-def get_tc_is_input(variable: str) -> bool:
-    """
-    Get the type (whether input or not) of a Tax-Calculator variable.
-
-    Args:
-        variable (str): The name of the variable.
-
-    Returns:
-        bool: Whether the variable is an input.
-    """
-    if variable in taxcalc_variable_metadata.get("read", {}):
-        return True
-    return False
 
 
 def add_taxcalc_outputs(
