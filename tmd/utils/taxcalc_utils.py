@@ -2,13 +2,40 @@
 This module provides utilities for working with Tax-Calculator.
 """
 
+import json
 import pathlib
+import urllib.request
 import yaml
 import numpy as np
 import pandas as pd
 import taxcalc as tc
 from tmd.storage import STORAGE_FOLDER
 from tmd.imputation_assumptions import TAXYEAR, CREDIT_CLAIMING
+
+TC_VARIABLES_URL = (
+    "https://raw.githubusercontent.com/PSLmodels/Tax-Calculator"
+    "/master/taxcalc/records_variables.json"
+)
+
+
+def update_tc_variable_metadata():
+    """
+    Fetch the latest records_variables.json from the Tax-Calculator
+    GitHub repo and write it as tc_variable_metadata.yaml file.
+    """
+    with urllib.request.urlopen(TC_VARIABLES_URL) as response:
+        records_variables = json.loads(response.read().decode("utf-8"))
+    output_path = STORAGE_FOLDER / "input" / "tc_variable_metadata.yaml"
+    with open(output_path, "w", encoding="utf-8") as f:
+        yaml.dump(
+            records_variables,
+            f,
+            default_flow_style=False,
+            sort_keys=True,
+            allow_unicode=True,
+            width=79,
+        )
+
 
 with open(
     STORAGE_FOLDER / "input" / "tc_variable_metadata.yaml",

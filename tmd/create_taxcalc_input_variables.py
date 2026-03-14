@@ -13,8 +13,13 @@ from tmd.imputation_assumptions import (
     CPS_WEIGHTS_SCALE,
 )
 from tmd.storage import STORAGE_FOLDER
+from tmd.utils.taxcalc_utils import update_tc_variable_metadata
 
 DUMP_ALL_UNROUNDED_VARIABLES = False
+
+
+# ensure Tax-Calculator variable metadata are up-to-date
+update_tc_variable_metadata()
 
 
 def create_variable_file(write_file=True):
