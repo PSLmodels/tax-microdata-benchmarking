@@ -1,11 +1,10 @@
 """
-Central location for data imputation assumptions.
+Central location for data generation and data imputation assumptions.
 """
 
 TAXYEAR = 2022  # single source of truth for the target tax year
 
 IMPUTATION_RF_RNG_SEED = 1928374  # random number seed used by RandomForest
-
 IMPUTATION_BETA_RNG_SEED = 37465  # random number seed used for Beta variates
 
 W2_WAGES_RATIO = {  # parameter used to impute pass-through W-2 wages
@@ -20,7 +19,7 @@ DEP_AGE_RNG_SEED = 24354657
 EARN_SPLIT_RNG_SEED = 18374659
 
 ITMDED_GROW_RATE = 0.02  # annual growth rate in itemized deduction amounts
-# grow rate applied to inflate 2015 amounts to 2021 amounts in uprate_puf.py
+# grow rate applied to inflate 2015 amounts to 2021+ amounts in uprate_puf.py
 
 # parameters used to identify CPS nonfilers:
 FILER_MIN_INCOME = {
