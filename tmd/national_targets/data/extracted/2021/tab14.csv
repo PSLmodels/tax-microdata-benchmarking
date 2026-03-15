@@ -1,0 +1,1161 @@
+table,year,fname,var_name,var_type,value_filter,marstat,description,irs_col_header,xlcolumn,xl_colnumber,incsort,incrange,xlrownum,raw_value
+tab14,2021,21in14ar.xls,agi,count,all,all,Number of returns,Number of returns | 1.0,B,2,1,"All returns, total",9,160824340.0
+tab14,2021,21in14ar.xls,agi,count,all,all,Number of returns,Number of returns | 1.0,B,2,2,No adjusted gross income,10,4098522.0
+tab14,2021,21in14ar.xls,agi,count,all,all,Number of returns,Number of returns | 1.0,B,2,3,"$1 under $5,000",11,8487025.0
+tab14,2021,21in14ar.xls,agi,count,all,all,Number of returns,Number of returns | 1.0,B,2,4,"$5,000 under $10,000",12,8944908.0
+tab14,2021,21in14ar.xls,agi,count,all,all,Number of returns,Number of returns | 1.0,B,2,5,"$10,000 under $15,000",13,10056377.0
+tab14,2021,21in14ar.xls,agi,count,all,all,Number of returns,Number of returns | 1.0,B,2,6,"$15,000 under $20,000",14,9786580.0
+tab14,2021,21in14ar.xls,agi,count,all,all,Number of returns,Number of returns | 1.0,B,2,7,"$20,000 under $25,000",15,8863570.0
+tab14,2021,21in14ar.xls,agi,count,all,all,Number of returns,Number of returns | 1.0,B,2,8,"$25,000 under $30,000",16,8787576.0
+tab14,2021,21in14ar.xls,agi,count,all,all,Number of returns,Number of returns | 1.0,B,2,9,"$30,000 under $40,000",17,16123068.0
+tab14,2021,21in14ar.xls,agi,count,all,all,Number of returns,Number of returns | 1.0,B,2,10,"$40,000 under $50,000",18,12782334.0
+tab14,2021,21in14ar.xls,agi,count,all,all,Number of returns,Number of returns | 1.0,B,2,11,"$50,000 under $75,000",19,22653934.0
+tab14,2021,21in14ar.xls,agi,count,all,all,Number of returns,Number of returns | 1.0,B,2,12,"$75,000 under $100,000",20,14657726.0
+tab14,2021,21in14ar.xls,agi,count,all,all,Number of returns,Number of returns | 1.0,B,2,13,"$100,000 under $200,000",21,24044481.0
+tab14,2021,21in14ar.xls,agi,count,all,all,Number of returns,Number of returns | 1.0,B,2,14,"$200,000 under $500,000",22,9045567.0
+tab14,2021,21in14ar.xls,agi,count,all,all,Number of returns,Number of returns | 1.0,B,2,15,"$500,000 under $1,000,000",23,1617144.0
+tab14,2021,21in14ar.xls,agi,count,all,all,Number of returns,Number of returns | 1.0,B,2,16,"$1,000,000 under $1,500,000",24,376859.0
+tab14,2021,21in14ar.xls,agi,count,all,all,Number of returns,Number of returns | 1.0,B,2,17,"$1,500,000 under $2,000,000",25,156020.0
+tab14,2021,21in14ar.xls,agi,count,all,all,Number of returns,Number of returns | 1.0,B,2,18,"$2,000,000 under $5,000,000",26,233838.0
+tab14,2021,21in14ar.xls,agi,count,all,all,Number of returns,Number of returns | 1.0,B,2,19,"$5,000,000 under $10,000,000",27,63406.0
+tab14,2021,21in14ar.xls,agi,count,all,all,Number of returns,Number of returns | 1.0,B,2,20,"$10,000,000 or more",28,45404.0
+tab14,2021,21in14ar.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | 2.0,C,3,1,"All returns, total",9,14795614070000.0
+tab14,2021,21in14ar.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | 2.0,C,3,2,No adjusted gross income,10,-171836364000.0
+tab14,2021,21in14ar.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | 2.0,C,3,3,"$1 under $5,000",11,19987243000.0
+tab14,2021,21in14ar.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | 2.0,C,3,4,"$5,000 under $10,000",12,67651359000.0
+tab14,2021,21in14ar.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | 2.0,C,3,5,"$10,000 under $15,000",13,125912056000.0
+tab14,2021,21in14ar.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | 2.0,C,3,6,"$15,000 under $20,000",14,170836129000.0
+tab14,2021,21in14ar.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | 2.0,C,3,7,"$20,000 under $25,000",15,199508960000.0
+tab14,2021,21in14ar.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | 2.0,C,3,8,"$25,000 under $30,000",16,241347179000.0
+tab14,2021,21in14ar.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | 2.0,C,3,9,"$30,000 under $40,000",17,561386434000.0
+tab14,2021,21in14ar.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | 2.0,C,3,10,"$40,000 under $50,000",18,573155378000.0
+tab14,2021,21in14ar.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | 2.0,C,3,11,"$50,000 under $75,000",19,1392395599000.0
+tab14,2021,21in14ar.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | 2.0,C,3,12,"$75,000 under $100,000",20,1271699391000.0
+tab14,2021,21in14ar.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | 2.0,C,3,13,"$100,000 under $200,000",21,3297058075000.0
+tab14,2021,21in14ar.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | 2.0,C,3,14,"$200,000 under $500,000",22,2619188471000.0
+tab14,2021,21in14ar.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | 2.0,C,3,15,"$500,000 under $1,000,000",23,1092599034000.0
+tab14,2021,21in14ar.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | 2.0,C,3,16,"$1,000,000 under $1,500,000",24,454552875000.0
+tab14,2021,21in14ar.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | 2.0,C,3,17,"$1,500,000 under $2,000,000",25,268278123000.0
+tab14,2021,21in14ar.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | 2.0,C,3,18,"$2,000,000 under $5,000,000",26,698923219000.0
+tab14,2021,21in14ar.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | 2.0,C,3,19,"$5,000,000 under $10,000,000",27,435242550000.0
+tab14,2021,21in14ar.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | 2.0,C,3,20,"$10,000,000 or more",28,1477728359000.0
+tab14,2021,21in14ar.xls,wages,count,nz,all,Salaries and wages — number of returns,Salaries and wages | Number of returns | 5.0,F,6,1,"All returns, total",9,126082290.0
+tab14,2021,21in14ar.xls,wages,count,nz,all,Salaries and wages — number of returns,Salaries and wages | Number of returns | 5.0,F,6,2,No adjusted gross income,10,488212.0
+tab14,2021,21in14ar.xls,wages,count,nz,all,Salaries and wages — number of returns,Salaries and wages | Number of returns | 5.0,F,6,3,"$1 under $5,000",11,4990145.0
+tab14,2021,21in14ar.xls,wages,count,nz,all,Salaries and wages — number of returns,Salaries and wages | Number of returns | 5.0,F,6,4,"$5,000 under $10,000",12,6353567.0
+tab14,2021,21in14ar.xls,wages,count,nz,all,Salaries and wages — number of returns,Salaries and wages | Number of returns | 5.0,F,6,5,"$10,000 under $15,000",13,6943210.0
+tab14,2021,21in14ar.xls,wages,count,nz,all,Salaries and wages — number of returns,Salaries and wages | Number of returns | 5.0,F,6,6,"$15,000 under $20,000",14,6925718.0
+tab14,2021,21in14ar.xls,wages,count,nz,all,Salaries and wages — number of returns,Salaries and wages | Number of returns | 5.0,F,6,7,"$20,000 under $25,000",15,6845285.0
+tab14,2021,21in14ar.xls,wages,count,nz,all,Salaries and wages — number of returns,Salaries and wages | Number of returns | 5.0,F,6,8,"$25,000 under $30,000",16,7155012.0
+tab14,2021,21in14ar.xls,wages,count,nz,all,Salaries and wages — number of returns,Salaries and wages | Number of returns | 5.0,F,6,9,"$30,000 under $40,000",17,13754153.0
+tab14,2021,21in14ar.xls,wages,count,nz,all,Salaries and wages — number of returns,Salaries and wages | Number of returns | 5.0,F,6,10,"$40,000 under $50,000",18,10991851.0
+tab14,2021,21in14ar.xls,wages,count,nz,all,Salaries and wages — number of returns,Salaries and wages | Number of returns | 5.0,F,6,11,"$50,000 under $75,000",19,19109110.0
+tab14,2021,21in14ar.xls,wages,count,nz,all,Salaries and wages — number of returns,Salaries and wages | Number of returns | 5.0,F,6,12,"$75,000 under $100,000",20,12291548.0
+tab14,2021,21in14ar.xls,wages,count,nz,all,Salaries and wages — number of returns,Salaries and wages | Number of returns | 5.0,F,6,13,"$100,000 under $200,000",21,20368720.0
+tab14,2021,21in14ar.xls,wages,count,nz,all,Salaries and wages — number of returns,Salaries and wages | Number of returns | 5.0,F,6,14,"$200,000 under $500,000",22,7776331.0
+tab14,2021,21in14ar.xls,wages,count,nz,all,Salaries and wages — number of returns,Salaries and wages | Number of returns | 5.0,F,6,15,"$500,000 under $1,000,000",23,1371980.0
+tab14,2021,21in14ar.xls,wages,count,nz,all,Salaries and wages — number of returns,Salaries and wages | Number of returns | 5.0,F,6,16,"$1,000,000 under $1,500,000",24,314686.0
+tab14,2021,21in14ar.xls,wages,count,nz,all,Salaries and wages — number of returns,Salaries and wages | Number of returns | 5.0,F,6,17,"$1,500,000 under $2,000,000",25,127464.0
+tab14,2021,21in14ar.xls,wages,count,nz,all,Salaries and wages — number of returns,Salaries and wages | Number of returns | 5.0,F,6,18,"$2,000,000 under $5,000,000",26,188625.0
+tab14,2021,21in14ar.xls,wages,count,nz,all,Salaries and wages — number of returns,Salaries and wages | Number of returns | 5.0,F,6,19,"$5,000,000 under $10,000,000",27,50463.0
+tab14,2021,21in14ar.xls,wages,count,nz,all,Salaries and wages — number of returns,Salaries and wages | Number of returns | 5.0,F,6,20,"$10,000,000 or more",28,36210.0
+tab14,2021,21in14ar.xls,wages,amount,nz,all,Salaries and wages,Amount | 6.0,G,7,1,"All returns, total",9,9022352941000.0
+tab14,2021,21in14ar.xls,wages,amount,nz,all,Salaries and wages,Amount | 6.0,G,7,2,No adjusted gross income,10,23670507000.0
+tab14,2021,21in14ar.xls,wages,amount,nz,all,Salaries and wages,Amount | 6.0,G,7,3,"$1 under $5,000",11,20132275000.0
+tab14,2021,21in14ar.xls,wages,amount,nz,all,Salaries and wages,Amount | 6.0,G,7,4,"$5,000 under $10,000",12,48844902000.0
+tab14,2021,21in14ar.xls,wages,amount,nz,all,Salaries and wages,Amount | 6.0,G,7,5,"$10,000 under $15,000",13,83858745000.0
+tab14,2021,21in14ar.xls,wages,amount,nz,all,Salaries and wages,Amount | 6.0,G,7,6,"$15,000 under $20,000",14,112149988000.0
+tab14,2021,21in14ar.xls,wages,amount,nz,all,Salaries and wages,Amount | 6.0,G,7,7,"$20,000 under $25,000",15,140010172000.0
+tab14,2021,21in14ar.xls,wages,amount,nz,all,Salaries and wages,Amount | 6.0,G,7,8,"$25,000 under $30,000",16,181173976000.0
+tab14,2021,21in14ar.xls,wages,amount,nz,all,Salaries and wages,Amount | 6.0,G,7,9,"$30,000 under $40,000",17,445172100000.0
+tab14,2021,21in14ar.xls,wages,amount,nz,all,Salaries and wages,Amount | 6.0,G,7,10,"$40,000 under $50,000",18,456243382000.0
+tab14,2021,21in14ar.xls,wages,amount,nz,all,Salaries and wages,Amount | 6.0,G,7,11,"$50,000 under $75,000",19,1063075172000.0
+tab14,2021,21in14ar.xls,wages,amount,nz,all,Salaries and wages,Amount | 6.0,G,7,12,"$75,000 under $100,000",20,933327679000.0
+tab14,2021,21in14ar.xls,wages,amount,nz,all,Salaries and wages,Amount | 6.0,G,7,13,"$100,000 under $200,000",21,2355845184000.0
+tab14,2021,21in14ar.xls,wages,amount,nz,all,Salaries and wages,Amount | 6.0,G,7,14,"$200,000 under $500,000",22,1713498524000.0
+tab14,2021,21in14ar.xls,wages,amount,nz,all,Salaries and wages,Amount | 6.0,G,7,15,"$500,000 under $1,000,000",23,593531858000.0
+tab14,2021,21in14ar.xls,wages,amount,nz,all,Salaries and wages,Amount | 6.0,G,7,16,"$1,000,000 under $1,500,000",24,202146931000.0
+tab14,2021,21in14ar.xls,wages,amount,nz,all,Salaries and wages,Amount | 6.0,G,7,17,"$1,500,000 under $2,000,000",25,104008030000.0
+tab14,2021,21in14ar.xls,wages,amount,nz,all,Salaries and wages,Amount | 6.0,G,7,18,"$2,000,000 under $5,000,000",26,220575715000.0
+tab14,2021,21in14ar.xls,wages,amount,nz,all,Salaries and wages,Amount | 6.0,G,7,19,"$5,000,000 under $10,000,000",27,108085376000.0
+tab14,2021,21in14ar.xls,wages,amount,nz,all,Salaries and wages,Amount | 6.0,G,7,20,"$10,000,000 or more",28,217002426000.0
+tab14,2021,21in14ar.xls,taxint,count,nz,all,Taxable interest — number of returns,Taxable interest | Number of returns | 7.0,H,8,1,"All returns, total",9,48990485.0
+tab14,2021,21in14ar.xls,taxint,count,nz,all,Taxable interest — number of returns,Taxable interest | Number of returns | 7.0,H,8,2,No adjusted gross income,10,565509.0
+tab14,2021,21in14ar.xls,taxint,count,nz,all,Taxable interest — number of returns,Taxable interest | Number of returns | 7.0,H,8,3,"$1 under $5,000",11,1715167.0
+tab14,2021,21in14ar.xls,taxint,count,nz,all,Taxable interest — number of returns,Taxable interest | Number of returns | 7.0,H,8,4,"$5,000 under $10,000",12,1132747.0
+tab14,2021,21in14ar.xls,taxint,count,nz,all,Taxable interest — number of returns,Taxable interest | Number of returns | 7.0,H,8,5,"$10,000 under $15,000",13,1414387.0
+tab14,2021,21in14ar.xls,taxint,count,nz,all,Taxable interest — number of returns,Taxable interest | Number of returns | 7.0,H,8,6,"$15,000 under $20,000",14,1435178.0
+tab14,2021,21in14ar.xls,taxint,count,nz,all,Taxable interest — number of returns,Taxable interest | Number of returns | 7.0,H,8,7,"$20,000 under $25,000",15,1439606.0
+tab14,2021,21in14ar.xls,taxint,count,nz,all,Taxable interest — number of returns,Taxable interest | Number of returns | 7.0,H,8,8,"$25,000 under $30,000",16,1470320.0
+tab14,2021,21in14ar.xls,taxint,count,nz,all,Taxable interest — number of returns,Taxable interest | Number of returns | 7.0,H,8,9,"$30,000 under $40,000",17,2801612.0
+tab14,2021,21in14ar.xls,taxint,count,nz,all,Taxable interest — number of returns,Taxable interest | Number of returns | 7.0,H,8,10,"$40,000 under $50,000",18,2917116.0
+tab14,2021,21in14ar.xls,taxint,count,nz,all,Taxable interest — number of returns,Taxable interest | Number of returns | 7.0,H,8,11,"$50,000 under $75,000",19,6685822.0
+tab14,2021,21in14ar.xls,taxint,count,nz,all,Taxable interest — number of returns,Taxable interest | Number of returns | 7.0,H,8,12,"$75,000 under $100,000",20,5884358.0
+tab14,2021,21in14ar.xls,taxint,count,nz,all,Taxable interest — number of returns,Taxable interest | Number of returns | 7.0,H,8,13,"$100,000 under $200,000",21,12805970.0
+tab14,2021,21in14ar.xls,taxint,count,nz,all,Taxable interest — number of returns,Taxable interest | Number of returns | 7.0,H,8,14,"$200,000 under $500,000",22,6484175.0
+tab14,2021,21in14ar.xls,taxint,count,nz,all,Taxable interest — number of returns,Taxable interest | Number of returns | 7.0,H,8,15,"$500,000 under $1,000,000",23,1408417.0
+tab14,2021,21in14ar.xls,taxint,count,nz,all,Taxable interest — number of returns,Taxable interest | Number of returns | 7.0,H,8,16,"$1,000,000 under $1,500,000",24,349330.0
+tab14,2021,21in14ar.xls,taxint,count,nz,all,Taxable interest — number of returns,Taxable interest | Number of returns | 7.0,H,8,17,"$1,500,000 under $2,000,000",25,148403.0
+tab14,2021,21in14ar.xls,taxint,count,nz,all,Taxable interest — number of returns,Taxable interest | Number of returns | 7.0,H,8,18,"$2,000,000 under $5,000,000",26,225416.0
+tab14,2021,21in14ar.xls,taxint,count,nz,all,Taxable interest — number of returns,Taxable interest | Number of returns | 7.0,H,8,19,"$5,000,000 under $10,000,000",27,62111.0
+tab14,2021,21in14ar.xls,taxint,count,nz,all,Taxable interest — number of returns,Taxable interest | Number of returns | 7.0,H,8,20,"$10,000,000 or more",28,44841.0
+tab14,2021,21in14ar.xls,taxint,amount,nz,all,Taxable interest,Amount | 8.0,I,9,1,"All returns, total",9,103535203000.0
+tab14,2021,21in14ar.xls,taxint,amount,nz,all,Taxable interest,Amount | 8.0,I,9,2,No adjusted gross income,10,3480795000.0
+tab14,2021,21in14ar.xls,taxint,amount,nz,all,Taxable interest,Amount | 8.0,I,9,3,"$1 under $5,000",11,448690000.0
+tab14,2021,21in14ar.xls,taxint,amount,nz,all,Taxable interest,Amount | 8.0,I,9,4,"$5,000 under $10,000",12,510374000.0
+tab14,2021,21in14ar.xls,taxint,amount,nz,all,Taxable interest,Amount | 8.0,I,9,5,"$10,000 under $15,000",13,647673000.0
+tab14,2021,21in14ar.xls,taxint,amount,nz,all,Taxable interest,Amount | 8.0,I,9,6,"$15,000 under $20,000",14,671713000.0
+tab14,2021,21in14ar.xls,taxint,amount,nz,all,Taxable interest,Amount | 8.0,I,9,7,"$20,000 under $25,000",15,678317000.0
+tab14,2021,21in14ar.xls,taxint,amount,nz,all,Taxable interest,Amount | 8.0,I,9,8,"$25,000 under $30,000",16,739131000.0
+tab14,2021,21in14ar.xls,taxint,amount,nz,all,Taxable interest,Amount | 8.0,I,9,9,"$30,000 under $40,000",17,1349938000.0
+tab14,2021,21in14ar.xls,taxint,amount,nz,all,Taxable interest,Amount | 8.0,I,9,10,"$40,000 under $50,000",18,1523359000.0
+tab14,2021,21in14ar.xls,taxint,amount,nz,all,Taxable interest,Amount | 8.0,I,9,11,"$50,000 under $75,000",19,4385387000.0
+tab14,2021,21in14ar.xls,taxint,amount,nz,all,Taxable interest,Amount | 8.0,I,9,12,"$75,000 under $100,000",20,4173567000.0
+tab14,2021,21in14ar.xls,taxint,amount,nz,all,Taxable interest,Amount | 8.0,I,9,13,"$100,000 under $200,000",21,13402654000.0
+tab14,2021,21in14ar.xls,taxint,amount,nz,all,Taxable interest,Amount | 8.0,I,9,14,"$200,000 under $500,000",22,14439132000.0
+tab14,2021,21in14ar.xls,taxint,amount,nz,all,Taxable interest,Amount | 8.0,I,9,15,"$500,000 under $1,000,000",23,8049644000.0
+tab14,2021,21in14ar.xls,taxint,amount,nz,all,Taxable interest,Amount | 8.0,I,9,16,"$1,000,000 under $1,500,000",24,4459247000.0
+tab14,2021,21in14ar.xls,taxint,amount,nz,all,Taxable interest,Amount | 8.0,I,9,17,"$1,500,000 under $2,000,000",25,2875469000.0
+tab14,2021,21in14ar.xls,taxint,amount,nz,all,Taxable interest,Amount | 8.0,I,9,18,"$2,000,000 under $5,000,000",26,9097803000.0
+tab14,2021,21in14ar.xls,taxint,amount,nz,all,Taxable interest,Amount | 8.0,I,9,19,"$5,000,000 under $10,000,000",27,6177098000.0
+tab14,2021,21in14ar.xls,taxint,amount,nz,all,Taxable interest,Amount | 8.0,I,9,20,"$10,000,000 or more",28,26425211000.0
+tab14,2021,21in14ar.xls,exemptint,count,nz,all,Tax-exempt interest — number of returns,Tax-exempt interest [1] | Number of returns | 9.0,J,10,1,"All returns, total",9,6569327.0
+tab14,2021,21in14ar.xls,exemptint,count,nz,all,Tax-exempt interest — number of returns,Tax-exempt interest [1] | Number of returns | 9.0,J,10,2,No adjusted gross income,10,57924.0
+tab14,2021,21in14ar.xls,exemptint,count,nz,all,Tax-exempt interest — number of returns,Tax-exempt interest [1] | Number of returns | 9.0,J,10,3,"$1 under $5,000",11,81923.0
+tab14,2021,21in14ar.xls,exemptint,count,nz,all,Tax-exempt interest — number of returns,Tax-exempt interest [1] | Number of returns | 9.0,J,10,4,"$5,000 under $10,000",12,73701.0
+tab14,2021,21in14ar.xls,exemptint,count,nz,all,Tax-exempt interest — number of returns,Tax-exempt interest [1] | Number of returns | 9.0,J,10,5,"$10,000 under $15,000",13,88828.0
+tab14,2021,21in14ar.xls,exemptint,count,nz,all,Tax-exempt interest — number of returns,Tax-exempt interest [1] | Number of returns | 9.0,J,10,6,"$15,000 under $20,000",14,86676.0
+tab14,2021,21in14ar.xls,exemptint,count,nz,all,Tax-exempt interest — number of returns,Tax-exempt interest [1] | Number of returns | 9.0,J,10,7,"$20,000 under $25,000",15,83587.0
+tab14,2021,21in14ar.xls,exemptint,count,nz,all,Tax-exempt interest — number of returns,Tax-exempt interest [1] | Number of returns | 9.0,J,10,8,"$25,000 under $30,000",16,84213.0
+tab14,2021,21in14ar.xls,exemptint,count,nz,all,Tax-exempt interest — number of returns,Tax-exempt interest [1] | Number of returns | 9.0,J,10,9,"$30,000 under $40,000",17,185185.0
+tab14,2021,21in14ar.xls,exemptint,count,nz,all,Tax-exempt interest — number of returns,Tax-exempt interest [1] | Number of returns | 9.0,J,10,10,"$40,000 under $50,000",18,241353.0
+tab14,2021,21in14ar.xls,exemptint,count,nz,all,Tax-exempt interest — number of returns,Tax-exempt interest [1] | Number of returns | 9.0,J,10,11,"$50,000 under $75,000",19,639872.0
+tab14,2021,21in14ar.xls,exemptint,count,nz,all,Tax-exempt interest — number of returns,Tax-exempt interest [1] | Number of returns | 9.0,J,10,12,"$75,000 under $100,000",20,630282.0
+tab14,2021,21in14ar.xls,exemptint,count,nz,all,Tax-exempt interest — number of returns,Tax-exempt interest [1] | Number of returns | 9.0,J,10,13,"$100,000 under $200,000",21,1867180.0
+tab14,2021,21in14ar.xls,exemptint,count,nz,all,Tax-exempt interest — number of returns,Tax-exempt interest [1] | Number of returns | 9.0,J,10,14,"$200,000 under $500,000",22,1535001.0
+tab14,2021,21in14ar.xls,exemptint,count,nz,all,Tax-exempt interest — number of returns,Tax-exempt interest [1] | Number of returns | 9.0,J,10,15,"$500,000 under $1,000,000",23,509107.0
+tab14,2021,21in14ar.xls,exemptint,count,nz,all,Tax-exempt interest — number of returns,Tax-exempt interest [1] | Number of returns | 9.0,J,10,16,"$1,000,000 under $1,500,000",24,148862.0
+tab14,2021,21in14ar.xls,exemptint,count,nz,all,Tax-exempt interest — number of returns,Tax-exempt interest [1] | Number of returns | 9.0,J,10,17,"$1,500,000 under $2,000,000",25,69529.0
+tab14,2021,21in14ar.xls,exemptint,count,nz,all,Tax-exempt interest — number of returns,Tax-exempt interest [1] | Number of returns | 9.0,J,10,18,"$2,000,000 under $5,000,000",26,118422.0
+tab14,2021,21in14ar.xls,exemptint,count,nz,all,Tax-exempt interest — number of returns,Tax-exempt interest [1] | Number of returns | 9.0,J,10,19,"$5,000,000 under $10,000,000",27,37253.0
+tab14,2021,21in14ar.xls,exemptint,count,nz,all,Tax-exempt interest — number of returns,Tax-exempt interest [1] | Number of returns | 9.0,J,10,20,"$10,000,000 or more",28,30429.0
+tab14,2021,21in14ar.xls,exemptint,amount,nz,all,Tax-exempt interest,Amount | 10.0,K,11,1,"All returns, total",9,55518422000.0
+tab14,2021,21in14ar.xls,exemptint,amount,nz,all,Tax-exempt interest,Amount | 10.0,K,11,2,No adjusted gross income,10,958274000.0
+tab14,2021,21in14ar.xls,exemptint,amount,nz,all,Tax-exempt interest,Amount | 10.0,K,11,3,"$1 under $5,000",11,88126000.0
+tab14,2021,21in14ar.xls,exemptint,amount,nz,all,Tax-exempt interest,Amount | 10.0,K,11,4,"$5,000 under $10,000",12,202799000.0
+tab14,2021,21in14ar.xls,exemptint,amount,nz,all,Tax-exempt interest,Amount | 10.0,K,11,5,"$10,000 under $15,000",13,190552000.0
+tab14,2021,21in14ar.xls,exemptint,amount,nz,all,Tax-exempt interest,Amount | 10.0,K,11,6,"$15,000 under $20,000",14,166021000.0
+tab14,2021,21in14ar.xls,exemptint,amount,nz,all,Tax-exempt interest,Amount | 10.0,K,11,7,"$20,000 under $25,000",15,254288000.0
+tab14,2021,21in14ar.xls,exemptint,amount,nz,all,Tax-exempt interest,Amount | 10.0,K,11,8,"$25,000 under $30,000",16,183046000.0
+tab14,2021,21in14ar.xls,exemptint,amount,nz,all,Tax-exempt interest,Amount | 10.0,K,11,9,"$30,000 under $40,000",17,485953000.0
+tab14,2021,21in14ar.xls,exemptint,amount,nz,all,Tax-exempt interest,Amount | 10.0,K,11,10,"$40,000 under $50,000",18,674362000.0
+tab14,2021,21in14ar.xls,exemptint,amount,nz,all,Tax-exempt interest,Amount | 10.0,K,11,11,"$50,000 under $75,000",19,1839498000.0
+tab14,2021,21in14ar.xls,exemptint,amount,nz,all,Tax-exempt interest,Amount | 10.0,K,11,12,"$75,000 under $100,000",20,1906837000.0
+tab14,2021,21in14ar.xls,exemptint,amount,nz,all,Tax-exempt interest,Amount | 10.0,K,11,13,"$100,000 under $200,000",21,8917871000.0
+tab14,2021,21in14ar.xls,exemptint,amount,nz,all,Tax-exempt interest,Amount | 10.0,K,11,14,"$200,000 under $500,000",22,11404390000.0
+tab14,2021,21in14ar.xls,exemptint,amount,nz,all,Tax-exempt interest,Amount | 10.0,K,11,15,"$500,000 under $1,000,000",23,7414214000.0
+tab14,2021,21in14ar.xls,exemptint,amount,nz,all,Tax-exempt interest,Amount | 10.0,K,11,16,"$1,000,000 under $1,500,000",24,3473707000.0
+tab14,2021,21in14ar.xls,exemptint,amount,nz,all,Tax-exempt interest,Amount | 10.0,K,11,17,"$1,500,000 under $2,000,000",25,2253316000.0
+tab14,2021,21in14ar.xls,exemptint,amount,nz,all,Tax-exempt interest,Amount | 10.0,K,11,18,"$2,000,000 under $5,000,000",26,5638265000.0
+tab14,2021,21in14ar.xls,exemptint,amount,nz,all,Tax-exempt interest,Amount | 10.0,K,11,19,"$5,000,000 under $10,000,000",27,3138614000.0
+tab14,2021,21in14ar.xls,exemptint,amount,nz,all,Tax-exempt interest,Amount | 10.0,K,11,20,"$10,000,000 or more",28,6328290000.0
+tab14,2021,21in14ar.xls,orddiv,count,nz,all,Ordinary dividends — number of returns,Ordinary dividends | Number of returns | 11.0,L,12,1,"All returns, total",9,32247057.0
+tab14,2021,21in14ar.xls,orddiv,count,nz,all,Ordinary dividends — number of returns,Ordinary dividends | Number of returns | 11.0,L,12,2,No adjusted gross income,10,375055.0
+tab14,2021,21in14ar.xls,orddiv,count,nz,all,Ordinary dividends — number of returns,Ordinary dividends | Number of returns | 11.0,L,12,3,"$1 under $5,000",11,790696.0
+tab14,2021,21in14ar.xls,orddiv,count,nz,all,Ordinary dividends — number of returns,Ordinary dividends | Number of returns | 11.0,L,12,4,"$5,000 under $10,000",12,776574.0
+tab14,2021,21in14ar.xls,orddiv,count,nz,all,Ordinary dividends — number of returns,Ordinary dividends | Number of returns | 11.0,L,12,5,"$10,000 under $15,000",13,714119.0
+tab14,2021,21in14ar.xls,orddiv,count,nz,all,Ordinary dividends — number of returns,Ordinary dividends | Number of returns | 11.0,L,12,6,"$15,000 under $20,000",14,757406.0
+tab14,2021,21in14ar.xls,orddiv,count,nz,all,Ordinary dividends — number of returns,Ordinary dividends | Number of returns | 11.0,L,12,7,"$20,000 under $25,000",15,685968.0
+tab14,2021,21in14ar.xls,orddiv,count,nz,all,Ordinary dividends — number of returns,Ordinary dividends | Number of returns | 11.0,L,12,8,"$25,000 under $30,000",16,686838.0
+tab14,2021,21in14ar.xls,orddiv,count,nz,all,Ordinary dividends — number of returns,Ordinary dividends | Number of returns | 11.0,L,12,9,"$30,000 under $40,000",17,1480384.0
+tab14,2021,21in14ar.xls,orddiv,count,nz,all,Ordinary dividends — number of returns,Ordinary dividends | Number of returns | 11.0,L,12,10,"$40,000 under $50,000",18,1585276.0
+tab14,2021,21in14ar.xls,orddiv,count,nz,all,Ordinary dividends — number of returns,Ordinary dividends | Number of returns | 11.0,L,12,11,"$50,000 under $75,000",19,3974772.0
+tab14,2021,21in14ar.xls,orddiv,count,nz,all,Ordinary dividends — number of returns,Ordinary dividends | Number of returns | 11.0,L,12,12,"$75,000 under $100,000",20,3723238.0
+tab14,2021,21in14ar.xls,orddiv,count,nz,all,Ordinary dividends — number of returns,Ordinary dividends | Number of returns | 11.0,L,12,13,"$100,000 under $200,000",21,8972329.0
+tab14,2021,21in14ar.xls,orddiv,count,nz,all,Ordinary dividends — number of returns,Ordinary dividends | Number of returns | 11.0,L,12,14,"$200,000 under $500,000",22,5657743.0
+tab14,2021,21in14ar.xls,orddiv,count,nz,all,Ordinary dividends — number of returns,Ordinary dividends | Number of returns | 11.0,L,12,15,"$500,000 under $1,000,000",23,1299171.0
+tab14,2021,21in14ar.xls,orddiv,count,nz,all,Ordinary dividends — number of returns,Ordinary dividends | Number of returns | 11.0,L,12,16,"$1,000,000 under $1,500,000",24,320718.0
+tab14,2021,21in14ar.xls,orddiv,count,nz,all,Ordinary dividends — number of returns,Ordinary dividends | Number of returns | 11.0,L,12,17,"$1,500,000 under $2,000,000",25,136624.0
+tab14,2021,21in14ar.xls,orddiv,count,nz,all,Ordinary dividends — number of returns,Ordinary dividends | Number of returns | 11.0,L,12,18,"$2,000,000 under $5,000,000",26,208955.0
+tab14,2021,21in14ar.xls,orddiv,count,nz,all,Ordinary dividends — number of returns,Ordinary dividends | Number of returns | 11.0,L,12,19,"$5,000,000 under $10,000,000",27,58225.0
+tab14,2021,21in14ar.xls,orddiv,count,nz,all,Ordinary dividends — number of returns,Ordinary dividends | Number of returns | 11.0,L,12,20,"$10,000,000 or more",28,42967.0
+tab14,2021,21in14ar.xls,orddiv,amount,nz,all,Ordinary dividends,Amount | 12.0,M,13,1,"All returns, total",9,386961461000.0
+tab14,2021,21in14ar.xls,orddiv,amount,nz,all,Ordinary dividends,Amount | 12.0,M,13,2,No adjusted gross income,10,3366312000.0
+tab14,2021,21in14ar.xls,orddiv,amount,nz,all,Ordinary dividends,Amount | 12.0,M,13,3,"$1 under $5,000",11,717653000.0
+tab14,2021,21in14ar.xls,orddiv,amount,nz,all,Ordinary dividends,Amount | 12.0,M,13,4,"$5,000 under $10,000",12,1068899000.0
+tab14,2021,21in14ar.xls,orddiv,amount,nz,all,Ordinary dividends,Amount | 12.0,M,13,5,"$10,000 under $15,000",13,1183718000.0
+tab14,2021,21in14ar.xls,orddiv,amount,nz,all,Ordinary dividends,Amount | 12.0,M,13,6,"$15,000 under $20,000",14,1521595000.0
+tab14,2021,21in14ar.xls,orddiv,amount,nz,all,Ordinary dividends,Amount | 12.0,M,13,7,"$20,000 under $25,000",15,1464978000.0
+tab14,2021,21in14ar.xls,orddiv,amount,nz,all,Ordinary dividends,Amount | 12.0,M,13,8,"$25,000 under $30,000",16,1551754000.0
+tab14,2021,21in14ar.xls,orddiv,amount,nz,all,Ordinary dividends,Amount | 12.0,M,13,9,"$30,000 under $40,000",17,3306237000.0
+tab14,2021,21in14ar.xls,orddiv,amount,nz,all,Ordinary dividends,Amount | 12.0,M,13,10,"$40,000 under $50,000",18,3821977000.0
+tab14,2021,21in14ar.xls,orddiv,amount,nz,all,Ordinary dividends,Amount | 12.0,M,13,11,"$50,000 under $75,000",19,12460005000.0
+tab14,2021,21in14ar.xls,orddiv,amount,nz,all,Ordinary dividends,Amount | 12.0,M,13,12,"$75,000 under $100,000",20,13739836000.0
+tab14,2021,21in14ar.xls,orddiv,amount,nz,all,Ordinary dividends,Amount | 12.0,M,13,13,"$100,000 under $200,000",21,51096349000.0
+tab14,2021,21in14ar.xls,orddiv,amount,nz,all,Ordinary dividends,Amount | 12.0,M,13,14,"$200,000 under $500,000",22,74408554000.0
+tab14,2021,21in14ar.xls,orddiv,amount,nz,all,Ordinary dividends,Amount | 12.0,M,13,15,"$500,000 under $1,000,000",23,44870842000.0
+tab14,2021,21in14ar.xls,orddiv,amount,nz,all,Ordinary dividends,Amount | 12.0,M,13,16,"$1,000,000 under $1,500,000",24,20107920000.0
+tab14,2021,21in14ar.xls,orddiv,amount,nz,all,Ordinary dividends,Amount | 12.0,M,13,17,"$1,500,000 under $2,000,000",25,12094139000.0
+tab14,2021,21in14ar.xls,orddiv,amount,nz,all,Ordinary dividends,Amount | 12.0,M,13,18,"$2,000,000 under $5,000,000",26,34574922000.0
+tab14,2021,21in14ar.xls,orddiv,amount,nz,all,Ordinary dividends,Amount | 12.0,M,13,19,"$5,000,000 under $10,000,000",27,22076152000.0
+tab14,2021,21in14ar.xls,orddiv,amount,nz,all,Ordinary dividends,Amount | 12.0,M,13,20,"$10,000,000 or more",28,83529618000.0
+tab14,2021,21in14ar.xls,qualdiv,count,nz,all,Qualified dividends — number of returns,Qualified dividends [1] | Number of returns | 13.0,N,14,1,"All returns, total",9,30524800.0
+tab14,2021,21in14ar.xls,qualdiv,count,nz,all,Qualified dividends — number of returns,Qualified dividends [1] | Number of returns | 13.0,N,14,2,No adjusted gross income,10,340668.0
+tab14,2021,21in14ar.xls,qualdiv,count,nz,all,Qualified dividends — number of returns,Qualified dividends [1] | Number of returns | 13.0,N,14,3,"$1 under $5,000",11,712438.0
+tab14,2021,21in14ar.xls,qualdiv,count,nz,all,Qualified dividends — number of returns,Qualified dividends [1] | Number of returns | 13.0,N,14,4,"$5,000 under $10,000",12,708724.0
+tab14,2021,21in14ar.xls,qualdiv,count,nz,all,Qualified dividends — number of returns,Qualified dividends [1] | Number of returns | 13.0,N,14,5,"$10,000 under $15,000",13,653265.0
+tab14,2021,21in14ar.xls,qualdiv,count,nz,all,Qualified dividends — number of returns,Qualified dividends [1] | Number of returns | 13.0,N,14,6,"$15,000 under $20,000",14,703804.0
+tab14,2021,21in14ar.xls,qualdiv,count,nz,all,Qualified dividends — number of returns,Qualified dividends [1] | Number of returns | 13.0,N,14,7,"$20,000 under $25,000",15,618604.0
+tab14,2021,21in14ar.xls,qualdiv,count,nz,all,Qualified dividends — number of returns,Qualified dividends [1] | Number of returns | 13.0,N,14,8,"$25,000 under $30,000",16,628482.0
+tab14,2021,21in14ar.xls,qualdiv,count,nz,all,Qualified dividends — number of returns,Qualified dividends [1] | Number of returns | 13.0,N,14,9,"$30,000 under $40,000",17,1363506.0
+tab14,2021,21in14ar.xls,qualdiv,count,nz,all,Qualified dividends — number of returns,Qualified dividends [1] | Number of returns | 13.0,N,14,10,"$40,000 under $50,000",18,1474068.0
+tab14,2021,21in14ar.xls,qualdiv,count,nz,all,Qualified dividends — number of returns,Qualified dividends [1] | Number of returns | 13.0,N,14,11,"$50,000 under $75,000",19,3723163.0
+tab14,2021,21in14ar.xls,qualdiv,count,nz,all,Qualified dividends — number of returns,Qualified dividends [1] | Number of returns | 13.0,N,14,12,"$75,000 under $100,000",20,3518585.0
+tab14,2021,21in14ar.xls,qualdiv,count,nz,all,Qualified dividends — number of returns,Qualified dividends [1] | Number of returns | 13.0,N,14,13,"$100,000 under $200,000",21,8568560.0
+tab14,2021,21in14ar.xls,qualdiv,count,nz,all,Qualified dividends — number of returns,Qualified dividends [1] | Number of returns | 13.0,N,14,14,"$200,000 under $500,000",22,5491717.0
+tab14,2021,21in14ar.xls,qualdiv,count,nz,all,Qualified dividends — number of returns,Qualified dividends [1] | Number of returns | 13.0,N,14,15,"$500,000 under $1,000,000",23,1266819.0
+tab14,2021,21in14ar.xls,qualdiv,count,nz,all,Qualified dividends — number of returns,Qualified dividends [1] | Number of returns | 13.0,N,14,16,"$1,000,000 under $1,500,000",24,314136.0
+tab14,2021,21in14ar.xls,qualdiv,count,nz,all,Qualified dividends — number of returns,Qualified dividends [1] | Number of returns | 13.0,N,14,17,"$1,500,000 under $2,000,000",25,133787.0
+tab14,2021,21in14ar.xls,qualdiv,count,nz,all,Qualified dividends — number of returns,Qualified dividends [1] | Number of returns | 13.0,N,14,18,"$2,000,000 under $5,000,000",26,205033.0
+tab14,2021,21in14ar.xls,qualdiv,count,nz,all,Qualified dividends — number of returns,Qualified dividends [1] | Number of returns | 13.0,N,14,19,"$5,000,000 under $10,000,000",27,57194.0
+tab14,2021,21in14ar.xls,qualdiv,count,nz,all,Qualified dividends — number of returns,Qualified dividends [1] | Number of returns | 13.0,N,14,20,"$10,000,000 or more",28,42247.0
+tab14,2021,21in14ar.xls,qualdiv,amount,nz,all,Qualified dividends,Amount | 14.0,O,15,1,"All returns, total",9,295906194000.0
+tab14,2021,21in14ar.xls,qualdiv,amount,nz,all,Qualified dividends,Amount | 14.0,O,15,2,No adjusted gross income,10,2343007000.0
+tab14,2021,21in14ar.xls,qualdiv,amount,nz,all,Qualified dividends,Amount | 14.0,O,15,3,"$1 under $5,000",11,466517000.0
+tab14,2021,21in14ar.xls,qualdiv,amount,nz,all,Qualified dividends,Amount | 14.0,O,15,4,"$5,000 under $10,000",12,667944000.0
+tab14,2021,21in14ar.xls,qualdiv,amount,nz,all,Qualified dividends,Amount | 14.0,O,15,5,"$10,000 under $15,000",13,721307000.0
+tab14,2021,21in14ar.xls,qualdiv,amount,nz,all,Qualified dividends,Amount | 14.0,O,15,6,"$15,000 under $20,000",14,1060701000.0
+tab14,2021,21in14ar.xls,qualdiv,amount,nz,all,Qualified dividends,Amount | 14.0,O,15,7,"$20,000 under $25,000",15,895825000.0
+tab14,2021,21in14ar.xls,qualdiv,amount,nz,all,Qualified dividends,Amount | 14.0,O,15,8,"$25,000 under $30,000",16,934172000.0
+tab14,2021,21in14ar.xls,qualdiv,amount,nz,all,Qualified dividends,Amount | 14.0,O,15,9,"$30,000 under $40,000",17,2196487000.0
+tab14,2021,21in14ar.xls,qualdiv,amount,nz,all,Qualified dividends,Amount | 14.0,O,15,10,"$40,000 under $50,000",18,2523390000.0
+tab14,2021,21in14ar.xls,qualdiv,amount,nz,all,Qualified dividends,Amount | 14.0,O,15,11,"$50,000 under $75,000",19,8599225000.0
+tab14,2021,21in14ar.xls,qualdiv,amount,nz,all,Qualified dividends,Amount | 14.0,O,15,12,"$75,000 under $100,000",20,9314082000.0
+tab14,2021,21in14ar.xls,qualdiv,amount,nz,all,Qualified dividends,Amount | 14.0,O,15,13,"$100,000 under $200,000",21,36162406000.0
+tab14,2021,21in14ar.xls,qualdiv,amount,nz,all,Qualified dividends,Amount | 14.0,O,15,14,"$200,000 under $500,000",22,54930379000.0
+tab14,2021,21in14ar.xls,qualdiv,amount,nz,all,Qualified dividends,Amount | 14.0,O,15,15,"$500,000 under $1,000,000",23,34477019000.0
+tab14,2021,21in14ar.xls,qualdiv,amount,nz,all,Qualified dividends,Amount | 14.0,O,15,16,"$1,000,000 under $1,500,000",24,15503762000.0
+tab14,2021,21in14ar.xls,qualdiv,amount,nz,all,Qualified dividends,Amount | 14.0,O,15,17,"$1,500,000 under $2,000,000",25,9363207000.0
+tab14,2021,21in14ar.xls,qualdiv,amount,nz,all,Qualified dividends,Amount | 14.0,O,15,18,"$2,000,000 under $5,000,000",26,27212821000.0
+tab14,2021,21in14ar.xls,qualdiv,amount,nz,all,Qualified dividends,Amount | 14.0,O,15,19,"$5,000,000 under $10,000,000",27,17867740000.0
+tab14,2021,21in14ar.xls,qualdiv,amount,nz,all,Qualified dividends,Amount | 14.0,O,15,20,"$10,000,000 or more",28,70666204000.0
+tab14,2021,21in14ar.xls,busprofincome,count,gt0,all,Business income — number of returns with profit,Business or profession | Net income | Number of returns | 19.0,T,20,1,"All returns, total",9,21105685.0
+tab14,2021,21in14ar.xls,busprofincome,count,gt0,all,Business income — number of returns with profit,Business or profession | Net income | Number of returns | 19.0,T,20,2,No adjusted gross income,10,177452.0
+tab14,2021,21in14ar.xls,busprofincome,count,gt0,all,Business income — number of returns with profit,Business or profession | Net income | Number of returns | 19.0,T,20,3,"$1 under $5,000",11,1387699.0
+tab14,2021,21in14ar.xls,busprofincome,count,gt0,all,Business income — number of returns with profit,Business or profession | Net income | Number of returns | 19.0,T,20,4,"$5,000 under $10,000",12,1562204.0
+tab14,2021,21in14ar.xls,busprofincome,count,gt0,all,Business income — number of returns with profit,Business or profession | Net income | Number of returns | 19.0,T,20,5,"$10,000 under $15,000",13,2046193.0
+tab14,2021,21in14ar.xls,busprofincome,count,gt0,all,Business income — number of returns with profit,Business or profession | Net income | Number of returns | 19.0,T,20,6,"$15,000 under $20,000",14,1574602.0
+tab14,2021,21in14ar.xls,busprofincome,count,gt0,all,Business income — number of returns with profit,Business or profession | Net income | Number of returns | 19.0,T,20,7,"$20,000 under $25,000",15,1258745.0
+tab14,2021,21in14ar.xls,busprofincome,count,gt0,all,Business income — number of returns with profit,Business or profession | Net income | Number of returns | 19.0,T,20,8,"$25,000 under $30,000",16,1060963.0
+tab14,2021,21in14ar.xls,busprofincome,count,gt0,all,Business income — number of returns with profit,Business or profession | Net income | Number of returns | 19.0,T,20,9,"$30,000 under $40,000",17,1633405.0
+tab14,2021,21in14ar.xls,busprofincome,count,gt0,all,Business income — number of returns with profit,Business or profession | Net income | Number of returns | 19.0,T,20,10,"$40,000 under $50,000",18,1255792.0
+tab14,2021,21in14ar.xls,busprofincome,count,gt0,all,Business income — number of returns with profit,Business or profession | Net income | Number of returns | 19.0,T,20,11,"$50,000 under $75,000",19,2395327.0
+tab14,2021,21in14ar.xls,busprofincome,count,gt0,all,Business income — number of returns with profit,Business or profession | Net income | Number of returns | 19.0,T,20,12,"$75,000 under $100,000",20,1620171.0
+tab14,2021,21in14ar.xls,busprofincome,count,gt0,all,Business income — number of returns with profit,Business or profession | Net income | Number of returns | 19.0,T,20,13,"$100,000 under $200,000",21,3193268.0
+tab14,2021,21in14ar.xls,busprofincome,count,gt0,all,Business income — number of returns with profit,Business or profession | Net income | Number of returns | 19.0,T,20,14,"$200,000 under $500,000",22,1464231.0
+tab14,2021,21in14ar.xls,busprofincome,count,gt0,all,Business income — number of returns with profit,Business or profession | Net income | Number of returns | 19.0,T,20,15,"$500,000 under $1,000,000",23,310202.0
+tab14,2021,21in14ar.xls,busprofincome,count,gt0,all,Business income — number of returns with profit,Business or profession | Net income | Number of returns | 19.0,T,20,16,"$1,000,000 under $1,500,000",24,72615.0
+tab14,2021,21in14ar.xls,busprofincome,count,gt0,all,Business income — number of returns with profit,Business or profession | Net income | Number of returns | 19.0,T,20,17,"$1,500,000 under $2,000,000",25,29373.0
+tab14,2021,21in14ar.xls,busprofincome,count,gt0,all,Business income — number of returns with profit,Business or profession | Net income | Number of returns | 19.0,T,20,18,"$2,000,000 under $5,000,000",26,43498.0
+tab14,2021,21in14ar.xls,busprofincome,count,gt0,all,Business income — number of returns with profit,Business or profession | Net income | Number of returns | 19.0,T,20,19,"$5,000,000 under $10,000,000",27,11675.0
+tab14,2021,21in14ar.xls,busprofincome,count,gt0,all,Business income — number of returns with profit,Business or profession | Net income | Number of returns | 19.0,T,20,20,"$10,000,000 or more",28,8271.0
+tab14,2021,21in14ar.xls,busprofincome,amount,gt0,all,Business net income (profit),Amount | 20.0,U,21,1,"All returns, total",9,517081772000.0
+tab14,2021,21in14ar.xls,busprofincome,amount,gt0,all,Business net income (profit),Amount | 20.0,U,21,2,No adjusted gross income,10,4193499000.0
+tab14,2021,21in14ar.xls,busprofincome,amount,gt0,all,Business net income (profit),Amount | 20.0,U,21,3,"$1 under $5,000",11,3659049000.0
+tab14,2021,21in14ar.xls,busprofincome,amount,gt0,all,Business net income (profit),Amount | 20.0,U,21,4,"$5,000 under $10,000",12,10546179000.0
+tab14,2021,21in14ar.xls,busprofincome,amount,gt0,all,Business net income (profit),Amount | 20.0,U,21,5,"$10,000 under $15,000",13,20104970000.0
+tab14,2021,21in14ar.xls,busprofincome,amount,gt0,all,Business net income (profit),Amount | 20.0,U,21,6,"$15,000 under $20,000",14,18140645000.0
+tab14,2021,21in14ar.xls,busprofincome,amount,gt0,all,Business net income (profit),Amount | 20.0,U,21,7,"$20,000 under $25,000",15,16237426000.0
+tab14,2021,21in14ar.xls,busprofincome,amount,gt0,all,Business net income (profit),Amount | 20.0,U,21,8,"$25,000 under $30,000",16,15467287000.0
+tab14,2021,21in14ar.xls,busprofincome,amount,gt0,all,Business net income (profit),Amount | 20.0,U,21,9,"$30,000 under $40,000",17,26647935000.0
+tab14,2021,21in14ar.xls,busprofincome,amount,gt0,all,Business net income (profit),Amount | 20.0,U,21,10,"$40,000 under $50,000",18,22811556000.0
+tab14,2021,21in14ar.xls,busprofincome,amount,gt0,all,Business net income (profit),Amount | 20.0,U,21,11,"$50,000 under $75,000",19,48371161000.0
+tab14,2021,21in14ar.xls,busprofincome,amount,gt0,all,Business net income (profit),Amount | 20.0,U,21,12,"$75,000 under $100,000",20,36692610000.0
+tab14,2021,21in14ar.xls,busprofincome,amount,gt0,all,Business net income (profit),Amount | 20.0,U,21,13,"$100,000 under $200,000",21,97740921000.0
+tab14,2021,21in14ar.xls,busprofincome,amount,gt0,all,Business net income (profit),Amount | 20.0,U,21,14,"$200,000 under $500,000",22,98370059000.0
+tab14,2021,21in14ar.xls,busprofincome,amount,gt0,all,Business net income (profit),Amount | 20.0,U,21,15,"$500,000 under $1,000,000",23,40285196000.0
+tab14,2021,21in14ar.xls,busprofincome,amount,gt0,all,Business net income (profit),Amount | 20.0,U,21,16,"$1,000,000 under $1,500,000",24,14533100000.0
+tab14,2021,21in14ar.xls,busprofincome,amount,gt0,all,Business net income (profit),Amount | 20.0,U,21,17,"$1,500,000 under $2,000,000",25,8245025000.0
+tab14,2021,21in14ar.xls,busprofincome,amount,gt0,all,Business net income (profit),Amount | 20.0,U,21,18,"$2,000,000 under $5,000,000",26,16755437000.0
+tab14,2021,21in14ar.xls,busprofincome,amount,gt0,all,Business net income (profit),Amount | 20.0,U,21,19,"$5,000,000 under $10,000,000",27,7274231000.0
+tab14,2021,21in14ar.xls,busprofincome,amount,gt0,all,Business net income (profit),Amount | 20.0,U,21,20,"$10,000,000 or more",28,11005486000.0
+tab14,2021,21in14ar.xls,busprofincome,count,lt0,all,Business income — number of returns with loss,Net loss | Number of returns | 21.0,V,22,1,"All returns, total",9,7546660.0
+tab14,2021,21in14ar.xls,busprofincome,count,lt0,all,Business income — number of returns with loss,Net loss | Number of returns | 21.0,V,22,2,No adjusted gross income,10,496910.0
+tab14,2021,21in14ar.xls,busprofincome,count,lt0,all,Business income — number of returns with loss,Net loss | Number of returns | 21.0,V,22,3,"$1 under $5,000",11,129756.0
+tab14,2021,21in14ar.xls,busprofincome,count,lt0,all,Business income — number of returns with loss,Net loss | Number of returns | 21.0,V,22,4,"$5,000 under $10,000",12,174436.0
+tab14,2021,21in14ar.xls,busprofincome,count,lt0,all,Business income — number of returns with loss,Net loss | Number of returns | 21.0,V,22,5,"$10,000 under $15,000",13,383871.0
+tab14,2021,21in14ar.xls,busprofincome,count,lt0,all,Business income — number of returns with loss,Net loss | Number of returns | 21.0,V,22,6,"$15,000 under $20,000",14,489504.0
+tab14,2021,21in14ar.xls,busprofincome,count,lt0,all,Business income — number of returns with loss,Net loss | Number of returns | 21.0,V,22,7,"$20,000 under $25,000",15,404331.0
+tab14,2021,21in14ar.xls,busprofincome,count,lt0,all,Business income — number of returns with loss,Net loss | Number of returns | 21.0,V,22,8,"$25,000 under $30,000",16,398390.0
+tab14,2021,21in14ar.xls,busprofincome,count,lt0,all,Business income — number of returns with loss,Net loss | Number of returns | 21.0,V,22,9,"$30,000 under $40,000",17,731244.0
+tab14,2021,21in14ar.xls,busprofincome,count,lt0,all,Business income — number of returns with loss,Net loss | Number of returns | 21.0,V,22,10,"$40,000 under $50,000",18,614437.0
+tab14,2021,21in14ar.xls,busprofincome,count,lt0,all,Business income — number of returns with loss,Net loss | Number of returns | 21.0,V,22,11,"$50,000 under $75,000",19,1000873.0
+tab14,2021,21in14ar.xls,busprofincome,count,lt0,all,Business income — number of returns with loss,Net loss | Number of returns | 21.0,V,22,12,"$75,000 under $100,000",20,712587.0
+tab14,2021,21in14ar.xls,busprofincome,count,lt0,all,Business income — number of returns with loss,Net loss | Number of returns | 21.0,V,22,13,"$100,000 under $200,000",21,1328596.0
+tab14,2021,21in14ar.xls,busprofincome,count,lt0,all,Business income — number of returns with loss,Net loss | Number of returns | 21.0,V,22,14,"$200,000 under $500,000",22,526968.0
+tab14,2021,21in14ar.xls,busprofincome,count,lt0,all,Business income — number of returns with loss,Net loss | Number of returns | 21.0,V,22,15,"$500,000 under $1,000,000",23,96621.0
+tab14,2021,21in14ar.xls,busprofincome,count,lt0,all,Business income — number of returns with loss,Net loss | Number of returns | 21.0,V,22,16,"$1,000,000 under $1,500,000",24,23020.0
+tab14,2021,21in14ar.xls,busprofincome,count,lt0,all,Business income — number of returns with loss,Net loss | Number of returns | 21.0,V,22,17,"$1,500,000 under $2,000,000",25,9921.0
+tab14,2021,21in14ar.xls,busprofincome,count,lt0,all,Business income — number of returns with loss,Net loss | Number of returns | 21.0,V,22,18,"$2,000,000 under $5,000,000",26,16222.0
+tab14,2021,21in14ar.xls,busprofincome,count,lt0,all,Business income — number of returns with loss,Net loss | Number of returns | 21.0,V,22,19,"$5,000,000 under $10,000,000",27,4765.0
+tab14,2021,21in14ar.xls,busprofincome,count,lt0,all,Business income — number of returns with loss,Net loss | Number of returns | 21.0,V,22,20,"$10,000,000 or more",28,4207.0
+tab14,2021,21in14ar.xls,busprofincome,amount,lt0,all,Business net loss,Amount | 22.0,W,23,1,"All returns, total",9,105580403000.0
+tab14,2021,21in14ar.xls,busprofincome,amount,lt0,all,Business net loss,Amount | 22.0,W,23,2,No adjusted gross income,10,19401043000.0
+tab14,2021,21in14ar.xls,busprofincome,amount,lt0,all,Business net loss,Amount | 22.0,W,23,3,"$1 under $5,000",11,1090552000.0
+tab14,2021,21in14ar.xls,busprofincome,amount,lt0,all,Business net loss,Amount | 22.0,W,23,4,"$5,000 under $10,000",12,1934591000.0
+tab14,2021,21in14ar.xls,busprofincome,amount,lt0,all,Business net loss,Amount | 22.0,W,23,5,"$10,000 under $15,000",13,4550449000.0
+tab14,2021,21in14ar.xls,busprofincome,amount,lt0,all,Business net loss,Amount | 22.0,W,23,6,"$15,000 under $20,000",14,5821504000.0
+tab14,2021,21in14ar.xls,busprofincome,amount,lt0,all,Business net loss,Amount | 22.0,W,23,7,"$20,000 under $25,000",15,4398237000.0
+tab14,2021,21in14ar.xls,busprofincome,amount,lt0,all,Business net loss,Amount | 22.0,W,23,8,"$25,000 under $30,000",16,4249474000.0
+tab14,2021,21in14ar.xls,busprofincome,amount,lt0,all,Business net loss,Amount | 22.0,W,23,9,"$30,000 under $40,000",17,7839859000.0
+tab14,2021,21in14ar.xls,busprofincome,amount,lt0,all,Business net loss,Amount | 22.0,W,23,10,"$40,000 under $50,000",18,6422149000.0
+tab14,2021,21in14ar.xls,busprofincome,amount,lt0,all,Business net loss,Amount | 22.0,W,23,11,"$50,000 under $75,000",19,9576425000.0
+tab14,2021,21in14ar.xls,busprofincome,amount,lt0,all,Business net loss,Amount | 22.0,W,23,12,"$75,000 under $100,000",20,7506827000.0
+tab14,2021,21in14ar.xls,busprofincome,amount,lt0,all,Business net loss,Amount | 22.0,W,23,13,"$100,000 under $200,000",21,13077153000.0
+tab14,2021,21in14ar.xls,busprofincome,amount,lt0,all,Business net loss,Amount | 22.0,W,23,14,"$200,000 under $500,000",22,8282956000.0
+tab14,2021,21in14ar.xls,busprofincome,amount,lt0,all,Business net loss,Amount | 22.0,W,23,15,"$500,000 under $1,000,000",23,2797954000.0
+tab14,2021,21in14ar.xls,busprofincome,amount,lt0,all,Business net loss,Amount | 22.0,W,23,16,"$1,000,000 under $1,500,000",24,1176858000.0
+tab14,2021,21in14ar.xls,busprofincome,amount,lt0,all,Business net loss,Amount | 22.0,W,23,17,"$1,500,000 under $2,000,000",25,745854000.0
+tab14,2021,21in14ar.xls,busprofincome,amount,lt0,all,Business net loss,Amount | 22.0,W,23,18,"$2,000,000 under $5,000,000",26,2221287000.0
+tab14,2021,21in14ar.xls,busprofincome,amount,lt0,all,Business net loss,Amount | 22.0,W,23,19,"$5,000,000 under $10,000,000",27,1162557000.0
+tab14,2021,21in14ar.xls,busprofincome,amount,lt0,all,Business net loss,Amount | 22.0,W,23,20,"$10,000,000 or more",28,3324675000.0
+tab14,2021,21in14ar.xls,cgdist,count,nz,all,Capital gain distributions — number of returns,Capital gain distributions reported on Form 1040 | Number of returns | 23.0,X,24,1,"All returns, total",9,4505544.0
+tab14,2021,21in14ar.xls,cgdist,count,nz,all,Capital gain distributions — number of returns,Capital gain distributions reported on Form 1040 | Number of returns | 23.0,X,24,2,No adjusted gross income,10,22086.0
+tab14,2021,21in14ar.xls,cgdist,count,nz,all,Capital gain distributions — number of returns,Capital gain distributions reported on Form 1040 | Number of returns | 23.0,X,24,3,"$1 under $5,000",11,147555.0
+tab14,2021,21in14ar.xls,cgdist,count,nz,all,Capital gain distributions — number of returns,Capital gain distributions reported on Form 1040 | Number of returns | 23.0,X,24,4,"$5,000 under $10,000",12,156516.0
+tab14,2021,21in14ar.xls,cgdist,count,nz,all,Capital gain distributions — number of returns,Capital gain distributions reported on Form 1040 | Number of returns | 23.0,X,24,5,"$10,000 under $15,000",13,130377.0
+tab14,2021,21in14ar.xls,cgdist,count,nz,all,Capital gain distributions — number of returns,Capital gain distributions reported on Form 1040 | Number of returns | 23.0,X,24,6,"$15,000 under $20,000",14,116943.0
+tab14,2021,21in14ar.xls,cgdist,count,nz,all,Capital gain distributions — number of returns,Capital gain distributions reported on Form 1040 | Number of returns | 23.0,X,24,7,"$20,000 under $25,000",15,129200.0
+tab14,2021,21in14ar.xls,cgdist,count,nz,all,Capital gain distributions — number of returns,Capital gain distributions reported on Form 1040 | Number of returns | 23.0,X,24,8,"$25,000 under $30,000",16,103882.0
+tab14,2021,21in14ar.xls,cgdist,count,nz,all,Capital gain distributions — number of returns,Capital gain distributions reported on Form 1040 | Number of returns | 23.0,X,24,9,"$30,000 under $40,000",17,242939.0
+tab14,2021,21in14ar.xls,cgdist,count,nz,all,Capital gain distributions — number of returns,Capital gain distributions reported on Form 1040 | Number of returns | 23.0,X,24,10,"$40,000 under $50,000",18,262877.0
+tab14,2021,21in14ar.xls,cgdist,count,nz,all,Capital gain distributions — number of returns,Capital gain distributions reported on Form 1040 | Number of returns | 23.0,X,24,11,"$50,000 under $75,000",19,690766.0
+tab14,2021,21in14ar.xls,cgdist,count,nz,all,Capital gain distributions — number of returns,Capital gain distributions reported on Form 1040 | Number of returns | 23.0,X,24,12,"$75,000 under $100,000",20,576208.0
+tab14,2021,21in14ar.xls,cgdist,count,nz,all,Capital gain distributions — number of returns,Capital gain distributions reported on Form 1040 | Number of returns | 23.0,X,24,13,"$100,000 under $200,000",21,1277399.0
+tab14,2021,21in14ar.xls,cgdist,count,nz,all,Capital gain distributions — number of returns,Capital gain distributions reported on Form 1040 | Number of returns | 23.0,X,24,14,"$200,000 under $500,000",22,570826.0
+tab14,2021,21in14ar.xls,cgdist,count,nz,all,Capital gain distributions — number of returns,Capital gain distributions reported on Form 1040 | Number of returns | 23.0,X,24,15,"$500,000 under $1,000,000",23,62560.0
+tab14,2021,21in14ar.xls,cgdist,count,nz,all,Capital gain distributions — number of returns,Capital gain distributions reported on Form 1040 | Number of returns | 23.0,X,24,16,"$1,000,000 under $1,500,000",24,9603.0
+tab14,2021,21in14ar.xls,cgdist,count,nz,all,Capital gain distributions — number of returns,Capital gain distributions reported on Form 1040 | Number of returns | 23.0,X,24,17,"$1,500,000 under $2,000,000",25,2394.0
+tab14,2021,21in14ar.xls,cgdist,count,nz,all,Capital gain distributions — number of returns,Capital gain distributions reported on Form 1040 | Number of returns | 23.0,X,24,18,"$2,000,000 under $5,000,000",26,2895.0
+tab14,2021,21in14ar.xls,cgdist,count,nz,all,Capital gain distributions — number of returns,Capital gain distributions reported on Form 1040 | Number of returns | 23.0,X,24,19,"$5,000,000 under $10,000,000",27,392.0
+tab14,2021,21in14ar.xls,cgdist,count,nz,all,Capital gain distributions — number of returns,Capital gain distributions reported on Form 1040 | Number of returns | 23.0,X,24,20,"$10,000,000 or more",28,127.0
+tab14,2021,21in14ar.xls,cgdist,amount,nz,all,Capital gain distributions,Amount | 24.0,Y,25,1,"All returns, total",9,23889533000.0
+tab14,2021,21in14ar.xls,cgdist,amount,nz,all,Capital gain distributions,Amount | 24.0,Y,25,2,No adjusted gross income,10,65371000.0
+tab14,2021,21in14ar.xls,cgdist,amount,nz,all,Capital gain distributions,Amount | 24.0,Y,25,3,"$1 under $5,000",11,113762000.0
+tab14,2021,21in14ar.xls,cgdist,amount,nz,all,Capital gain distributions,Amount | 24.0,Y,25,4,"$5,000 under $10,000",12,245186000.0
+tab14,2021,21in14ar.xls,cgdist,amount,nz,all,Capital gain distributions,Amount | 24.0,Y,25,5,"$10,000 under $15,000",13,280333000.0
+tab14,2021,21in14ar.xls,cgdist,amount,nz,all,Capital gain distributions,Amount | 24.0,Y,25,6,"$15,000 under $20,000",14,295710000.0
+tab14,2021,21in14ar.xls,cgdist,amount,nz,all,Capital gain distributions,Amount | 24.0,Y,25,7,"$20,000 under $25,000",15,240785000.0
+tab14,2021,21in14ar.xls,cgdist,amount,nz,all,Capital gain distributions,Amount | 24.0,Y,25,8,"$25,000 under $30,000",16,259495000.0
+tab14,2021,21in14ar.xls,cgdist,amount,nz,all,Capital gain distributions,Amount | 24.0,Y,25,9,"$30,000 under $40,000",17,639548000.0
+tab14,2021,21in14ar.xls,cgdist,amount,nz,all,Capital gain distributions,Amount | 24.0,Y,25,10,"$40,000 under $50,000",18,778440000.0
+tab14,2021,21in14ar.xls,cgdist,amount,nz,all,Capital gain distributions,Amount | 24.0,Y,25,11,"$50,000 under $75,000",19,2211122000.0
+tab14,2021,21in14ar.xls,cgdist,amount,nz,all,Capital gain distributions,Amount | 24.0,Y,25,12,"$75,000 under $100,000",20,2396707000.0
+tab14,2021,21in14ar.xls,cgdist,amount,nz,all,Capital gain distributions,Amount | 24.0,Y,25,13,"$100,000 under $200,000",21,7791104000.0
+tab14,2021,21in14ar.xls,cgdist,amount,nz,all,Capital gain distributions,Amount | 24.0,Y,25,14,"$200,000 under $500,000",22,6797511000.0
+tab14,2021,21in14ar.xls,cgdist,amount,nz,all,Capital gain distributions,Amount | 24.0,Y,25,15,"$500,000 under $1,000,000",23,1132318000.0
+tab14,2021,21in14ar.xls,cgdist,amount,nz,all,Capital gain distributions,Amount | 24.0,Y,25,16,"$1,000,000 under $1,500,000",24,365803000.0
+tab14,2021,21in14ar.xls,cgdist,amount,nz,all,Capital gain distributions,Amount | 24.0,Y,25,17,"$1,500,000 under $2,000,000",25,50466000.0
+tab14,2021,21in14ar.xls,cgdist,amount,nz,all,Capital gain distributions,Amount | 24.0,Y,25,18,"$2,000,000 under $5,000,000",26,117583000.0
+tab14,2021,21in14ar.xls,cgdist,amount,nz,all,Capital gain distributions,Amount | 24.0,Y,25,19,"$5,000,000 under $10,000,000",27,32557000.0
+tab14,2021,21in14ar.xls,cgdist,amount,nz,all,Capital gain distributions,Amount | 24.0,Y,25,20,"$10,000,000 or more",28,75734000.0
+tab14,2021,21in14ar.xls,cgtaxable,count,gt0,all,Capital gains — number of returns with net gain,"Sales of capital assets reported on Form 1040, Schedule D [2] | Taxable net gain | Number of returns | 25.0",Z,26,1,"All returns, total",9,20497375.0
+tab14,2021,21in14ar.xls,cgtaxable,count,gt0,all,Capital gains — number of returns with net gain,"Sales of capital assets reported on Form 1040, Schedule D [2] | Taxable net gain | Number of returns | 25.0",Z,26,2,No adjusted gross income,10,168588.0
+tab14,2021,21in14ar.xls,cgtaxable,count,gt0,all,Capital gains — number of returns with net gain,"Sales of capital assets reported on Form 1040, Schedule D [2] | Taxable net gain | Number of returns | 25.0",Z,26,3,"$1 under $5,000",11,329154.0
+tab14,2021,21in14ar.xls,cgtaxable,count,gt0,all,Capital gains — number of returns with net gain,"Sales of capital assets reported on Form 1040, Schedule D [2] | Taxable net gain | Number of returns | 25.0",Z,26,4,"$5,000 under $10,000",12,332066.0
+tab14,2021,21in14ar.xls,cgtaxable,count,gt0,all,Capital gains — number of returns with net gain,"Sales of capital assets reported on Form 1040, Schedule D [2] | Taxable net gain | Number of returns | 25.0",Z,26,5,"$10,000 under $15,000",13,374844.0
+tab14,2021,21in14ar.xls,cgtaxable,count,gt0,all,Capital gains — number of returns with net gain,"Sales of capital assets reported on Form 1040, Schedule D [2] | Taxable net gain | Number of returns | 25.0",Z,26,6,"$15,000 under $20,000",14,419502.0
+tab14,2021,21in14ar.xls,cgtaxable,count,gt0,all,Capital gains — number of returns with net gain,"Sales of capital assets reported on Form 1040, Schedule D [2] | Taxable net gain | Number of returns | 25.0",Z,26,7,"$20,000 under $25,000",15,392742.0
+tab14,2021,21in14ar.xls,cgtaxable,count,gt0,all,Capital gains — number of returns with net gain,"Sales of capital assets reported on Form 1040, Schedule D [2] | Taxable net gain | Number of returns | 25.0",Z,26,8,"$25,000 under $30,000",16,422949.0
+tab14,2021,21in14ar.xls,cgtaxable,count,gt0,all,Capital gains — number of returns with net gain,"Sales of capital assets reported on Form 1040, Schedule D [2] | Taxable net gain | Number of returns | 25.0",Z,26,9,"$30,000 under $40,000",17,907889.0
+tab14,2021,21in14ar.xls,cgtaxable,count,gt0,all,Capital gains — number of returns with net gain,"Sales of capital assets reported on Form 1040, Schedule D [2] | Taxable net gain | Number of returns | 25.0",Z,26,10,"$40,000 under $50,000",18,975226.0
+tab14,2021,21in14ar.xls,cgtaxable,count,gt0,all,Capital gains — number of returns with net gain,"Sales of capital assets reported on Form 1040, Schedule D [2] | Taxable net gain | Number of returns | 25.0",Z,26,11,"$50,000 under $75,000",19,2364604.0
+tab14,2021,21in14ar.xls,cgtaxable,count,gt0,all,Capital gains — number of returns with net gain,"Sales of capital assets reported on Form 1040, Schedule D [2] | Taxable net gain | Number of returns | 25.0",Z,26,12,"$75,000 under $100,000",20,2289026.0
+tab14,2021,21in14ar.xls,cgtaxable,count,gt0,all,Capital gains — number of returns with net gain,"Sales of capital assets reported on Form 1040, Schedule D [2] | Taxable net gain | Number of returns | 25.0",Z,26,13,"$100,000 under $200,000",21,5731237.0
+tab14,2021,21in14ar.xls,cgtaxable,count,gt0,all,Capital gains — number of returns with net gain,"Sales of capital assets reported on Form 1040, Schedule D [2] | Taxable net gain | Number of returns | 25.0",Z,26,14,"$200,000 under $500,000",22,4062046.0
+tab14,2021,21in14ar.xls,cgtaxable,count,gt0,all,Capital gains — number of returns with net gain,"Sales of capital assets reported on Form 1040, Schedule D [2] | Taxable net gain | Number of returns | 25.0",Z,26,15,"$500,000 under $1,000,000",23,1052486.0
+tab14,2021,21in14ar.xls,cgtaxable,count,gt0,all,Capital gains — number of returns with net gain,"Sales of capital assets reported on Form 1040, Schedule D [2] | Taxable net gain | Number of returns | 25.0",Z,26,16,"$1,000,000 under $1,500,000",24,276029.0
+tab14,2021,21in14ar.xls,cgtaxable,count,gt0,all,Capital gains — number of returns with net gain,"Sales of capital assets reported on Form 1040, Schedule D [2] | Taxable net gain | Number of returns | 25.0",Z,26,17,"$1,500,000 under $2,000,000",25,119345.0
+tab14,2021,21in14ar.xls,cgtaxable,count,gt0,all,Capital gains — number of returns with net gain,"Sales of capital assets reported on Form 1040, Schedule D [2] | Taxable net gain | Number of returns | 25.0",Z,26,18,"$2,000,000 under $5,000,000",26,185600.0
+tab14,2021,21in14ar.xls,cgtaxable,count,gt0,all,Capital gains — number of returns with net gain,"Sales of capital assets reported on Form 1040, Schedule D [2] | Taxable net gain | Number of returns | 25.0",Z,26,19,"$5,000,000 under $10,000,000",27,53600.0
+tab14,2021,21in14ar.xls,cgtaxable,count,gt0,all,Capital gains — number of returns with net gain,"Sales of capital assets reported on Form 1040, Schedule D [2] | Taxable net gain | Number of returns | 25.0",Z,26,20,"$10,000,000 or more",28,40444.0
+tab14,2021,21in14ar.xls,cgtaxable,amount,gt0,all,Net capital gain,Amount | 26.0,AA,27,1,"All returns, total",9,2048795356000.0
+tab14,2021,21in14ar.xls,cgtaxable,amount,gt0,all,Net capital gain,Amount | 26.0,AA,27,2,No adjusted gross income,10,19015791000.0
+tab14,2021,21in14ar.xls,cgtaxable,amount,gt0,all,Net capital gain,Amount | 26.0,AA,27,3,"$1 under $5,000",11,594696000.0
+tab14,2021,21in14ar.xls,cgtaxable,amount,gt0,all,Net capital gain,Amount | 26.0,AA,27,4,"$5,000 under $10,000",12,1350615000.0
+tab14,2021,21in14ar.xls,cgtaxable,amount,gt0,all,Net capital gain,Amount | 26.0,AA,27,5,"$10,000 under $15,000",13,1733569000.0
+tab14,2021,21in14ar.xls,cgtaxable,amount,gt0,all,Net capital gain,Amount | 26.0,AA,27,6,"$15,000 under $20,000",14,2147651000.0
+tab14,2021,21in14ar.xls,cgtaxable,amount,gt0,all,Net capital gain,Amount | 26.0,AA,27,7,"$20,000 under $25,000",15,2033390000.0
+tab14,2021,21in14ar.xls,cgtaxable,amount,gt0,all,Net capital gain,Amount | 26.0,AA,27,8,"$25,000 under $30,000",16,2354104000.0
+tab14,2021,21in14ar.xls,cgtaxable,amount,gt0,all,Net capital gain,Amount | 26.0,AA,27,9,"$30,000 under $40,000",17,5913774000.0
+tab14,2021,21in14ar.xls,cgtaxable,amount,gt0,all,Net capital gain,Amount | 26.0,AA,27,10,"$40,000 under $50,000",18,6347528000.0
+tab14,2021,21in14ar.xls,cgtaxable,amount,gt0,all,Net capital gain,Amount | 26.0,AA,27,11,"$50,000 under $75,000",19,20655401000.0
+tab14,2021,21in14ar.xls,cgtaxable,amount,gt0,all,Net capital gain,Amount | 26.0,AA,27,12,"$75,000 under $100,000",20,27763563000.0
+tab14,2021,21in14ar.xls,cgtaxable,amount,gt0,all,Net capital gain,Amount | 26.0,AA,27,13,"$100,000 under $200,000",21,126157757000.0
+tab14,2021,21in14ar.xls,cgtaxable,amount,gt0,all,Net capital gain,Amount | 26.0,AA,27,14,"$200,000 under $500,000",22,239861626000.0
+tab14,2021,21in14ar.xls,cgtaxable,amount,gt0,all,Net capital gain,Amount | 26.0,AA,27,15,"$500,000 under $1,000,000",23,185067883000.0
+tab14,2021,21in14ar.xls,cgtaxable,amount,gt0,all,Net capital gain,Amount | 26.0,AA,27,16,"$1,000,000 under $1,500,000",24,98605526000.0
+tab14,2021,21in14ar.xls,cgtaxable,amount,gt0,all,Net capital gain,Amount | 26.0,AA,27,17,"$1,500,000 under $2,000,000",25,67058929000.0
+tab14,2021,21in14ar.xls,cgtaxable,amount,gt0,all,Net capital gain,Amount | 26.0,AA,27,18,"$2,000,000 under $5,000,000",26,216578879000.0
+tab14,2021,21in14ar.xls,cgtaxable,amount,gt0,all,Net capital gain,Amount | 26.0,AA,27,19,"$5,000,000 under $10,000,000",27,175240752000.0
+tab14,2021,21in14ar.xls,cgtaxable,amount,gt0,all,Net capital gain,Amount | 26.0,AA,27,20,"$10,000,000 or more",28,850313922000.0
+tab14,2021,21in14ar.xls,cgtaxable,count,lt0,all,Capital gains — number of returns with net loss,Taxable net loss | Number of returns | 27.0,AB,28,1,"All returns, total",9,8074079.0
+tab14,2021,21in14ar.xls,cgtaxable,count,lt0,all,Capital gains — number of returns with net loss,Taxable net loss | Number of returns | 27.0,AB,28,2,No adjusted gross income,10,347354.0
+tab14,2021,21in14ar.xls,cgtaxable,count,lt0,all,Capital gains — number of returns with net loss,Taxable net loss | Number of returns | 27.0,AB,28,3,"$1 under $5,000",11,232283.0
+tab14,2021,21in14ar.xls,cgtaxable,count,lt0,all,Capital gains — number of returns with net loss,Taxable net loss | Number of returns | 27.0,AB,28,4,"$5,000 under $10,000",12,254651.0
+tab14,2021,21in14ar.xls,cgtaxable,count,lt0,all,Capital gains — number of returns with net loss,Taxable net loss | Number of returns | 27.0,AB,28,5,"$10,000 under $15,000",13,261320.0
+tab14,2021,21in14ar.xls,cgtaxable,count,lt0,all,Capital gains — number of returns with net loss,Taxable net loss | Number of returns | 27.0,AB,28,6,"$15,000 under $20,000",14,277969.0
+tab14,2021,21in14ar.xls,cgtaxable,count,lt0,all,Capital gains — number of returns with net loss,Taxable net loss | Number of returns | 27.0,AB,28,7,"$20,000 under $25,000",15,236185.0
+tab14,2021,21in14ar.xls,cgtaxable,count,lt0,all,Capital gains — number of returns with net loss,Taxable net loss | Number of returns | 27.0,AB,28,8,"$25,000 under $30,000",16,248004.0
+tab14,2021,21in14ar.xls,cgtaxable,count,lt0,all,Capital gains — number of returns with net loss,Taxable net loss | Number of returns | 27.0,AB,28,9,"$30,000 under $40,000",17,466004.0
+tab14,2021,21in14ar.xls,cgtaxable,count,lt0,all,Capital gains — number of returns with net loss,Taxable net loss | Number of returns | 27.0,AB,28,10,"$40,000 under $50,000",18,414682.0
+tab14,2021,21in14ar.xls,cgtaxable,count,lt0,all,Capital gains — number of returns with net loss,Taxable net loss | Number of returns | 27.0,AB,28,11,"$50,000 under $75,000",19,1009155.0
+tab14,2021,21in14ar.xls,cgtaxable,count,lt0,all,Capital gains — number of returns with net loss,Taxable net loss | Number of returns | 27.0,AB,28,12,"$75,000 under $100,000",20,853928.0
+tab14,2021,21in14ar.xls,cgtaxable,count,lt0,all,Capital gains — number of returns with net loss,Taxable net loss | Number of returns | 27.0,AB,28,13,"$100,000 under $200,000",21,1948252.0
+tab14,2021,21in14ar.xls,cgtaxable,count,lt0,all,Capital gains — number of returns with net loss,Taxable net loss | Number of returns | 27.0,AB,28,14,"$200,000 under $500,000",22,1153231.0
+tab14,2021,21in14ar.xls,cgtaxable,count,lt0,all,Capital gains — number of returns with net loss,Taxable net loss | Number of returns | 27.0,AB,28,15,"$500,000 under $1,000,000",23,250020.0
+tab14,2021,21in14ar.xls,cgtaxable,count,lt0,all,Capital gains — number of returns with net loss,Taxable net loss | Number of returns | 27.0,AB,28,16,"$1,000,000 under $1,500,000",24,55654.0
+tab14,2021,21in14ar.xls,cgtaxable,count,lt0,all,Capital gains — number of returns with net loss,Taxable net loss | Number of returns | 27.0,AB,28,17,"$1,500,000 under $2,000,000",25,22285.0
+tab14,2021,21in14ar.xls,cgtaxable,count,lt0,all,Capital gains — number of returns with net loss,Taxable net loss | Number of returns | 27.0,AB,28,18,"$2,000,000 under $5,000,000",26,31810.0
+tab14,2021,21in14ar.xls,cgtaxable,count,lt0,all,Capital gains — number of returns with net loss,Taxable net loss | Number of returns | 27.0,AB,28,19,"$5,000,000 under $10,000,000",27,7274.0
+tab14,2021,21in14ar.xls,cgtaxable,count,lt0,all,Capital gains — number of returns with net loss,Taxable net loss | Number of returns | 27.0,AB,28,20,"$10,000,000 or more",28,4018.0
+tab14,2021,21in14ar.xls,cgtaxable,amount,lt0,all,Net capital loss,Amount | 28.0,AC,29,1,"All returns, total",9,16241889000.0
+tab14,2021,21in14ar.xls,cgtaxable,amount,lt0,all,Net capital loss,Amount | 28.0,AC,29,2,No adjusted gross income,10,860874000.0
+tab14,2021,21in14ar.xls,cgtaxable,amount,lt0,all,Net capital loss,Amount | 28.0,AC,29,3,"$1 under $5,000",11,454913000.0
+tab14,2021,21in14ar.xls,cgtaxable,amount,lt0,all,Net capital loss,Amount | 28.0,AC,29,4,"$5,000 under $10,000",12,482569000.0
+tab14,2021,21in14ar.xls,cgtaxable,amount,lt0,all,Net capital loss,Amount | 28.0,AC,29,5,"$10,000 under $15,000",13,501628000.0
+tab14,2021,21in14ar.xls,cgtaxable,amount,lt0,all,Net capital loss,Amount | 28.0,AC,29,6,"$15,000 under $20,000",14,506220000.0
+tab14,2021,21in14ar.xls,cgtaxable,amount,lt0,all,Net capital loss,Amount | 28.0,AC,29,7,"$20,000 under $25,000",15,429782000.0
+tab14,2021,21in14ar.xls,cgtaxable,amount,lt0,all,Net capital loss,Amount | 28.0,AC,29,8,"$25,000 under $30,000",16,453545000.0
+tab14,2021,21in14ar.xls,cgtaxable,amount,lt0,all,Net capital loss,Amount | 28.0,AC,29,9,"$30,000 under $40,000",17,811885000.0
+tab14,2021,21in14ar.xls,cgtaxable,amount,lt0,all,Net capital loss,Amount | 28.0,AC,29,10,"$40,000 under $50,000",18,764543000.0
+tab14,2021,21in14ar.xls,cgtaxable,amount,lt0,all,Net capital loss,Amount | 28.0,AC,29,11,"$50,000 under $75,000",19,1890497000.0
+tab14,2021,21in14ar.xls,cgtaxable,amount,lt0,all,Net capital loss,Amount | 28.0,AC,29,12,"$75,000 under $100,000",20,1644525000.0
+tab14,2021,21in14ar.xls,cgtaxable,amount,lt0,all,Net capital loss,Amount | 28.0,AC,29,13,"$100,000 under $200,000",21,3937902000.0
+tab14,2021,21in14ar.xls,cgtaxable,amount,lt0,all,Net capital loss,Amount | 28.0,AC,29,14,"$200,000 under $500,000",22,2553466000.0
+tab14,2021,21in14ar.xls,cgtaxable,amount,lt0,all,Net capital loss,Amount | 28.0,AC,29,15,"$500,000 under $1,000,000",23,621321000.0
+tab14,2021,21in14ar.xls,cgtaxable,amount,lt0,all,Net capital loss,Amount | 28.0,AC,29,16,"$1,000,000 under $1,500,000",24,147697000.0
+tab14,2021,21in14ar.xls,cgtaxable,amount,lt0,all,Net capital loss,Amount | 28.0,AC,29,17,"$1,500,000 under $2,000,000",25,60591000.0
+tab14,2021,21in14ar.xls,cgtaxable,amount,lt0,all,Net capital loss,Amount | 28.0,AC,29,18,"$2,000,000 under $5,000,000",26,87792000.0
+tab14,2021,21in14ar.xls,cgtaxable,amount,lt0,all,Net capital loss,Amount | 28.0,AC,29,19,"$5,000,000 under $10,000,000",27,20661000.0
+tab14,2021,21in14ar.xls,cgtaxable,amount,lt0,all,Net capital loss,Amount | 28.0,AC,29,20,"$10,000,000 or more",28,11481000.0
+tab14,2021,21in14ar.xls,iradist,count,nz,all,IRA distributions — number of returns,Taxable Individual Retirement Arrangement (IRA) distributions | Number of returns | 33.0,AH,34,1,"All returns, total",9,15584165.0
+tab14,2021,21in14ar.xls,iradist,count,nz,all,IRA distributions — number of returns,Taxable Individual Retirement Arrangement (IRA) distributions | Number of returns | 33.0,AH,34,2,No adjusted gross income,10,114208.0
+tab14,2021,21in14ar.xls,iradist,count,nz,all,IRA distributions — number of returns,Taxable Individual Retirement Arrangement (IRA) distributions | Number of returns | 33.0,AH,34,3,"$1 under $5,000",11,291248.0
+tab14,2021,21in14ar.xls,iradist,count,nz,all,IRA distributions — number of returns,Taxable Individual Retirement Arrangement (IRA) distributions | Number of returns | 33.0,AH,34,4,"$5,000 under $10,000",12,505204.0
+tab14,2021,21in14ar.xls,iradist,count,nz,all,IRA distributions — number of returns,Taxable Individual Retirement Arrangement (IRA) distributions | Number of returns | 33.0,AH,34,5,"$10,000 under $15,000",13,557286.0
+tab14,2021,21in14ar.xls,iradist,count,nz,all,IRA distributions — number of returns,Taxable Individual Retirement Arrangement (IRA) distributions | Number of returns | 33.0,AH,34,6,"$15,000 under $20,000",14,545318.0
+tab14,2021,21in14ar.xls,iradist,count,nz,all,IRA distributions — number of returns,Taxable Individual Retirement Arrangement (IRA) distributions | Number of returns | 33.0,AH,34,7,"$20,000 under $25,000",15,490238.0
+tab14,2021,21in14ar.xls,iradist,count,nz,all,IRA distributions — number of returns,Taxable Individual Retirement Arrangement (IRA) distributions | Number of returns | 33.0,AH,34,8,"$25,000 under $30,000",16,509524.0
+tab14,2021,21in14ar.xls,iradist,count,nz,all,IRA distributions — number of returns,Taxable Individual Retirement Arrangement (IRA) distributions | Number of returns | 33.0,AH,34,9,"$30,000 under $40,000",17,887479.0
+tab14,2021,21in14ar.xls,iradist,count,nz,all,IRA distributions — number of returns,Taxable Individual Retirement Arrangement (IRA) distributions | Number of returns | 33.0,AH,34,10,"$40,000 under $50,000",18,926489.0
+tab14,2021,21in14ar.xls,iradist,count,nz,all,IRA distributions — number of returns,Taxable Individual Retirement Arrangement (IRA) distributions | Number of returns | 33.0,AH,34,11,"$50,000 under $75,000",19,2255659.0
+tab14,2021,21in14ar.xls,iradist,count,nz,all,IRA distributions — number of returns,Taxable Individual Retirement Arrangement (IRA) distributions | Number of returns | 33.0,AH,34,12,"$75,000 under $100,000",20,2007006.0
+tab14,2021,21in14ar.xls,iradist,count,nz,all,IRA distributions — number of returns,Taxable Individual Retirement Arrangement (IRA) distributions | Number of returns | 33.0,AH,34,13,"$100,000 under $200,000",21,4181158.0
+tab14,2021,21in14ar.xls,iradist,count,nz,all,IRA distributions — number of returns,Taxable Individual Retirement Arrangement (IRA) distributions | Number of returns | 33.0,AH,34,14,"$200,000 under $500,000",22,1849303.0
+tab14,2021,21in14ar.xls,iradist,count,nz,all,IRA distributions — number of returns,Taxable Individual Retirement Arrangement (IRA) distributions | Number of returns | 33.0,AH,34,15,"$500,000 under $1,000,000",23,308885.0
+tab14,2021,21in14ar.xls,iradist,count,nz,all,IRA distributions — number of returns,Taxable Individual Retirement Arrangement (IRA) distributions | Number of returns | 33.0,AH,34,16,"$1,000,000 under $1,500,000",24,67779.0
+tab14,2021,21in14ar.xls,iradist,count,nz,all,IRA distributions — number of returns,Taxable Individual Retirement Arrangement (IRA) distributions | Number of returns | 33.0,AH,34,17,"$1,500,000 under $2,000,000",25,28426.0
+tab14,2021,21in14ar.xls,iradist,count,nz,all,IRA distributions — number of returns,Taxable Individual Retirement Arrangement (IRA) distributions | Number of returns | 33.0,AH,34,18,"$2,000,000 under $5,000,000",26,41232.0
+tab14,2021,21in14ar.xls,iradist,count,nz,all,IRA distributions — number of returns,Taxable Individual Retirement Arrangement (IRA) distributions | Number of returns | 33.0,AH,34,19,"$5,000,000 under $10,000,000",27,10727.0
+tab14,2021,21in14ar.xls,iradist,count,nz,all,IRA distributions — number of returns,Taxable Individual Retirement Arrangement (IRA) distributions | Number of returns | 33.0,AH,34,20,"$10,000,000 or more",28,6996.0
+tab14,2021,21in14ar.xls,iradist,amount,nz,all,IRA distributions,Amount | 34.0,AI,35,1,"All returns, total",9,408382461000.0
+tab14,2021,21in14ar.xls,iradist,amount,nz,all,IRA distributions,Amount | 34.0,AI,35,2,No adjusted gross income,10,1992887000.0
+tab14,2021,21in14ar.xls,iradist,amount,nz,all,IRA distributions,Amount | 34.0,AI,35,3,"$1 under $5,000",11,803551000.0
+tab14,2021,21in14ar.xls,iradist,amount,nz,all,IRA distributions,Amount | 34.0,AI,35,4,"$5,000 under $10,000",12,2565706000.0
+tab14,2021,21in14ar.xls,iradist,amount,nz,all,IRA distributions,Amount | 34.0,AI,35,5,"$10,000 under $15,000",13,3938974000.0
+tab14,2021,21in14ar.xls,iradist,amount,nz,all,IRA distributions,Amount | 34.0,AI,35,6,"$15,000 under $20,000",14,4783292000.0
+tab14,2021,21in14ar.xls,iradist,amount,nz,all,IRA distributions,Amount | 34.0,AI,35,7,"$20,000 under $25,000",15,4888488000.0
+tab14,2021,21in14ar.xls,iradist,amount,nz,all,IRA distributions,Amount | 34.0,AI,35,8,"$25,000 under $30,000",16,5079260000.0
+tab14,2021,21in14ar.xls,iradist,amount,nz,all,IRA distributions,Amount | 34.0,AI,35,9,"$30,000 under $40,000",17,9886903000.0
+tab14,2021,21in14ar.xls,iradist,amount,nz,all,IRA distributions,Amount | 34.0,AI,35,10,"$40,000 under $50,000",18,11265236000.0
+tab14,2021,21in14ar.xls,iradist,amount,nz,all,IRA distributions,Amount | 34.0,AI,35,11,"$50,000 under $75,000",19,32852491000.0
+tab14,2021,21in14ar.xls,iradist,amount,nz,all,IRA distributions,Amount | 34.0,AI,35,12,"$75,000 under $100,000",20,39055981000.0
+tab14,2021,21in14ar.xls,iradist,amount,nz,all,IRA distributions,Amount | 34.0,AI,35,13,"$100,000 under $200,000",21,131891844000.0
+tab14,2021,21in14ar.xls,iradist,amount,nz,all,IRA distributions,Amount | 34.0,AI,35,14,"$200,000 under $500,000",22,108787482000.0
+tab14,2021,21in14ar.xls,iradist,amount,nz,all,IRA distributions,Amount | 34.0,AI,35,15,"$500,000 under $1,000,000",23,25693093000.0
+tab14,2021,21in14ar.xls,iradist,amount,nz,all,IRA distributions,Amount | 34.0,AI,35,16,"$1,000,000 under $1,500,000",24,6573862000.0
+tab14,2021,21in14ar.xls,iradist,amount,nz,all,IRA distributions,Amount | 34.0,AI,35,17,"$1,500,000 under $2,000,000",25,3313664000.0
+tab14,2021,21in14ar.xls,iradist,amount,nz,all,IRA distributions,Amount | 34.0,AI,35,18,"$2,000,000 under $5,000,000",26,7074590000.0
+tab14,2021,21in14ar.xls,iradist,amount,nz,all,IRA distributions,Amount | 34.0,AI,35,19,"$5,000,000 under $10,000,000",27,3128843000.0
+tab14,2021,21in14ar.xls,iradist,amount,nz,all,IRA distributions,Amount | 34.0,AI,35,20,"$10,000,000 or more",28,4806315000.0
+tab14,2021,21in14ar.xls,pensions,count,nz,all,Pensions and annuities — number of returns,Pensions and annuities | Total [1] | Number of returns | 35.0,AJ,36,1,"All returns, total",9,32171355.0
+tab14,2021,21in14ar.xls,pensions,count,nz,all,Pensions and annuities — number of returns,Pensions and annuities | Total [1] | Number of returns | 35.0,AJ,36,2,No adjusted gross income,10,248894.0
+tab14,2021,21in14ar.xls,pensions,count,nz,all,Pensions and annuities — number of returns,Pensions and annuities | Total [1] | Number of returns | 35.0,AJ,36,3,"$1 under $5,000",11,747616.0
+tab14,2021,21in14ar.xls,pensions,count,nz,all,Pensions and annuities — number of returns,Pensions and annuities | Total [1] | Number of returns | 35.0,AJ,36,4,"$5,000 under $10,000",12,983565.0
+tab14,2021,21in14ar.xls,pensions,count,nz,all,Pensions and annuities — number of returns,Pensions and annuities | Total [1] | Number of returns | 35.0,AJ,36,5,"$10,000 under $15,000",13,1301846.0
+tab14,2021,21in14ar.xls,pensions,count,nz,all,Pensions and annuities — number of returns,Pensions and annuities | Total [1] | Number of returns | 35.0,AJ,36,6,"$15,000 under $20,000",14,1322953.0
+tab14,2021,21in14ar.xls,pensions,count,nz,all,Pensions and annuities — number of returns,Pensions and annuities | Total [1] | Number of returns | 35.0,AJ,36,7,"$20,000 under $25,000",15,1257174.0
+tab14,2021,21in14ar.xls,pensions,count,nz,all,Pensions and annuities — number of returns,Pensions and annuities | Total [1] | Number of returns | 35.0,AJ,36,8,"$25,000 under $30,000",16,1258069.0
+tab14,2021,21in14ar.xls,pensions,count,nz,all,Pensions and annuities — number of returns,Pensions and annuities | Total [1] | Number of returns | 35.0,AJ,36,9,"$30,000 under $40,000",17,2362435.0
+tab14,2021,21in14ar.xls,pensions,count,nz,all,Pensions and annuities — number of returns,Pensions and annuities | Total [1] | Number of returns | 35.0,AJ,36,10,"$40,000 under $50,000",18,2237532.0
+tab14,2021,21in14ar.xls,pensions,count,nz,all,Pensions and annuities — number of returns,Pensions and annuities | Total [1] | Number of returns | 35.0,AJ,36,11,"$50,000 under $75,000",19,5090890.0
+tab14,2021,21in14ar.xls,pensions,count,nz,all,Pensions and annuities — number of returns,Pensions and annuities | Total [1] | Number of returns | 35.0,AJ,36,12,"$75,000 under $100,000",20,4189391.0
+tab14,2021,21in14ar.xls,pensions,count,nz,all,Pensions and annuities — number of returns,Pensions and annuities | Total [1] | Number of returns | 35.0,AJ,36,13,"$100,000 under $200,000",21,7698980.0
+tab14,2021,21in14ar.xls,pensions,count,nz,all,Pensions and annuities — number of returns,Pensions and annuities | Total [1] | Number of returns | 35.0,AJ,36,14,"$200,000 under $500,000",22,2835784.0
+tab14,2021,21in14ar.xls,pensions,count,nz,all,Pensions and annuities — number of returns,Pensions and annuities | Total [1] | Number of returns | 35.0,AJ,36,15,"$500,000 under $1,000,000",23,423868.0
+tab14,2021,21in14ar.xls,pensions,count,nz,all,Pensions and annuities — number of returns,Pensions and annuities | Total [1] | Number of returns | 35.0,AJ,36,16,"$1,000,000 under $1,500,000",24,93871.0
+tab14,2021,21in14ar.xls,pensions,count,nz,all,Pensions and annuities — number of returns,Pensions and annuities | Total [1] | Number of returns | 35.0,AJ,36,17,"$1,500,000 under $2,000,000",25,38651.0
+tab14,2021,21in14ar.xls,pensions,count,nz,all,Pensions and annuities — number of returns,Pensions and annuities | Total [1] | Number of returns | 35.0,AJ,36,18,"$2,000,000 under $5,000,000",26,54952.0
+tab14,2021,21in14ar.xls,pensions,count,nz,all,Pensions and annuities — number of returns,Pensions and annuities | Total [1] | Number of returns | 35.0,AJ,36,19,"$5,000,000 under $10,000,000",27,14628.0
+tab14,2021,21in14ar.xls,pensions,count,nz,all,Pensions and annuities — number of returns,Pensions and annuities | Total [1] | Number of returns | 35.0,AJ,36,20,"$10,000,000 or more",28,10257.0
+tab14,2021,21in14ar.xls,pensions,amount,nz,all,Pensions and annuities (total),Amount | 36.0,AK,37,1,"All returns, total",9,1506948061000.0
+tab14,2021,21in14ar.xls,pensions,amount,nz,all,Pensions and annuities (total),Amount | 36.0,AK,37,2,No adjusted gross income,10,6763059000.0
+tab14,2021,21in14ar.xls,pensions,amount,nz,all,Pensions and annuities (total),Amount | 36.0,AK,37,3,"$1 under $5,000",11,5734467000.0
+tab14,2021,21in14ar.xls,pensions,amount,nz,all,Pensions and annuities (total),Amount | 36.0,AK,37,4,"$5,000 under $10,000",12,9362560000.0
+tab14,2021,21in14ar.xls,pensions,amount,nz,all,Pensions and annuities (total),Amount | 36.0,AK,37,5,"$10,000 under $15,000",13,15555885000.0
+tab14,2021,21in14ar.xls,pensions,amount,nz,all,Pensions and annuities (total),Amount | 36.0,AK,37,6,"$15,000 under $20,000",14,17825944000.0
+tab14,2021,21in14ar.xls,pensions,amount,nz,all,Pensions and annuities (total),Amount | 36.0,AK,37,7,"$20,000 under $25,000",15,18785258000.0
+tab14,2021,21in14ar.xls,pensions,amount,nz,all,Pensions and annuities (total),Amount | 36.0,AK,37,8,"$25,000 under $30,000",16,22377250000.0
+tab14,2021,21in14ar.xls,pensions,amount,nz,all,Pensions and annuities (total),Amount | 36.0,AK,37,9,"$30,000 under $40,000",17,50636533000.0
+tab14,2021,21in14ar.xls,pensions,amount,nz,all,Pensions and annuities (total),Amount | 36.0,AK,37,10,"$40,000 under $50,000",18,52865761000.0
+tab14,2021,21in14ar.xls,pensions,amount,nz,all,Pensions and annuities (total),Amount | 36.0,AK,37,11,"$50,000 under $75,000",19,164394888000.0
+tab14,2021,21in14ar.xls,pensions,amount,nz,all,Pensions and annuities (total),Amount | 36.0,AK,37,12,"$75,000 under $100,000",20,183811124000.0
+tab14,2021,21in14ar.xls,pensions,amount,nz,all,Pensions and annuities (total),Amount | 36.0,AK,37,13,"$100,000 under $200,000",21,502675859000.0
+tab14,2021,21in14ar.xls,pensions,amount,nz,all,Pensions and annuities (total),Amount | 36.0,AK,37,14,"$200,000 under $500,000",22,323076078000.0
+tab14,2021,21in14ar.xls,pensions,amount,nz,all,Pensions and annuities (total),Amount | 36.0,AK,37,15,"$500,000 under $1,000,000",23,77426767000.0
+tab14,2021,21in14ar.xls,pensions,amount,nz,all,Pensions and annuities (total),Amount | 36.0,AK,37,16,"$1,000,000 under $1,500,000",24,21775336000.0
+tab14,2021,21in14ar.xls,pensions,amount,nz,all,Pensions and annuities (total),Amount | 36.0,AK,37,17,"$1,500,000 under $2,000,000",25,8868497000.0
+tab14,2021,21in14ar.xls,pensions,amount,nz,all,Pensions and annuities (total),Amount | 36.0,AK,37,18,"$2,000,000 under $5,000,000",26,15425227000.0
+tab14,2021,21in14ar.xls,pensions,amount,nz,all,Pensions and annuities (total),Amount | 36.0,AK,37,19,"$5,000,000 under $10,000,000",27,5131480000.0
+tab14,2021,21in14ar.xls,pensions,amount,nz,all,Pensions and annuities (total),Amount | 36.0,AK,37,20,"$10,000,000 or more",28,4456090000.0
+tab14,2021,21in14ar.xls,pensions_taxable,count,nz,all,Pensions and annuities (taxable) — number of returns,Taxable [3] | Number of returns | 37.0,AL,38,1,"All returns, total",9,29357159.0
+tab14,2021,21in14ar.xls,pensions_taxable,count,nz,all,Pensions and annuities (taxable) — number of returns,Taxable [3] | Number of returns | 37.0,AL,38,2,No adjusted gross income,10,193961.0
+tab14,2021,21in14ar.xls,pensions_taxable,count,nz,all,Pensions and annuities (taxable) — number of returns,Taxable [3] | Number of returns | 37.0,AL,38,3,"$1 under $5,000",11,693782.0
+tab14,2021,21in14ar.xls,pensions_taxable,count,nz,all,Pensions and annuities (taxable) — number of returns,Taxable [3] | Number of returns | 37.0,AL,38,4,"$5,000 under $10,000",12,944195.0
+tab14,2021,21in14ar.xls,pensions_taxable,count,nz,all,Pensions and annuities (taxable) — number of returns,Taxable [3] | Number of returns | 37.0,AL,38,5,"$10,000 under $15,000",13,1250111.0
+tab14,2021,21in14ar.xls,pensions_taxable,count,nz,all,Pensions and annuities (taxable) — number of returns,Taxable [3] | Number of returns | 37.0,AL,38,6,"$15,000 under $20,000",14,1268203.0
+tab14,2021,21in14ar.xls,pensions_taxable,count,nz,all,Pensions and annuities (taxable) — number of returns,Taxable [3] | Number of returns | 37.0,AL,38,7,"$20,000 under $25,000",15,1195253.0
+tab14,2021,21in14ar.xls,pensions_taxable,count,nz,all,Pensions and annuities (taxable) — number of returns,Taxable [3] | Number of returns | 37.0,AL,38,8,"$25,000 under $30,000",16,1176711.0
+tab14,2021,21in14ar.xls,pensions_taxable,count,nz,all,Pensions and annuities (taxable) — number of returns,Taxable [3] | Number of returns | 37.0,AL,38,9,"$30,000 under $40,000",17,2197626.0
+tab14,2021,21in14ar.xls,pensions_taxable,count,nz,all,Pensions and annuities (taxable) — number of returns,Taxable [3] | Number of returns | 37.0,AL,38,10,"$40,000 under $50,000",18,2079488.0
+tab14,2021,21in14ar.xls,pensions_taxable,count,nz,all,Pensions and annuities (taxable) — number of returns,Taxable [3] | Number of returns | 37.0,AL,38,11,"$50,000 under $75,000",19,4737483.0
+tab14,2021,21in14ar.xls,pensions_taxable,count,nz,all,Pensions and annuities (taxable) — number of returns,Taxable [3] | Number of returns | 37.0,AL,38,12,"$75,000 under $100,000",20,3870768.0
+tab14,2021,21in14ar.xls,pensions_taxable,count,nz,all,Pensions and annuities (taxable) — number of returns,Taxable [3] | Number of returns | 37.0,AL,38,13,"$100,000 under $200,000",21,6914014.0
+tab14,2021,21in14ar.xls,pensions_taxable,count,nz,all,Pensions and annuities (taxable) — number of returns,Taxable [3] | Number of returns | 37.0,AL,38,14,"$200,000 under $500,000",22,2378973.0
+tab14,2021,21in14ar.xls,pensions_taxable,count,nz,all,Pensions and annuities (taxable) — number of returns,Taxable [3] | Number of returns | 37.0,AL,38,15,"$500,000 under $1,000,000",23,309957.0
+tab14,2021,21in14ar.xls,pensions_taxable,count,nz,all,Pensions and annuities (taxable) — number of returns,Taxable [3] | Number of returns | 37.0,AL,38,16,"$1,000,000 under $1,500,000",24,64883.0
+tab14,2021,21in14ar.xls,pensions_taxable,count,nz,all,Pensions and annuities (taxable) — number of returns,Taxable [3] | Number of returns | 37.0,AL,38,17,"$1,500,000 under $2,000,000",25,26817.0
+tab14,2021,21in14ar.xls,pensions_taxable,count,nz,all,Pensions and annuities (taxable) — number of returns,Taxable [3] | Number of returns | 37.0,AL,38,18,"$2,000,000 under $5,000,000",26,37790.0
+tab14,2021,21in14ar.xls,pensions_taxable,count,nz,all,Pensions and annuities (taxable) — number of returns,Taxable [3] | Number of returns | 37.0,AL,38,19,"$5,000,000 under $10,000,000",27,9918.0
+tab14,2021,21in14ar.xls,pensions_taxable,count,nz,all,Pensions and annuities (taxable) — number of returns,Taxable [3] | Number of returns | 37.0,AL,38,20,"$10,000,000 or more",28,7225.0
+tab14,2021,21in14ar.xls,pensions_taxable,amount,nz,all,Pensions and annuities (taxable),Amount | 38.0,AM,39,1,"All returns, total",9,858038339000.0
+tab14,2021,21in14ar.xls,pensions_taxable,amount,nz,all,Pensions and annuities (taxable),Amount | 38.0,AM,39,2,No adjusted gross income,10,3171606000.0
+tab14,2021,21in14ar.xls,pensions_taxable,amount,nz,all,Pensions and annuities (taxable),Amount | 38.0,AM,39,3,"$1 under $5,000",11,2194380000.0
+tab14,2021,21in14ar.xls,pensions_taxable,amount,nz,all,Pensions and annuities (taxable),Amount | 38.0,AM,39,4,"$5,000 under $10,000",12,5601441000.0
+tab14,2021,21in14ar.xls,pensions_taxable,amount,nz,all,Pensions and annuities (taxable),Amount | 38.0,AM,39,5,"$10,000 under $15,000",13,11373258000.0
+tab14,2021,21in14ar.xls,pensions_taxable,amount,nz,all,Pensions and annuities (taxable),Amount | 38.0,AM,39,6,"$15,000 under $20,000",14,14244330000.0
+tab14,2021,21in14ar.xls,pensions_taxable,amount,nz,all,Pensions and annuities (taxable),Amount | 38.0,AM,39,7,"$20,000 under $25,000",15,15028717000.0
+tab14,2021,21in14ar.xls,pensions_taxable,amount,nz,all,Pensions and annuities (taxable),Amount | 38.0,AM,39,8,"$25,000 under $30,000",16,16915492000.0
+tab14,2021,21in14ar.xls,pensions_taxable,amount,nz,all,Pensions and annuities (taxable),Amount | 38.0,AM,39,9,"$30,000 under $40,000",17,36742864000.0
+tab14,2021,21in14ar.xls,pensions_taxable,amount,nz,all,Pensions and annuities (taxable),Amount | 38.0,AM,39,10,"$40,000 under $50,000",18,40461903000.0
+tab14,2021,21in14ar.xls,pensions_taxable,amount,nz,all,Pensions and annuities (taxable),Amount | 38.0,AM,39,11,"$50,000 under $75,000",19,118581365000.0
+tab14,2021,21in14ar.xls,pensions_taxable,amount,nz,all,Pensions and annuities (taxable),Amount | 38.0,AM,39,12,"$75,000 under $100,000",20,122865979000.0
+tab14,2021,21in14ar.xls,pensions_taxable,amount,nz,all,Pensions and annuities (taxable),Amount | 38.0,AM,39,13,"$100,000 under $200,000",21,295456804000.0
+tab14,2021,21in14ar.xls,pensions_taxable,amount,nz,all,Pensions and annuities (taxable),Amount | 38.0,AM,39,14,"$200,000 under $500,000",22,142093107000.0
+tab14,2021,21in14ar.xls,pensions_taxable,amount,nz,all,Pensions and annuities (taxable),Amount | 38.0,AM,39,15,"$500,000 under $1,000,000",23,21135234000.0
+tab14,2021,21in14ar.xls,pensions_taxable,amount,nz,all,Pensions and annuities (taxable),Amount | 38.0,AM,39,16,"$1,000,000 under $1,500,000",24,4286668000.0
+tab14,2021,21in14ar.xls,pensions_taxable,amount,nz,all,Pensions and annuities (taxable),Amount | 38.0,AM,39,17,"$1,500,000 under $2,000,000",25,1936068000.0
+tab14,2021,21in14ar.xls,pensions_taxable,amount,nz,all,Pensions and annuities (taxable),Amount | 38.0,AM,39,18,"$2,000,000 under $5,000,000",26,3380526000.0
+tab14,2021,21in14ar.xls,pensions_taxable,amount,nz,all,Pensions and annuities (taxable),Amount | 38.0,AM,39,19,"$5,000,000 under $10,000,000",27,1268562000.0
+tab14,2021,21in14ar.xls,pensions_taxable,amount,nz,all,Pensions and annuities (taxable),Amount | 38.0,AM,39,20,"$10,000,000 or more",28,1300036000.0
+tab14,2021,21in14ar.xls,rentroyalty,count,gt0,all,Rent/royalty — number of returns with income,Total rental and royalty | Net income | Number of returns | 51.0,AZ,52,1,"All returns, total",9,6305037.0
+tab14,2021,21in14ar.xls,rentroyalty,count,gt0,all,Rent/royalty — number of returns with income,Total rental and royalty | Net income | Number of returns | 51.0,AZ,52,2,No adjusted gross income,10,127457.0
+tab14,2021,21in14ar.xls,rentroyalty,count,gt0,all,Rent/royalty — number of returns with income,Total rental and royalty | Net income | Number of returns | 51.0,AZ,52,3,"$1 under $5,000",11,105186.0
+tab14,2021,21in14ar.xls,rentroyalty,count,gt0,all,Rent/royalty — number of returns with income,Total rental and royalty | Net income | Number of returns | 51.0,AZ,52,4,"$5,000 under $10,000",12,177352.0
+tab14,2021,21in14ar.xls,rentroyalty,count,gt0,all,Rent/royalty — number of returns with income,Total rental and royalty | Net income | Number of returns | 51.0,AZ,52,5,"$10,000 under $15,000",13,206801.0
+tab14,2021,21in14ar.xls,rentroyalty,count,gt0,all,Rent/royalty — number of returns with income,Total rental and royalty | Net income | Number of returns | 51.0,AZ,52,6,"$15,000 under $20,000",14,192320.0
+tab14,2021,21in14ar.xls,rentroyalty,count,gt0,all,Rent/royalty — number of returns with income,Total rental and royalty | Net income | Number of returns | 51.0,AZ,52,7,"$20,000 under $25,000",15,173129.0
+tab14,2021,21in14ar.xls,rentroyalty,count,gt0,all,Rent/royalty — number of returns with income,Total rental and royalty | Net income | Number of returns | 51.0,AZ,52,8,"$25,000 under $30,000",16,163891.0
+tab14,2021,21in14ar.xls,rentroyalty,count,gt0,all,Rent/royalty — number of returns with income,Total rental and royalty | Net income | Number of returns | 51.0,AZ,52,9,"$30,000 under $40,000",17,271019.0
+tab14,2021,21in14ar.xls,rentroyalty,count,gt0,all,Rent/royalty — number of returns with income,Total rental and royalty | Net income | Number of returns | 51.0,AZ,52,10,"$40,000 under $50,000",18,289556.0
+tab14,2021,21in14ar.xls,rentroyalty,count,gt0,all,Rent/royalty — number of returns with income,Total rental and royalty | Net income | Number of returns | 51.0,AZ,52,11,"$50,000 under $75,000",19,759142.0
+tab14,2021,21in14ar.xls,rentroyalty,count,gt0,all,Rent/royalty — number of returns with income,Total rental and royalty | Net income | Number of returns | 51.0,AZ,52,12,"$75,000 under $100,000",20,711934.0
+tab14,2021,21in14ar.xls,rentroyalty,count,gt0,all,Rent/royalty — number of returns with income,Total rental and royalty | Net income | Number of returns | 51.0,AZ,52,13,"$100,000 under $200,000",21,1629877.0
+tab14,2021,21in14ar.xls,rentroyalty,count,gt0,all,Rent/royalty — number of returns with income,Total rental and royalty | Net income | Number of returns | 51.0,AZ,52,14,"$200,000 under $500,000",22,1009957.0
+tab14,2021,21in14ar.xls,rentroyalty,count,gt0,all,Rent/royalty — number of returns with income,Total rental and royalty | Net income | Number of returns | 51.0,AZ,52,15,"$500,000 under $1,000,000",23,271737.0
+tab14,2021,21in14ar.xls,rentroyalty,count,gt0,all,Rent/royalty — number of returns with income,Total rental and royalty | Net income | Number of returns | 51.0,AZ,52,16,"$1,000,000 under $1,500,000",24,79355.0
+tab14,2021,21in14ar.xls,rentroyalty,count,gt0,all,Rent/royalty — number of returns with income,Total rental and royalty | Net income | Number of returns | 51.0,AZ,52,17,"$1,500,000 under $2,000,000",25,36535.0
+tab14,2021,21in14ar.xls,rentroyalty,count,gt0,all,Rent/royalty — number of returns with income,Total rental and royalty | Net income | Number of returns | 51.0,AZ,52,18,"$2,000,000 under $5,000,000",26,62357.0
+tab14,2021,21in14ar.xls,rentroyalty,count,gt0,all,Rent/royalty — number of returns with income,Total rental and royalty | Net income | Number of returns | 51.0,AZ,52,19,"$5,000,000 under $10,000,000",27,20267.0
+tab14,2021,21in14ar.xls,rentroyalty,count,gt0,all,Rent/royalty — number of returns with income,Total rental and royalty | Net income | Number of returns | 51.0,AZ,52,20,"$10,000,000 or more",28,17163.0
+tab14,2021,21in14ar.xls,rentroyalty,amount,gt0,all,Rent and royalty net income,Amount | 52.0,BA,53,1,"All returns, total",9,125168233000.0
+tab14,2021,21in14ar.xls,rentroyalty,amount,gt0,all,Rent and royalty net income,Amount | 52.0,BA,53,2,No adjusted gross income,10,2442565000.0
+tab14,2021,21in14ar.xls,rentroyalty,amount,gt0,all,Rent and royalty net income,Amount | 52.0,BA,53,3,"$1 under $5,000",11,252165000.0
+tab14,2021,21in14ar.xls,rentroyalty,amount,gt0,all,Rent and royalty net income,Amount | 52.0,BA,53,4,"$5,000 under $10,000",12,810504000.0
+tab14,2021,21in14ar.xls,rentroyalty,amount,gt0,all,Rent and royalty net income,Amount | 52.0,BA,53,5,"$10,000 under $15,000",13,1400866000.0
+tab14,2021,21in14ar.xls,rentroyalty,amount,gt0,all,Rent and royalty net income,Amount | 52.0,BA,53,6,"$15,000 under $20,000",14,1359444000.0
+tab14,2021,21in14ar.xls,rentroyalty,amount,gt0,all,Rent and royalty net income,Amount | 52.0,BA,53,7,"$20,000 under $25,000",15,1326092000.0
+tab14,2021,21in14ar.xls,rentroyalty,amount,gt0,all,Rent and royalty net income,Amount | 52.0,BA,53,8,"$25,000 under $30,000",16,1243079000.0
+tab14,2021,21in14ar.xls,rentroyalty,amount,gt0,all,Rent and royalty net income,Amount | 52.0,BA,53,9,"$30,000 under $40,000",17,2333608000.0
+tab14,2021,21in14ar.xls,rentroyalty,amount,gt0,all,Rent and royalty net income,Amount | 52.0,BA,53,10,"$40,000 under $50,000",18,2115656000.0
+tab14,2021,21in14ar.xls,rentroyalty,amount,gt0,all,Rent and royalty net income,Amount | 52.0,BA,53,11,"$50,000 under $75,000",19,8102192000.0
+tab14,2021,21in14ar.xls,rentroyalty,amount,gt0,all,Rent and royalty net income,Amount | 52.0,BA,53,12,"$75,000 under $100,000",20,7488793000.0
+tab14,2021,21in14ar.xls,rentroyalty,amount,gt0,all,Rent and royalty net income,Amount | 52.0,BA,53,13,"$100,000 under $200,000",21,23848755000.0
+tab14,2021,21in14ar.xls,rentroyalty,amount,gt0,all,Rent and royalty net income,Amount | 52.0,BA,53,14,"$200,000 under $500,000",22,27515158000.0
+tab14,2021,21in14ar.xls,rentroyalty,amount,gt0,all,Rent and royalty net income,Amount | 52.0,BA,53,15,"$500,000 under $1,000,000",23,13796937000.0
+tab14,2021,21in14ar.xls,rentroyalty,amount,gt0,all,Rent and royalty net income,Amount | 52.0,BA,53,16,"$1,000,000 under $1,500,000",24,5825852000.0
+tab14,2021,21in14ar.xls,rentroyalty,amount,gt0,all,Rent and royalty net income,Amount | 52.0,BA,53,17,"$1,500,000 under $2,000,000",25,3571948000.0
+tab14,2021,21in14ar.xls,rentroyalty,amount,gt0,all,Rent and royalty net income,Amount | 52.0,BA,53,18,"$2,000,000 under $5,000,000",26,8452529000.0
+tab14,2021,21in14ar.xls,rentroyalty,amount,gt0,all,Rent and royalty net income,Amount | 52.0,BA,53,19,"$5,000,000 under $10,000,000",27,3944126000.0
+tab14,2021,21in14ar.xls,rentroyalty,amount,gt0,all,Rent and royalty net income,Amount | 52.0,BA,53,20,"$10,000,000 or more",28,9337965000.0
+tab14,2021,21in14ar.xls,rentroyalty,count,lt0,all,Rent/royalty — number of returns with loss,Net loss | Number of returns | 53.0,BB,54,1,"All returns, total",9,3496912.0
+tab14,2021,21in14ar.xls,rentroyalty,count,lt0,all,Rent/royalty — number of returns with loss,Net loss | Number of returns | 53.0,BB,54,2,No adjusted gross income,10,186685.0
+tab14,2021,21in14ar.xls,rentroyalty,count,lt0,all,Rent/royalty — number of returns with loss,Net loss | Number of returns | 53.0,BB,54,3,"$1 under $5,000",11,47651.0
+tab14,2021,21in14ar.xls,rentroyalty,count,lt0,all,Rent/royalty — number of returns with loss,Net loss | Number of returns | 53.0,BB,54,4,"$5,000 under $10,000",12,52142.0
+tab14,2021,21in14ar.xls,rentroyalty,count,lt0,all,Rent/royalty — number of returns with loss,Net loss | Number of returns | 53.0,BB,54,5,"$10,000 under $15,000",13,79992.0
+tab14,2021,21in14ar.xls,rentroyalty,count,lt0,all,Rent/royalty — number of returns with loss,Net loss | Number of returns | 53.0,BB,54,6,"$15,000 under $20,000",14,71717.0
+tab14,2021,21in14ar.xls,rentroyalty,count,lt0,all,Rent/royalty — number of returns with loss,Net loss | Number of returns | 53.0,BB,54,7,"$20,000 under $25,000",15,87413.0
+tab14,2021,21in14ar.xls,rentroyalty,count,lt0,all,Rent/royalty — number of returns with loss,Net loss | Number of returns | 53.0,BB,54,8,"$25,000 under $30,000",16,100383.0
+tab14,2021,21in14ar.xls,rentroyalty,count,lt0,all,Rent/royalty — number of returns with loss,Net loss | Number of returns | 53.0,BB,54,9,"$30,000 under $40,000",17,201219.0
+tab14,2021,21in14ar.xls,rentroyalty,count,lt0,all,Rent/royalty — number of returns with loss,Net loss | Number of returns | 53.0,BB,54,10,"$40,000 under $50,000",18,188133.0
+tab14,2021,21in14ar.xls,rentroyalty,count,lt0,all,Rent/royalty — number of returns with loss,Net loss | Number of returns | 53.0,BB,54,11,"$50,000 under $75,000",19,512458.0
+tab14,2021,21in14ar.xls,rentroyalty,count,lt0,all,Rent/royalty — number of returns with loss,Net loss | Number of returns | 53.0,BB,54,12,"$75,000 under $100,000",20,506912.0
+tab14,2021,21in14ar.xls,rentroyalty,count,lt0,all,Rent/royalty — number of returns with loss,Net loss | Number of returns | 53.0,BB,54,13,"$100,000 under $200,000",21,928576.0
+tab14,2021,21in14ar.xls,rentroyalty,count,lt0,all,Rent/royalty — number of returns with loss,Net loss | Number of returns | 53.0,BB,54,14,"$200,000 under $500,000",22,340074.0
+tab14,2021,21in14ar.xls,rentroyalty,count,lt0,all,Rent/royalty — number of returns with loss,Net loss | Number of returns | 53.0,BB,54,15,"$500,000 under $1,000,000",23,109995.0
+tab14,2021,21in14ar.xls,rentroyalty,count,lt0,all,Rent/royalty — number of returns with loss,Net loss | Number of returns | 53.0,BB,54,16,"$1,000,000 under $1,500,000",24,31247.0
+tab14,2021,21in14ar.xls,rentroyalty,count,lt0,all,Rent/royalty — number of returns with loss,Net loss | Number of returns | 53.0,BB,54,17,"$1,500,000 under $2,000,000",25,14592.0
+tab14,2021,21in14ar.xls,rentroyalty,count,lt0,all,Rent/royalty — number of returns with loss,Net loss | Number of returns | 53.0,BB,54,18,"$2,000,000 under $5,000,000",26,24066.0
+tab14,2021,21in14ar.xls,rentroyalty,count,lt0,all,Rent/royalty — number of returns with loss,Net loss | Number of returns | 53.0,BB,54,19,"$5,000,000 under $10,000,000",27,7425.0
+tab14,2021,21in14ar.xls,rentroyalty,count,lt0,all,Rent/royalty — number of returns with loss,Net loss | Number of returns | 53.0,BB,54,20,"$10,000,000 or more",28,6233.0
+tab14,2021,21in14ar.xls,rentroyalty,amount,lt0,all,Rent and royalty net loss,Amount | 54.0,BC,55,1,"All returns, total",9,56765983000.0
+tab14,2021,21in14ar.xls,rentroyalty,amount,lt0,all,Rent and royalty net loss,Amount | 54.0,BC,55,2,No adjusted gross income,10,7147339000.0
+tab14,2021,21in14ar.xls,rentroyalty,amount,lt0,all,Rent and royalty net loss,Amount | 54.0,BC,55,3,"$1 under $5,000",11,450428000.0
+tab14,2021,21in14ar.xls,rentroyalty,amount,lt0,all,Rent and royalty net loss,Amount | 54.0,BC,55,4,"$5,000 under $10,000",12,423191000.0
+tab14,2021,21in14ar.xls,rentroyalty,amount,lt0,all,Rent and royalty net loss,Amount | 54.0,BC,55,5,"$10,000 under $15,000",13,825615000.0
+tab14,2021,21in14ar.xls,rentroyalty,amount,lt0,all,Rent and royalty net loss,Amount | 54.0,BC,55,6,"$15,000 under $20,000",14,804625000.0
+tab14,2021,21in14ar.xls,rentroyalty,amount,lt0,all,Rent and royalty net loss,Amount | 54.0,BC,55,7,"$20,000 under $25,000",15,958872000.0
+tab14,2021,21in14ar.xls,rentroyalty,amount,lt0,all,Rent and royalty net loss,Amount | 54.0,BC,55,8,"$25,000 under $30,000",16,892664000.0
+tab14,2021,21in14ar.xls,rentroyalty,amount,lt0,all,Rent and royalty net loss,Amount | 54.0,BC,55,9,"$30,000 under $40,000",17,2145126000.0
+tab14,2021,21in14ar.xls,rentroyalty,amount,lt0,all,Rent and royalty net loss,Amount | 54.0,BC,55,10,"$40,000 under $50,000",18,1763351000.0
+tab14,2021,21in14ar.xls,rentroyalty,amount,lt0,all,Rent and royalty net loss,Amount | 54.0,BC,55,11,"$50,000 under $75,000",19,5248649000.0
+tab14,2021,21in14ar.xls,rentroyalty,amount,lt0,all,Rent and royalty net loss,Amount | 54.0,BC,55,12,"$75,000 under $100,000",20,5334809000.0
+tab14,2021,21in14ar.xls,rentroyalty,amount,lt0,all,Rent and royalty net loss,Amount | 54.0,BC,55,13,"$100,000 under $200,000",21,10158810000.0
+tab14,2021,21in14ar.xls,rentroyalty,amount,lt0,all,Rent and royalty net loss,Amount | 54.0,BC,55,14,"$200,000 under $500,000",22,8898786000.0
+tab14,2021,21in14ar.xls,rentroyalty,amount,lt0,all,Rent and royalty net loss,Amount | 54.0,BC,55,15,"$500,000 under $1,000,000",23,4900018000.0
+tab14,2021,21in14ar.xls,rentroyalty,amount,lt0,all,Rent and royalty net loss,Amount | 54.0,BC,55,16,"$1,000,000 under $1,500,000",24,1804009000.0
+tab14,2021,21in14ar.xls,rentroyalty,amount,lt0,all,Rent and royalty net loss,Amount | 54.0,BC,55,17,"$1,500,000 under $2,000,000",25,894747000.0
+tab14,2021,21in14ar.xls,rentroyalty,amount,lt0,all,Rent and royalty net loss,Amount | 54.0,BC,55,18,"$2,000,000 under $5,000,000",26,1872901000.0
+tab14,2021,21in14ar.xls,rentroyalty,amount,lt0,all,Rent and royalty net loss,Amount | 54.0,BC,55,19,"$5,000,000 under $10,000,000",27,876204000.0
+tab14,2021,21in14ar.xls,rentroyalty,amount,lt0,all,Rent and royalty net loss,Amount | 54.0,BC,55,20,"$10,000,000 or more",28,1365840000.0
+tab14,2021,21in14ar.xls,partnerincome,count,gt0,all,Partnership income — number with income (2021+),Partnership | Net income | Number of returns | 55.0,BD,56,1,"All returns, total",9,3201572.0
+tab14,2021,21in14ar.xls,partnerincome,count,gt0,all,Partnership income — number with income (2021+),Partnership | Net income | Number of returns | 55.0,BD,56,2,No adjusted gross income,10,51367.0
+tab14,2021,21in14ar.xls,partnerincome,count,gt0,all,Partnership income — number with income (2021+),Partnership | Net income | Number of returns | 55.0,BD,56,3,"$1 under $5,000",11,27783.0
+tab14,2021,21in14ar.xls,partnerincome,count,gt0,all,Partnership income — number with income (2021+),Partnership | Net income | Number of returns | 55.0,BD,56,4,"$5,000 under $10,000",12,32994.0
+tab14,2021,21in14ar.xls,partnerincome,count,gt0,all,Partnership income — number with income (2021+),Partnership | Net income | Number of returns | 55.0,BD,56,5,"$10,000 under $15,000",13,47844.0
+tab14,2021,21in14ar.xls,partnerincome,count,gt0,all,Partnership income — number with income (2021+),Partnership | Net income | Number of returns | 55.0,BD,56,6,"$15,000 under $20,000",14,47049.0
+tab14,2021,21in14ar.xls,partnerincome,count,gt0,all,Partnership income — number with income (2021+),Partnership | Net income | Number of returns | 55.0,BD,56,7,"$20,000 under $25,000",15,45301.0
+tab14,2021,21in14ar.xls,partnerincome,count,gt0,all,Partnership income — number with income (2021+),Partnership | Net income | Number of returns | 55.0,BD,56,8,"$25,000 under $30,000",16,48690.0
+tab14,2021,21in14ar.xls,partnerincome,count,gt0,all,Partnership income — number with income (2021+),Partnership | Net income | Number of returns | 55.0,BD,56,9,"$30,000 under $40,000",17,89514.0
+tab14,2021,21in14ar.xls,partnerincome,count,gt0,all,Partnership income — number with income (2021+),Partnership | Net income | Number of returns | 55.0,BD,56,10,"$40,000 under $50,000",18,100861.0
+tab14,2021,21in14ar.xls,partnerincome,count,gt0,all,Partnership income — number with income (2021+),Partnership | Net income | Number of returns | 55.0,BD,56,11,"$50,000 under $75,000",19,255645.0
+tab14,2021,21in14ar.xls,partnerincome,count,gt0,all,Partnership income — number with income (2021+),Partnership | Net income | Number of returns | 55.0,BD,56,12,"$75,000 under $100,000",20,234635.0
+tab14,2021,21in14ar.xls,partnerincome,count,gt0,all,Partnership income — number with income (2021+),Partnership | Net income | Number of returns | 55.0,BD,56,13,"$100,000 under $200,000",21,761877.0
+tab14,2021,21in14ar.xls,partnerincome,count,gt0,all,Partnership income — number with income (2021+),Partnership | Net income | Number of returns | 55.0,BD,56,14,"$200,000 under $500,000",22,789328.0
+tab14,2021,21in14ar.xls,partnerincome,count,gt0,all,Partnership income — number with income (2021+),Partnership | Net income | Number of returns | 55.0,BD,56,15,"$500,000 under $1,000,000",23,352610.0
+tab14,2021,21in14ar.xls,partnerincome,count,gt0,all,Partnership income — number with income (2021+),Partnership | Net income | Number of returns | 55.0,BD,56,16,"$1,000,000 under $1,500,000",24,117686.0
+tab14,2021,21in14ar.xls,partnerincome,count,gt0,all,Partnership income — number with income (2021+),Partnership | Net income | Number of returns | 55.0,BD,56,17,"$1,500,000 under $2,000,000",25,55237.0
+tab14,2021,21in14ar.xls,partnerincome,count,gt0,all,Partnership income — number with income (2021+),Partnership | Net income | Number of returns | 55.0,BD,56,18,"$2,000,000 under $5,000,000",26,93799.0
+tab14,2021,21in14ar.xls,partnerincome,count,gt0,all,Partnership income — number with income (2021+),Partnership | Net income | Number of returns | 55.0,BD,56,19,"$5,000,000 under $10,000,000",27,28090.0
+tab14,2021,21in14ar.xls,partnerincome,count,gt0,all,Partnership income — number with income (2021+),Partnership | Net income | Number of returns | 55.0,BD,56,20,"$10,000,000 or more",28,21260.0
+tab14,2021,21in14ar.xls,partnerincome,amount,gt0,all,Partnership net income (2021+),Amount | 56.0,BE,57,1,"All returns, total",9,469816308000.0
+tab14,2021,21in14ar.xls,partnerincome,amount,gt0,all,Partnership net income (2021+),Amount | 56.0,BE,57,2,No adjusted gross income,10,3495518000.0
+tab14,2021,21in14ar.xls,partnerincome,amount,gt0,all,Partnership net income (2021+),Amount | 56.0,BE,57,3,"$1 under $5,000",11,191043000.0
+tab14,2021,21in14ar.xls,partnerincome,amount,gt0,all,Partnership net income (2021+),Amount | 56.0,BE,57,4,"$5,000 under $10,000",12,238826000.0
+tab14,2021,21in14ar.xls,partnerincome,amount,gt0,all,Partnership net income (2021+),Amount | 56.0,BE,57,5,"$10,000 under $15,000",13,456672000.0
+tab14,2021,21in14ar.xls,partnerincome,amount,gt0,all,Partnership net income (2021+),Amount | 56.0,BE,57,6,"$15,000 under $20,000",14,510981000.0
+tab14,2021,21in14ar.xls,partnerincome,amount,gt0,all,Partnership net income (2021+),Amount | 56.0,BE,57,7,"$20,000 under $25,000",15,526263000.0
+tab14,2021,21in14ar.xls,partnerincome,amount,gt0,all,Partnership net income (2021+),Amount | 56.0,BE,57,8,"$25,000 under $30,000",16,853533000.0
+tab14,2021,21in14ar.xls,partnerincome,amount,gt0,all,Partnership net income (2021+),Amount | 56.0,BE,57,9,"$30,000 under $40,000",17,1429379000.0
+tab14,2021,21in14ar.xls,partnerincome,amount,gt0,all,Partnership net income (2021+),Amount | 56.0,BE,57,10,"$40,000 under $50,000",18,1915933000.0
+tab14,2021,21in14ar.xls,partnerincome,amount,gt0,all,Partnership net income (2021+),Amount | 56.0,BE,57,11,"$50,000 under $75,000",19,5029213000.0
+tab14,2021,21in14ar.xls,partnerincome,amount,gt0,all,Partnership net income (2021+),Amount | 56.0,BE,57,12,"$75,000 under $100,000",20,6041749000.0
+tab14,2021,21in14ar.xls,partnerincome,amount,gt0,all,Partnership net income (2021+),Amount | 56.0,BE,57,13,"$100,000 under $200,000",21,26438754000.0
+tab14,2021,21in14ar.xls,partnerincome,amount,gt0,all,Partnership net income (2021+),Amount | 56.0,BE,57,14,"$200,000 under $500,000",22,63894659000.0
+tab14,2021,21in14ar.xls,partnerincome,amount,gt0,all,Partnership net income (2021+),Amount | 56.0,BE,57,15,"$500,000 under $1,000,000",23,72964993000.0
+tab14,2021,21in14ar.xls,partnerincome,amount,gt0,all,Partnership net income (2021+),Amount | 56.0,BE,57,16,"$1,000,000 under $1,500,000",24,42314661000.0
+tab14,2021,21in14ar.xls,partnerincome,amount,gt0,all,Partnership net income (2021+),Amount | 56.0,BE,57,17,"$1,500,000 under $2,000,000",25,26983310000.0
+tab14,2021,21in14ar.xls,partnerincome,amount,gt0,all,Partnership net income (2021+),Amount | 56.0,BE,57,18,"$2,000,000 under $5,000,000",26,75076603000.0
+tab14,2021,21in14ar.xls,partnerincome,amount,gt0,all,Partnership net income (2021+),Amount | 56.0,BE,57,19,"$5,000,000 under $10,000,000",27,42960677000.0
+tab14,2021,21in14ar.xls,partnerincome,amount,gt0,all,Partnership net income (2021+),Amount | 56.0,BE,57,20,"$10,000,000 or more",28,98493540000.0
+tab14,2021,21in14ar.xls,partnerincome,count,lt0,all,Partnership income — number with loss (2021+),Net loss | Number of returns | 57.0,BF,58,1,"All returns, total",9,1990357.0
+tab14,2021,21in14ar.xls,partnerincome,count,lt0,all,Partnership income — number with loss (2021+),Net loss | Number of returns | 57.0,BF,58,2,No adjusted gross income,10,154045.0
+tab14,2021,21in14ar.xls,partnerincome,count,lt0,all,Partnership income — number with loss (2021+),Net loss | Number of returns | 57.0,BF,58,3,"$1 under $5,000",11,20109.0
+tab14,2021,21in14ar.xls,partnerincome,count,lt0,all,Partnership income — number with loss (2021+),Net loss | Number of returns | 57.0,BF,58,4,"$5,000 under $10,000",12,25878.0
+tab14,2021,21in14ar.xls,partnerincome,count,lt0,all,Partnership income — number with loss (2021+),Net loss | Number of returns | 57.0,BF,58,5,"$10,000 under $15,000",13,27240.0
+tab14,2021,21in14ar.xls,partnerincome,count,lt0,all,Partnership income — number with loss (2021+),Net loss | Number of returns | 57.0,BF,58,6,"$15,000 under $20,000",14,33786.0
+tab14,2021,21in14ar.xls,partnerincome,count,lt0,all,Partnership income — number with loss (2021+),Net loss | Number of returns | 57.0,BF,58,7,"$20,000 under $25,000",15,31513.0
+tab14,2021,21in14ar.xls,partnerincome,count,lt0,all,Partnership income — number with loss (2021+),Net loss | Number of returns | 57.0,BF,58,8,"$25,000 under $30,000",16,35076.0
+tab14,2021,21in14ar.xls,partnerincome,count,lt0,all,Partnership income — number with loss (2021+),Net loss | Number of returns | 57.0,BF,58,9,"$30,000 under $40,000",17,56150.0
+tab14,2021,21in14ar.xls,partnerincome,count,lt0,all,Partnership income — number with loss (2021+),Net loss | Number of returns | 57.0,BF,58,10,"$40,000 under $50,000",18,70656.0
+tab14,2021,21in14ar.xls,partnerincome,count,lt0,all,Partnership income — number with loss (2021+),Net loss | Number of returns | 57.0,BF,58,11,"$50,000 under $75,000",19,155127.0
+tab14,2021,21in14ar.xls,partnerincome,count,lt0,all,Partnership income — number with loss (2021+),Net loss | Number of returns | 57.0,BF,58,12,"$75,000 under $100,000",20,164162.0
+tab14,2021,21in14ar.xls,partnerincome,count,lt0,all,Partnership income — number with loss (2021+),Net loss | Number of returns | 57.0,BF,58,13,"$100,000 under $200,000",21,464313.0
+tab14,2021,21in14ar.xls,partnerincome,count,lt0,all,Partnership income — number with loss (2021+),Net loss | Number of returns | 57.0,BF,58,14,"$200,000 under $500,000",22,410608.0
+tab14,2021,21in14ar.xls,partnerincome,count,lt0,all,Partnership income — number with loss (2021+),Net loss | Number of returns | 57.0,BF,58,15,"$500,000 under $1,000,000",23,175073.0
+tab14,2021,21in14ar.xls,partnerincome,count,lt0,all,Partnership income — number with loss (2021+),Net loss | Number of returns | 57.0,BF,58,16,"$1,000,000 under $1,500,000",24,57269.0
+tab14,2021,21in14ar.xls,partnerincome,count,lt0,all,Partnership income — number with loss (2021+),Net loss | Number of returns | 57.0,BF,58,17,"$1,500,000 under $2,000,000",25,27788.0
+tab14,2021,21in14ar.xls,partnerincome,count,lt0,all,Partnership income — number with loss (2021+),Net loss | Number of returns | 57.0,BF,58,18,"$2,000,000 under $5,000,000",26,50191.0
+tab14,2021,21in14ar.xls,partnerincome,count,lt0,all,Partnership income — number with loss (2021+),Net loss | Number of returns | 57.0,BF,58,19,"$5,000,000 under $10,000,000",27,16687.0
+tab14,2021,21in14ar.xls,partnerincome,count,lt0,all,Partnership income — number with loss (2021+),Net loss | Number of returns | 57.0,BF,58,20,"$10,000,000 or more",28,14688.0
+tab14,2021,21in14ar.xls,partnerincome,amount,lt0,all,Partnership net loss (2021+),Amount | 58.0,BG,59,1,"All returns, total",9,168152043000.0
+tab14,2021,21in14ar.xls,partnerincome,amount,lt0,all,Partnership net loss (2021+),Amount | 58.0,BG,59,2,No adjusted gross income,10,41556919000.0
+tab14,2021,21in14ar.xls,partnerincome,amount,lt0,all,Partnership net loss (2021+),Amount | 58.0,BG,59,3,"$1 under $5,000",11,280618000.0
+tab14,2021,21in14ar.xls,partnerincome,amount,lt0,all,Partnership net loss (2021+),Amount | 58.0,BG,59,4,"$5,000 under $10,000",12,483055000.0
+tab14,2021,21in14ar.xls,partnerincome,amount,lt0,all,Partnership net loss (2021+),Amount | 58.0,BG,59,5,"$10,000 under $15,000",13,398235000.0
+tab14,2021,21in14ar.xls,partnerincome,amount,lt0,all,Partnership net loss (2021+),Amount | 58.0,BG,59,6,"$15,000 under $20,000",14,454719000.0
+tab14,2021,21in14ar.xls,partnerincome,amount,lt0,all,Partnership net loss (2021+),Amount | 58.0,BG,59,7,"$20,000 under $25,000",15,447752000.0
+tab14,2021,21in14ar.xls,partnerincome,amount,lt0,all,Partnership net loss (2021+),Amount | 58.0,BG,59,8,"$25,000 under $30,000",16,476041000.0
+tab14,2021,21in14ar.xls,partnerincome,amount,lt0,all,Partnership net loss (2021+),Amount | 58.0,BG,59,9,"$30,000 under $40,000",17,1060851000.0
+tab14,2021,21in14ar.xls,partnerincome,amount,lt0,all,Partnership net loss (2021+),Amount | 58.0,BG,59,10,"$40,000 under $50,000",18,935985000.0
+tab14,2021,21in14ar.xls,partnerincome,amount,lt0,all,Partnership net loss (2021+),Amount | 58.0,BG,59,11,"$50,000 under $75,000",19,2714271000.0
+tab14,2021,21in14ar.xls,partnerincome,amount,lt0,all,Partnership net loss (2021+),Amount | 58.0,BG,59,12,"$75,000 under $100,000",20,2618448000.0
+tab14,2021,21in14ar.xls,partnerincome,amount,lt0,all,Partnership net loss (2021+),Amount | 58.0,BG,59,13,"$100,000 under $200,000",21,8777366000.0
+tab14,2021,21in14ar.xls,partnerincome,amount,lt0,all,Partnership net loss (2021+),Amount | 58.0,BG,59,14,"$200,000 under $500,000",22,14325853000.0
+tab14,2021,21in14ar.xls,partnerincome,amount,lt0,all,Partnership net loss (2021+),Amount | 58.0,BG,59,15,"$500,000 under $1,000,000",23,11738936000.0
+tab14,2021,21in14ar.xls,partnerincome,amount,lt0,all,Partnership net loss (2021+),Amount | 58.0,BG,59,16,"$1,000,000 under $1,500,000",24,6368462000.0
+tab14,2021,21in14ar.xls,partnerincome,amount,lt0,all,Partnership net loss (2021+),Amount | 58.0,BG,59,17,"$1,500,000 under $2,000,000",25,4021272000.0
+tab14,2021,21in14ar.xls,partnerincome,amount,lt0,all,Partnership net loss (2021+),Amount | 58.0,BG,59,18,"$2,000,000 under $5,000,000",26,13693841000.0
+tab14,2021,21in14ar.xls,partnerincome,amount,lt0,all,Partnership net loss (2021+),Amount | 58.0,BG,59,19,"$5,000,000 under $10,000,000",27,9249576000.0
+tab14,2021,21in14ar.xls,partnerincome,amount,lt0,all,Partnership net loss (2021+),Amount | 58.0,BG,59,20,"$10,000,000 or more",28,48549844000.0
+tab14,2021,21in14ar.xls,scorpincome,count,gt0,all,S-corporation income — number with income (2021+),S corporation | Net income | Number of returns | 59.0,BH,60,1,"All returns, total",9,3878815.0
+tab14,2021,21in14ar.xls,scorpincome,count,gt0,all,S-corporation income — number with income (2021+),S corporation | Net income | Number of returns | 59.0,BH,60,2,No adjusted gross income,10,29831.0
+tab14,2021,21in14ar.xls,scorpincome,count,gt0,all,S-corporation income — number with income (2021+),S corporation | Net income | Number of returns | 59.0,BH,60,3,"$1 under $5,000",11,20073.0
+tab14,2021,21in14ar.xls,scorpincome,count,gt0,all,S-corporation income — number with income (2021+),S corporation | Net income | Number of returns | 59.0,BH,60,4,"$5,000 under $10,000",12,35163.0
+tab14,2021,21in14ar.xls,scorpincome,count,gt0,all,S-corporation income — number with income (2021+),S corporation | Net income | Number of returns | 59.0,BH,60,5,"$10,000 under $15,000",13,32367.0
+tab14,2021,21in14ar.xls,scorpincome,count,gt0,all,S-corporation income — number with income (2021+),S corporation | Net income | Number of returns | 59.0,BH,60,6,"$15,000 under $20,000",14,56930.0
+tab14,2021,21in14ar.xls,scorpincome,count,gt0,all,S-corporation income — number with income (2021+),S corporation | Net income | Number of returns | 59.0,BH,60,7,"$20,000 under $25,000",15,57490.0
+tab14,2021,21in14ar.xls,scorpincome,count,gt0,all,S-corporation income — number with income (2021+),S corporation | Net income | Number of returns | 59.0,BH,60,8,"$25,000 under $30,000",16,67025.0
+tab14,2021,21in14ar.xls,scorpincome,count,gt0,all,S-corporation income — number with income (2021+),S corporation | Net income | Number of returns | 59.0,BH,60,9,"$30,000 under $40,000",17,146497.0
+tab14,2021,21in14ar.xls,scorpincome,count,gt0,all,S-corporation income — number with income (2021+),S corporation | Net income | Number of returns | 59.0,BH,60,10,"$40,000 under $50,000",18,127348.0
+tab14,2021,21in14ar.xls,scorpincome,count,gt0,all,S-corporation income — number with income (2021+),S corporation | Net income | Number of returns | 59.0,BH,60,11,"$50,000 under $75,000",19,351051.0
+tab14,2021,21in14ar.xls,scorpincome,count,gt0,all,S-corporation income — number with income (2021+),S corporation | Net income | Number of returns | 59.0,BH,60,12,"$75,000 under $100,000",20,344190.0
+tab14,2021,21in14ar.xls,scorpincome,count,gt0,all,S-corporation income — number with income (2021+),S corporation | Net income | Number of returns | 59.0,BH,60,13,"$100,000 under $200,000",21,1023614.0
+tab14,2021,21in14ar.xls,scorpincome,count,gt0,all,S-corporation income — number with income (2021+),S corporation | Net income | Number of returns | 59.0,BH,60,14,"$200,000 under $500,000",22,964074.0
+tab14,2021,21in14ar.xls,scorpincome,count,gt0,all,S-corporation income — number with income (2021+),S corporation | Net income | Number of returns | 59.0,BH,60,15,"$500,000 under $1,000,000",23,341823.0
+tab14,2021,21in14ar.xls,scorpincome,count,gt0,all,S-corporation income — number with income (2021+),S corporation | Net income | Number of returns | 59.0,BH,60,16,"$1,000,000 under $1,500,000",24,110295.0
+tab14,2021,21in14ar.xls,scorpincome,count,gt0,all,S-corporation income — number with income (2021+),S corporation | Net income | Number of returns | 59.0,BH,60,17,"$1,500,000 under $2,000,000",25,50221.0
+tab14,2021,21in14ar.xls,scorpincome,count,gt0,all,S-corporation income — number with income (2021+),S corporation | Net income | Number of returns | 59.0,BH,60,18,"$2,000,000 under $5,000,000",26,80671.0
+tab14,2021,21in14ar.xls,scorpincome,count,gt0,all,S-corporation income — number with income (2021+),S corporation | Net income | Number of returns | 59.0,BH,60,19,"$5,000,000 under $10,000,000",27,23204.0
+tab14,2021,21in14ar.xls,scorpincome,count,gt0,all,S-corporation income — number with income (2021+),S corporation | Net income | Number of returns | 59.0,BH,60,20,"$10,000,000 or more",28,16948.0
+tab14,2021,21in14ar.xls,scorpincome,amount,gt0,all,S-corporation net income (2021+),Amount | 60.0,BI,61,1,"All returns, total",9,766681240000.0
+tab14,2021,21in14ar.xls,scorpincome,amount,gt0,all,S-corporation net income (2021+),Amount | 60.0,BI,61,2,No adjusted gross income,10,4391548000.0
+tab14,2021,21in14ar.xls,scorpincome,amount,gt0,all,S-corporation net income (2021+),Amount | 60.0,BI,61,3,"$1 under $5,000",11,92564000.0
+tab14,2021,21in14ar.xls,scorpincome,amount,gt0,all,S-corporation net income (2021+),Amount | 60.0,BI,61,4,"$5,000 under $10,000",12,347412000.0
+tab14,2021,21in14ar.xls,scorpincome,amount,gt0,all,S-corporation net income (2021+),Amount | 60.0,BI,61,5,"$10,000 under $15,000",13,453016000.0
+tab14,2021,21in14ar.xls,scorpincome,amount,gt0,all,S-corporation net income (2021+),Amount | 60.0,BI,61,6,"$15,000 under $20,000",14,592026000.0
+tab14,2021,21in14ar.xls,scorpincome,amount,gt0,all,S-corporation net income (2021+),Amount | 60.0,BI,61,7,"$20,000 under $25,000",15,779624000.0
+tab14,2021,21in14ar.xls,scorpincome,amount,gt0,all,S-corporation net income (2021+),Amount | 60.0,BI,61,8,"$25,000 under $30,000",16,1069086000.0
+tab14,2021,21in14ar.xls,scorpincome,amount,gt0,all,S-corporation net income (2021+),Amount | 60.0,BI,61,9,"$30,000 under $40,000",17,2553876000.0
+tab14,2021,21in14ar.xls,scorpincome,amount,gt0,all,S-corporation net income (2021+),Amount | 60.0,BI,61,10,"$40,000 under $50,000",18,2703861000.0
+tab14,2021,21in14ar.xls,scorpincome,amount,gt0,all,S-corporation net income (2021+),Amount | 60.0,BI,61,11,"$50,000 under $75,000",19,9980514000.0
+tab14,2021,21in14ar.xls,scorpincome,amount,gt0,all,S-corporation net income (2021+),Amount | 60.0,BI,61,12,"$75,000 under $100,000",20,12626016000.0
+tab14,2021,21in14ar.xls,scorpincome,amount,gt0,all,S-corporation net income (2021+),Amount | 60.0,BI,61,13,"$100,000 under $200,000",21,51717735000.0
+tab14,2021,21in14ar.xls,scorpincome,amount,gt0,all,S-corporation net income (2021+),Amount | 60.0,BI,61,14,"$200,000 under $500,000",22,118036039000.0
+tab14,2021,21in14ar.xls,scorpincome,amount,gt0,all,S-corporation net income (2021+),Amount | 60.0,BI,61,15,"$500,000 under $1,000,000",23,100763796000.0
+tab14,2021,21in14ar.xls,scorpincome,amount,gt0,all,S-corporation net income (2021+),Amount | 60.0,BI,61,16,"$1,000,000 under $1,500,000",24,62531757000.0
+tab14,2021,21in14ar.xls,scorpincome,amount,gt0,all,S-corporation net income (2021+),Amount | 60.0,BI,61,17,"$1,500,000 under $2,000,000",25,42085326000.0
+tab14,2021,21in14ar.xls,scorpincome,amount,gt0,all,S-corporation net income (2021+),Amount | 60.0,BI,61,18,"$2,000,000 under $5,000,000",26,116109397000.0
+tab14,2021,21in14ar.xls,scorpincome,amount,gt0,all,S-corporation net income (2021+),Amount | 60.0,BI,61,19,"$5,000,000 under $10,000,000",27,68737430000.0
+tab14,2021,21in14ar.xls,scorpincome,amount,gt0,all,S-corporation net income (2021+),Amount | 60.0,BI,61,20,"$10,000,000 or more",28,171110216000.0
+tab14,2021,21in14ar.xls,scorpincome,count,lt0,all,S-corporation income — number with loss (2021+),Net loss | Number of returns | 61.0,BJ,62,1,"All returns, total",9,1453974.0
+tab14,2021,21in14ar.xls,scorpincome,count,lt0,all,S-corporation income — number with loss (2021+),Net loss | Number of returns | 61.0,BJ,62,2,No adjusted gross income,10,184546.0
+tab14,2021,21in14ar.xls,scorpincome,count,lt0,all,S-corporation income — number with loss (2021+),Net loss | Number of returns | 61.0,BJ,62,3,"$1 under $5,000",11,22633.0
+tab14,2021,21in14ar.xls,scorpincome,count,lt0,all,S-corporation income — number with loss (2021+),Net loss | Number of returns | 61.0,BJ,62,4,"$5,000 under $10,000",12,28589.0
+tab14,2021,21in14ar.xls,scorpincome,count,lt0,all,S-corporation income — number with loss (2021+),Net loss | Number of returns | 61.0,BJ,62,5,"$10,000 under $15,000",13,22953.0
+tab14,2021,21in14ar.xls,scorpincome,count,lt0,all,S-corporation income — number with loss (2021+),Net loss | Number of returns | 61.0,BJ,62,6,"$15,000 under $20,000",14,36524.0
+tab14,2021,21in14ar.xls,scorpincome,count,lt0,all,S-corporation income — number with loss (2021+),Net loss | Number of returns | 61.0,BJ,62,7,"$20,000 under $25,000",15,28645.0
+tab14,2021,21in14ar.xls,scorpincome,count,lt0,all,S-corporation income — number with loss (2021+),Net loss | Number of returns | 61.0,BJ,62,8,"$25,000 under $30,000",16,28773.0
+tab14,2021,21in14ar.xls,scorpincome,count,lt0,all,S-corporation income — number with loss (2021+),Net loss | Number of returns | 61.0,BJ,62,9,"$30,000 under $40,000",17,66998.0
+tab14,2021,21in14ar.xls,scorpincome,count,lt0,all,S-corporation income — number with loss (2021+),Net loss | Number of returns | 61.0,BJ,62,10,"$40,000 under $50,000",18,47866.0
+tab14,2021,21in14ar.xls,scorpincome,count,lt0,all,S-corporation income — number with loss (2021+),Net loss | Number of returns | 61.0,BJ,62,11,"$50,000 under $75,000",19,160626.0
+tab14,2021,21in14ar.xls,scorpincome,count,lt0,all,S-corporation income — number with loss (2021+),Net loss | Number of returns | 61.0,BJ,62,12,"$75,000 under $100,000",20,125252.0
+tab14,2021,21in14ar.xls,scorpincome,count,lt0,all,S-corporation income — number with loss (2021+),Net loss | Number of returns | 61.0,BJ,62,13,"$100,000 under $200,000",21,354264.0
+tab14,2021,21in14ar.xls,scorpincome,count,lt0,all,S-corporation income — number with loss (2021+),Net loss | Number of returns | 61.0,BJ,62,14,"$200,000 under $500,000",22,222459.0
+tab14,2021,21in14ar.xls,scorpincome,count,lt0,all,S-corporation income — number with loss (2021+),Net loss | Number of returns | 61.0,BJ,62,15,"$500,000 under $1,000,000",23,67985.0
+tab14,2021,21in14ar.xls,scorpincome,count,lt0,all,S-corporation income — number with loss (2021+),Net loss | Number of returns | 61.0,BJ,62,16,"$1,000,000 under $1,500,000",24,19489.0
+tab14,2021,21in14ar.xls,scorpincome,count,lt0,all,S-corporation income — number with loss (2021+),Net loss | Number of returns | 61.0,BJ,62,17,"$1,500,000 under $2,000,000",25,9229.0
+tab14,2021,21in14ar.xls,scorpincome,count,lt0,all,S-corporation income — number with loss (2021+),Net loss | Number of returns | 61.0,BJ,62,18,"$2,000,000 under $5,000,000",26,16093.0
+tab14,2021,21in14ar.xls,scorpincome,count,lt0,all,S-corporation income — number with loss (2021+),Net loss | Number of returns | 61.0,BJ,62,19,"$5,000,000 under $10,000,000",27,5688.0
+tab14,2021,21in14ar.xls,scorpincome,count,lt0,all,S-corporation income — number with loss (2021+),Net loss | Number of returns | 61.0,BJ,62,20,"$10,000,000 or more",28,5363.0
+tab14,2021,21in14ar.xls,scorpincome,amount,lt0,all,S-corporation net loss (2021+),Amount | 62.0,BK,63,1,"All returns, total",9,92689104000.0
+tab14,2021,21in14ar.xls,scorpincome,amount,lt0,all,S-corporation net loss (2021+),Amount | 62.0,BK,63,2,No adjusted gross income,10,29520422000.0
+tab14,2021,21in14ar.xls,scorpincome,amount,lt0,all,S-corporation net loss (2021+),Amount | 62.0,BK,63,3,"$1 under $5,000",11,795211000.0
+tab14,2021,21in14ar.xls,scorpincome,amount,lt0,all,S-corporation net loss (2021+),Amount | 62.0,BK,63,4,"$5,000 under $10,000",12,1043588000.0
+tab14,2021,21in14ar.xls,scorpincome,amount,lt0,all,S-corporation net loss (2021+),Amount | 62.0,BK,63,5,"$10,000 under $15,000",13,889474000.0
+tab14,2021,21in14ar.xls,scorpincome,amount,lt0,all,S-corporation net loss (2021+),Amount | 62.0,BK,63,6,"$15,000 under $20,000",14,1157717000.0
+tab14,2021,21in14ar.xls,scorpincome,amount,lt0,all,S-corporation net loss (2021+),Amount | 62.0,BK,63,7,"$20,000 under $25,000",15,690852000.0
+tab14,2021,21in14ar.xls,scorpincome,amount,lt0,all,S-corporation net loss (2021+),Amount | 62.0,BK,63,8,"$25,000 under $30,000",16,896241000.0
+tab14,2021,21in14ar.xls,scorpincome,amount,lt0,all,S-corporation net loss (2021+),Amount | 62.0,BK,63,9,"$30,000 under $40,000",17,1582533000.0
+tab14,2021,21in14ar.xls,scorpincome,amount,lt0,all,S-corporation net loss (2021+),Amount | 62.0,BK,63,10,"$40,000 under $50,000",18,1062758000.0
+tab14,2021,21in14ar.xls,scorpincome,amount,lt0,all,S-corporation net loss (2021+),Amount | 62.0,BK,63,11,"$50,000 under $75,000",19,4382315000.0
+tab14,2021,21in14ar.xls,scorpincome,amount,lt0,all,S-corporation net loss (2021+),Amount | 62.0,BK,63,12,"$75,000 under $100,000",20,3469917000.0
+tab14,2021,21in14ar.xls,scorpincome,amount,lt0,all,S-corporation net loss (2021+),Amount | 62.0,BK,63,13,"$100,000 under $200,000",21,9417120000.0
+tab14,2021,21in14ar.xls,scorpincome,amount,lt0,all,S-corporation net loss (2021+),Amount | 62.0,BK,63,14,"$200,000 under $500,000",22,9774224000.0
+tab14,2021,21in14ar.xls,scorpincome,amount,lt0,all,S-corporation net loss (2021+),Amount | 62.0,BK,63,15,"$500,000 under $1,000,000",23,5305980000.0
+tab14,2021,21in14ar.xls,scorpincome,amount,lt0,all,S-corporation net loss (2021+),Amount | 62.0,BK,63,16,"$1,000,000 under $1,500,000",24,2401748000.0
+tab14,2021,21in14ar.xls,scorpincome,amount,lt0,all,S-corporation net loss (2021+),Amount | 62.0,BK,63,17,"$1,500,000 under $2,000,000",25,1521322000.0
+tab14,2021,21in14ar.xls,scorpincome,amount,lt0,all,S-corporation net loss (2021+),Amount | 62.0,BK,63,18,"$2,000,000 under $5,000,000",26,4389329000.0
+tab14,2021,21in14ar.xls,scorpincome,amount,lt0,all,S-corporation net loss (2021+),Amount | 62.0,BK,63,19,"$5,000,000 under $10,000,000",27,2633645000.0
+tab14,2021,21in14ar.xls,scorpincome,amount,lt0,all,S-corporation net loss (2021+),Amount | 62.0,BK,63,20,"$10,000,000 or more",28,11754707000.0
+tab14,2021,21in14ar.xls,estateincome,count,gt0,all,Estate/trust income — number with income,Estate and trust | Net income | Number of returns | 63.0,BL,64,1,"All returns, total",9,624529.0
+tab14,2021,21in14ar.xls,estateincome,count,gt0,all,Estate/trust income — number with income,Estate and trust | Net income | Number of returns | 63.0,BL,64,2,No adjusted gross income,10,10588.0
+tab14,2021,21in14ar.xls,estateincome,count,gt0,all,Estate/trust income — number with income,Estate and trust | Net income | Number of returns | 63.0,BL,64,3,"$1 under $5,000",11,4262.0
+tab14,2021,21in14ar.xls,estateincome,count,gt0,all,Estate/trust income — number with income,Estate and trust | Net income | Number of returns | 63.0,BL,64,4,"$5,000 under $10,000",12,7292.0
+tab14,2021,21in14ar.xls,estateincome,count,gt0,all,Estate/trust income — number with income,Estate and trust | Net income | Number of returns | 63.0,BL,64,5,"$10,000 under $15,000",13,6417.0
+tab14,2021,21in14ar.xls,estateincome,count,gt0,all,Estate/trust income — number with income,Estate and trust | Net income | Number of returns | 63.0,BL,64,6,"$15,000 under $20,000",14,17044.0
+tab14,2021,21in14ar.xls,estateincome,count,gt0,all,Estate/trust income — number with income,Estate and trust | Net income | Number of returns | 63.0,BL,64,7,"$20,000 under $25,000",15,10425.0
+tab14,2021,21in14ar.xls,estateincome,count,gt0,all,Estate/trust income — number with income,Estate and trust | Net income | Number of returns | 63.0,BL,64,8,"$25,000 under $30,000",16,9174.0
+tab14,2021,21in14ar.xls,estateincome,count,gt0,all,Estate/trust income — number with income,Estate and trust | Net income | Number of returns | 63.0,BL,64,9,"$30,000 under $40,000",17,17740.0
+tab14,2021,21in14ar.xls,estateincome,count,gt0,all,Estate/trust income — number with income,Estate and trust | Net income | Number of returns | 63.0,BL,64,10,"$40,000 under $50,000",18,15074.0
+tab14,2021,21in14ar.xls,estateincome,count,gt0,all,Estate/trust income — number with income,Estate and trust | Net income | Number of returns | 63.0,BL,64,11,"$50,000 under $75,000",19,45850.0
+tab14,2021,21in14ar.xls,estateincome,count,gt0,all,Estate/trust income — number with income,Estate and trust | Net income | Number of returns | 63.0,BL,64,12,"$75,000 under $100,000",20,66873.0
+tab14,2021,21in14ar.xls,estateincome,count,gt0,all,Estate/trust income — number with income,Estate and trust | Net income | Number of returns | 63.0,BL,64,13,"$100,000 under $200,000",21,179736.0
+tab14,2021,21in14ar.xls,estateincome,count,gt0,all,Estate/trust income — number with income,Estate and trust | Net income | Number of returns | 63.0,BL,64,14,"$200,000 under $500,000",22,146691.0
+tab14,2021,21in14ar.xls,estateincome,count,gt0,all,Estate/trust income — number with income,Estate and trust | Net income | Number of returns | 63.0,BL,64,15,"$500,000 under $1,000,000",23,44278.0
+tab14,2021,21in14ar.xls,estateincome,count,gt0,all,Estate/trust income — number with income,Estate and trust | Net income | Number of returns | 63.0,BL,64,16,"$1,000,000 under $1,500,000",24,13733.0
+tab14,2021,21in14ar.xls,estateincome,count,gt0,all,Estate/trust income — number with income,Estate and trust | Net income | Number of returns | 63.0,BL,64,17,"$1,500,000 under $2,000,000",25,6620.0
+tab14,2021,21in14ar.xls,estateincome,count,gt0,all,Estate/trust income — number with income,Estate and trust | Net income | Number of returns | 63.0,BL,64,18,"$2,000,000 under $5,000,000",26,13765.0
+tab14,2021,21in14ar.xls,estateincome,count,gt0,all,Estate/trust income — number with income,Estate and trust | Net income | Number of returns | 63.0,BL,64,19,"$5,000,000 under $10,000,000",27,4783.0
+tab14,2021,21in14ar.xls,estateincome,count,gt0,all,Estate/trust income — number with income,Estate and trust | Net income | Number of returns | 63.0,BL,64,20,"$10,000,000 or more",28,4186.0
+tab14,2021,21in14ar.xls,estateincome,amount,gt0,all,Estate and trust net income,Amount | 64.0,BM,65,1,"All returns, total",9,49387898000.0
+tab14,2021,21in14ar.xls,estateincome,amount,gt0,all,Estate and trust net income,Amount | 64.0,BM,65,2,No adjusted gross income,10,488912000.0
+tab14,2021,21in14ar.xls,estateincome,amount,gt0,all,Estate and trust net income,Amount | 64.0,BM,65,3,"$1 under $5,000",11,10954000.0
+tab14,2021,21in14ar.xls,estateincome,amount,gt0,all,Estate and trust net income,Amount | 64.0,BM,65,4,"$5,000 under $10,000",12,59889000.0
+tab14,2021,21in14ar.xls,estateincome,amount,gt0,all,Estate and trust net income,Amount | 64.0,BM,65,5,"$10,000 under $15,000",13,58657000.0
+tab14,2021,21in14ar.xls,estateincome,amount,gt0,all,Estate and trust net income,Amount | 64.0,BM,65,6,"$15,000 under $20,000",14,143010000.0
+tab14,2021,21in14ar.xls,estateincome,amount,gt0,all,Estate and trust net income,Amount | 64.0,BM,65,7,"$20,000 under $25,000",15,69961000.0
+tab14,2021,21in14ar.xls,estateincome,amount,gt0,all,Estate and trust net income,Amount | 64.0,BM,65,8,"$25,000 under $30,000",16,91435000.0
+tab14,2021,21in14ar.xls,estateincome,amount,gt0,all,Estate and trust net income,Amount | 64.0,BM,65,9,"$30,000 under $40,000",17,128784000.0
+tab14,2021,21in14ar.xls,estateincome,amount,gt0,all,Estate and trust net income,Amount | 64.0,BM,65,10,"$40,000 under $50,000",18,201827000.0
+tab14,2021,21in14ar.xls,estateincome,amount,gt0,all,Estate and trust net income,Amount | 64.0,BM,65,11,"$50,000 under $75,000",19,600148000.0
+tab14,2021,21in14ar.xls,estateincome,amount,gt0,all,Estate and trust net income,Amount | 64.0,BM,65,12,"$75,000 under $100,000",20,889093000.0
+tab14,2021,21in14ar.xls,estateincome,amount,gt0,all,Estate and trust net income,Amount | 64.0,BM,65,13,"$100,000 under $200,000",21,4607196000.0
+tab14,2021,21in14ar.xls,estateincome,amount,gt0,all,Estate and trust net income,Amount | 64.0,BM,65,14,"$200,000 under $500,000",22,7211565000.0
+tab14,2021,21in14ar.xls,estateincome,amount,gt0,all,Estate and trust net income,Amount | 64.0,BM,65,15,"$500,000 under $1,000,000",23,4549574000.0
+tab14,2021,21in14ar.xls,estateincome,amount,gt0,all,Estate and trust net income,Amount | 64.0,BM,65,16,"$1,000,000 under $1,500,000",24,2716098000.0
+tab14,2021,21in14ar.xls,estateincome,amount,gt0,all,Estate and trust net income,Amount | 64.0,BM,65,17,"$1,500,000 under $2,000,000",25,1539241000.0
+tab14,2021,21in14ar.xls,estateincome,amount,gt0,all,Estate and trust net income,Amount | 64.0,BM,65,18,"$2,000,000 under $5,000,000",26,6203776000.0
+tab14,2021,21in14ar.xls,estateincome,amount,gt0,all,Estate and trust net income,Amount | 64.0,BM,65,19,"$5,000,000 under $10,000,000",27,4243588000.0
+tab14,2021,21in14ar.xls,estateincome,amount,gt0,all,Estate and trust net income,Amount | 64.0,BM,65,20,"$10,000,000 or more",28,15574190000.0
+tab14,2021,21in14ar.xls,estateincome,count,lt0,all,Estate/trust income — number with loss,Net loss | Number of returns | 65.0,BN,66,1,"All returns, total",9,49450.0
+tab14,2021,21in14ar.xls,estateincome,count,lt0,all,Estate/trust income — number with loss,Net loss | Number of returns | 65.0,BN,66,2,No adjusted gross income,10,4170.0
+tab14,2021,21in14ar.xls,estateincome,count,lt0,all,Estate/trust income — number with loss,Net loss | Number of returns | 65.0,BN,66,3,"$1 under $5,000",11,2616.0
+tab14,2021,21in14ar.xls,estateincome,count,lt0,all,Estate/trust income — number with loss,Net loss | Number of returns | 65.0,BN,66,4,"$5,000 under $10,000",12,31.0
+tab14,2021,21in14ar.xls,estateincome,count,lt0,all,Estate/trust income — number with loss,Net loss | Number of returns | 65.0,BN,66,5,"$10,000 under $15,000",13,1375.0
+tab14,2021,21in14ar.xls,estateincome,count,lt0,all,Estate/trust income — number with loss,Net loss | Number of returns | 65.0,BN,66,6,"$15,000 under $20,000",14,16.0
+tab14,2021,21in14ar.xls,estateincome,count,lt0,all,Estate/trust income — number with loss,Net loss | Number of returns | 65.0,BN,66,7,"$20,000 under $25,000",15,16.0
+tab14,2021,21in14ar.xls,estateincome,count,lt0,all,Estate/trust income — number with loss,Net loss | Number of returns | 65.0,BN,66,8,"$25,000 under $30,000",16,54.0
+tab14,2021,21in14ar.xls,estateincome,count,lt0,all,Estate/trust income — number with loss,Net loss | Number of returns | 65.0,BN,66,9,"$30,000 under $40,000",17,2217.0
+tab14,2021,21in14ar.xls,estateincome,count,lt0,all,Estate/trust income — number with loss,Net loss | Number of returns | 65.0,BN,66,10,"$40,000 under $50,000",18,368.0
+tab14,2021,21in14ar.xls,estateincome,count,lt0,all,Estate/trust income — number with loss,Net loss | Number of returns | 65.0,BN,66,11,"$50,000 under $75,000",19,1337.0
+tab14,2021,21in14ar.xls,estateincome,count,lt0,all,Estate/trust income — number with loss,Net loss | Number of returns | 65.0,BN,66,12,"$75,000 under $100,000",20,4539.0
+tab14,2021,21in14ar.xls,estateincome,count,lt0,all,Estate/trust income — number with loss,Net loss | Number of returns | 65.0,BN,66,13,"$100,000 under $200,000",21,11440.0
+tab14,2021,21in14ar.xls,estateincome,count,lt0,all,Estate/trust income — number with loss,Net loss | Number of returns | 65.0,BN,66,14,"$200,000 under $500,000",22,8183.0
+tab14,2021,21in14ar.xls,estateincome,count,lt0,all,Estate/trust income — number with loss,Net loss | Number of returns | 65.0,BN,66,15,"$500,000 under $1,000,000",23,3901.0
+tab14,2021,21in14ar.xls,estateincome,count,lt0,all,Estate/trust income — number with loss,Net loss | Number of returns | 65.0,BN,66,16,"$1,000,000 under $1,500,000",24,2120.0
+tab14,2021,21in14ar.xls,estateincome,count,lt0,all,Estate/trust income — number with loss,Net loss | Number of returns | 65.0,BN,66,17,"$1,500,000 under $2,000,000",25,1229.0
+tab14,2021,21in14ar.xls,estateincome,count,lt0,all,Estate/trust income — number with loss,Net loss | Number of returns | 65.0,BN,66,18,"$2,000,000 under $5,000,000",26,2632.0
+tab14,2021,21in14ar.xls,estateincome,count,lt0,all,Estate/trust income — number with loss,Net loss | Number of returns | 65.0,BN,66,19,"$5,000,000 under $10,000,000",27,1387.0
+tab14,2021,21in14ar.xls,estateincome,count,lt0,all,Estate/trust income — number with loss,Net loss | Number of returns | 65.0,BN,66,20,"$10,000,000 or more",28,1817.0
+tab14,2021,21in14ar.xls,estateincome,amount,lt0,all,Estate and trust net loss,Amount | 66.0,BO,67,1,"All returns, total",9,5899376000.0
+tab14,2021,21in14ar.xls,estateincome,amount,lt0,all,Estate and trust net loss,Amount | 66.0,BO,67,2,No adjusted gross income,10,1259085000.0
+tab14,2021,21in14ar.xls,estateincome,amount,lt0,all,Estate and trust net loss,Amount | 66.0,BO,67,3,"$1 under $5,000",11,3360000.0
+tab14,2021,21in14ar.xls,estateincome,amount,lt0,all,Estate and trust net loss,Amount | 66.0,BO,67,4,"$5,000 under $10,000",12,121000.0
+tab14,2021,21in14ar.xls,estateincome,amount,lt0,all,Estate and trust net loss,Amount | 66.0,BO,67,5,"$10,000 under $15,000",13,34976000.0
+tab14,2021,21in14ar.xls,estateincome,amount,lt0,all,Estate and trust net loss,Amount | 66.0,BO,67,6,"$15,000 under $20,000",14,6988000.0
+tab14,2021,21in14ar.xls,estateincome,amount,lt0,all,Estate and trust net loss,Amount | 66.0,BO,67,7,"$20,000 under $25,000",15,3736000.0
+tab14,2021,21in14ar.xls,estateincome,amount,lt0,all,Estate and trust net loss,Amount | 66.0,BO,67,8,"$25,000 under $30,000",16,833000.0
+tab14,2021,21in14ar.xls,estateincome,amount,lt0,all,Estate and trust net loss,Amount | 66.0,BO,67,9,"$30,000 under $40,000",17,39521000.0
+tab14,2021,21in14ar.xls,estateincome,amount,lt0,all,Estate and trust net loss,Amount | 66.0,BO,67,10,"$40,000 under $50,000",18,10079000.0
+tab14,2021,21in14ar.xls,estateincome,amount,lt0,all,Estate and trust net loss,Amount | 66.0,BO,67,11,"$50,000 under $75,000",19,93978000.0
+tab14,2021,21in14ar.xls,estateincome,amount,lt0,all,Estate and trust net loss,Amount | 66.0,BO,67,12,"$75,000 under $100,000",20,35427000.0
+tab14,2021,21in14ar.xls,estateincome,amount,lt0,all,Estate and trust net loss,Amount | 66.0,BO,67,13,"$100,000 under $200,000",21,99732000.0
+tab14,2021,21in14ar.xls,estateincome,amount,lt0,all,Estate and trust net loss,Amount | 66.0,BO,67,14,"$200,000 under $500,000",22,278211000.0
+tab14,2021,21in14ar.xls,estateincome,amount,lt0,all,Estate and trust net loss,Amount | 66.0,BO,67,15,"$500,000 under $1,000,000",23,243152000.0
+tab14,2021,21in14ar.xls,estateincome,amount,lt0,all,Estate and trust net loss,Amount | 66.0,BO,67,16,"$1,000,000 under $1,500,000",24,209182000.0
+tab14,2021,21in14ar.xls,estateincome,amount,lt0,all,Estate and trust net loss,Amount | 66.0,BO,67,17,"$1,500,000 under $2,000,000",25,123348000.0
+tab14,2021,21in14ar.xls,estateincome,amount,lt0,all,Estate and trust net loss,Amount | 66.0,BO,67,18,"$2,000,000 under $5,000,000",26,490805000.0
+tab14,2021,21in14ar.xls,estateincome,amount,lt0,all,Estate and trust net loss,Amount | 66.0,BO,67,19,"$5,000,000 under $10,000,000",27,298217000.0
+tab14,2021,21in14ar.xls,estateincome,amount,lt0,all,Estate and trust net loss,Amount | 66.0,BO,67,20,"$10,000,000 or more",28,2668626000.0
+tab14,2021,21in14ar.xls,unempcomp,count,nz,all,Unemployment compensation — number of returns,Unemployment compensation | Number of returns | 71.0,BT,72,1,"All returns, total",9,15809172.0
+tab14,2021,21in14ar.xls,unempcomp,count,nz,all,Unemployment compensation — number of returns,Unemployment compensation | Number of returns | 71.0,BT,72,2,No adjusted gross income,10,124275.0
+tab14,2021,21in14ar.xls,unempcomp,count,nz,all,Unemployment compensation — number of returns,Unemployment compensation | Number of returns | 71.0,BT,72,3,"$1 under $5,000",11,197448.0
+tab14,2021,21in14ar.xls,unempcomp,count,nz,all,Unemployment compensation — number of returns,Unemployment compensation | Number of returns | 71.0,BT,72,4,"$5,000 under $10,000",12,466107.0
+tab14,2021,21in14ar.xls,unempcomp,count,nz,all,Unemployment compensation — number of returns,Unemployment compensation | Number of returns | 71.0,BT,72,5,"$10,000 under $15,000",13,1136775.0
+tab14,2021,21in14ar.xls,unempcomp,count,nz,all,Unemployment compensation — number of returns,Unemployment compensation | Number of returns | 71.0,BT,72,6,"$15,000 under $20,000",14,1878369.0
+tab14,2021,21in14ar.xls,unempcomp,count,nz,all,Unemployment compensation — number of returns,Unemployment compensation | Number of returns | 71.0,BT,72,7,"$20,000 under $25,000",15,1642065.0
+tab14,2021,21in14ar.xls,unempcomp,count,nz,all,Unemployment compensation — number of returns,Unemployment compensation | Number of returns | 71.0,BT,72,8,"$25,000 under $30,000",16,1390637.0
+tab14,2021,21in14ar.xls,unempcomp,count,nz,all,Unemployment compensation — number of returns,Unemployment compensation | Number of returns | 71.0,BT,72,9,"$30,000 under $40,000",17,2022975.0
+tab14,2021,21in14ar.xls,unempcomp,count,nz,all,Unemployment compensation — number of returns,Unemployment compensation | Number of returns | 71.0,BT,72,10,"$40,000 under $50,000",18,1312942.0
+tab14,2021,21in14ar.xls,unempcomp,count,nz,all,Unemployment compensation — number of returns,Unemployment compensation | Number of returns | 71.0,BT,72,11,"$50,000 under $75,000",19,2011827.0
+tab14,2021,21in14ar.xls,unempcomp,count,nz,all,Unemployment compensation — number of returns,Unemployment compensation | Number of returns | 71.0,BT,72,12,"$75,000 under $100,000",20,1289395.0
+tab14,2021,21in14ar.xls,unempcomp,count,nz,all,Unemployment compensation — number of returns,Unemployment compensation | Number of returns | 71.0,BT,72,13,"$100,000 under $200,000",21,1840565.0
+tab14,2021,21in14ar.xls,unempcomp,count,nz,all,Unemployment compensation — number of returns,Unemployment compensation | Number of returns | 71.0,BT,72,14,"$200,000 under $500,000",22,433790.0
+tab14,2021,21in14ar.xls,unempcomp,count,nz,all,Unemployment compensation — number of returns,Unemployment compensation | Number of returns | 71.0,BT,72,15,"$500,000 under $1,000,000",23,47030.0
+tab14,2021,21in14ar.xls,unempcomp,count,nz,all,Unemployment compensation — number of returns,Unemployment compensation | Number of returns | 71.0,BT,72,16,"$1,000,000 under $1,500,000",24,8021.0
+tab14,2021,21in14ar.xls,unempcomp,count,nz,all,Unemployment compensation — number of returns,Unemployment compensation | Number of returns | 71.0,BT,72,17,"$1,500,000 under $2,000,000",25,2944.0
+tab14,2021,21in14ar.xls,unempcomp,count,nz,all,Unemployment compensation — number of returns,Unemployment compensation | Number of returns | 71.0,BT,72,18,"$2,000,000 under $5,000,000",26,3154.0
+tab14,2021,21in14ar.xls,unempcomp,count,nz,all,Unemployment compensation — number of returns,Unemployment compensation | Number of returns | 71.0,BT,72,19,"$5,000,000 under $10,000,000",27,550.0
+tab14,2021,21in14ar.xls,unempcomp,count,nz,all,Unemployment compensation — number of returns,Unemployment compensation | Number of returns | 71.0,BT,72,20,"$10,000,000 or more",28,303.0
+tab14,2021,21in14ar.xls,unempcomp,amount,nz,all,Unemployment compensation,Amount | 72.0,BU,73,1,"All returns, total",9,208872354000.0
+tab14,2021,21in14ar.xls,unempcomp,amount,nz,all,Unemployment compensation,Amount | 72.0,BU,73,2,No adjusted gross income,10,1731244000.0
+tab14,2021,21in14ar.xls,unempcomp,amount,nz,all,Unemployment compensation,Amount | 72.0,BU,73,3,"$1 under $5,000",11,1192432000.0
+tab14,2021,21in14ar.xls,unempcomp,amount,nz,all,Unemployment compensation,Amount | 72.0,BU,73,4,"$5,000 under $10,000",12,3477871000.0
+tab14,2021,21in14ar.xls,unempcomp,amount,nz,all,Unemployment compensation,Amount | 72.0,BU,73,5,"$10,000 under $15,000",13,11528307000.0
+tab14,2021,21in14ar.xls,unempcomp,amount,nz,all,Unemployment compensation,Amount | 72.0,BU,73,6,"$15,000 under $20,000",14,24375282000.0
+tab14,2021,21in14ar.xls,unempcomp,amount,nz,all,Unemployment compensation,Amount | 72.0,BU,73,7,"$20,000 under $25,000",15,23100700000.0
+tab14,2021,21in14ar.xls,unempcomp,amount,nz,all,Unemployment compensation,Amount | 72.0,BU,73,8,"$25,000 under $30,000",16,20127231000.0
+tab14,2021,21in14ar.xls,unempcomp,amount,nz,all,Unemployment compensation,Amount | 72.0,BU,73,9,"$30,000 under $40,000",17,29558905000.0
+tab14,2021,21in14ar.xls,unempcomp,amount,nz,all,Unemployment compensation,Amount | 72.0,BU,73,10,"$40,000 under $50,000",18,18740477000.0
+tab14,2021,21in14ar.xls,unempcomp,amount,nz,all,Unemployment compensation,Amount | 72.0,BU,73,11,"$50,000 under $75,000",19,28035317000.0
+tab14,2021,21in14ar.xls,unempcomp,amount,nz,all,Unemployment compensation,Amount | 72.0,BU,73,12,"$75,000 under $100,000",20,17043811000.0
+tab14,2021,21in14ar.xls,unempcomp,amount,nz,all,Unemployment compensation,Amount | 72.0,BU,73,13,"$100,000 under $200,000",21,23285476000.0
+tab14,2021,21in14ar.xls,unempcomp,amount,nz,all,Unemployment compensation,Amount | 72.0,BU,73,14,"$200,000 under $500,000",22,5767497000.0
+tab14,2021,21in14ar.xls,unempcomp,amount,nz,all,Unemployment compensation,Amount | 72.0,BU,73,15,"$500,000 under $1,000,000",23,694202000.0
+tab14,2021,21in14ar.xls,unempcomp,amount,nz,all,Unemployment compensation,Amount | 72.0,BU,73,16,"$1,000,000 under $1,500,000",24,113470000.0
+tab14,2021,21in14ar.xls,unempcomp,amount,nz,all,Unemployment compensation,Amount | 72.0,BU,73,17,"$1,500,000 under $2,000,000",25,41432000.0
+tab14,2021,21in14ar.xls,unempcomp,amount,nz,all,Unemployment compensation,Amount | 72.0,BU,73,18,"$2,000,000 under $5,000,000",26,47162000.0
+tab14,2021,21in14ar.xls,unempcomp,amount,nz,all,Unemployment compensation,Amount | 72.0,BU,73,19,"$5,000,000 under $10,000,000",27,7800000.0
+tab14,2021,21in14ar.xls,unempcomp,amount,nz,all,Unemployment compensation,Amount | 72.0,BU,73,20,"$10,000,000 or more",28,3737000.0
+tab14,2021,21in14ar.xls,socsectot,count,nz,all,Social security benefits (total) — number of returns,Social security benefits | Total [1] | Number of returns | 73.0,BV,74,1,"All returns, total",9,31293066.0
+tab14,2021,21in14ar.xls,socsectot,count,nz,all,Social security benefits (total) — number of returns,Social security benefits | Total [1] | Number of returns | 73.0,BV,74,2,No adjusted gross income,10,1122130.0
+tab14,2021,21in14ar.xls,socsectot,count,nz,all,Social security benefits (total) — number of returns,Social security benefits | Total [1] | Number of returns | 73.0,BV,74,3,"$1 under $5,000",11,2034531.0
+tab14,2021,21in14ar.xls,socsectot,count,nz,all,Social security benefits (total) — number of returns,Social security benefits | Total [1] | Number of returns | 73.0,BV,74,4,"$5,000 under $10,000",12,1726114.0
+tab14,2021,21in14ar.xls,socsectot,count,nz,all,Social security benefits (total) — number of returns,Social security benefits | Total [1] | Number of returns | 73.0,BV,74,5,"$10,000 under $15,000",13,1965208.0
+tab14,2021,21in14ar.xls,socsectot,count,nz,all,Social security benefits (total) — number of returns,Social security benefits | Total [1] | Number of returns | 73.0,BV,74,6,"$15,000 under $20,000",14,1753163.0
+tab14,2021,21in14ar.xls,socsectot,count,nz,all,Social security benefits (total) — number of returns,Social security benefits | Total [1] | Number of returns | 73.0,BV,74,7,"$20,000 under $25,000",15,1443145.0
+tab14,2021,21in14ar.xls,socsectot,count,nz,all,Social security benefits (total) — number of returns,Social security benefits | Total [1] | Number of returns | 73.0,BV,74,8,"$25,000 under $30,000",16,1320304.0
+tab14,2021,21in14ar.xls,socsectot,count,nz,all,Social security benefits (total) — number of returns,Social security benefits | Total [1] | Number of returns | 73.0,BV,74,9,"$30,000 under $40,000",17,2173266.0
+tab14,2021,21in14ar.xls,socsectot,count,nz,all,Social security benefits (total) — number of returns,Social security benefits | Total [1] | Number of returns | 73.0,BV,74,10,"$40,000 under $50,000",18,1960809.0
+tab14,2021,21in14ar.xls,socsectot,count,nz,all,Social security benefits (total) — number of returns,Social security benefits | Total [1] | Number of returns | 73.0,BV,74,11,"$50,000 under $75,000",19,4373045.0
+tab14,2021,21in14ar.xls,socsectot,count,nz,all,Social security benefits (total) — number of returns,Social security benefits | Total [1] | Number of returns | 73.0,BV,74,12,"$75,000 under $100,000",20,3447623.0
+tab14,2021,21in14ar.xls,socsectot,count,nz,all,Social security benefits (total) — number of returns,Social security benefits | Total [1] | Number of returns | 73.0,BV,74,13,"$100,000 under $200,000",21,5628183.0
+tab14,2021,21in14ar.xls,socsectot,count,nz,all,Social security benefits (total) — number of returns,Social security benefits | Total [1] | Number of returns | 73.0,BV,74,14,"$200,000 under $500,000",22,1873015.0
+tab14,2021,21in14ar.xls,socsectot,count,nz,all,Social security benefits (total) — number of returns,Social security benefits | Total [1] | Number of returns | 73.0,BV,74,15,"$500,000 under $1,000,000",23,304147.0
+tab14,2021,21in14ar.xls,socsectot,count,nz,all,Social security benefits (total) — number of returns,Social security benefits | Total [1] | Number of returns | 73.0,BV,74,16,"$1,000,000 under $1,500,000",24,70642.0
+tab14,2021,21in14ar.xls,socsectot,count,nz,all,Social security benefits (total) — number of returns,Social security benefits | Total [1] | Number of returns | 73.0,BV,74,17,"$1,500,000 under $2,000,000",25,30245.0
+tab14,2021,21in14ar.xls,socsectot,count,nz,all,Social security benefits (total) — number of returns,Social security benefits | Total [1] | Number of returns | 73.0,BV,74,18,"$2,000,000 under $5,000,000",26,46214.0
+tab14,2021,21in14ar.xls,socsectot,count,nz,all,Social security benefits (total) — number of returns,Social security benefits | Total [1] | Number of returns | 73.0,BV,74,19,"$5,000,000 under $10,000,000",27,12510.0
+tab14,2021,21in14ar.xls,socsectot,count,nz,all,Social security benefits (total) — number of returns,Social security benefits | Total [1] | Number of returns | 73.0,BV,74,20,"$10,000,000 or more",28,8772.0
+tab14,2021,21in14ar.xls,socsectot,amount,nz,all,Social security benefits (total),Amount | 74.0,BW,75,1,"All returns, total",9,791161174000.0
+tab14,2021,21in14ar.xls,socsectot,amount,nz,all,Social security benefits (total),Amount | 74.0,BW,75,2,No adjusted gross income,10,23536368000.0
+tab14,2021,21in14ar.xls,socsectot,amount,nz,all,Social security benefits (total),Amount | 74.0,BW,75,3,"$1 under $5,000",11,39846341000.0
+tab14,2021,21in14ar.xls,socsectot,amount,nz,all,Social security benefits (total),Amount | 74.0,BW,75,4,"$5,000 under $10,000",12,35515487000.0
+tab14,2021,21in14ar.xls,socsectot,amount,nz,all,Social security benefits (total),Amount | 74.0,BW,75,5,"$10,000 under $15,000",13,40383202000.0
+tab14,2021,21in14ar.xls,socsectot,amount,nz,all,Social security benefits (total),Amount | 74.0,BW,75,6,"$15,000 under $20,000",14,36698208000.0
+tab14,2021,21in14ar.xls,socsectot,amount,nz,all,Social security benefits (total),Amount | 74.0,BW,75,7,"$20,000 under $25,000",15,32270846000.0
+tab14,2021,21in14ar.xls,socsectot,amount,nz,all,Social security benefits (total),Amount | 74.0,BW,75,8,"$25,000 under $30,000",16,30607751000.0
+tab14,2021,21in14ar.xls,socsectot,amount,nz,all,Social security benefits (total),Amount | 74.0,BW,75,9,"$30,000 under $40,000",17,50301193000.0
+tab14,2021,21in14ar.xls,socsectot,amount,nz,all,Social security benefits (total),Amount | 74.0,BW,75,10,"$40,000 under $50,000",18,45283931000.0
+tab14,2021,21in14ar.xls,socsectot,amount,nz,all,Social security benefits (total),Amount | 74.0,BW,75,11,"$50,000 under $75,000",19,104788772000.0
+tab14,2021,21in14ar.xls,socsectot,amount,nz,all,Social security benefits (total),Amount | 74.0,BW,75,12,"$75,000 under $100,000",20,90885785000.0
+tab14,2021,21in14ar.xls,socsectot,amount,nz,all,Social security benefits (total),Amount | 74.0,BW,75,13,"$100,000 under $200,000",21,175599410000.0
+tab14,2021,21in14ar.xls,socsectot,amount,nz,all,Social security benefits (total),Amount | 74.0,BW,75,14,"$200,000 under $500,000",22,66714127000.0
+tab14,2021,21in14ar.xls,socsectot,amount,nz,all,Social security benefits (total),Amount | 74.0,BW,75,15,"$500,000 under $1,000,000",23,11845014000.0
+tab14,2021,21in14ar.xls,socsectot,amount,nz,all,Social security benefits (total),Amount | 74.0,BW,75,16,"$1,000,000 under $1,500,000",24,2836780000.0
+tab14,2021,21in14ar.xls,socsectot,amount,nz,all,Social security benefits (total),Amount | 74.0,BW,75,17,"$1,500,000 under $2,000,000",25,1235190000.0
+tab14,2021,21in14ar.xls,socsectot,amount,nz,all,Social security benefits (total),Amount | 74.0,BW,75,18,"$2,000,000 under $5,000,000",26,1888392000.0
+tab14,2021,21in14ar.xls,socsectot,amount,nz,all,Social security benefits (total),Amount | 74.0,BW,75,19,"$5,000,000 under $10,000,000",27,535125000.0
+tab14,2021,21in14ar.xls,socsectot,amount,nz,all,Social security benefits (total),Amount | 74.0,BW,75,20,"$10,000,000 or more",28,389254000.0
+tab14,2021,21in14ar.xls,socsectaxable,count,nz,all,Social security benefits (taxable) — number of returns,Taxable | Number of returns | 75.0,BX,76,1,"All returns, total",9,23798351.0
+tab14,2021,21in14ar.xls,socsectaxable,count,nz,all,Social security benefits (taxable) — number of returns,Taxable | Number of returns | 75.0,BX,76,2,No adjusted gross income,10,1810.0
+tab14,2021,21in14ar.xls,socsectaxable,count,nz,all,Social security benefits (taxable) — number of returns,Taxable | Number of returns | 75.0,BX,76,3,"$1 under $5,000",11,17871.0
+tab14,2021,21in14ar.xls,socsectaxable,count,nz,all,Social security benefits (taxable) — number of returns,Taxable | Number of returns | 75.0,BX,76,4,"$5,000 under $10,000",12,53922.0
+tab14,2021,21in14ar.xls,socsectaxable,count,nz,all,Social security benefits (taxable) — number of returns,Taxable | Number of returns | 75.0,BX,76,5,"$10,000 under $15,000",13,286325.0
+tab14,2021,21in14ar.xls,socsectaxable,count,nz,all,Social security benefits (taxable) — number of returns,Taxable | Number of returns | 75.0,BX,76,6,"$15,000 under $20,000",14,1001301.0
+tab14,2021,21in14ar.xls,socsectaxable,count,nz,all,Social security benefits (taxable) — number of returns,Taxable | Number of returns | 75.0,BX,76,7,"$20,000 under $25,000",15,1239135.0
+tab14,2021,21in14ar.xls,socsectaxable,count,nz,all,Social security benefits (taxable) — number of returns,Taxable | Number of returns | 75.0,BX,76,8,"$25,000 under $30,000",16,1280188.0
+tab14,2021,21in14ar.xls,socsectaxable,count,nz,all,Social security benefits (taxable) — number of returns,Taxable | Number of returns | 75.0,BX,76,9,"$30,000 under $40,000",17,2171147.0
+tab14,2021,21in14ar.xls,socsectaxable,count,nz,all,Social security benefits (taxable) — number of returns,Taxable | Number of returns | 75.0,BX,76,10,"$40,000 under $50,000",18,1960565.0
+tab14,2021,21in14ar.xls,socsectaxable,count,nz,all,Social security benefits (taxable) — number of returns,Taxable | Number of returns | 75.0,BX,76,11,"$50,000 under $75,000",19,4372880.0
+tab14,2021,21in14ar.xls,socsectaxable,count,nz,all,Social security benefits (taxable) — number of returns,Taxable | Number of returns | 75.0,BX,76,12,"$75,000 under $100,000",20,3446381.0
+tab14,2021,21in14ar.xls,socsectaxable,count,nz,all,Social security benefits (taxable) — number of returns,Taxable | Number of returns | 75.0,BX,76,13,"$100,000 under $200,000",21,5623506.0
+tab14,2021,21in14ar.xls,socsectaxable,count,nz,all,Social security benefits (taxable) — number of returns,Taxable | Number of returns | 75.0,BX,76,14,"$200,000 under $500,000",22,1871269.0
+tab14,2021,21in14ar.xls,socsectaxable,count,nz,all,Social security benefits (taxable) — number of returns,Taxable | Number of returns | 75.0,BX,76,15,"$500,000 under $1,000,000",23,303816.0
+tab14,2021,21in14ar.xls,socsectaxable,count,nz,all,Social security benefits (taxable) — number of returns,Taxable | Number of returns | 75.0,BX,76,16,"$1,000,000 under $1,500,000",24,70581.0
+tab14,2021,21in14ar.xls,socsectaxable,count,nz,all,Social security benefits (taxable) — number of returns,Taxable | Number of returns | 75.0,BX,76,17,"$1,500,000 under $2,000,000",25,30206.0
+tab14,2021,21in14ar.xls,socsectaxable,count,nz,all,Social security benefits (taxable) — number of returns,Taxable | Number of returns | 75.0,BX,76,18,"$2,000,000 under $5,000,000",26,46179.0
+tab14,2021,21in14ar.xls,socsectaxable,count,nz,all,Social security benefits (taxable) — number of returns,Taxable | Number of returns | 75.0,BX,76,19,"$5,000,000 under $10,000,000",27,12500.0
+tab14,2021,21in14ar.xls,socsectaxable,count,nz,all,Social security benefits (taxable) — number of returns,Taxable | Number of returns | 75.0,BX,76,20,"$10,000,000 or more",28,8767.0
+tab14,2021,21in14ar.xls,socsectaxable,amount,nz,all,Social security benefits (taxable),Amount | 76.0,BY,77,1,"All returns, total",9,412830233000.0
+tab14,2021,21in14ar.xls,socsectaxable,amount,nz,all,Social security benefits (taxable),Amount | 76.0,BY,77,2,No adjusted gross income,10,5051000.0
+tab14,2021,21in14ar.xls,socsectaxable,amount,nz,all,Social security benefits (taxable),Amount | 76.0,BY,77,3,"$1 under $5,000",11,56211000.0
+tab14,2021,21in14ar.xls,socsectaxable,amount,nz,all,Social security benefits (taxable),Amount | 76.0,BY,77,4,"$5,000 under $10,000",12,236096000.0
+tab14,2021,21in14ar.xls,socsectaxable,amount,nz,all,Social security benefits (taxable),Amount | 76.0,BY,77,5,"$10,000 under $15,000",13,376863000.0
+tab14,2021,21in14ar.xls,socsectaxable,amount,nz,all,Social security benefits (taxable),Amount | 76.0,BY,77,6,"$15,000 under $20,000",14,1390216000.0
+tab14,2021,21in14ar.xls,socsectaxable,amount,nz,all,Social security benefits (taxable),Amount | 76.0,BY,77,7,"$20,000 under $25,000",15,3274619000.0
+tab14,2021,21in14ar.xls,socsectaxable,amount,nz,all,Social security benefits (taxable),Amount | 76.0,BY,77,8,"$25,000 under $30,000",16,5194320000.0
+tab14,2021,21in14ar.xls,socsectaxable,amount,nz,all,Social security benefits (taxable),Amount | 76.0,BY,77,9,"$30,000 under $40,000",17,14547676000.0
+tab14,2021,21in14ar.xls,socsectaxable,amount,nz,all,Social security benefits (taxable),Amount | 76.0,BY,77,10,"$40,000 under $50,000",18,20950320000.0
+tab14,2021,21in14ar.xls,socsectaxable,amount,nz,all,Social security benefits (taxable),Amount | 76.0,BY,77,11,"$50,000 under $75,000",19,71433500000.0
+tab14,2021,21in14ar.xls,socsectaxable,amount,nz,all,Social security benefits (taxable),Amount | 76.0,BY,77,12,"$75,000 under $100,000",20,73935780000.0
+tab14,2021,21in14ar.xls,socsectaxable,amount,nz,all,Social security benefits (taxable),Amount | 76.0,BY,77,13,"$100,000 under $200,000",21,148855563000.0
+tab14,2021,21in14ar.xls,socsectaxable,amount,nz,all,Social security benefits (taxable),Amount | 76.0,BY,77,14,"$200,000 under $500,000",22,56662240000.0
+tab14,2021,21in14ar.xls,socsectaxable,amount,nz,all,Social security benefits (taxable),Amount | 76.0,BY,77,15,"$500,000 under $1,000,000",23,10063315000.0
+tab14,2021,21in14ar.xls,socsectaxable,amount,nz,all,Social security benefits (taxable),Amount | 76.0,BY,77,16,"$1,000,000 under $1,500,000",24,2409392000.0
+tab14,2021,21in14ar.xls,socsectaxable,amount,nz,all,Social security benefits (taxable),Amount | 76.0,BY,77,17,"$1,500,000 under $2,000,000",25,1049301000.0
+tab14,2021,21in14ar.xls,socsectaxable,amount,nz,all,Social security benefits (taxable),Amount | 76.0,BY,77,18,"$2,000,000 under $5,000,000",26,1604460000.0
+tab14,2021,21in14ar.xls,socsectaxable,amount,nz,all,Social security benefits (taxable),Amount | 76.0,BY,77,19,"$5,000,000 under $10,000,000",27,454512000.0
+tab14,2021,21in14ar.xls,socsectaxable,amount,nz,all,Social security benefits (taxable),Amount | 76.0,BY,77,20,"$10,000,000 or more",28,330800000.0
+tab14,2021,21in14ar.xls,itemded,count,nz,all,Itemized deductions — number of returns,Total itemized deductions | Number of returns | 125.0,DV,126,1,"All returns, total",9,14842685.0
+tab14,2021,21in14ar.xls,itemded,count,nz,all,Itemized deductions — number of returns,Total itemized deductions | Number of returns | 125.0,DV,126,2,No adjusted gross income,10,0.0
+tab14,2021,21in14ar.xls,itemded,count,nz,all,Itemized deductions — number of returns,Total itemized deductions | Number of returns | 125.0,DV,126,3,"$1 under $5,000",11,80236.0
+tab14,2021,21in14ar.xls,itemded,count,nz,all,Itemized deductions — number of returns,Total itemized deductions | Number of returns | 125.0,DV,126,4,"$5,000 under $10,000",12,93583.0
+tab14,2021,21in14ar.xls,itemded,count,nz,all,Itemized deductions — number of returns,Total itemized deductions | Number of returns | 125.0,DV,126,5,"$10,000 under $15,000",13,109149.0
+tab14,2021,21in14ar.xls,itemded,count,nz,all,Itemized deductions — number of returns,Total itemized deductions | Number of returns | 125.0,DV,126,6,"$15,000 under $20,000",14,161030.0
+tab14,2021,21in14ar.xls,itemded,count,nz,all,Itemized deductions — number of returns,Total itemized deductions | Number of returns | 125.0,DV,126,7,"$20,000 under $25,000",15,167731.0
+tab14,2021,21in14ar.xls,itemded,count,nz,all,Itemized deductions — number of returns,Total itemized deductions | Number of returns | 125.0,DV,126,8,"$25,000 under $30,000",16,193007.0
+tab14,2021,21in14ar.xls,itemded,count,nz,all,Itemized deductions — number of returns,Total itemized deductions | Number of returns | 125.0,DV,126,9,"$30,000 under $40,000",17,467215.0
+tab14,2021,21in14ar.xls,itemded,count,nz,all,Itemized deductions — number of returns,Total itemized deductions | Number of returns | 125.0,DV,126,10,"$40,000 under $50,000",18,614463.0
+tab14,2021,21in14ar.xls,itemded,count,nz,all,Itemized deductions — number of returns,Total itemized deductions | Number of returns | 125.0,DV,126,11,"$50,000 under $75,000",19,1841364.0
+tab14,2021,21in14ar.xls,itemded,count,nz,all,Itemized deductions — number of returns,Total itemized deductions | Number of returns | 125.0,DV,126,12,"$75,000 under $100,000",20,1985056.0
+tab14,2021,21in14ar.xls,itemded,count,nz,all,Itemized deductions — number of returns,Total itemized deductions | Number of returns | 125.0,DV,126,13,"$100,000 under $200,000",21,4513652.0
+tab14,2021,21in14ar.xls,itemded,count,nz,all,Itemized deductions — number of returns,Total itemized deductions | Number of returns | 125.0,DV,126,14,"$200,000 under $500,000",22,3134769.0
+tab14,2021,21in14ar.xls,itemded,count,nz,all,Itemized deductions — number of returns,Total itemized deductions | Number of returns | 125.0,DV,126,15,"$500,000 under $1,000,000",23,874181.0
+tab14,2021,21in14ar.xls,itemded,count,nz,all,Itemized deductions — number of returns,Total itemized deductions | Number of returns | 125.0,DV,126,16,"$1,000,000 under $1,500,000",24,236902.0
+tab14,2021,21in14ar.xls,itemded,count,nz,all,Itemized deductions — number of returns,Total itemized deductions | Number of returns | 125.0,DV,126,17,"$1,500,000 under $2,000,000",25,107470.0
+tab14,2021,21in14ar.xls,itemded,count,nz,all,Itemized deductions — number of returns,Total itemized deductions | Number of returns | 125.0,DV,126,18,"$2,000,000 under $5,000,000",26,172234.0
+tab14,2021,21in14ar.xls,itemded,count,nz,all,Itemized deductions — number of returns,Total itemized deductions | Number of returns | 125.0,DV,126,19,"$5,000,000 under $10,000,000",27,51030.0
+tab14,2021,21in14ar.xls,itemded,count,nz,all,Itemized deductions — number of returns,Total itemized deductions | Number of returns | 125.0,DV,126,20,"$10,000,000 or more",28,39613.0
+tab14,2021,21in14ar.xls,itemded,amount,nz,all,Total itemized deductions,Amount | 126.0,DW,127,1,"All returns, total",9,659680547000.0
+tab14,2021,21in14ar.xls,itemded,amount,nz,all,Total itemized deductions,Amount | 126.0,DW,127,2,No adjusted gross income,10,0.0
+tab14,2021,21in14ar.xls,itemded,amount,nz,all,Total itemized deductions,Amount | 126.0,DW,127,3,"$1 under $5,000",11,1871637000.0
+tab14,2021,21in14ar.xls,itemded,amount,nz,all,Total itemized deductions,Amount | 126.0,DW,127,4,"$5,000 under $10,000",12,2292492000.0
+tab14,2021,21in14ar.xls,itemded,amount,nz,all,Total itemized deductions,Amount | 126.0,DW,127,5,"$10,000 under $15,000",13,2804369000.0
+tab14,2021,21in14ar.xls,itemded,amount,nz,all,Total itemized deductions,Amount | 126.0,DW,127,6,"$15,000 under $20,000",14,4775555000.0
+tab14,2021,21in14ar.xls,itemded,amount,nz,all,Total itemized deductions,Amount | 126.0,DW,127,7,"$20,000 under $25,000",15,4285472000.0
+tab14,2021,21in14ar.xls,itemded,amount,nz,all,Total itemized deductions,Amount | 126.0,DW,127,8,"$25,000 under $30,000",16,4765016000.0
+tab14,2021,21in14ar.xls,itemded,amount,nz,all,Total itemized deductions,Amount | 126.0,DW,127,9,"$30,000 under $40,000",17,12606528000.0
+tab14,2021,21in14ar.xls,itemded,amount,nz,all,Total itemized deductions,Amount | 126.0,DW,127,10,"$40,000 under $50,000",18,15706593000.0
+tab14,2021,21in14ar.xls,itemded,amount,nz,all,Total itemized deductions,Amount | 126.0,DW,127,11,"$50,000 under $75,000",19,47466699000.0
+tab14,2021,21in14ar.xls,itemded,amount,nz,all,Total itemized deductions,Amount | 126.0,DW,127,12,"$75,000 under $100,000",20,54706812000.0
+tab14,2021,21in14ar.xls,itemded,amount,nz,all,Total itemized deductions,Amount | 126.0,DW,127,13,"$100,000 under $200,000",21,138751518000.0
+tab14,2021,21in14ar.xls,itemded,amount,nz,all,Total itemized deductions,Amount | 126.0,DW,127,14,"$200,000 under $500,000",22,124480962000.0
+tab14,2021,21in14ar.xls,itemded,amount,nz,all,Total itemized deductions,Amount | 126.0,DW,127,15,"$500,000 under $1,000,000",23,49971545000.0
+tab14,2021,21in14ar.xls,itemded,amount,nz,all,Total itemized deductions,Amount | 126.0,DW,127,16,"$1,000,000 under $1,500,000",24,20103248000.0
+tab14,2021,21in14ar.xls,itemded,amount,nz,all,Total itemized deductions,Amount | 126.0,DW,127,17,"$1,500,000 under $2,000,000",25,11864113000.0
+tab14,2021,21in14ar.xls,itemded,amount,nz,all,Total itemized deductions,Amount | 126.0,DW,127,18,"$2,000,000 under $5,000,000",26,31470281000.0
+tab14,2021,21in14ar.xls,itemded,amount,nz,all,Total itemized deductions,Amount | 126.0,DW,127,19,"$5,000,000 under $10,000,000",27,19991637000.0
+tab14,2021,21in14ar.xls,itemded,amount,nz,all,Total itemized deductions,Amount | 126.0,DW,127,20,"$10,000,000 or more",28,111766070000.0
+tab14,2021,21in14ar.xls,qbid,count,nz,all,QBI deduction — number of returns (2021+),Qualified business income deduction | Number of returns | 127.0,DX,128,1,"All returns, total",9,25924668.0
+tab14,2021,21in14ar.xls,qbid,count,nz,all,QBI deduction — number of returns (2021+),Qualified business income deduction | Number of returns | 127.0,DX,128,2,No adjusted gross income,10,0.0
+tab14,2021,21in14ar.xls,qbid,count,nz,all,QBI deduction — number of returns (2021+),Qualified business income deduction | Number of returns | 127.0,DX,128,3,"$1 under $5,000",11,20887.0
+tab14,2021,21in14ar.xls,qbid,count,nz,all,QBI deduction — number of returns (2021+),Qualified business income deduction | Number of returns | 127.0,DX,128,4,"$5,000 under $10,000",12,39486.0
+tab14,2021,21in14ar.xls,qbid,count,nz,all,QBI deduction — number of returns (2021+),Qualified business income deduction | Number of returns | 127.0,DX,128,5,"$10,000 under $15,000",13,438355.0
+tab14,2021,21in14ar.xls,qbid,count,nz,all,QBI deduction — number of returns (2021+),Qualified business income deduction | Number of returns | 127.0,DX,128,6,"$15,000 under $20,000",14,970408.0
+tab14,2021,21in14ar.xls,qbid,count,nz,all,QBI deduction — number of returns (2021+),Qualified business income deduction | Number of returns | 127.0,DX,128,7,"$20,000 under $25,000",15,946007.0
+tab14,2021,21in14ar.xls,qbid,count,nz,all,QBI deduction — number of returns (2021+),Qualified business income deduction | Number of returns | 127.0,DX,128,8,"$25,000 under $30,000",16,1073605.0
+tab14,2021,21in14ar.xls,qbid,count,nz,all,QBI deduction — number of returns (2021+),Qualified business income deduction | Number of returns | 127.0,DX,128,9,"$30,000 under $40,000",17,1812616.0
+tab14,2021,21in14ar.xls,qbid,count,nz,all,QBI deduction — number of returns (2021+),Qualified business income deduction | Number of returns | 127.0,DX,128,10,"$40,000 under $50,000",18,1609597.0
+tab14,2021,21in14ar.xls,qbid,count,nz,all,QBI deduction — number of returns (2021+),Qualified business income deduction | Number of returns | 127.0,DX,128,11,"$50,000 under $75,000",19,3515828.0
+tab14,2021,21in14ar.xls,qbid,count,nz,all,QBI deduction — number of returns (2021+),Qualified business income deduction | Number of returns | 127.0,DX,128,12,"$75,000 under $100,000",20,2824372.0
+tab14,2021,21in14ar.xls,qbid,count,nz,all,QBI deduction — number of returns (2021+),Qualified business income deduction | Number of returns | 127.0,DX,128,13,"$100,000 under $200,000",21,6739276.0
+tab14,2021,21in14ar.xls,qbid,count,nz,all,QBI deduction — number of returns (2021+),Qualified business income deduction | Number of returns | 127.0,DX,128,14,"$200,000 under $500,000",22,4297046.0
+tab14,2021,21in14ar.xls,qbid,count,nz,all,QBI deduction — number of returns (2021+),Qualified business income deduction | Number of returns | 127.0,DX,128,15,"$500,000 under $1,000,000",23,995853.0
+tab14,2021,21in14ar.xls,qbid,count,nz,all,QBI deduction — number of returns (2021+),Qualified business income deduction | Number of returns | 127.0,DX,128,16,"$1,000,000 under $1,500,000",24,265528.0
+tab14,2021,21in14ar.xls,qbid,count,nz,all,QBI deduction — number of returns (2021+),Qualified business income deduction | Number of returns | 127.0,DX,128,17,"$1,500,000 under $2,000,000",25,114452.0
+tab14,2021,21in14ar.xls,qbid,count,nz,all,QBI deduction — number of returns (2021+),Qualified business income deduction | Number of returns | 127.0,DX,128,18,"$2,000,000 under $5,000,000",26,178739.0
+tab14,2021,21in14ar.xls,qbid,count,nz,all,QBI deduction — number of returns (2021+),Qualified business income deduction | Number of returns | 127.0,DX,128,19,"$5,000,000 under $10,000,000",27,48998.0
+tab14,2021,21in14ar.xls,qbid,count,nz,all,QBI deduction — number of returns (2021+),Qualified business income deduction | Number of returns | 127.0,DX,128,20,"$10,000,000 or more",28,33615.0
+tab14,2021,21in14ar.xls,qbid,amount,nz,all,Qualified business income deduction (2021+),Amount | 128.0,DY,129,1,"All returns, total",9,205779729000.0
+tab14,2021,21in14ar.xls,qbid,amount,nz,all,Qualified business income deduction (2021+),Amount | 128.0,DY,129,2,No adjusted gross income,10,0.0
+tab14,2021,21in14ar.xls,qbid,amount,nz,all,Qualified business income deduction (2021+),Amount | 128.0,DY,129,3,"$1 under $5,000",11,3109000.0
+tab14,2021,21in14ar.xls,qbid,amount,nz,all,Qualified business income deduction (2021+),Amount | 128.0,DY,129,4,"$5,000 under $10,000",12,15105000.0
+tab14,2021,21in14ar.xls,qbid,amount,nz,all,Qualified business income deduction (2021+),Amount | 128.0,DY,129,5,"$10,000 under $15,000",13,98223000.0
+tab14,2021,21in14ar.xls,qbid,amount,nz,all,Qualified business income deduction (2021+),Amount | 128.0,DY,129,6,"$15,000 under $20,000",14,586769000.0
+tab14,2021,21in14ar.xls,qbid,amount,nz,all,Qualified business income deduction (2021+),Amount | 128.0,DY,129,7,"$20,000 under $25,000",15,914224000.0
+tab14,2021,21in14ar.xls,qbid,amount,nz,all,Qualified business income deduction (2021+),Amount | 128.0,DY,129,8,"$25,000 under $30,000",16,1222867000.0
+tab14,2021,21in14ar.xls,qbid,amount,nz,all,Qualified business income deduction (2021+),Amount | 128.0,DY,129,9,"$30,000 under $40,000",17,2872968000.0
+tab14,2021,21in14ar.xls,qbid,amount,nz,all,Qualified business income deduction (2021+),Amount | 128.0,DY,129,10,"$40,000 under $50,000",18,3191541000.0
+tab14,2021,21in14ar.xls,qbid,amount,nz,all,Qualified business income deduction (2021+),Amount | 128.0,DY,129,11,"$50,000 under $75,000",19,9015688000.0
+tab14,2021,21in14ar.xls,qbid,amount,nz,all,Qualified business income deduction (2021+),Amount | 128.0,DY,129,12,"$75,000 under $100,000",20,8543742000.0
+tab14,2021,21in14ar.xls,qbid,amount,nz,all,Qualified business income deduction (2021+),Amount | 128.0,DY,129,13,"$100,000 under $200,000",21,29732755000.0
+tab14,2021,21in14ar.xls,qbid,amount,nz,all,Qualified business income deduction (2021+),Amount | 128.0,DY,129,14,"$200,000 under $500,000",22,39509153000.0
+tab14,2021,21in14ar.xls,qbid,amount,nz,all,Qualified business income deduction (2021+),Amount | 128.0,DY,129,15,"$500,000 under $1,000,000",23,18882845000.0
+tab14,2021,21in14ar.xls,qbid,amount,nz,all,Qualified business income deduction (2021+),Amount | 128.0,DY,129,16,"$1,000,000 under $1,500,000",24,11281864000.0
+tab14,2021,21in14ar.xls,qbid,amount,nz,all,Qualified business income deduction (2021+),Amount | 128.0,DY,129,17,"$1,500,000 under $2,000,000",25,7932390000.0
+tab14,2021,21in14ar.xls,qbid,amount,nz,all,Qualified business income deduction (2021+),Amount | 128.0,DY,129,18,"$2,000,000 under $5,000,000",26,23312146000.0
+tab14,2021,21in14ar.xls,qbid,amount,nz,all,Qualified business income deduction (2021+),Amount | 128.0,DY,129,19,"$5,000,000 under $10,000,000",27,14234309000.0
+tab14,2021,21in14ar.xls,qbid,amount,nz,all,Qualified business income deduction (2021+),Amount | 128.0,DY,129,20,"$10,000,000 or more",28,34430031000.0
+tab14,2021,21in14ar.xls,amt,count,nz,all,Alternative minimum tax — number of returns,Alternative minimum tax | Number of returns | 133.0,ED,134,1,"All returns, total",9,243550.0
+tab14,2021,21in14ar.xls,amt,count,nz,all,Alternative minimum tax — number of returns,Alternative minimum tax | Number of returns | 133.0,ED,134,2,No adjusted gross income,10,3867.0
+tab14,2021,21in14ar.xls,amt,count,nz,all,Alternative minimum tax — number of returns,Alternative minimum tax | Number of returns | 133.0,ED,134,3,"$1 under $5,000",11,18.0
+tab14,2021,21in14ar.xls,amt,count,nz,all,Alternative minimum tax — number of returns,Alternative minimum tax | Number of returns | 133.0,ED,134,4,"$5,000 under $10,000",12,0.0
+tab14,2021,21in14ar.xls,amt,count,nz,all,Alternative minimum tax — number of returns,Alternative minimum tax | Number of returns | 133.0,ED,134,5,"$10,000 under $15,000",13,0.0
+tab14,2021,21in14ar.xls,amt,count,nz,all,Alternative minimum tax — number of returns,Alternative minimum tax | Number of returns | 133.0,ED,134,6,"$15,000 under $20,000",14,13.0
+tab14,2021,21in14ar.xls,amt,count,nz,all,Alternative minimum tax — number of returns,Alternative minimum tax | Number of returns | 133.0,ED,134,7,"$20,000 under $25,000",15,0.0
+tab14,2021,21in14ar.xls,amt,count,nz,all,Alternative minimum tax — number of returns,Alternative minimum tax | Number of returns | 133.0,ED,134,8,"$25,000 under $30,000",16,1183.0
+tab14,2021,21in14ar.xls,amt,count,nz,all,Alternative minimum tax — number of returns,Alternative minimum tax | Number of returns | 133.0,ED,134,9,"$30,000 under $40,000",17,100.0
+tab14,2021,21in14ar.xls,amt,count,nz,all,Alternative minimum tax — number of returns,Alternative minimum tax | Number of returns | 133.0,ED,134,10,"$40,000 under $50,000",18,89.0
+tab14,2021,21in14ar.xls,amt,count,nz,all,Alternative minimum tax — number of returns,Alternative minimum tax | Number of returns | 133.0,ED,134,11,"$50,000 under $75,000",19,2897.0
+tab14,2021,21in14ar.xls,amt,count,nz,all,Alternative minimum tax — number of returns,Alternative minimum tax | Number of returns | 133.0,ED,134,12,"$75,000 under $100,000",20,3925.0
+tab14,2021,21in14ar.xls,amt,count,nz,all,Alternative minimum tax — number of returns,Alternative minimum tax | Number of returns | 133.0,ED,134,13,"$100,000 under $200,000",21,16341.0
+tab14,2021,21in14ar.xls,amt,count,nz,all,Alternative minimum tax — number of returns,Alternative minimum tax | Number of returns | 133.0,ED,134,14,"$200,000 under $500,000",22,38734.0
+tab14,2021,21in14ar.xls,amt,count,nz,all,Alternative minimum tax — number of returns,Alternative minimum tax | Number of returns | 133.0,ED,134,15,"$500,000 under $1,000,000",23,176382.0
+tab14,2021,21in14ar.xls,amt,count,nz,all,Alternative minimum tax — number of returns,Alternative minimum tax | Number of returns | 133.0,ED,134,16,"$1,000,000 under $1,500,000",24,0.0
+tab14,2021,21in14ar.xls,amt,count,nz,all,Alternative minimum tax — number of returns,Alternative minimum tax | Number of returns | 133.0,ED,134,17,"$1,500,000 under $2,000,000",25,0.0
+tab14,2021,21in14ar.xls,amt,count,nz,all,Alternative minimum tax — number of returns,Alternative minimum tax | Number of returns | 133.0,ED,134,18,"$2,000,000 under $5,000,000",26,0.0
+tab14,2021,21in14ar.xls,amt,count,nz,all,Alternative minimum tax — number of returns,Alternative minimum tax | Number of returns | 133.0,ED,134,19,"$5,000,000 under $10,000,000",27,0.0
+tab14,2021,21in14ar.xls,amt,count,nz,all,Alternative minimum tax — number of returns,Alternative minimum tax | Number of returns | 133.0,ED,134,20,"$10,000,000 or more",28,0.0
+tab14,2021,21in14ar.xls,amt,amount,nz,all,Alternative minimum tax,Amount | 134.0,EE,135,1,"All returns, total",9,5598598000.0
+tab14,2021,21in14ar.xls,amt,amount,nz,all,Alternative minimum tax,Amount | 134.0,EE,135,2,No adjusted gross income,10,173716000.0
+tab14,2021,21in14ar.xls,amt,amount,nz,all,Alternative minimum tax,Amount | 134.0,EE,135,3,"$1 under $5,000",11,1480000.0
+tab14,2021,21in14ar.xls,amt,amount,nz,all,Alternative minimum tax,Amount | 134.0,EE,135,4,"$5,000 under $10,000",12,0.0
+tab14,2021,21in14ar.xls,amt,amount,nz,all,Alternative minimum tax,Amount | 134.0,EE,135,5,"$10,000 under $15,000",13,0.0
+tab14,2021,21in14ar.xls,amt,amount,nz,all,Alternative minimum tax,Amount | 134.0,EE,135,6,"$15,000 under $20,000",14,434000.0
+tab14,2021,21in14ar.xls,amt,amount,nz,all,Alternative minimum tax,Amount | 134.0,EE,135,7,"$20,000 under $25,000",15,0.0
+tab14,2021,21in14ar.xls,amt,amount,nz,all,Alternative minimum tax,Amount | 134.0,EE,135,8,"$25,000 under $30,000",16,97684000.0
+tab14,2021,21in14ar.xls,amt,amount,nz,all,Alternative minimum tax,Amount | 134.0,EE,135,9,"$30,000 under $40,000",17,872000.0
+tab14,2021,21in14ar.xls,amt,amount,nz,all,Alternative minimum tax,Amount | 134.0,EE,135,10,"$40,000 under $50,000",18,1319000.0
+tab14,2021,21in14ar.xls,amt,amount,nz,all,Alternative minimum tax,Amount | 134.0,EE,135,11,"$50,000 under $75,000",19,25173000.0
+tab14,2021,21in14ar.xls,amt,amount,nz,all,Alternative minimum tax,Amount | 134.0,EE,135,12,"$75,000 under $100,000",20,9598000.0
+tab14,2021,21in14ar.xls,amt,amount,nz,all,Alternative minimum tax,Amount | 134.0,EE,135,13,"$100,000 under $200,000",21,134503000.0
+tab14,2021,21in14ar.xls,amt,amount,nz,all,Alternative minimum tax,Amount | 134.0,EE,135,14,"$200,000 under $500,000",22,870515000.0
+tab14,2021,21in14ar.xls,amt,amount,nz,all,Alternative minimum tax,Amount | 134.0,EE,135,15,"$500,000 under $1,000,000",23,4283305000.0
+tab14,2021,21in14ar.xls,amt,amount,nz,all,Alternative minimum tax,Amount | 134.0,EE,135,16,"$1,000,000 under $1,500,000",24,0.0
+tab14,2021,21in14ar.xls,amt,amount,nz,all,Alternative minimum tax,Amount | 134.0,EE,135,17,"$1,500,000 under $2,000,000",25,0.0
+tab14,2021,21in14ar.xls,amt,amount,nz,all,Alternative minimum tax,Amount | 134.0,EE,135,18,"$2,000,000 under $5,000,000",26,0.0
+tab14,2021,21in14ar.xls,amt,amount,nz,all,Alternative minimum tax,Amount | 134.0,EE,135,19,"$5,000,000 under $10,000,000",27,0.0
+tab14,2021,21in14ar.xls,amt,amount,nz,all,Alternative minimum tax,Amount | 134.0,EE,135,20,"$10,000,000 or more",28,0.0
+tab14,2021,21in14ar.xls,taxbc,count,nz,all,Income tax before credits — number of returns,Income tax before credits | Number of returns | 137.0,EH,138,1,"All returns, total",9,127874599.0
+tab14,2021,21in14ar.xls,taxbc,count,nz,all,Income tax before credits — number of returns,Income tax before credits | Number of returns | 137.0,EH,138,2,No adjusted gross income,10,29216.0
+tab14,2021,21in14ar.xls,taxbc,count,nz,all,Income tax before credits — number of returns,Income tax before credits | Number of returns | 137.0,EH,138,3,"$1 under $5,000",11,181180.0
+tab14,2021,21in14ar.xls,taxbc,count,nz,all,Income tax before credits — number of returns,Income tax before credits | Number of returns | 137.0,EH,138,4,"$5,000 under $10,000",12,230722.0
+tab14,2021,21in14ar.xls,taxbc,count,nz,all,Income tax before credits — number of returns,Income tax before credits | Number of returns | 137.0,EH,138,5,"$10,000 under $15,000",13,3245394.0
+tab14,2021,21in14ar.xls,taxbc,count,nz,all,Income tax before credits — number of returns,Income tax before credits | Number of returns | 137.0,EH,138,6,"$15,000 under $20,000",14,7085512.0
+tab14,2021,21in14ar.xls,taxbc,count,nz,all,Income tax before credits — number of returns,Income tax before credits | Number of returns | 137.0,EH,138,7,"$20,000 under $25,000",15,7525781.0
+tab14,2021,21in14ar.xls,taxbc,count,nz,all,Income tax before credits — number of returns,Income tax before credits | Number of returns | 137.0,EH,138,8,"$25,000 under $30,000",16,8333779.0
+tab14,2021,21in14ar.xls,taxbc,count,nz,all,Income tax before credits — number of returns,Income tax before credits | Number of returns | 137.0,EH,138,9,"$30,000 under $40,000",17,15914155.0
+tab14,2021,21in14ar.xls,taxbc,count,nz,all,Income tax before credits — number of returns,Income tax before credits | Number of returns | 137.0,EH,138,10,"$40,000 under $50,000",18,12678971.0
+tab14,2021,21in14ar.xls,taxbc,count,nz,all,Income tax before credits — number of returns,Income tax before credits | Number of returns | 137.0,EH,138,11,"$50,000 under $75,000",19,22515023.0
+tab14,2021,21in14ar.xls,taxbc,count,nz,all,Income tax before credits — number of returns,Income tax before credits | Number of returns | 137.0,EH,138,12,"$75,000 under $100,000",20,14601342.0
+tab14,2021,21in14ar.xls,taxbc,count,nz,all,Income tax before credits — number of returns,Income tax before credits | Number of returns | 137.0,EH,138,13,"$100,000 under $200,000",21,24006476.0
+tab14,2021,21in14ar.xls,taxbc,count,nz,all,Income tax before credits — number of returns,Income tax before credits | Number of returns | 137.0,EH,138,14,"$200,000 under $500,000",22,9036803.0
+tab14,2021,21in14ar.xls,taxbc,count,nz,all,Income tax before credits — number of returns,Income tax before credits | Number of returns | 137.0,EH,138,15,"$500,000 under $1,000,000",23,1615890.0
+tab14,2021,21in14ar.xls,taxbc,count,nz,all,Income tax before credits — number of returns,Income tax before credits | Number of returns | 137.0,EH,138,16,"$1,000,000 under $1,500,000",24,376494.0
+tab14,2021,21in14ar.xls,taxbc,count,nz,all,Income tax before credits — number of returns,Income tax before credits | Number of returns | 137.0,EH,138,17,"$1,500,000 under $2,000,000",25,155831.0
+tab14,2021,21in14ar.xls,taxbc,count,nz,all,Income tax before credits — number of returns,Income tax before credits | Number of returns | 137.0,EH,138,18,"$2,000,000 under $5,000,000",26,233468.0
+tab14,2021,21in14ar.xls,taxbc,count,nz,all,Income tax before credits — number of returns,Income tax before credits | Number of returns | 137.0,EH,138,19,"$5,000,000 under $10,000,000",27,63288.0
+tab14,2021,21in14ar.xls,taxbc,count,nz,all,Income tax before credits — number of returns,Income tax before credits | Number of returns | 137.0,EH,138,20,"$10,000,000 or more",28,45273.0
+tab14,2021,21in14ar.xls,taxbc,amount,nz,all,Income tax before credits,Amount | 138.0,EI,139,1,"All returns, total",9,2290478645000.0
+tab14,2021,21in14ar.xls,taxbc,amount,nz,all,Income tax before credits,Amount | 138.0,EI,139,2,No adjusted gross income,10,225572000.0
+tab14,2021,21in14ar.xls,taxbc,amount,nz,all,Income tax before credits,Amount | 138.0,EI,139,3,"$1 under $5,000",11,85408000.0
+tab14,2021,21in14ar.xls,taxbc,amount,nz,all,Income tax before credits,Amount | 138.0,EI,139,4,"$5,000 under $10,000",12,95009000.0
+tab14,2021,21in14ar.xls,taxbc,amount,nz,all,Income tax before credits,Amount | 138.0,EI,139,5,"$10,000 under $15,000",13,491367000.0
+tab14,2021,21in14ar.xls,taxbc,amount,nz,all,Income tax before credits,Amount | 138.0,EI,139,6,"$15,000 under $20,000",14,3112114000.0
+tab14,2021,21in14ar.xls,taxbc,amount,nz,all,Income tax before credits,Amount | 138.0,EI,139,7,"$20,000 under $25,000",15,6155804000.0
+tab14,2021,21in14ar.xls,taxbc,amount,nz,all,Income tax before credits,Amount | 138.0,EI,139,8,"$25,000 under $30,000",16,10227467000.0
+tab14,2021,21in14ar.xls,taxbc,amount,nz,all,Income tax before credits,Amount | 138.0,EI,139,9,"$30,000 under $40,000",17,31177700000.0
+tab14,2021,21in14ar.xls,taxbc,amount,nz,all,Income tax before credits,Amount | 138.0,EI,139,10,"$40,000 under $50,000",18,38366413000.0
+tab14,2021,21in14ar.xls,taxbc,amount,nz,all,Income tax before credits,Amount | 138.0,EI,139,11,"$50,000 under $75,000",19,115766605000.0
+tab14,2021,21in14ar.xls,taxbc,amount,nz,all,Income tax before credits,Amount | 138.0,EI,139,12,"$75,000 under $100,000",20,124411058000.0
+tab14,2021,21in14ar.xls,taxbc,amount,nz,all,Income tax before credits,Amount | 138.0,EI,139,13,"$100,000 under $200,000",21,405668074000.0
+tab14,2021,21in14ar.xls,taxbc,amount,nz,all,Income tax before credits,Amount | 138.0,EI,139,14,"$200,000 under $500,000",22,451924178000.0
+tab14,2021,21in14ar.xls,taxbc,amount,nz,all,Income tax before credits,Amount | 138.0,EI,139,15,"$500,000 under $1,000,000",23,250471738000.0
+tab14,2021,21in14ar.xls,taxbc,amount,nz,all,Income tax before credits,Amount | 138.0,EI,139,16,"$1,000,000 under $1,500,000",24,117790037000.0
+tab14,2021,21in14ar.xls,taxbc,amount,nz,all,Income tax before credits,Amount | 138.0,EI,139,17,"$1,500,000 under $2,000,000",25,71950793000.0
+tab14,2021,21in14ar.xls,taxbc,amount,nz,all,Income tax before credits,Amount | 138.0,EI,139,18,"$2,000,000 under $5,000,000",26,189909559000.0
+tab14,2021,21in14ar.xls,taxbc,amount,nz,all,Income tax before credits,Amount | 138.0,EI,139,19,"$5,000,000 under $10,000,000",27,116498227000.0
+tab14,2021,21in14ar.xls,taxbc,amount,nz,all,Income tax before credits,Amount | 138.0,EI,139,20,"$10,000,000 or more",28,356151525000.0

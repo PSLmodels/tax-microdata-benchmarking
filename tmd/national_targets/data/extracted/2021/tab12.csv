@@ -1,0 +1,401 @@
+table,year,fname,var_name,var_type,value_filter,marstat,description,irs_col_header,xlcolumn,xl_colnumber,incsort,incrange,xlrownum,raw_value
+tab12,2021,21in12ms.xls,agi,count,all,all,Number of returns,All returns | Number of returns | -1.0,B,2,1,"All returns, total",9,160824340.0
+tab12,2021,21in12ms.xls,agi,count,all,all,Number of returns,All returns | Number of returns | -1.0,B,2,2,No adjusted gross income (includes deficits),10,4098522.0
+tab12,2021,21in12ms.xls,agi,count,all,all,Number of returns,All returns | Number of returns | -1.0,B,2,3,"$1 under $5,000",11,8487025.0
+tab12,2021,21in12ms.xls,agi,count,all,all,Number of returns,All returns | Number of returns | -1.0,B,2,4,"$5,000 under $10,000",12,8944908.0
+tab12,2021,21in12ms.xls,agi,count,all,all,Number of returns,All returns | Number of returns | -1.0,B,2,5,"$10,000 under $15,000",13,10056377.0
+tab12,2021,21in12ms.xls,agi,count,all,all,Number of returns,All returns | Number of returns | -1.0,B,2,6,"$15,000 under $20,000",14,9786580.0
+tab12,2021,21in12ms.xls,agi,count,all,all,Number of returns,All returns | Number of returns | -1.0,B,2,7,"$20,000 under $25,000",15,8863570.0
+tab12,2021,21in12ms.xls,agi,count,all,all,Number of returns,All returns | Number of returns | -1.0,B,2,8,"$25,000 under $30,000",16,8787576.0
+tab12,2021,21in12ms.xls,agi,count,all,all,Number of returns,All returns | Number of returns | -1.0,B,2,9,"$30,000 under $40,000",17,16123068.0
+tab12,2021,21in12ms.xls,agi,count,all,all,Number of returns,All returns | Number of returns | -1.0,B,2,10,"$40,000 under $50,000",18,12782334.0
+tab12,2021,21in12ms.xls,agi,count,all,all,Number of returns,All returns | Number of returns | -1.0,B,2,11,"$50,000 under $75,000",19,22653934.0
+tab12,2021,21in12ms.xls,agi,count,all,all,Number of returns,All returns | Number of returns | -1.0,B,2,12,"$75,000 under $100,000",20,14657726.0
+tab12,2021,21in12ms.xls,agi,count,all,all,Number of returns,All returns | Number of returns | -1.0,B,2,13,"$100,000 under $200,000",21,24044481.0
+tab12,2021,21in12ms.xls,agi,count,all,all,Number of returns,All returns | Number of returns | -1.0,B,2,14,"$200,000 under $500,000",22,9045567.0
+tab12,2021,21in12ms.xls,agi,count,all,all,Number of returns,All returns | Number of returns | -1.0,B,2,15,"$500,000 under $1,000,000",23,1617144.0
+tab12,2021,21in12ms.xls,agi,count,all,all,Number of returns,All returns | Number of returns | -1.0,B,2,16,"$1,000,000 under $1,500,000",24,376859.0
+tab12,2021,21in12ms.xls,agi,count,all,all,Number of returns,All returns | Number of returns | -1.0,B,2,17,"$1,500,000 under $2,000,000",25,156020.0
+tab12,2021,21in12ms.xls,agi,count,all,all,Number of returns,All returns | Number of returns | -1.0,B,2,18,"$2,000,000 under $5,000,000",26,233838.0
+tab12,2021,21in12ms.xls,agi,count,all,all,Number of returns,All returns | Number of returns | -1.0,B,2,19,"$5,000,000 under $10,000,000",27,63406.0
+tab12,2021,21in12ms.xls,agi,count,all,all,Number of returns,All returns | Number of returns | -1.0,B,2,20,"$10,000,000 or more",28,45404.0
+tab12,2021,21in12ms.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | -2.0,C,3,1,"All returns, total",9,14795614070000.0
+tab12,2021,21in12ms.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | -2.0,C,3,2,No adjusted gross income (includes deficits),10,-171836364000.0
+tab12,2021,21in12ms.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | -2.0,C,3,3,"$1 under $5,000",11,19987243000.0
+tab12,2021,21in12ms.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | -2.0,C,3,4,"$5,000 under $10,000",12,67651359000.0
+tab12,2021,21in12ms.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | -2.0,C,3,5,"$10,000 under $15,000",13,125912056000.0
+tab12,2021,21in12ms.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | -2.0,C,3,6,"$15,000 under $20,000",14,170836129000.0
+tab12,2021,21in12ms.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | -2.0,C,3,7,"$20,000 under $25,000",15,199508960000.0
+tab12,2021,21in12ms.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | -2.0,C,3,8,"$25,000 under $30,000",16,241347179000.0
+tab12,2021,21in12ms.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | -2.0,C,3,9,"$30,000 under $40,000",17,561386434000.0
+tab12,2021,21in12ms.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | -2.0,C,3,10,"$40,000 under $50,000",18,573155378000.0
+tab12,2021,21in12ms.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | -2.0,C,3,11,"$50,000 under $75,000",19,1392395599000.0
+tab12,2021,21in12ms.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | -2.0,C,3,12,"$75,000 under $100,000",20,1271699391000.0
+tab12,2021,21in12ms.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | -2.0,C,3,13,"$100,000 under $200,000",21,3297058075000.0
+tab12,2021,21in12ms.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | -2.0,C,3,14,"$200,000 under $500,000",22,2619188471000.0
+tab12,2021,21in12ms.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | -2.0,C,3,15,"$500,000 under $1,000,000",23,1092599034000.0
+tab12,2021,21in12ms.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | -2.0,C,3,16,"$1,000,000 under $1,500,000",24,454552875000.0
+tab12,2021,21in12ms.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | -2.0,C,3,17,"$1,500,000 under $2,000,000",25,268278123000.0
+tab12,2021,21in12ms.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | -2.0,C,3,18,"$2,000,000 under $5,000,000",26,698923219000.0
+tab12,2021,21in12ms.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | -2.0,C,3,19,"$5,000,000 under $10,000,000",27,435242550000.0
+tab12,2021,21in12ms.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | -2.0,C,3,20,"$10,000,000 or more",28,1477728359000.0
+tab12,2021,21in12ms.xls,itemded,count,nz,all,Itemized deductions — number of returns,Total itemized deductions | Number of returns | -3.0,D,4,1,"All returns, total",9,14842685.0
+tab12,2021,21in12ms.xls,itemded,count,nz,all,Itemized deductions — number of returns,Total itemized deductions | Number of returns | -3.0,D,4,2,No adjusted gross income (includes deficits),10,0.0
+tab12,2021,21in12ms.xls,itemded,count,nz,all,Itemized deductions — number of returns,Total itemized deductions | Number of returns | -3.0,D,4,3,"$1 under $5,000",11,80236.0
+tab12,2021,21in12ms.xls,itemded,count,nz,all,Itemized deductions — number of returns,Total itemized deductions | Number of returns | -3.0,D,4,4,"$5,000 under $10,000",12,93583.0
+tab12,2021,21in12ms.xls,itemded,count,nz,all,Itemized deductions — number of returns,Total itemized deductions | Number of returns | -3.0,D,4,5,"$10,000 under $15,000",13,109149.0
+tab12,2021,21in12ms.xls,itemded,count,nz,all,Itemized deductions — number of returns,Total itemized deductions | Number of returns | -3.0,D,4,6,"$15,000 under $20,000",14,161030.0
+tab12,2021,21in12ms.xls,itemded,count,nz,all,Itemized deductions — number of returns,Total itemized deductions | Number of returns | -3.0,D,4,7,"$20,000 under $25,000",15,167731.0
+tab12,2021,21in12ms.xls,itemded,count,nz,all,Itemized deductions — number of returns,Total itemized deductions | Number of returns | -3.0,D,4,8,"$25,000 under $30,000",16,193007.0
+tab12,2021,21in12ms.xls,itemded,count,nz,all,Itemized deductions — number of returns,Total itemized deductions | Number of returns | -3.0,D,4,9,"$30,000 under $40,000",17,467215.0
+tab12,2021,21in12ms.xls,itemded,count,nz,all,Itemized deductions — number of returns,Total itemized deductions | Number of returns | -3.0,D,4,10,"$40,000 under $50,000",18,614463.0
+tab12,2021,21in12ms.xls,itemded,count,nz,all,Itemized deductions — number of returns,Total itemized deductions | Number of returns | -3.0,D,4,11,"$50,000 under $75,000",19,1841364.0
+tab12,2021,21in12ms.xls,itemded,count,nz,all,Itemized deductions — number of returns,Total itemized deductions | Number of returns | -3.0,D,4,12,"$75,000 under $100,000",20,1985056.0
+tab12,2021,21in12ms.xls,itemded,count,nz,all,Itemized deductions — number of returns,Total itemized deductions | Number of returns | -3.0,D,4,13,"$100,000 under $200,000",21,4513652.0
+tab12,2021,21in12ms.xls,itemded,count,nz,all,Itemized deductions — number of returns,Total itemized deductions | Number of returns | -3.0,D,4,14,"$200,000 under $500,000",22,3134769.0
+tab12,2021,21in12ms.xls,itemded,count,nz,all,Itemized deductions — number of returns,Total itemized deductions | Number of returns | -3.0,D,4,15,"$500,000 under $1,000,000",23,874181.0
+tab12,2021,21in12ms.xls,itemded,count,nz,all,Itemized deductions — number of returns,Total itemized deductions | Number of returns | -3.0,D,4,16,"$1,000,000 under $1,500,000",24,236902.0
+tab12,2021,21in12ms.xls,itemded,count,nz,all,Itemized deductions — number of returns,Total itemized deductions | Number of returns | -3.0,D,4,17,"$1,500,000 under $2,000,000",25,107470.0
+tab12,2021,21in12ms.xls,itemded,count,nz,all,Itemized deductions — number of returns,Total itemized deductions | Number of returns | -3.0,D,4,18,"$2,000,000 under $5,000,000",26,172234.0
+tab12,2021,21in12ms.xls,itemded,count,nz,all,Itemized deductions — number of returns,Total itemized deductions | Number of returns | -3.0,D,4,19,"$5,000,000 under $10,000,000",27,51030.0
+tab12,2021,21in12ms.xls,itemded,count,nz,all,Itemized deductions — number of returns,Total itemized deductions | Number of returns | -3.0,D,4,20,"$10,000,000 or more",28,39613.0
+tab12,2021,21in12ms.xls,itemded,amount,nz,all,Total itemized deductions,Amount | -4.0,E,5,1,"All returns, total",9,659680547000.0
+tab12,2021,21in12ms.xls,itemded,amount,nz,all,Total itemized deductions,Amount | -4.0,E,5,2,No adjusted gross income (includes deficits),10,0.0
+tab12,2021,21in12ms.xls,itemded,amount,nz,all,Total itemized deductions,Amount | -4.0,E,5,3,"$1 under $5,000",11,1871637000.0
+tab12,2021,21in12ms.xls,itemded,amount,nz,all,Total itemized deductions,Amount | -4.0,E,5,4,"$5,000 under $10,000",12,2292492000.0
+tab12,2021,21in12ms.xls,itemded,amount,nz,all,Total itemized deductions,Amount | -4.0,E,5,5,"$10,000 under $15,000",13,2804369000.0
+tab12,2021,21in12ms.xls,itemded,amount,nz,all,Total itemized deductions,Amount | -4.0,E,5,6,"$15,000 under $20,000",14,4775555000.0
+tab12,2021,21in12ms.xls,itemded,amount,nz,all,Total itemized deductions,Amount | -4.0,E,5,7,"$20,000 under $25,000",15,4285472000.0
+tab12,2021,21in12ms.xls,itemded,amount,nz,all,Total itemized deductions,Amount | -4.0,E,5,8,"$25,000 under $30,000",16,4765016000.0
+tab12,2021,21in12ms.xls,itemded,amount,nz,all,Total itemized deductions,Amount | -4.0,E,5,9,"$30,000 under $40,000",17,12606528000.0
+tab12,2021,21in12ms.xls,itemded,amount,nz,all,Total itemized deductions,Amount | -4.0,E,5,10,"$40,000 under $50,000",18,15706593000.0
+tab12,2021,21in12ms.xls,itemded,amount,nz,all,Total itemized deductions,Amount | -4.0,E,5,11,"$50,000 under $75,000",19,47466699000.0
+tab12,2021,21in12ms.xls,itemded,amount,nz,all,Total itemized deductions,Amount | -4.0,E,5,12,"$75,000 under $100,000",20,54706812000.0
+tab12,2021,21in12ms.xls,itemded,amount,nz,all,Total itemized deductions,Amount | -4.0,E,5,13,"$100,000 under $200,000",21,138751518000.0
+tab12,2021,21in12ms.xls,itemded,amount,nz,all,Total itemized deductions,Amount | -4.0,E,5,14,"$200,000 under $500,000",22,124480962000.0
+tab12,2021,21in12ms.xls,itemded,amount,nz,all,Total itemized deductions,Amount | -4.0,E,5,15,"$500,000 under $1,000,000",23,49971545000.0
+tab12,2021,21in12ms.xls,itemded,amount,nz,all,Total itemized deductions,Amount | -4.0,E,5,16,"$1,000,000 under $1,500,000",24,20103248000.0
+tab12,2021,21in12ms.xls,itemded,amount,nz,all,Total itemized deductions,Amount | -4.0,E,5,17,"$1,500,000 under $2,000,000",25,11864113000.0
+tab12,2021,21in12ms.xls,itemded,amount,nz,all,Total itemized deductions,Amount | -4.0,E,5,18,"$2,000,000 under $5,000,000",26,31470281000.0
+tab12,2021,21in12ms.xls,itemded,amount,nz,all,Total itemized deductions,Amount | -4.0,E,5,19,"$5,000,000 under $10,000,000",27,19991637000.0
+tab12,2021,21in12ms.xls,itemded,amount,nz,all,Total itemized deductions,Amount | -4.0,E,5,20,"$10,000,000 or more",28,111766070000.0
+tab12,2021,21in12ms.xls,sd,count,nz,all,Standard deduction — number of returns,Standard deduction | Number of returns | -5.0,F,6,1,"All returns, total",9,141872935.0
+tab12,2021,21in12ms.xls,sd,count,nz,all,Standard deduction — number of returns,Standard deduction | Number of returns | -5.0,F,6,2,No adjusted gross income (includes deficits),10,0.0
+tab12,2021,21in12ms.xls,sd,count,nz,all,Standard deduction — number of returns,Standard deduction | Number of returns | -5.0,F,6,3,"$1 under $5,000",11,8401693.0
+tab12,2021,21in12ms.xls,sd,count,nz,all,Standard deduction — number of returns,Standard deduction | Number of returns | -5.0,F,6,4,"$5,000 under $10,000",12,8851325.0
+tab12,2021,21in12ms.xls,sd,count,nz,all,Standard deduction — number of returns,Standard deduction | Number of returns | -5.0,F,6,5,"$10,000 under $15,000",13,9946220.0
+tab12,2021,21in12ms.xls,sd,count,nz,all,Standard deduction — number of returns,Standard deduction | Number of returns | -5.0,F,6,6,"$15,000 under $20,000",14,9625550.0
+tab12,2021,21in12ms.xls,sd,count,nz,all,Standard deduction — number of returns,Standard deduction | Number of returns | -5.0,F,6,7,"$20,000 under $25,000",15,8695838.0
+tab12,2021,21in12ms.xls,sd,count,nz,all,Standard deduction — number of returns,Standard deduction | Number of returns | -5.0,F,6,8,"$25,000 under $30,000",16,8593575.0
+tab12,2021,21in12ms.xls,sd,count,nz,all,Standard deduction — number of returns,Standard deduction | Number of returns | -5.0,F,6,9,"$30,000 under $40,000",17,15654845.0
+tab12,2021,21in12ms.xls,sd,count,nz,all,Standard deduction — number of returns,Standard deduction | Number of returns | -5.0,F,6,10,"$40,000 under $50,000",18,12167871.0
+tab12,2021,21in12ms.xls,sd,count,nz,all,Standard deduction — number of returns,Standard deduction | Number of returns | -5.0,F,6,11,"$50,000 under $75,000",19,20810563.0
+tab12,2021,21in12ms.xls,sd,count,nz,all,Standard deduction — number of returns,Standard deduction | Number of returns | -5.0,F,6,12,"$75,000 under $100,000",20,12672652.0
+tab12,2021,21in12ms.xls,sd,count,nz,all,Standard deduction — number of returns,Standard deduction | Number of returns | -5.0,F,6,13,"$100,000 under $200,000",21,19530803.0
+tab12,2021,21in12ms.xls,sd,count,nz,all,Standard deduction — number of returns,Standard deduction | Number of returns | -5.0,F,6,14,"$200,000 under $500,000",22,5910788.0
+tab12,2021,21in12ms.xls,sd,count,nz,all,Standard deduction — number of returns,Standard deduction | Number of returns | -5.0,F,6,15,"$500,000 under $1,000,000",23,742962.0
+tab12,2021,21in12ms.xls,sd,count,nz,all,Standard deduction — number of returns,Standard deduction | Number of returns | -5.0,F,6,16,"$1,000,000 under $1,500,000",24,139954.0
+tab12,2021,21in12ms.xls,sd,count,nz,all,Standard deduction — number of returns,Standard deduction | Number of returns | -5.0,F,6,17,"$1,500,000 under $2,000,000",25,48550.0
+tab12,2021,21in12ms.xls,sd,count,nz,all,Standard deduction — number of returns,Standard deduction | Number of returns | -5.0,F,6,18,"$2,000,000 under $5,000,000",26,61583.0
+tab12,2021,21in12ms.xls,sd,count,nz,all,Standard deduction — number of returns,Standard deduction | Number of returns | -5.0,F,6,19,"$5,000,000 under $10,000,000",27,12376.0
+tab12,2021,21in12ms.xls,sd,count,nz,all,Standard deduction — number of returns,Standard deduction | Number of returns | -5.0,F,6,20,"$10,000,000 or more",28,5789.0
+tab12,2021,21in12ms.xls,sd,amount,nz,all,Standard deduction,Amount | -6.0,G,7,1,"All returns, total",9,2506538615000.0
+tab12,2021,21in12ms.xls,sd,amount,nz,all,Standard deduction,Amount | -6.0,G,7,2,No adjusted gross income (includes deficits),10,0.0
+tab12,2021,21in12ms.xls,sd,amount,nz,all,Standard deduction,Amount | -6.0,G,7,3,"$1 under $5,000",11,98120053000.0
+tab12,2021,21in12ms.xls,sd,amount,nz,all,Standard deduction,Amount | -6.0,G,7,4,"$5,000 under $10,000",12,116961807000.0
+tab12,2021,21in12ms.xls,sd,amount,nz,all,Standard deduction,Amount | -6.0,G,7,5,"$10,000 under $15,000",13,148143828000.0
+tab12,2021,21in12ms.xls,sd,amount,nz,all,Standard deduction,Amount | -6.0,G,7,6,"$15,000 under $20,000",14,147511432000.0
+tab12,2021,21in12ms.xls,sd,amount,nz,all,Standard deduction,Amount | -6.0,G,7,7,"$20,000 under $25,000",15,138067676000.0
+tab12,2021,21in12ms.xls,sd,amount,nz,all,Standard deduction,Amount | -6.0,G,7,8,"$25,000 under $30,000",16,138563570000.0
+tab12,2021,21in12ms.xls,sd,amount,nz,all,Standard deduction,Amount | -6.0,G,7,9,"$30,000 under $40,000",17,256213310000.0
+tab12,2021,21in12ms.xls,sd,amount,nz,all,Standard deduction,Amount | -6.0,G,7,10,"$40,000 under $50,000",18,204664807000.0
+tab12,2021,21in12ms.xls,sd,amount,nz,all,Standard deduction,Amount | -6.0,G,7,11,"$50,000 under $75,000",19,376778774000.0
+tab12,2021,21in12ms.xls,sd,amount,nz,all,Standard deduction,Amount | -6.0,G,7,12,"$75,000 under $100,000",20,263917424000.0
+tab12,2021,21in12ms.xls,sd,amount,nz,all,Standard deduction,Amount | -6.0,G,7,13,"$100,000 under $200,000",21,451428959000.0
+tab12,2021,21in12ms.xls,sd,amount,nz,all,Standard deduction,Amount | -6.0,G,7,14,"$200,000 under $500,000",22,141816314000.0
+tab12,2021,21in12ms.xls,sd,amount,nz,all,Standard deduction,Amount | -6.0,G,7,15,"$500,000 under $1,000,000",23,17931209000.0
+tab12,2021,21in12ms.xls,sd,amount,nz,all,Standard deduction,Amount | -6.0,G,7,16,"$1,000,000 under $1,500,000",24,3374835000.0
+tab12,2021,21in12ms.xls,sd,amount,nz,all,Standard deduction,Amount | -6.0,G,7,17,"$1,500,000 under $2,000,000",25,1162935000.0
+tab12,2021,21in12ms.xls,sd,amount,nz,all,Standard deduction,Amount | -6.0,G,7,18,"$2,000,000 under $5,000,000",26,1456808000.0
+tab12,2021,21in12ms.xls,sd,amount,nz,all,Standard deduction,Amount | -6.0,G,7,19,"$5,000,000 under $10,000,000",27,290838000.0
+tab12,2021,21in12ms.xls,sd,amount,nz,all,Standard deduction,Amount | -6.0,G,7,20,"$10,000,000 or more",28,134035000.0
+tab12,2021,21in12ms.xls,ti,count,nz,all,Taxable income — number of returns,Taxable income | Number of returns | -7.0,H,8,1,"All returns, total",9,128519569.0
+tab12,2021,21in12ms.xls,ti,count,nz,all,Taxable income — number of returns,Taxable income | Number of returns | -7.0,H,8,2,No adjusted gross income (includes deficits),10,0.0
+tab12,2021,21in12ms.xls,ti,count,nz,all,Taxable income — number of returns,Taxable income | Number of returns | -7.0,H,8,3,"$1 under $5,000",11,229950.0
+tab12,2021,21in12ms.xls,ti,count,nz,all,Taxable income — number of returns,Taxable income | Number of returns | -7.0,H,8,4,"$5,000 under $10,000",12,256332.0
+tab12,2021,21in12ms.xls,ti,count,nz,all,Taxable income — number of returns,Taxable income | Number of returns | -7.0,H,8,5,"$10,000 under $15,000",13,3274058.0
+tab12,2021,21in12ms.xls,ti,count,nz,all,Taxable income — number of returns,Taxable income | Number of returns | -7.0,H,8,6,"$15,000 under $20,000",14,7213222.0
+tab12,2021,21in12ms.xls,ti,count,nz,all,Taxable income — number of returns,Taxable income | Number of returns | -7.0,H,8,7,"$20,000 under $25,000",15,7565336.0
+tab12,2021,21in12ms.xls,ti,count,nz,all,Taxable income — number of returns,Taxable income | Number of returns | -7.0,H,8,8,"$25,000 under $30,000",16,8419122.0
+tab12,2021,21in12ms.xls,ti,count,nz,all,Taxable income — number of returns,Taxable income | Number of returns | -7.0,H,8,9,"$30,000 under $40,000",17,16053345.0
+tab12,2021,21in12ms.xls,ti,count,nz,all,Taxable income — number of returns,Taxable income | Number of returns | -7.0,H,8,10,"$40,000 under $50,000",18,12742030.0
+tab12,2021,21in12ms.xls,ti,count,nz,all,Taxable income — number of returns,Taxable income | Number of returns | -7.0,H,8,11,"$50,000 under $75,000",19,22580599.0
+tab12,2021,21in12ms.xls,ti,count,nz,all,Taxable income — number of returns,Taxable income | Number of returns | -7.0,H,8,12,"$75,000 under $100,000",20,14628527.0
+tab12,2021,21in12ms.xls,ti,count,nz,all,Taxable income — number of returns,Taxable income | Number of returns | -7.0,H,8,13,"$100,000 under $200,000",21,24025794.0
+tab12,2021,21in12ms.xls,ti,count,nz,all,Taxable income — number of returns,Taxable income | Number of returns | -7.0,H,8,14,"$200,000 under $500,000",22,9040733.0
+tab12,2021,21in12ms.xls,ti,count,nz,all,Taxable income — number of returns,Taxable income | Number of returns | -7.0,H,8,15,"$500,000 under $1,000,000",23,1616070.0
+tab12,2021,21in12ms.xls,ti,count,nz,all,Taxable income — number of returns,Taxable income | Number of returns | -7.0,H,8,16,"$1,000,000 under $1,500,000",24,376559.0
+tab12,2021,21in12ms.xls,ti,count,nz,all,Taxable income — number of returns,Taxable income | Number of returns | -7.0,H,8,17,"$1,500,000 under $2,000,000",25,155853.0
+tab12,2021,21in12ms.xls,ti,count,nz,all,Taxable income — number of returns,Taxable income | Number of returns | -7.0,H,8,18,"$2,000,000 under $5,000,000",26,233500.0
+tab12,2021,21in12ms.xls,ti,count,nz,all,Taxable income — number of returns,Taxable income | Number of returns | -7.0,H,8,19,"$5,000,000 under $10,000,000",27,63280.0
+tab12,2021,21in12ms.xls,ti,count,nz,all,Taxable income — number of returns,Taxable income | Number of returns | -7.0,H,8,20,"$10,000,000 or more",28,45261.0
+tab12,2021,21in12ms.xls,ti,amount,nz,all,Taxable income,Amount | -8.0,I,9,1,"All returns, total",9,11767185281000.0
+tab12,2021,21in12ms.xls,ti,amount,nz,all,Taxable income,Amount | -8.0,I,9,2,No adjusted gross income (includes deficits),10,0.0
+tab12,2021,21in12ms.xls,ti,amount,nz,all,Taxable income,Amount | -8.0,I,9,3,"$1 under $5,000",11,295328000.0
+tab12,2021,21in12ms.xls,ti,amount,nz,all,Taxable income,Amount | -8.0,I,9,4,"$5,000 under $10,000",12,842819000.0
+tab12,2021,21in12ms.xls,ti,amount,nz,all,Taxable income,Amount | -8.0,I,9,5,"$10,000 under $15,000",13,4468515000.0
+tab12,2021,21in12ms.xls,ti,amount,nz,all,Taxable income,Amount | -8.0,I,9,6,"$15,000 under $20,000",14,31348526000.0
+tab12,2021,21in12ms.xls,ti,amount,nz,all,Taxable income,Amount | -8.0,I,9,7,"$20,000 under $25,000",15,61206997000.0
+tab12,2021,21in12ms.xls,ti,amount,nz,all,Taxable income,Amount | -8.0,I,9,8,"$25,000 under $30,000",16,97212333000.0
+tab12,2021,21in12ms.xls,ti,amount,nz,all,Taxable income,Amount | -8.0,I,9,9,"$30,000 under $40,000",17,289923966000.0
+tab12,2021,21in12ms.xls,ti,amount,nz,all,Taxable income,Amount | -8.0,I,9,10,"$40,000 under $50,000",18,348974613000.0
+tab12,2021,21in12ms.xls,ti,amount,nz,all,Taxable income,Amount | -8.0,I,9,11,"$50,000 under $75,000",19,957673164000.0
+tab12,2021,21in12ms.xls,ti,amount,nz,all,Taxable income,Amount | -8.0,I,9,12,"$75,000 under $100,000",20,943012644000.0
+tab12,2021,21in12ms.xls,ti,amount,nz,all,Taxable income,Amount | -8.0,I,9,13,"$100,000 under $200,000",21,2672516594000.0
+tab12,2021,21in12ms.xls,ti,amount,nz,all,Taxable income,Amount | -8.0,I,9,14,"$200,000 under $500,000",22,2311714703000.0
+tab12,2021,21in12ms.xls,ti,amount,nz,all,Taxable income,Amount | -8.0,I,9,15,"$500,000 under $1,000,000",23,1005606850000.0
+tab12,2021,21in12ms.xls,ti,amount,nz,all,Taxable income,Amount | -8.0,I,9,16,"$1,000,000 under $1,500,000",24,419754109000.0
+tab12,2021,21in12ms.xls,ti,amount,nz,all,Taxable income,Amount | -8.0,I,9,17,"$1,500,000 under $2,000,000",25,247322898000.0
+tab12,2021,21in12ms.xls,ti,amount,nz,all,Taxable income,Amount | -8.0,I,9,18,"$2,000,000 under $5,000,000",26,642731428000.0
+tab12,2021,21in12ms.xls,ti,amount,nz,all,Taxable income,Amount | -8.0,I,9,19,"$5,000,000 under $10,000,000",27,400742701000.0
+tab12,2021,21in12ms.xls,ti,amount,nz,all,Taxable income,Amount | -8.0,I,9,20,"$10,000,000 or more",28,1331837093000.0
+tab12,2021,21in12ms.xls,taxac,count,nz,all,Income tax after credits — number of returns,Income tax after credits | Number of returns | -9.0,J,10,1,"All returns, total",9,104549808.0
+tab12,2021,21in12ms.xls,taxac,count,nz,all,Income tax after credits — number of returns,Income tax after credits | Number of returns | -9.0,J,10,2,No adjusted gross income (includes deficits),10,4361.0
+tab12,2021,21in12ms.xls,taxac,count,nz,all,Income tax after credits — number of returns,Income tax after credits | Number of returns | -9.0,J,10,3,"$1 under $5,000",11,142544.0
+tab12,2021,21in12ms.xls,taxac,count,nz,all,Income tax after credits — number of returns,Income tax after credits | Number of returns | -9.0,J,10,4,"$5,000 under $10,000",12,184757.0
+tab12,2021,21in12ms.xls,taxac,count,nz,all,Income tax after credits — number of returns,Income tax after credits | Number of returns | -9.0,J,10,5,"$10,000 under $15,000",13,1055682.0
+tab12,2021,21in12ms.xls,taxac,count,nz,all,Income tax after credits — number of returns,Income tax after credits | Number of returns | -9.0,J,10,6,"$15,000 under $20,000",14,3224915.0
+tab12,2021,21in12ms.xls,taxac,count,nz,all,Income tax after credits — number of returns,Income tax after credits | Number of returns | -9.0,J,10,7,"$20,000 under $25,000",15,4511505.0
+tab12,2021,21in12ms.xls,taxac,count,nz,all,Income tax after credits — number of returns,Income tax after credits | Number of returns | -9.0,J,10,8,"$25,000 under $30,000",16,5152093.0
+tab12,2021,21in12ms.xls,taxac,count,nz,all,Income tax after credits — number of returns,Income tax after credits | Number of returns | -9.0,J,10,9,"$30,000 under $40,000",17,10941846.0
+tab12,2021,21in12ms.xls,taxac,count,nz,all,Income tax after credits — number of returns,Income tax after credits | Number of returns | -9.0,J,10,10,"$40,000 under $50,000",18,10178852.0
+tab12,2021,21in12ms.xls,taxac,count,nz,all,Income tax after credits — number of returns,Income tax after credits | Number of returns | -9.0,J,10,11,"$50,000 under $75,000",19,20079918.0
+tab12,2021,21in12ms.xls,taxac,count,nz,all,Income tax after credits — number of returns,Income tax after credits | Number of returns | -9.0,J,10,12,"$75,000 under $100,000",20,13899298.0
+tab12,2021,21in12ms.xls,taxac,count,nz,all,Income tax after credits — number of returns,Income tax after credits | Number of returns | -9.0,J,10,13,"$100,000 under $200,000",21,23678030.0
+tab12,2021,21in12ms.xls,taxac,count,nz,all,Income tax after credits — number of returns,Income tax after credits | Number of returns | -9.0,J,10,14,"$200,000 under $500,000",22,9011428.0
+tab12,2021,21in12ms.xls,taxac,count,nz,all,Income tax after credits — number of returns,Income tax after credits | Number of returns | -9.0,J,10,15,"$500,000 under $1,000,000",23,1612396.0
+tab12,2021,21in12ms.xls,taxac,count,nz,all,Income tax after credits — number of returns,Income tax after credits | Number of returns | -9.0,J,10,16,"$1,000,000 under $1,500,000",24,375593.0
+tab12,2021,21in12ms.xls,taxac,count,nz,all,Income tax after credits — number of returns,Income tax after credits | Number of returns | -9.0,J,10,17,"$1,500,000 under $2,000,000",25,155353.0
+tab12,2021,21in12ms.xls,taxac,count,nz,all,Income tax after credits — number of returns,Income tax after credits | Number of returns | -9.0,J,10,18,"$2,000,000 under $5,000,000",26,232933.0
+tab12,2021,21in12ms.xls,taxac,count,nz,all,Income tax after credits — number of returns,Income tax after credits | Number of returns | -9.0,J,10,19,"$5,000,000 under $10,000,000",27,63155.0
+tab12,2021,21in12ms.xls,taxac,count,nz,all,Income tax after credits — number of returns,Income tax after credits | Number of returns | -9.0,J,10,20,"$10,000,000 or more",28,45149.0
+tab12,2021,21in12ms.xls,taxac,amount,nz,all,Income tax after credits,Amount | -10.0,K,11,1,"All returns, total",9,2136650742000.0
+tab12,2021,21in12ms.xls,taxac,amount,nz,all,Income tax after credits,Amount | -10.0,K,11,2,No adjusted gross income (includes deficits),10,186617000.0
+tab12,2021,21in12ms.xls,taxac,amount,nz,all,Income tax after credits,Amount | -10.0,K,11,3,"$1 under $5,000",11,73072000.0
+tab12,2021,21in12ms.xls,taxac,amount,nz,all,Income tax after credits,Amount | -10.0,K,11,4,"$5,000 under $10,000",12,78223000.0
+tab12,2021,21in12ms.xls,taxac,amount,nz,all,Income tax after credits,Amount | -10.0,K,11,5,"$10,000 under $15,000",13,211113000.0
+tab12,2021,21in12ms.xls,taxac,amount,nz,all,Income tax after credits,Amount | -10.0,K,11,6,"$15,000 under $20,000",14,1247479000.0
+tab12,2021,21in12ms.xls,taxac,amount,nz,all,Income tax after credits,Amount | -10.0,K,11,7,"$20,000 under $25,000",15,4047553000.0
+tab12,2021,21in12ms.xls,taxac,amount,nz,all,Income tax after credits,Amount | -10.0,K,11,8,"$25,000 under $30,000",16,6837013000.0
+tab12,2021,21in12ms.xls,taxac,amount,nz,all,Income tax after credits,Amount | -10.0,K,11,9,"$30,000 under $40,000",17,21563554000.0
+tab12,2021,21in12ms.xls,taxac,amount,nz,all,Income tax after credits,Amount | -10.0,K,11,10,"$40,000 under $50,000",18,28872618000.0
+tab12,2021,21in12ms.xls,taxac,amount,nz,all,Income tax after credits,Amount | -10.0,K,11,11,"$50,000 under $75,000",19,93196258000.0
+tab12,2021,21in12ms.xls,taxac,amount,nz,all,Income tax after credits,Amount | -10.0,K,11,12,"$75,000 under $100,000",20,105625288000.0
+tab12,2021,21in12ms.xls,taxac,amount,nz,all,Income tax after credits,Amount | -10.0,K,11,13,"$100,000 under $200,000",21,365139832000.0
+tab12,2021,21in12ms.xls,taxac,amount,nz,all,Income tax after credits,Amount | -10.0,K,11,14,"$200,000 under $500,000",22,437089172000.0
+tab12,2021,21in12ms.xls,taxac,amount,nz,all,Income tax after credits,Amount | -10.0,K,11,15,"$500,000 under $1,000,000",23,244827113000.0
+tab12,2021,21in12ms.xls,taxac,amount,nz,all,Income tax after credits,Amount | -10.0,K,11,16,"$1,000,000 under $1,500,000",24,115008024000.0
+tab12,2021,21in12ms.xls,taxac,amount,nz,all,Income tax after credits,Amount | -10.0,K,11,17,"$1,500,000 under $2,000,000",25,70041765000.0
+tab12,2021,21in12ms.xls,taxac,amount,nz,all,Income tax after credits,Amount | -10.0,K,11,18,"$2,000,000 under $5,000,000",26,184436241000.0
+tab12,2021,21in12ms.xls,taxac,amount,nz,all,Income tax after credits,Amount | -10.0,K,11,19,"$5,000,000 under $10,000,000",27,112972811000.0
+tab12,2021,21in12ms.xls,taxac,amount,nz,all,Income tax after credits,Amount | -10.0,K,11,20,"$10,000,000 or more",28,345196995000.0
+tab12,2021,21in12ms.xls,tottax,count,nz,all,Total tax — number of returns,Total income tax | Number of returns | -11.0,L,12,1,"All returns, total",9,104573768.0
+tab12,2021,21in12ms.xls,tottax,count,nz,all,Total tax — number of returns,Total income tax | Number of returns | -11.0,L,12,2,No adjusted gross income (includes deficits),10,4367.0
+tab12,2021,21in12ms.xls,tottax,count,nz,all,Total tax — number of returns,Total income tax | Number of returns | -11.0,L,12,3,"$1 under $5,000",11,142593.0
+tab12,2021,21in12ms.xls,tottax,count,nz,all,Total tax — number of returns,Total income tax | Number of returns | -11.0,L,12,4,"$5,000 under $10,000",12,184757.0
+tab12,2021,21in12ms.xls,tottax,count,nz,all,Total tax — number of returns,Total income tax | Number of returns | -11.0,L,12,5,"$10,000 under $15,000",13,1055682.0
+tab12,2021,21in12ms.xls,tottax,count,nz,all,Total tax — number of returns,Total income tax | Number of returns | -11.0,L,12,6,"$15,000 under $20,000",14,3224975.0
+tab12,2021,21in12ms.xls,tottax,count,nz,all,Total tax — number of returns,Total income tax | Number of returns | -11.0,L,12,7,"$20,000 under $25,000",15,4511653.0
+tab12,2021,21in12ms.xls,tottax,count,nz,all,Total tax — number of returns,Total income tax | Number of returns | -11.0,L,12,8,"$25,000 under $30,000",16,5152142.0
+tab12,2021,21in12ms.xls,tottax,count,nz,all,Total tax — number of returns,Total income tax | Number of returns | -11.0,L,12,9,"$30,000 under $40,000",17,10942006.0
+tab12,2021,21in12ms.xls,tottax,count,nz,all,Total tax — number of returns,Total income tax | Number of returns | -11.0,L,12,10,"$40,000 under $50,000",18,10179035.0
+tab12,2021,21in12ms.xls,tottax,count,nz,all,Total tax — number of returns,Total income tax | Number of returns | -11.0,L,12,11,"$50,000 under $75,000",19,20080197.0
+tab12,2021,21in12ms.xls,tottax,count,nz,all,Total tax — number of returns,Total income tax | Number of returns | -11.0,L,12,12,"$75,000 under $100,000",20,13899732.0
+tab12,2021,21in12ms.xls,tottax,count,nz,all,Total tax — number of returns,Total income tax | Number of returns | -11.0,L,12,13,"$100,000 under $200,000",21,23680641.0
+tab12,2021,21in12ms.xls,tottax,count,nz,all,Total tax — number of returns,Total income tax | Number of returns | -11.0,L,12,14,"$200,000 under $500,000",22,9025608.0
+tab12,2021,21in12ms.xls,tottax,count,nz,all,Total tax — number of returns,Total income tax | Number of returns | -11.0,L,12,15,"$500,000 under $1,000,000",23,1615603.0
+tab12,2021,21in12ms.xls,tottax,count,nz,all,Total tax — number of returns,Total income tax | Number of returns | -11.0,L,12,16,"$1,000,000 under $1,500,000",24,376495.0
+tab12,2021,21in12ms.xls,tottax,count,nz,all,Total tax — number of returns,Total income tax | Number of returns | -11.0,L,12,17,"$1,500,000 under $2,000,000",25,155851.0
+tab12,2021,21in12ms.xls,tottax,count,nz,all,Total tax — number of returns,Total income tax | Number of returns | -11.0,L,12,18,"$2,000,000 under $5,000,000",26,233680.0
+tab12,2021,21in12ms.xls,tottax,count,nz,all,Total tax — number of returns,Total income tax | Number of returns | -11.0,L,12,19,"$5,000,000 under $10,000,000",27,63373.0
+tab12,2021,21in12ms.xls,tottax,count,nz,all,Total tax — number of returns,Total income tax | Number of returns | -11.0,L,12,20,"$10,000,000 or more",28,45376.0
+tab12,2021,21in12ms.xls,tottax,amount,nz,all,Total tax,Amount | -12.0,M,13,1,"All returns, total",9,2196348205000.0
+tab12,2021,21in12ms.xls,tottax,amount,nz,all,Total tax,Amount | -12.0,M,13,2,No adjusted gross income (includes deficits),10,186881000.0
+tab12,2021,21in12ms.xls,tottax,amount,nz,all,Total tax,Amount | -12.0,M,13,3,"$1 under $5,000",11,73079000.0
+tab12,2021,21in12ms.xls,tottax,amount,nz,all,Total tax,Amount | -12.0,M,13,4,"$5,000 under $10,000",12,78223000.0
+tab12,2021,21in12ms.xls,tottax,amount,nz,all,Total tax,Amount | -12.0,M,13,5,"$10,000 under $15,000",13,211113000.0
+tab12,2021,21in12ms.xls,tottax,amount,nz,all,Total tax,Amount | -12.0,M,13,6,"$15,000 under $20,000",14,1247485000.0
+tab12,2021,21in12ms.xls,tottax,amount,nz,all,Total tax,Amount | -12.0,M,13,7,"$20,000 under $25,000",15,4047630000.0
+tab12,2021,21in12ms.xls,tottax,amount,nz,all,Total tax,Amount | -12.0,M,13,8,"$25,000 under $30,000",16,6837046000.0
+tab12,2021,21in12ms.xls,tottax,amount,nz,all,Total tax,Amount | -12.0,M,13,9,"$30,000 under $40,000",17,21563813000.0
+tab12,2021,21in12ms.xls,tottax,amount,nz,all,Total tax,Amount | -12.0,M,13,10,"$40,000 under $50,000",18,28872871000.0
+tab12,2021,21in12ms.xls,tottax,amount,nz,all,Total tax,Amount | -12.0,M,13,11,"$50,000 under $75,000",19,93197007000.0
+tab12,2021,21in12ms.xls,tottax,amount,nz,all,Total tax,Amount | -12.0,M,13,12,"$75,000 under $100,000",20,105626193000.0
+tab12,2021,21in12ms.xls,tottax,amount,nz,all,Total tax,Amount | -12.0,M,13,13,"$100,000 under $200,000",21,365196521000.0
+tab12,2021,21in12ms.xls,tottax,amount,nz,all,Total tax,Amount | -12.0,M,13,14,"$200,000 under $500,000",22,443362161000.0
+tab12,2021,21in12ms.xls,tottax,amount,nz,all,Total tax,Amount | -12.0,M,13,15,"$500,000 under $1,000,000",23,252558323000.0
+tab12,2021,21in12ms.xls,tottax,amount,nz,all,Total tax,Amount | -12.0,M,13,16,"$1,000,000 under $1,500,000",24,119130275000.0
+tab12,2021,21in12ms.xls,tottax,amount,nz,all,Total tax,Amount | -12.0,M,13,17,"$1,500,000 under $2,000,000",25,72721172000.0
+tab12,2021,21in12ms.xls,tottax,amount,nz,all,Total tax,Amount | -12.0,M,13,18,"$2,000,000 under $5,000,000",26,192544953000.0
+tab12,2021,21in12ms.xls,tottax,amount,nz,all,Total tax,Amount | -12.0,M,13,19,"$5,000,000 under $10,000,000",27,118711991000.0
+tab12,2021,21in12ms.xls,tottax,amount,nz,all,Total tax,Amount | -12.0,M,13,20,"$10,000,000 or more",28,370181469000.0
+tab12,2021,21in12ms.xls,agi,count,all,mfjss,Number of returns — married filing jointly/SS,Returns of married persons filing jointly and returns of surviving spouses | Number of returns | -13.0,N,14,1,"All returns, total",9,54248325.0
+tab12,2021,21in12ms.xls,agi,count,all,mfjss,Number of returns — married filing jointly/SS,Returns of married persons filing jointly and returns of surviving spouses | Number of returns | -13.0,N,14,2,No adjusted gross income (includes deficits),10,706064.0
+tab12,2021,21in12ms.xls,agi,count,all,mfjss,Number of returns — married filing jointly/SS,Returns of married persons filing jointly and returns of surviving spouses | Number of returns | -13.0,N,14,3,"$1 under $5,000",11,709447.0
+tab12,2021,21in12ms.xls,agi,count,all,mfjss,Number of returns — married filing jointly/SS,Returns of married persons filing jointly and returns of surviving spouses | Number of returns | -13.0,N,14,4,"$5,000 under $10,000",12,735637.0
+tab12,2021,21in12ms.xls,agi,count,all,mfjss,Number of returns — married filing jointly/SS,Returns of married persons filing jointly and returns of surviving spouses | Number of returns | -13.0,N,14,5,"$10,000 under $15,000",13,954527.0
+tab12,2021,21in12ms.xls,agi,count,all,mfjss,Number of returns — married filing jointly/SS,Returns of married persons filing jointly and returns of surviving spouses | Number of returns | -13.0,N,14,6,"$15,000 under $20,000",14,1035746.0
+tab12,2021,21in12ms.xls,agi,count,all,mfjss,Number of returns — married filing jointly/SS,Returns of married persons filing jointly and returns of surviving spouses | Number of returns | -13.0,N,14,7,"$20,000 under $25,000",15,1239738.0
+tab12,2021,21in12ms.xls,agi,count,all,mfjss,Number of returns — married filing jointly/SS,Returns of married persons filing jointly and returns of surviving spouses | Number of returns | -13.0,N,14,8,"$25,000 under $30,000",16,1346593.0
+tab12,2021,21in12ms.xls,agi,count,all,mfjss,Number of returns — married filing jointly/SS,Returns of married persons filing jointly and returns of surviving spouses | Number of returns | -13.0,N,14,9,"$30,000 under $40,000",17,2792745.0
+tab12,2021,21in12ms.xls,agi,count,all,mfjss,Number of returns — married filing jointly/SS,Returns of married persons filing jointly and returns of surviving spouses | Number of returns | -13.0,N,14,10,"$40,000 under $50,000",18,2878772.0
+tab12,2021,21in12ms.xls,agi,count,all,mfjss,Number of returns — married filing jointly/SS,Returns of married persons filing jointly and returns of surviving spouses | Number of returns | -13.0,N,14,11,"$50,000 under $75,000",19,7435237.0
+tab12,2021,21in12ms.xls,agi,count,all,mfjss,Number of returns — married filing jointly/SS,Returns of married persons filing jointly and returns of surviving spouses | Number of returns | -13.0,N,14,12,"$75,000 under $100,000",20,7735156.0
+tab12,2021,21in12ms.xls,agi,count,all,mfjss,Number of returns — married filing jointly/SS,Returns of married persons filing jointly and returns of surviving spouses | Number of returns | -13.0,N,14,13,"$100,000 under $200,000",21,17274270.0
+tab12,2021,21in12ms.xls,agi,count,all,mfjss,Number of returns — married filing jointly/SS,Returns of married persons filing jointly and returns of surviving spouses | Number of returns | -13.0,N,14,14,"$200,000 under $500,000",22,7335493.0
+tab12,2021,21in12ms.xls,agi,count,all,mfjss,Number of returns — married filing jointly/SS,Returns of married persons filing jointly and returns of surviving spouses | Number of returns | -13.0,N,14,15,"$500,000 under $1,000,000",23,1342189.0
+tab12,2021,21in12ms.xls,agi,count,all,mfjss,Number of returns — married filing jointly/SS,Returns of married persons filing jointly and returns of surviving spouses | Number of returns | -13.0,N,14,16,"$1,000,000 under $1,500,000",24,317361.0
+tab12,2021,21in12ms.xls,agi,count,all,mfjss,Number of returns — married filing jointly/SS,Returns of married persons filing jointly and returns of surviving spouses | Number of returns | -13.0,N,14,17,"$1,500,000 under $2,000,000",25,129835.0
+tab12,2021,21in12ms.xls,agi,count,all,mfjss,Number of returns — married filing jointly/SS,Returns of married persons filing jointly and returns of surviving spouses | Number of returns | -13.0,N,14,18,"$2,000,000 under $5,000,000",26,191346.0
+tab12,2021,21in12ms.xls,agi,count,all,mfjss,Number of returns — married filing jointly/SS,Returns of married persons filing jointly and returns of surviving spouses | Number of returns | -13.0,N,14,19,"$5,000,000 under $10,000,000",27,51648.0
+tab12,2021,21in12ms.xls,agi,count,all,mfjss,Number of returns — married filing jointly/SS,Returns of married persons filing jointly and returns of surviving spouses | Number of returns | -13.0,N,14,20,"$10,000,000 or more",28,36520.0
+tab12,2021,21in12ms.xls,agi,amount,all,mfjss,Adjusted gross income — married filing jointly/SS,Adjusted gross income less deficit | -14.0,O,15,1,"All returns, total",9,9496757833000.0
+tab12,2021,21in12ms.xls,agi,amount,all,mfjss,Adjusted gross income — married filing jointly/SS,Adjusted gross income less deficit | -14.0,O,15,2,No adjusted gross income (includes deficits),10,-104261187000.0
+tab12,2021,21in12ms.xls,agi,amount,all,mfjss,Adjusted gross income — married filing jointly/SS,Adjusted gross income less deficit | -14.0,O,15,3,"$1 under $5,000",11,1572736000.0
+tab12,2021,21in12ms.xls,agi,amount,all,mfjss,Adjusted gross income — married filing jointly/SS,Adjusted gross income less deficit | -14.0,O,15,4,"$5,000 under $10,000",12,5618512000.0
+tab12,2021,21in12ms.xls,agi,amount,all,mfjss,Adjusted gross income — married filing jointly/SS,Adjusted gross income less deficit | -14.0,O,15,5,"$10,000 under $15,000",13,12030518000.0
+tab12,2021,21in12ms.xls,agi,amount,all,mfjss,Adjusted gross income — married filing jointly/SS,Adjusted gross income less deficit | -14.0,O,15,6,"$15,000 under $20,000",14,18128929000.0
+tab12,2021,21in12ms.xls,agi,amount,all,mfjss,Adjusted gross income — married filing jointly/SS,Adjusted gross income less deficit | -14.0,O,15,7,"$20,000 under $25,000",15,27927390000.0
+tab12,2021,21in12ms.xls,agi,amount,all,mfjss,Adjusted gross income — married filing jointly/SS,Adjusted gross income less deficit | -14.0,O,15,8,"$25,000 under $30,000",16,37000617000.0
+tab12,2021,21in12ms.xls,agi,amount,all,mfjss,Adjusted gross income — married filing jointly/SS,Adjusted gross income less deficit | -14.0,O,15,9,"$30,000 under $40,000",17,97902867000.0
+tab12,2021,21in12ms.xls,agi,amount,all,mfjss,Adjusted gross income — married filing jointly/SS,Adjusted gross income less deficit | -14.0,O,15,10,"$40,000 under $50,000",18,129639187000.0
+tab12,2021,21in12ms.xls,agi,amount,all,mfjss,Adjusted gross income — married filing jointly/SS,Adjusted gross income less deficit | -14.0,O,15,11,"$50,000 under $75,000",19,466603588000.0
+tab12,2021,21in12ms.xls,agi,amount,all,mfjss,Adjusted gross income — married filing jointly/SS,Adjusted gross income less deficit | -14.0,O,15,12,"$75,000 under $100,000",20,676922080000.0
+tab12,2021,21in12ms.xls,agi,amount,all,mfjss,Adjusted gross income — married filing jointly/SS,Adjusted gross income less deficit | -14.0,O,15,13,"$100,000 under $200,000",21,2402518137000.0
+tab12,2021,21in12ms.xls,agi,amount,all,mfjss,Adjusted gross income — married filing jointly/SS,Adjusted gross income less deficit | -14.0,O,15,14,"$200,000 under $500,000",22,2128764355000.0
+tab12,2021,21in12ms.xls,agi,amount,all,mfjss,Adjusted gross income — married filing jointly/SS,Adjusted gross income less deficit | -14.0,O,15,15,"$500,000 under $1,000,000",23,908210770000.0
+tab12,2021,21in12ms.xls,agi,amount,all,mfjss,Adjusted gross income — married filing jointly/SS,Adjusted gross income less deficit | -14.0,O,15,16,"$1,000,000 under $1,500,000",24,382588291000.0
+tab12,2021,21in12ms.xls,agi,amount,all,mfjss,Adjusted gross income — married filing jointly/SS,Adjusted gross income less deficit | -14.0,O,15,17,"$1,500,000 under $2,000,000",25,223211644000.0
+tab12,2021,21in12ms.xls,agi,amount,all,mfjss,Adjusted gross income — married filing jointly/SS,Adjusted gross income less deficit | -14.0,O,15,18,"$2,000,000 under $5,000,000",26,571344173000.0
+tab12,2021,21in12ms.xls,agi,amount,all,mfjss,Adjusted gross income — married filing jointly/SS,Adjusted gross income less deficit | -14.0,O,15,19,"$5,000,000 under $10,000,000",27,354206871000.0
+tab12,2021,21in12ms.xls,agi,amount,all,mfjss,Adjusted gross income — married filing jointly/SS,Adjusted gross income less deficit | -14.0,O,15,20,"$10,000,000 or more",28,1156828354000.0
+tab12,2021,21in12ms.xls,agi,count,all,mfs,Number of returns — married filing separately,Returns of married persons filing separately | Number of returns | -25.0,Z,26,1,"All returns, total",9,3912940.0
+tab12,2021,21in12ms.xls,agi,count,all,mfs,Number of returns — married filing separately,Returns of married persons filing separately | Number of returns | -25.0,Z,26,2,No adjusted gross income (includes deficits),10,123238.0
+tab12,2021,21in12ms.xls,agi,count,all,mfs,Number of returns — married filing separately,Returns of married persons filing separately | Number of returns | -25.0,Z,26,3,"$1 under $5,000",11,154821.0
+tab12,2021,21in12ms.xls,agi,count,all,mfs,Number of returns — married filing separately,Returns of married persons filing separately | Number of returns | -25.0,Z,26,4,"$5,000 under $10,000",12,142096.0
+tab12,2021,21in12ms.xls,agi,count,all,mfs,Number of returns — married filing separately,Returns of married persons filing separately | Number of returns | -25.0,Z,26,5,"$10,000 under $15,000",13,157599.0
+tab12,2021,21in12ms.xls,agi,count,all,mfs,Number of returns — married filing separately,Returns of married persons filing separately | Number of returns | -25.0,Z,26,6,"$15,000 under $20,000",14,161811.0
+tab12,2021,21in12ms.xls,agi,count,all,mfs,Number of returns — married filing separately,Returns of married persons filing separately | Number of returns | -25.0,Z,26,7,"$20,000 under $25,000",15,181840.0
+tab12,2021,21in12ms.xls,agi,count,all,mfs,Number of returns — married filing separately,Returns of married persons filing separately | Number of returns | -25.0,Z,26,8,"$25,000 under $30,000",16,220057.0
+tab12,2021,21in12ms.xls,agi,count,all,mfs,Number of returns — married filing separately,Returns of married persons filing separately | Number of returns | -25.0,Z,26,9,"$30,000 under $40,000",17,491569.0
+tab12,2021,21in12ms.xls,agi,count,all,mfs,Number of returns — married filing separately,Returns of married persons filing separately | Number of returns | -25.0,Z,26,10,"$40,000 under $50,000",18,478125.0
+tab12,2021,21in12ms.xls,agi,count,all,mfs,Number of returns — married filing separately,Returns of married persons filing separately | Number of returns | -25.0,Z,26,11,"$50,000 under $75,000",19,860888.0
+tab12,2021,21in12ms.xls,agi,count,all,mfs,Number of returns — married filing separately,Returns of married persons filing separately | Number of returns | -25.0,Z,26,12,"$75,000 under $100,000",20,351192.0
+tab12,2021,21in12ms.xls,agi,count,all,mfs,Number of returns — married filing separately,Returns of married persons filing separately | Number of returns | -25.0,Z,26,13,"$100,000 under $200,000",21,455335.0
+tab12,2021,21in12ms.xls,agi,count,all,mfs,Number of returns — married filing separately,Returns of married persons filing separately | Number of returns | -25.0,Z,26,14,"$200,000 under $500,000",22,97466.0
+tab12,2021,21in12ms.xls,agi,count,all,mfs,Number of returns — married filing separately,Returns of married persons filing separately | Number of returns | -25.0,Z,26,15,"$500,000 under $1,000,000",23,19437.0
+tab12,2021,21in12ms.xls,agi,count,all,mfs,Number of returns — married filing separately,Returns of married persons filing separately | Number of returns | -25.0,Z,26,16,"$1,000,000 under $1,500,000",24,5761.0
+tab12,2021,21in12ms.xls,agi,count,all,mfs,Number of returns — married filing separately,Returns of married persons filing separately | Number of returns | -25.0,Z,26,17,"$1,500,000 under $2,000,000",25,2947.0
+tab12,2021,21in12ms.xls,agi,count,all,mfs,Number of returns — married filing separately,Returns of married persons filing separately | Number of returns | -25.0,Z,26,18,"$2,000,000 under $5,000,000",26,5365.0
+tab12,2021,21in12ms.xls,agi,count,all,mfs,Number of returns — married filing separately,Returns of married persons filing separately | Number of returns | -25.0,Z,26,19,"$5,000,000 under $10,000,000",27,1687.0
+tab12,2021,21in12ms.xls,agi,count,all,mfs,Number of returns — married filing separately,Returns of married persons filing separately | Number of returns | -25.0,Z,26,20,"$10,000,000 or more",28,1707.0
+tab12,2021,21in12ms.xls,agi,amount,all,mfs,Adjusted gross income — married filing separately,Adjusted gross income less deficit | -26.0,AA,27,1,"All returns, total",9,349173490000.0
+tab12,2021,21in12ms.xls,agi,amount,all,mfs,Adjusted gross income — married filing separately,Adjusted gross income less deficit | -26.0,AA,27,2,No adjusted gross income (includes deficits),10,-10308919000.0
+tab12,2021,21in12ms.xls,agi,amount,all,mfs,Adjusted gross income — married filing separately,Adjusted gross income less deficit | -26.0,AA,27,3,"$1 under $5,000",11,339626000.0
+tab12,2021,21in12ms.xls,agi,amount,all,mfs,Adjusted gross income — married filing separately,Adjusted gross income less deficit | -26.0,AA,27,4,"$5,000 under $10,000",12,1052349000.0
+tab12,2021,21in12ms.xls,agi,amount,all,mfs,Adjusted gross income — married filing separately,Adjusted gross income less deficit | -26.0,AA,27,5,"$10,000 under $15,000",13,1980767000.0
+tab12,2021,21in12ms.xls,agi,amount,all,mfs,Adjusted gross income — married filing separately,Adjusted gross income less deficit | -26.0,AA,27,6,"$15,000 under $20,000",14,2841995000.0
+tab12,2021,21in12ms.xls,agi,amount,all,mfs,Adjusted gross income — married filing separately,Adjusted gross income less deficit | -26.0,AA,27,7,"$20,000 under $25,000",15,4090074000.0
+tab12,2021,21in12ms.xls,agi,amount,all,mfs,Adjusted gross income — married filing separately,Adjusted gross income less deficit | -26.0,AA,27,8,"$25,000 under $30,000",16,6062013000.0
+tab12,2021,21in12ms.xls,agi,amount,all,mfs,Adjusted gross income — married filing separately,Adjusted gross income less deficit | -26.0,AA,27,9,"$30,000 under $40,000",17,17234995000.0
+tab12,2021,21in12ms.xls,agi,amount,all,mfs,Adjusted gross income — married filing separately,Adjusted gross income less deficit | -26.0,AA,27,10,"$40,000 under $50,000",18,21379178000.0
+tab12,2021,21in12ms.xls,agi,amount,all,mfs,Adjusted gross income — married filing separately,Adjusted gross income less deficit | -26.0,AA,27,11,"$50,000 under $75,000",19,52103375000.0
+tab12,2021,21in12ms.xls,agi,amount,all,mfs,Adjusted gross income — married filing separately,Adjusted gross income less deficit | -26.0,AA,27,12,"$75,000 under $100,000",20,30369694000.0
+tab12,2021,21in12ms.xls,agi,amount,all,mfs,Adjusted gross income — married filing separately,Adjusted gross income less deficit | -26.0,AA,27,13,"$100,000 under $200,000",21,59902172000.0
+tab12,2021,21in12ms.xls,agi,amount,all,mfs,Adjusted gross income — married filing separately,Adjusted gross income less deficit | -26.0,AA,27,14,"$200,000 under $500,000",22,28525110000.0
+tab12,2021,21in12ms.xls,agi,amount,all,mfs,Adjusted gross income — married filing separately,Adjusted gross income less deficit | -26.0,AA,27,15,"$500,000 under $1,000,000",23,13063263000.0
+tab12,2021,21in12ms.xls,agi,amount,all,mfs,Adjusted gross income — married filing separately,Adjusted gross income less deficit | -26.0,AA,27,16,"$1,000,000 under $1,500,000",24,6934037000.0
+tab12,2021,21in12ms.xls,agi,amount,all,mfs,Adjusted gross income — married filing separately,Adjusted gross income less deficit | -26.0,AA,27,17,"$1,500,000 under $2,000,000",25,5061198000.0
+tab12,2021,21in12ms.xls,agi,amount,all,mfs,Adjusted gross income — married filing separately,Adjusted gross income less deficit | -26.0,AA,27,18,"$2,000,000 under $5,000,000",26,16332731000.0
+tab12,2021,21in12ms.xls,agi,amount,all,mfs,Adjusted gross income — married filing separately,Adjusted gross income less deficit | -26.0,AA,27,19,"$5,000,000 under $10,000,000",27,11765312000.0
+tab12,2021,21in12ms.xls,agi,amount,all,mfs,Adjusted gross income — married filing separately,Adjusted gross income less deficit | -26.0,AA,27,20,"$10,000,000 or more",28,80444520000.0
+tab12,2021,21in12ms.xls,agi,count,all,hoh,Number of returns — head of household,Returns of heads of households | Number of returns | -37.0,AL,38,1,"All returns, total",9,21240317.0
+tab12,2021,21in12ms.xls,agi,count,all,hoh,Number of returns — head of household,Returns of heads of households | Number of returns | -37.0,AL,38,2,No adjusted gross income (includes deficits),10,418044.0
+tab12,2021,21in12ms.xls,agi,count,all,hoh,Number of returns — head of household,Returns of heads of households | Number of returns | -37.0,AL,38,3,"$1 under $5,000",11,644578.0
+tab12,2021,21in12ms.xls,agi,count,all,hoh,Number of returns — head of household,Returns of heads of households | Number of returns | -37.0,AL,38,4,"$5,000 under $10,000",12,905840.0
+tab12,2021,21in12ms.xls,agi,count,all,hoh,Number of returns — head of household,Returns of heads of households | Number of returns | -37.0,AL,38,5,"$10,000 under $15,000",13,1606806.0
+tab12,2021,21in12ms.xls,agi,count,all,hoh,Number of returns — head of household,Returns of heads of households | Number of returns | -37.0,AL,38,6,"$15,000 under $20,000",14,1906721.0
+tab12,2021,21in12ms.xls,agi,count,all,hoh,Number of returns — head of household,Returns of heads of households | Number of returns | -37.0,AL,38,7,"$20,000 under $25,000",15,1870213.0
+tab12,2021,21in12ms.xls,agi,count,all,hoh,Number of returns — head of household,Returns of heads of households | Number of returns | -37.0,AL,38,8,"$25,000 under $30,000",16,1947419.0
+tab12,2021,21in12ms.xls,agi,count,all,hoh,Number of returns — head of household,Returns of heads of households | Number of returns | -37.0,AL,38,9,"$30,000 under $40,000",17,3546653.0
+tab12,2021,21in12ms.xls,agi,count,all,hoh,Number of returns — head of household,Returns of heads of households | Number of returns | -37.0,AL,38,10,"$40,000 under $50,000",18,2232401.0
+tab12,2021,21in12ms.xls,agi,count,all,hoh,Number of returns — head of household,Returns of heads of households | Number of returns | -37.0,AL,38,11,"$50,000 under $75,000",19,3130763.0
+tab12,2021,21in12ms.xls,agi,count,all,hoh,Number of returns — head of household,Returns of heads of households | Number of returns | -37.0,AL,38,12,"$75,000 under $100,000",20,1418570.0
+tab12,2021,21in12ms.xls,agi,count,all,hoh,Number of returns — head of household,Returns of heads of households | Number of returns | -37.0,AL,38,13,"$100,000 under $200,000",21,1289413.0
+tab12,2021,21in12ms.xls,agi,count,all,hoh,Number of returns — head of household,Returns of heads of households | Number of returns | -37.0,AL,38,14,"$200,000 under $500,000",22,260151.0
+tab12,2021,21in12ms.xls,agi,count,all,hoh,Number of returns — head of household,Returns of heads of households | Number of returns | -37.0,AL,38,15,"$500,000 under $1,000,000",23,42124.0
+tab12,2021,21in12ms.xls,agi,count,all,hoh,Number of returns — head of household,Returns of heads of households | Number of returns | -37.0,AL,38,16,"$1,000,000 under $1,500,000",24,8811.0
+tab12,2021,21in12ms.xls,agi,count,all,hoh,Number of returns — head of household,Returns of heads of households | Number of returns | -37.0,AL,38,17,"$1,500,000 under $2,000,000",25,3695.0
+tab12,2021,21in12ms.xls,agi,count,all,hoh,Number of returns — head of household,Returns of heads of households | Number of returns | -37.0,AL,38,18,"$2,000,000 under $5,000,000",26,5488.0
+tab12,2021,21in12ms.xls,agi,count,all,hoh,Number of returns — head of household,Returns of heads of households | Number of returns | -37.0,AL,38,19,"$5,000,000 under $10,000,000",27,1505.0
+tab12,2021,21in12ms.xls,agi,count,all,hoh,Number of returns — head of household,Returns of heads of households | Number of returns | -37.0,AL,38,20,"$10,000,000 or more",28,1125.0
+tab12,2021,21in12ms.xls,agi,amount,all,hoh,Adjusted gross income — head of household,Adjusted gross income less deficit | -38.0,AM,39,1,"All returns, total",9,1037010822000.0
+tab12,2021,21in12ms.xls,agi,amount,all,hoh,Adjusted gross income — head of household,Adjusted gross income less deficit | -38.0,AM,39,2,No adjusted gross income (includes deficits),10,-5663364000.0
+tab12,2021,21in12ms.xls,agi,amount,all,hoh,Adjusted gross income — head of household,Adjusted gross income less deficit | -38.0,AM,39,3,"$1 under $5,000",11,1500478000.0
+tab12,2021,21in12ms.xls,agi,amount,all,hoh,Adjusted gross income — head of household,Adjusted gross income less deficit | -38.0,AM,39,4,"$5,000 under $10,000",12,7050139000.0
+tab12,2021,21in12ms.xls,agi,amount,all,hoh,Adjusted gross income — head of household,Adjusted gross income less deficit | -38.0,AM,39,5,"$10,000 under $15,000",13,20151818000.0
+tab12,2021,21in12ms.xls,agi,amount,all,hoh,Adjusted gross income — head of household,Adjusted gross income less deficit | -38.0,AM,39,6,"$15,000 under $20,000",14,33387804000.0
+tab12,2021,21in12ms.xls,agi,amount,all,hoh,Adjusted gross income — head of household,Adjusted gross income less deficit | -38.0,AM,39,7,"$20,000 under $25,000",15,42143232000.0
+tab12,2021,21in12ms.xls,agi,amount,all,hoh,Adjusted gross income — head of household,Adjusted gross income less deficit | -38.0,AM,39,8,"$25,000 under $30,000",16,53516222000.0
+tab12,2021,21in12ms.xls,agi,amount,all,hoh,Adjusted gross income — head of household,Adjusted gross income less deficit | -38.0,AM,39,9,"$30,000 under $40,000",17,123133503000.0
+tab12,2021,21in12ms.xls,agi,amount,all,hoh,Adjusted gross income — head of household,Adjusted gross income less deficit | -38.0,AM,39,10,"$40,000 under $50,000",18,99654083000.0
+tab12,2021,21in12ms.xls,agi,amount,all,hoh,Adjusted gross income — head of household,Adjusted gross income less deficit | -38.0,AM,39,11,"$50,000 under $75,000",19,190923665000.0
+tab12,2021,21in12ms.xls,agi,amount,all,hoh,Adjusted gross income — head of household,Adjusted gross income less deficit | -38.0,AM,39,12,"$75,000 under $100,000",20,121571248000.0
+tab12,2021,21in12ms.xls,agi,amount,all,hoh,Adjusted gross income — head of household,Adjusted gross income less deficit | -38.0,AM,39,13,"$100,000 under $200,000",21,169608771000.0
+tab12,2021,21in12ms.xls,agi,amount,all,hoh,Adjusted gross income — head of household,Adjusted gross income less deficit | -38.0,AM,39,14,"$200,000 under $500,000",22,73740677000.0
+tab12,2021,21in12ms.xls,agi,amount,all,hoh,Adjusted gross income — head of household,Adjusted gross income less deficit | -38.0,AM,39,15,"$500,000 under $1,000,000",23,27867019000.0
+tab12,2021,21in12ms.xls,agi,amount,all,hoh,Adjusted gross income — head of household,Adjusted gross income less deficit | -38.0,AM,39,16,"$1,000,000 under $1,500,000",24,10735679000.0
+tab12,2021,21in12ms.xls,agi,amount,all,hoh,Adjusted gross income — head of household,Adjusted gross income less deficit | -38.0,AM,39,17,"$1,500,000 under $2,000,000",25,6312826000.0
+tab12,2021,21in12ms.xls,agi,amount,all,hoh,Adjusted gross income — head of household,Adjusted gross income less deficit | -38.0,AM,39,18,"$2,000,000 under $5,000,000",26,16591282000.0
+tab12,2021,21in12ms.xls,agi,amount,all,hoh,Adjusted gross income — head of household,Adjusted gross income less deficit | -38.0,AM,39,19,"$5,000,000 under $10,000,000",27,10364542000.0
+tab12,2021,21in12ms.xls,agi,amount,all,hoh,Adjusted gross income — head of household,Adjusted gross income less deficit | -38.0,AM,39,20,"$10,000,000 or more",28,34421197000.0
+tab12,2021,21in12ms.xls,agi,count,all,single,Number of returns — single,Returns of single persons | Number of returns | -49.0,AX,50,1,"All returns, total",9,81422759.0
+tab12,2021,21in12ms.xls,agi,count,all,single,Number of returns — single,Returns of single persons | Number of returns | -49.0,AX,50,2,No adjusted gross income (includes deficits),10,2851176.0
+tab12,2021,21in12ms.xls,agi,count,all,single,Number of returns — single,Returns of single persons | Number of returns | -49.0,AX,50,3,"$1 under $5,000",11,6978179.0
+tab12,2021,21in12ms.xls,agi,count,all,single,Number of returns — single,Returns of single persons | Number of returns | -49.0,AX,50,4,"$5,000 under $10,000",12,7161336.0
+tab12,2021,21in12ms.xls,agi,count,all,single,Number of returns — single,Returns of single persons | Number of returns | -49.0,AX,50,5,"$10,000 under $15,000",13,7337444.0
+tab12,2021,21in12ms.xls,agi,count,all,single,Number of returns — single,Returns of single persons | Number of returns | -49.0,AX,50,6,"$15,000 under $20,000",14,6682302.0
+tab12,2021,21in12ms.xls,agi,count,all,single,Number of returns — single,Returns of single persons | Number of returns | -49.0,AX,50,7,"$20,000 under $25,000",15,5571779.0
+tab12,2021,21in12ms.xls,agi,count,all,single,Number of returns — single,Returns of single persons | Number of returns | -49.0,AX,50,8,"$25,000 under $30,000",16,5273508.0
+tab12,2021,21in12ms.xls,agi,count,all,single,Number of returns — single,Returns of single persons | Number of returns | -49.0,AX,50,9,"$30,000 under $40,000",17,9292101.0
+tab12,2021,21in12ms.xls,agi,count,all,single,Number of returns — single,Returns of single persons | Number of returns | -49.0,AX,50,10,"$40,000 under $50,000",18,7193036.0
+tab12,2021,21in12ms.xls,agi,count,all,single,Number of returns — single,Returns of single persons | Number of returns | -49.0,AX,50,11,"$50,000 under $75,000",19,11227046.0
+tab12,2021,21in12ms.xls,agi,count,all,single,Number of returns — single,Returns of single persons | Number of returns | -49.0,AX,50,12,"$75,000 under $100,000",20,5152809.0
+tab12,2021,21in12ms.xls,agi,count,all,single,Number of returns — single,Returns of single persons | Number of returns | -49.0,AX,50,13,"$100,000 under $200,000",21,5025462.0
+tab12,2021,21in12ms.xls,agi,count,all,single,Number of returns — single,Returns of single persons | Number of returns | -49.0,AX,50,14,"$200,000 under $500,000",22,1352457.0
+tab12,2021,21in12ms.xls,agi,count,all,single,Number of returns — single,Returns of single persons | Number of returns | -49.0,AX,50,15,"$500,000 under $1,000,000",23,213394.0
+tab12,2021,21in12ms.xls,agi,count,all,single,Number of returns — single,Returns of single persons | Number of returns | -49.0,AX,50,16,"$1,000,000 under $1,500,000",24,44926.0
+tab12,2021,21in12ms.xls,agi,count,all,single,Number of returns — single,Returns of single persons | Number of returns | -49.0,AX,50,17,"$1,500,000 under $2,000,000",25,19543.0
+tab12,2021,21in12ms.xls,agi,count,all,single,Number of returns — single,Returns of single persons | Number of returns | -49.0,AX,50,18,"$2,000,000 under $5,000,000",26,31640.0
+tab12,2021,21in12ms.xls,agi,count,all,single,Number of returns — single,Returns of single persons | Number of returns | -49.0,AX,50,19,"$5,000,000 under $10,000,000",27,8567.0
+tab12,2021,21in12ms.xls,agi,count,all,single,Number of returns — single,Returns of single persons | Number of returns | -49.0,AX,50,20,"$10,000,000 or more",28,6052.0
+tab12,2021,21in12ms.xls,agi,amount,all,single,Adjusted gross income — single,Adjusted gross income less deficit | -50.0,AY,51,1,"All returns, total",9,3912671925000.0
+tab12,2021,21in12ms.xls,agi,amount,all,single,Adjusted gross income — single,Adjusted gross income less deficit | -50.0,AY,51,2,No adjusted gross income (includes deficits),10,-51602893000.0
+tab12,2021,21in12ms.xls,agi,amount,all,single,Adjusted gross income — single,Adjusted gross income less deficit | -50.0,AY,51,3,"$1 under $5,000",11,16574403000.0
+tab12,2021,21in12ms.xls,agi,amount,all,single,Adjusted gross income — single,Adjusted gross income less deficit | -50.0,AY,51,4,"$5,000 under $10,000",12,53930358000.0
+tab12,2021,21in12ms.xls,agi,amount,all,single,Adjusted gross income — single,Adjusted gross income less deficit | -50.0,AY,51,5,"$10,000 under $15,000",13,91748952000.0
+tab12,2021,21in12ms.xls,agi,amount,all,single,Adjusted gross income — single,Adjusted gross income less deficit | -50.0,AY,51,6,"$15,000 under $20,000",14,116477401000.0
+tab12,2021,21in12ms.xls,agi,amount,all,single,Adjusted gross income — single,Adjusted gross income less deficit | -50.0,AY,51,7,"$20,000 under $25,000",15,125348264000.0
+tab12,2021,21in12ms.xls,agi,amount,all,single,Adjusted gross income — single,Adjusted gross income less deficit | -50.0,AY,51,8,"$25,000 under $30,000",16,144768327000.0
+tab12,2021,21in12ms.xls,agi,amount,all,single,Adjusted gross income — single,Adjusted gross income less deficit | -50.0,AY,51,9,"$30,000 under $40,000",17,323115069000.0
+tab12,2021,21in12ms.xls,agi,amount,all,single,Adjusted gross income — single,Adjusted gross income less deficit | -50.0,AY,51,10,"$40,000 under $50,000",18,322482930000.0
+tab12,2021,21in12ms.xls,agi,amount,all,single,Adjusted gross income — single,Adjusted gross income less deficit | -50.0,AY,51,11,"$50,000 under $75,000",19,682764971000.0
+tab12,2021,21in12ms.xls,agi,amount,all,single,Adjusted gross income — single,Adjusted gross income less deficit | -50.0,AY,51,12,"$75,000 under $100,000",20,442836369000.0
+tab12,2021,21in12ms.xls,agi,amount,all,single,Adjusted gross income — single,Adjusted gross income less deficit | -50.0,AY,51,13,"$100,000 under $200,000",21,665028995000.0
+tab12,2021,21in12ms.xls,agi,amount,all,single,Adjusted gross income — single,Adjusted gross income less deficit | -50.0,AY,51,14,"$200,000 under $500,000",22,388158330000.0
+tab12,2021,21in12ms.xls,agi,amount,all,single,Adjusted gross income — single,Adjusted gross income less deficit | -50.0,AY,51,15,"$500,000 under $1,000,000",23,143457981000.0
+tab12,2021,21in12ms.xls,agi,amount,all,single,Adjusted gross income — single,Adjusted gross income less deficit | -50.0,AY,51,16,"$1,000,000 under $1,500,000",24,54294868000.0
+tab12,2021,21in12ms.xls,agi,amount,all,single,Adjusted gross income — single,Adjusted gross income less deficit | -50.0,AY,51,17,"$1,500,000 under $2,000,000",25,33692456000.0
+tab12,2021,21in12ms.xls,agi,amount,all,single,Adjusted gross income — single,Adjusted gross income less deficit | -50.0,AY,51,18,"$2,000,000 under $5,000,000",26,94655032000.0
+tab12,2021,21in12ms.xls,agi,amount,all,single,Adjusted gross income — single,Adjusted gross income less deficit | -50.0,AY,51,19,"$5,000,000 under $10,000,000",27,58905825000.0
+tab12,2021,21in12ms.xls,agi,amount,all,single,Adjusted gross income — single,Adjusted gross income less deficit | -50.0,AY,51,20,"$10,000,000 or more",28,206034288000.0

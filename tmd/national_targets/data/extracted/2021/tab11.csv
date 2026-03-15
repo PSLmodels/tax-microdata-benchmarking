@@ -1,0 +1,41 @@
+table,year,fname,var_name,var_type,value_filter,marstat,description,irs_col_header,xlcolumn,xl_colnumber,incsort,incrange,xlrownum,raw_value
+tab11,2021,21in11si.xls,agi,count,all,all,Number of returns,All returns | Number of returns | 1.0,B,2,1,All returns,10,160824340.0
+tab11,2021,21in11si.xls,agi,count,all,all,Number of returns,All returns | Number of returns | 1.0,B,2,2,No adjusted gross income,11,4098522.0
+tab11,2021,21in11si.xls,agi,count,all,all,Number of returns,All returns | Number of returns | 1.0,B,2,3,"$1 under $5,000",12,8487025.0
+tab11,2021,21in11si.xls,agi,count,all,all,Number of returns,All returns | Number of returns | 1.0,B,2,4,"$5,000 under $10,000",13,8944908.0
+tab11,2021,21in11si.xls,agi,count,all,all,Number of returns,All returns | Number of returns | 1.0,B,2,5,"$10,000 under $15,000",14,10056377.0
+tab11,2021,21in11si.xls,agi,count,all,all,Number of returns,All returns | Number of returns | 1.0,B,2,6,"$15,000 under $20,000",15,9786580.0
+tab11,2021,21in11si.xls,agi,count,all,all,Number of returns,All returns | Number of returns | 1.0,B,2,7,"$20,000 under $25,000",16,8863570.0
+tab11,2021,21in11si.xls,agi,count,all,all,Number of returns,All returns | Number of returns | 1.0,B,2,8,"$25,000 under $30,000",17,8787576.0
+tab11,2021,21in11si.xls,agi,count,all,all,Number of returns,All returns | Number of returns | 1.0,B,2,9,"$30,000 under $40,000",18,16123068.0
+tab11,2021,21in11si.xls,agi,count,all,all,Number of returns,All returns | Number of returns | 1.0,B,2,10,"$40,000 under $50,000",19,12782334.0
+tab11,2021,21in11si.xls,agi,count,all,all,Number of returns,All returns | Number of returns | 1.0,B,2,11,"$50,000 under $75,000",20,22653934.0
+tab11,2021,21in11si.xls,agi,count,all,all,Number of returns,All returns | Number of returns | 1.0,B,2,12,"$75,000 under $100,000",21,14657726.0
+tab11,2021,21in11si.xls,agi,count,all,all,Number of returns,All returns | Number of returns | 1.0,B,2,13,"$100,000 under $200,000",22,24044481.0
+tab11,2021,21in11si.xls,agi,count,all,all,Number of returns,All returns | Number of returns | 1.0,B,2,14,"$200,000 under $500,000",23,9045567.0
+tab11,2021,21in11si.xls,agi,count,all,all,Number of returns,All returns | Number of returns | 1.0,B,2,15,"$500,000 under $1,000,000",24,1617144.0
+tab11,2021,21in11si.xls,agi,count,all,all,Number of returns,All returns | Number of returns | 1.0,B,2,16,"$1,000,000 under $1,500,000",25,376859.0
+tab11,2021,21in11si.xls,agi,count,all,all,Number of returns,All returns | Number of returns | 1.0,B,2,17,"$1,500,000 under $2,000,000",26,156020.0
+tab11,2021,21in11si.xls,agi,count,all,all,Number of returns,All returns | Number of returns | 1.0,B,2,18,"$2,000,000 under $5,000,000",27,233838.0
+tab11,2021,21in11si.xls,agi,count,all,all,Number of returns,All returns | Number of returns | 1.0,B,2,19,"$5,000,000 under $10,000,000",28,63406.0
+tab11,2021,21in11si.xls,agi,count,all,all,Number of returns,All returns | Number of returns | 1.0,B,2,20,"$10,000,000 or more",29,45404.0
+tab11,2021,21in11si.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | Amount | 3.0,D,4,1,All returns,10,14795614070000.0
+tab11,2021,21in11si.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | Amount | 3.0,D,4,2,No adjusted gross income,11,-171836364000.0
+tab11,2021,21in11si.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | Amount | 3.0,D,4,3,"$1 under $5,000",12,19987243000.0
+tab11,2021,21in11si.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | Amount | 3.0,D,4,4,"$5,000 under $10,000",13,67651359000.0
+tab11,2021,21in11si.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | Amount | 3.0,D,4,5,"$10,000 under $15,000",14,125912056000.0
+tab11,2021,21in11si.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | Amount | 3.0,D,4,6,"$15,000 under $20,000",15,170836129000.0
+tab11,2021,21in11si.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | Amount | 3.0,D,4,7,"$20,000 under $25,000",16,199508960000.0
+tab11,2021,21in11si.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | Amount | 3.0,D,4,8,"$25,000 under $30,000",17,241347179000.0
+tab11,2021,21in11si.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | Amount | 3.0,D,4,9,"$30,000 under $40,000",18,561386434000.0
+tab11,2021,21in11si.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | Amount | 3.0,D,4,10,"$40,000 under $50,000",19,573155378000.0
+tab11,2021,21in11si.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | Amount | 3.0,D,4,11,"$50,000 under $75,000",20,1392395599000.0
+tab11,2021,21in11si.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | Amount | 3.0,D,4,12,"$75,000 under $100,000",21,1271699391000.0
+tab11,2021,21in11si.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | Amount | 3.0,D,4,13,"$100,000 under $200,000",22,3297058075000.0
+tab11,2021,21in11si.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | Amount | 3.0,D,4,14,"$200,000 under $500,000",23,2619188471000.0
+tab11,2021,21in11si.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | Amount | 3.0,D,4,15,"$500,000 under $1,000,000",24,1092599034000.0
+tab11,2021,21in11si.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | Amount | 3.0,D,4,16,"$1,000,000 under $1,500,000",25,454552875000.0
+tab11,2021,21in11si.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | Amount | 3.0,D,4,17,"$1,500,000 under $2,000,000",26,268278123000.0
+tab11,2021,21in11si.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | Amount | 3.0,D,4,18,"$2,000,000 under $5,000,000",27,698923219000.0
+tab11,2021,21in11si.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | Amount | 3.0,D,4,19,"$5,000,000 under $10,000,000",28,435242550000.0
+tab11,2021,21in11si.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | Amount | 3.0,D,4,20,"$10,000,000 or more",29,1477728359000.0
