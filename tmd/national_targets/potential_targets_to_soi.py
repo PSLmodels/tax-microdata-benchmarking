@@ -242,9 +242,12 @@ def convert_potential_targets_to_soi(years=None, year_exclude_vars=None):
         "Taxable only",
     ]
     before = len(df)
-    df = df.sort_values(["Year", "SOI table", "XLSX row"]).groupby(
-        dedup_cols, sort=False
-    ).first().reset_index()
+    df = (
+        df.sort_values(["Year", "SOI table", "XLSX row"])
+        .groupby(dedup_cols, sort=False)
+        .first()
+        .reset_index()
+    )
     after = len(df)
     if before != after:
         print(

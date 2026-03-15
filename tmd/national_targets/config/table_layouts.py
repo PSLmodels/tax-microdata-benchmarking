@@ -19,7 +19,7 @@ Units: IRS amount columns are in thousands of dollars.
 
 YEARS = (2015, 2021, 2022)
 
-# ── Filenames ──────────────────────────────────────────────────────────────────
+# ── Filenames ────────────────────────────────────────────────────────────────
 
 FILE_NAMES = {
     ("tab11", 2015): "15in11si.xls",
@@ -37,13 +37,13 @@ FILE_NAMES = {
 }
 
 TABLE_DESCRIPTIONS = {
-    "tab11": "Table 1.1: All Returns — Number of Returns and AGI by Income Size",
+    "tab11": "Table 1.1: All Returns — Returns and AGI by Income Size",
     "tab12": "Table 1.2: All Returns — Marital Status",
     "tab14": "Table 1.4: All Returns — Sources of Income and Adjustments",
     "tab21": "Table 2.1: Returns with Itemized Deductions",
 }
 
-# ── Data row ranges (1-indexed Excel row numbers, inclusive) ───────────────────
+# ── Data row ranges (1-indexed Excel row numbers, inclusive) ─────────────────
 # First data row = "All returns, total" row
 # Last data row  = highest income bracket row
 
@@ -62,7 +62,7 @@ DATA_ROWS = {
     ("tab21", 2022): (10, 32),
 }
 
-# ── Column specifications ──────────────────────────────────────────────────────
+# ── Column specifications ────────────────────────────────────────────────────
 # Each entry defines one (variable × type × filter × marstat) combination.
 # "cols" maps year → Excel column letter for that year's file.
 # Omit a year from "cols" if the variable doesn't exist in that year.
@@ -86,7 +86,7 @@ DATA_ROWS = {
 #   2021+ only: qbid, partnerincome, scorpincome (tab14), id_pitgst (tab21)
 
 
-# ── Table 1.1: All Returns — AGI by income size ────────────────────────────────
+# ── Table 1.1: All Returns — AGI by income size ──────────────────────────────
 # Only two useful columns; "Percent of total" (col C) is intentionally skipped.
 
 TAB11_COLUMNS = [
@@ -109,13 +109,13 @@ TAB11_COLUMNS = [
 ]
 
 
-# ── Table 1.2: All Returns — Marital Status ────────────────────────────────────
+# ── Table 1.2: All Returns — Marital Status ──────────────────────────────────
 # 2015 has a personal exemption column (col D) not present in 2021/2022.
 # This shifts all 2015 column letters by +1 for the "all" block and
 # by an additional +1 per marstat block (each block also had an exemption col).
 
 TAB12_COLUMNS = [
-    # ── All returns ────────────────────────────────────────────────────────────
+    # ── All returns ──────────────────────────────────────────────────────────
     {
         "var_name": "agi",
         "var_type": "count",
@@ -221,7 +221,7 @@ TAB12_COLUMNS = [
         "description": "Total tax",
         "cols": {2015: "N", 2021: "M", 2022: "M"},
     },
-    # ── Married filing jointly / surviving spouse ──────────────────────────────
+    # ── Married filing jointly / surviving spouse ────────────────────────────
     # Each marstat block in 2015 also has an exemption col, so the 2015 shift
     # grows by 1 per block: mfjss +1, mfs +2, hoh +3, single +4.
     {
@@ -240,7 +240,7 @@ TAB12_COLUMNS = [
         "description": "Adjusted gross income — married filing jointly/SS",
         "cols": {2015: "P", 2021: "O", 2022: "O"},
     },
-    # ── Married filing separately ──────────────────────────────────────────────
+    # ── Married filing separately ────────────────────────────────────────────
     {
         "var_name": "agi",
         "var_type": "count",
@@ -257,7 +257,7 @@ TAB12_COLUMNS = [
         "description": "Adjusted gross income — married filing separately",
         "cols": {2015: "AC", 2021: "AA", 2022: "AA"},
     },
-    # ── Head of household ──────────────────────────────────────────────────────
+    # ── Head of household ────────────────────────────────────────────────────
     {
         "var_name": "agi",
         "var_type": "count",
@@ -274,7 +274,7 @@ TAB12_COLUMNS = [
         "description": "Adjusted gross income — head of household",
         "cols": {2015: "AP", 2021: "AM", 2022: "AM"},
     },
-    # ── Single ─────────────────────────────────────────────────────────────────
+    # ── Single ───────────────────────────────────────────────────────────────
     {
         "var_name": "agi",
         "var_type": "count",
@@ -294,18 +294,19 @@ TAB12_COLUMNS = [
 ]
 
 
-# ── Table 1.4: All Returns — Sources of Income and Adjustments ────────────────
+# ── Table 1.4: All Returns — Sources of Income and Adjustments ───────────────
 # Column positions are stable for 2015 and 2021 for most variables, but
 # IRS added several new columns in 2022 before the existing variables,
 # shifting many of them. See column comments where 2022 differs.
 # Additionally:
 #   - 2015 has partnerscorpincome (combined) but not partnerincome/scorpincome
-#   - 2021+ have partnerincome and scorpincome (split) but not partnerscorpincome
+#   - 2021+ have partnerincome and scorpincome (split) but not
+#     partnerscorpincome
 #   - 2015 has exemption/exemptions_n (pre-TCJA)
 #   - 2021+ have qbid (post-TCJA)
 
 TAB14_COLUMNS = [
-    # ── Number of returns and AGI ──────────────────────────────────────────────
+    # ── Number of returns and AGI ────────────────────────────────────────────
     {
         "var_name": "agi",
         "var_type": "count",
@@ -322,7 +323,7 @@ TAB14_COLUMNS = [
         "description": "Adjusted gross income",
         "cols": {2015: "C", 2021: "C", 2022: "C"},
     },
-    # ── Wages and salaries ─────────────────────────────────────────────────────
+    # ── Wages and salaries ───────────────────────────────────────────────────
     {
         "var_name": "wages",
         "var_type": "count",
@@ -339,7 +340,7 @@ TAB14_COLUMNS = [
         "description": "Salaries and wages",
         "cols": {2015: "G", 2021: "G", 2022: "G"},
     },
-    # ── Taxable interest ───────────────────────────────────────────────────────
+    # ── Taxable interest ─────────────────────────────────────────────────────
     # 2022: IRS inserted new columns (tips, overtime) before taxint
     {
         "var_name": "taxint",
@@ -357,7 +358,7 @@ TAB14_COLUMNS = [
         "description": "Taxable interest",
         "cols": {2015: "I", 2021: "I", 2022: "U"},
     },
-    # ── Tax-exempt interest ────────────────────────────────────────────────────
+    # ── Tax-exempt interest ──────────────────────────────────────────────────
     {
         "var_name": "exemptint",
         "var_type": "count",
@@ -374,7 +375,7 @@ TAB14_COLUMNS = [
         "description": "Tax-exempt interest",
         "cols": {2015: "K", 2021: "K", 2022: "W"},
     },
-    # ── Ordinary dividends ─────────────────────────────────────────────────────
+    # ── Ordinary dividends ───────────────────────────────────────────────────
     {
         "var_name": "orddiv",
         "var_type": "count",
@@ -391,7 +392,7 @@ TAB14_COLUMNS = [
         "description": "Ordinary dividends",
         "cols": {2015: "M", 2021: "M", 2022: "Y"},
     },
-    # ── Qualified dividends ────────────────────────────────────────────────────
+    # ── Qualified dividends ──────────────────────────────────────────────────
     {
         "var_name": "qualdiv",
         "var_type": "count",
@@ -408,7 +409,8 @@ TAB14_COLUMNS = [
         "description": "Qualified dividends",
         "cols": {2015: "O", 2021: "O", 2022: "AA"},
     },
-    # ── Business / profession net income (income and loss reported separately) ─
+    # ── Business / profession net income (income and loss reported
+    # ── separately)
     {
         "var_name": "busprofincome",
         "var_type": "count",
@@ -441,7 +443,7 @@ TAB14_COLUMNS = [
         "description": "Business net loss",
         "cols": {2015: "W", 2021: "W", 2022: "AI"},
     },
-    # ── Capital gain distributions (Schedule D) ───────────────────────────────
+    # ── Capital gain distributions (Schedule D) ──────────────────────────────
     {
         "var_name": "cgdist",
         "var_type": "count",
@@ -458,7 +460,7 @@ TAB14_COLUMNS = [
         "description": "Capital gain distributions",
         "cols": {2015: "Y", 2021: "Y", 2022: "AK"},
     },
-    # ── Net capital gain / loss ────────────────────────────────────────────────
+    # ── Net capital gain / loss ──────────────────────────────────────────────
     {
         "var_name": "cgtaxable",
         "var_type": "count",
@@ -491,7 +493,7 @@ TAB14_COLUMNS = [
         "description": "Net capital loss",
         "cols": {2015: "AC", 2021: "AC", 2022: "AO"},
     },
-    # ── IRA distributions ──────────────────────────────────────────────────────
+    # ── IRA distributions ────────────────────────────────────────────────────
     {
         "var_name": "iradist",
         "var_type": "count",
@@ -508,7 +510,7 @@ TAB14_COLUMNS = [
         "description": "IRA distributions",
         "cols": {2015: "AI", 2021: "AI", 2022: "AU"},
     },
-    # ── Pensions and annuities ─────────────────────────────────────────────────
+    # ── Pensions and annuities ───────────────────────────────────────────────
     {
         "var_name": "pensions",
         "var_type": "count",
@@ -541,7 +543,7 @@ TAB14_COLUMNS = [
         "description": "Pensions and annuities (taxable)",
         "cols": {2015: "AM", 2021: "AM", 2022: "AY"},
     },
-    # ── Rent and royalty net income / loss ─────────────────────────────────────
+    # ── Rent and royalty net income / loss ───────────────────────────────────
     {
         "var_name": "rentroyalty",
         "var_type": "count",
@@ -574,7 +576,7 @@ TAB14_COLUMNS = [
         "description": "Rent and royalty net loss",
         "cols": {2015: "BC", 2021: "BC", 2022: "BO"},
     },
-    # ── Partnership and S-corp: 2015 combined, 2021+ split ────────────────────
+    # ── Partnership and S-corp: 2015 combined, 2021+ split ───────────────────
     # IRS reported partnership+S-corp combined in 2015; split into two series
     # starting 2021.  Use partnerscorpincome for 2015 targets; use
     # partnerincome + scorpincome for 2021+ (potential_targets_to_soi.py
@@ -592,7 +594,7 @@ TAB14_COLUMNS = [
         "var_type": "amount",
         "value_filter": "gt0",
         "marstat": "all",
-        "description": "Partnership and S-corp net income (2015 only, combined)",
+        "description": "Partnership+S-corp net income (2015 only, combined)",
         "cols": {2015: "BE"},
     },
     {
@@ -675,7 +677,7 @@ TAB14_COLUMNS = [
         "description": "S-corporation net loss (2021+)",
         "cols": {2021: "BK", 2022: "BW"},
     },
-    # ── Estate and trust income / loss ─────────────────────────────────────────
+    # ── Estate and trust income / loss ───────────────────────────────────────
     # Positions differ all 3 years because 2021 inserted scorpincome cols
     # and 2022 shifted further.
     {
@@ -710,7 +712,7 @@ TAB14_COLUMNS = [
         "description": "Estate and trust net loss",
         "cols": {2015: "BK", 2021: "BO", 2022: "CA"},
     },
-    # ── Unemployment compensation ──────────────────────────────────────────────
+    # ── Unemployment compensation ────────────────────────────────────────────
     {
         "var_name": "unempcomp",
         "var_type": "count",
@@ -727,7 +729,7 @@ TAB14_COLUMNS = [
         "description": "Unemployment compensation",
         "cols": {2015: "BQ", 2021: "BU", 2022: "CG"},
     },
-    # ── Social security benefits ───────────────────────────────────────────────
+    # ── Social security benefits ─────────────────────────────────────────────
     {
         "var_name": "socsectot",
         "var_type": "count",
@@ -749,7 +751,7 @@ TAB14_COLUMNS = [
         "var_type": "count",
         "value_filter": "nz",
         "marstat": "all",
-        "description": "Social security benefits (taxable) — number of returns",
+        "description": "Social security benefits (taxable) — num. returns",
         "cols": {2015: "BT", 2021: "BX", 2022: "CJ"},
     },
     {
@@ -760,7 +762,7 @@ TAB14_COLUMNS = [
         "description": "Social security benefits (taxable)",
         "cols": {2015: "BU", 2021: "BY", 2022: "CK"},
     },
-    # ── Personal exemptions: 2015 only (TCJA eliminated after 2017) ───────────
+    # ── Personal exemptions: 2015 only (TCJA eliminated after 2017) ──────────
     {
         "var_name": "exemption",
         "var_type": "amount",
@@ -777,7 +779,7 @@ TAB14_COLUMNS = [
         "description": "Number of exemptions (2015 only)",
         "cols": {2015: "DX"},
     },
-    # ── Itemized deductions (total) ────────────────────────────────────────────
+    # ── Itemized deductions (total) ──────────────────────────────────────────
     {
         "var_name": "itemded",
         "var_type": "count",
@@ -811,7 +813,7 @@ TAB14_COLUMNS = [
         "description": "Qualified business income deduction (2021+)",
         "cols": {2021: "DY", 2022: "EI"},
     },
-    # ── Alternative minimum tax ────────────────────────────────────────────────
+    # ── Alternative minimum tax ──────────────────────────────────────────────
     {
         "var_name": "amt",
         "var_type": "count",
@@ -828,7 +830,7 @@ TAB14_COLUMNS = [
         "description": "Alternative minimum tax",
         "cols": {2015: "EE", 2021: "EE", 2022: "EO"},
     },
-    # ── Income tax before credits ──────────────────────────────────────────────
+    # ── Income tax before credits ────────────────────────────────────────────
     {
         "var_name": "taxbc",
         "var_type": "count",
@@ -848,14 +850,14 @@ TAB14_COLUMNS = [
 ]
 
 
-# ── Table 2.1: Returns with Itemized Deductions ────────────────────────────────
+# ── Table 2.1: Returns with Itemized Deductions ──────────────────────────────
 # Covers taxable returns with itemized deductions only.
 # Column positions differ across all three years because IRS regularly
 # adds or reorganizes itemized deduction sub-components.
 # id_pitgst (combined state income/sales tax) was added in 2021.
 
 TAB21_COLUMNS = [
-    # ── Count of returns with itemized deductions ──────────────────────────────
+    # ── Count of returns with itemized deductions ────────────────────────────
     {
         "var_name": "id",
         "var_type": "count",
@@ -864,13 +866,13 @@ TAB21_COLUMNS = [
         "description": "Number of returns with itemized deductions",
         "cols": {2015: "B", 2021: "B", 2022: "B"},
     },
-    # ── Medical and dental expenses ────────────────────────────────────────────
+    # ── Medical and dental expenses ──────────────────────────────────────────
     {
         "var_name": "id_medical_capped",
         "var_type": "count",
         "value_filter": "nz",
         "marstat": "all",
-        "description": "Medical expenses (deductible/capped) — number of returns",
+        "description": "Medical expenses (capped) — number of returns",
         "cols": {2015: "BK", 2021: "BI", 2022: "BU"},
     },
     {
@@ -897,7 +899,7 @@ TAB21_COLUMNS = [
         "description": "Medical expenses (total/uncapped)",
         "cols": {2015: "BN", 2021: "BL", 2022: "BX"},
     },
-    # ── Taxes paid ─────────────────────────────────────────────────────────────
+    # ── Taxes paid ───────────────────────────────────────────────────────────
     {
         "var_name": "id_taxpaid",
         "var_type": "count",
@@ -914,7 +916,7 @@ TAB21_COLUMNS = [
         "description": "Taxes paid deduction",
         "cols": {2015: "BR", 2021: "BP", 2022: "CB"},
     },
-    # ── State and local taxes (SALT) ───────────────────────────────────────────
+    # ── State and local taxes (SALT) ─────────────────────────────────────────
     {
         "var_name": "id_salt",
         "var_type": "count",
@@ -931,7 +933,7 @@ TAB21_COLUMNS = [
         "description": "State and local taxes (SALT)",
         "cols": {2015: "BT", 2021: "BR", 2022: "CD"},
     },
-    # ── State income/sales taxes combined: 2021+ only ─────────────────────────
+    # ── State income/sales taxes combined: 2021+ only ────────────────────────
     # In 2021 IRS began reporting the combined income-or-sales-tax election
     # as a separate line (id_pitgst), in addition to the individual components.
     {
@@ -939,7 +941,7 @@ TAB21_COLUMNS = [
         "var_type": "count",
         "value_filter": "nz",
         "marstat": "all",
-        "description": "State income or sales taxes combined — number of returns (2021+)",
+        "description": "State income/sales taxes — number of returns (2021+)",
         "cols": {2021: "BS", 2022: "CE"},
     },
     {
@@ -950,7 +952,7 @@ TAB21_COLUMNS = [
         "description": "State income or sales taxes combined (2021+)",
         "cols": {2021: "BT", 2022: "CF"},
     },
-    # ── State/local income taxes ───────────────────────────────────────────────
+    # ── State/local income taxes ─────────────────────────────────────────────
     {
         "var_name": "id_pit",
         "var_type": "count",
@@ -967,7 +969,7 @@ TAB21_COLUMNS = [
         "description": "State income taxes",
         "cols": {2015: "BV", 2021: "BV", 2022: "CH"},
     },
-    # ── General sales taxes ────────────────────────────────────────────────────
+    # ── General sales taxes ──────────────────────────────────────────────────
     {
         "var_name": "id_gst",
         "var_type": "count",
@@ -984,7 +986,7 @@ TAB21_COLUMNS = [
         "description": "General sales taxes",
         "cols": {2015: "BX", 2021: "BX", 2022: "CJ"},
     },
-    # ── Real estate taxes ──────────────────────────────────────────────────────
+    # ── Real estate taxes ────────────────────────────────────────────────────
     {
         "var_name": "id_retax",
         "var_type": "count",
@@ -1001,7 +1003,7 @@ TAB21_COLUMNS = [
         "description": "Real estate taxes",
         "cols": {2015: "BZ", 2021: "BZ", 2022: "CL"},
     },
-    # ── Interest paid ──────────────────────────────────────────────────────────
+    # ── Interest paid ────────────────────────────────────────────────────────
     # 2021/2022 column positions are offset from 2015 because id_pitgst
     # (2 cols) was inserted before id_pit/id_gst in 2021.
     {
@@ -1020,7 +1022,7 @@ TAB21_COLUMNS = [
         "description": "Interest paid",
         "cols": {2015: "CF", 2021: "CH", 2022: "CT"},
     },
-    # ── Home mortgage interest ─────────────────────────────────────────────────
+    # ── Home mortgage interest ───────────────────────────────────────────────
     {
         "var_name": "id_mortgage",
         "var_type": "count",
@@ -1037,7 +1039,7 @@ TAB21_COLUMNS = [
         "description": "Home mortgage interest",
         "cols": {2015: "CH", 2021: "CJ", 2022: "CX"},
     },
-    # ── Charitable contributions ───────────────────────────────────────────────
+    # ── Charitable contributions ─────────────────────────────────────────────
     {
         "var_name": "id_contributions",
         "var_type": "count",
@@ -1057,7 +1059,7 @@ TAB21_COLUMNS = [
 ]
 
 
-# ── Aggregate lookup ───────────────────────────────────────────────────────────
+# ── Aggregate lookup ─────────────────────────────────────────────────────────
 
 COLUMNS = {
     "tab11": TAB11_COLUMNS,

@@ -29,7 +29,7 @@ import xlrd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from tmd.national_targets.config.table_layouts import (
+from tmd.national_targets.config.table_layouts import (  # noqa: E402
     COLUMNS,
     DATA_ROWS,
     FILE_NAMES,
@@ -124,9 +124,9 @@ def read_irs_table(table: str, year: int) -> pd.DataFrame:
         merges where the same text is stored in both covered rows).
         """
         skip_rows_0based = {
-            0,               # row 1: table title
-            1,               # row 2: "All figures..." note
-            first_row - 2,   # last header row: IRS column numbers
+            0,  # row 1: table title
+            1,  # row 2: "All figures..." note
+            first_row - 2,  # last header row: IRS column numbers
         }
         raw_parts = []
         for r in range(first_row - 1):  # 0-based rows before first data row
@@ -206,7 +206,7 @@ def extract_all(
         overwrite:  If False (default), skip files that already exist.
     """
     output_dir = Path(output_dir)
-    n_written = 0
+    count = 0
 
     for year in years:
         year_dir = output_dir / str(year)
@@ -231,9 +231,9 @@ def extract_all(
             df.to_csv(out_path, index=False)
             rel = out_path.relative_to(Path.cwd())
             print(f"{len(df)} rows → {rel}")
-            n_written += 1
+            count += 1
 
-    return n_written
+    return count
 
 
 if __name__ == "__main__":
@@ -273,6 +273,12 @@ if __name__ == "__main__":
     )
     print()
     if n_written:
-        print(f"Done. {n_written} CSVs written to {EXTRACTED_DIR.relative_to(Path.cwd())}/")
+        print(
+            f"Done. {n_written} CSVs written to "
+            f"{EXTRACTED_DIR.relative_to(Path.cwd())}/"
+        )
     else:
-        print("Done. All CSVs already up to date (use --overwrite to re-extract).")
+        print(
+            "Done. All CSVs already up to date "
+            "(use --overwrite to re-extract)."
+        )

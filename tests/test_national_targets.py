@@ -12,14 +12,11 @@ that read the raw IRS Excel files directly; these are skipped if the
 Excel files are absent (e.g., in CI environments that don't include them).
 """
 
-import sys
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 import pytest
-
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from tmd.national_targets.config.table_layouts import (
     COLUMNS,
@@ -38,8 +35,10 @@ VALID_VAR_TYPES = {"amount", "count", "number"}
 VALID_VALUE_FILTERS = {"all", "nz", "gt0", "lt0"}
 VALID_MARSTATS = {"all", "single", "mfjss", "mfs", "hoh"}
 
+# pylint: disable=redefined-outer-name  # pytest fixture pattern
 
-# ── Fixtures ───────────────────────────────────────────────────────────────────
+
+# ── Fixtures
 
 
 @pytest.fixture(scope="module")
@@ -52,7 +51,7 @@ def soi():
     return pd.read_csv(STORAGE_FOLDER / "input" / "soi.csv")
 
 
-# ── 1. Config sanity ───────────────────────────────────────────────────────────
+# ── 1. Config sanity
 
 
 class TestConfig:
@@ -71,30 +70,38 @@ class TestConfig:
         for table, specs in COLUMNS.items():
             for spec in specs:
                 missing = required - set(spec.keys())
-                assert not missing, (
-                    f"{table}: spec for {spec.get('var_name')} missing {missing}"
-                )
+                var_name = spec.get("var_name")
+                assert (
+                    not missing
+                ), f"{table}: spec for {var_name} missing {missing}"
 
     def test_var_type_values_are_valid(self):
         for table, specs in COLUMNS.items():
             for spec in specs:
-                assert spec["var_type"] in VALID_VAR_TYPES, (
-                    f"{table}/{spec['var_name']}: invalid var_type {spec['var_type']!r}"
-                )
+                var_name = spec["var_name"]
+                var_type = spec["var_type"]
+                assert (
+                    var_type in VALID_VAR_TYPES
+                ), f"{table}/{var_name}: invalid var_type {var_type!r}"
 
     def test_value_filter_values_are_valid(self):
         for table, specs in COLUMNS.items():
             for spec in specs:
-                assert spec["value_filter"] in VALID_VALUE_FILTERS, (
-                    f"{table}/{spec['var_name']}: invalid value_filter {spec['value_filter']!r}"
+                var_name = spec["var_name"]
+                value_filter = spec["value_filter"]
+                assert value_filter in VALID_VALUE_FILTERS, (
+                    f"{table}/{var_name}: "
+                    f"invalid value_filter {value_filter!r}"
                 )
 
     def test_marstat_values_are_valid(self):
         for table, specs in COLUMNS.items():
             for spec in specs:
-                assert spec["marstat"] in VALID_MARSTATS, (
-                    f"{table}/{spec['var_name']}: invalid marstat {spec['marstat']!r}"
-                )
+                var_name = spec["var_name"]
+                marstat = spec["marstat"]
+                assert (
+                    marstat in VALID_MARSTATS
+                ), f"{table}/{var_name}: invalid marstat {marstat!r}"
 
     def test_no_duplicate_column_letters_per_table_year(self):
         """Two specs in the same table must not map to the same column in the
@@ -111,7 +118,8 @@ class TestConfig:
                 seen = set()
                 for letter in letters:
                     assert letter not in seen, (
-                        f"{table}/{year}: column letter {letter!r} assigned twice"
+                        f"{table}/{year}: column letter "
+                        f"{letter!r} assigned twice"
                     )
                     seen.add(letter)
 
@@ -122,13 +130,19 @@ class TestConfig:
         for table, specs in COLUMNS.items():
             for year in YEARS:
                 keys = [
-                    (s["var_name"], s["var_type"], s["value_filter"], s["marstat"])
+                    (
+                        s["var_name"],
+                        s["var_type"],
+                        s["value_filter"],
+                        s["marstat"],
+                    )
                     for s in specs
                     if year in s["cols"]
                 ]
-                assert len(keys) == len(set(keys)), (
-                    f"{table}/{year}: duplicate var key(s): "
-                    + str([k for k in keys if keys.count(k) > 1])
+                assert len(keys) == len(
+                    set(keys)
+                ), f"{table}/{year}: duplicate var key(s): " + str(
+                    [k for k in keys if keys.count(k) > 1]
                 )
 
     def test_data_rows_first_before_last(self):
@@ -138,19 +152,32 @@ class TestConfig:
     def test_cols_years_are_known_years(self):
         for table, specs in COLUMNS.items():
             for spec in specs:
+                var_name = spec["var_name"]
                 for year in spec["cols"]:
-                    assert year in YEARS, (
-                        f"{table}/{spec['var_name']}: cols has unknown year {year}"
-                    )
+                    assert (
+                        year in YEARS
+                    ), f"{table}/{var_name}: cols has unknown year {year}"
 
 
-# ── 2. Extracted CSVs ──────────────────────────────────────────────────────────
+# ── 2. Extracted CSVs
 
 
 EXTRACTED_COLUMNS = {
-    "table", "year", "fname", "var_name", "var_type", "value_filter",
-    "marstat", "description", "irs_col_header", "xlcolumn",
-    "xl_colnumber", "incsort", "incrange", "xlrownum", "raw_value",
+    "table",
+    "year",
+    "fname",
+    "var_name",
+    "var_type",
+    "value_filter",
+    "marstat",
+    "description",
+    "irs_col_header",
+    "xlcolumn",
+    "xl_colnumber",
+    "incsort",
+    "incrange",
+    "xlrownum",
+    "raw_value",
 }
 
 
@@ -164,89 +191,109 @@ class TestExtractedCSVs:
                 p = EXTRACTED_DIR / str(year) / f"{table}.csv"
                 if not p.exists():
                     missing.append(str(p))
-        assert not missing, f"Missing extracted CSVs:\n" + "\n".join(missing)
+        assert not missing, "Missing extracted CSVs:\n" + "\n".join(missing)
 
-    @pytest.mark.parametrize("year,table", [
-        (year, table)
-        for year in YEARS
-        for table in TABLES
-        if (table, year) in FILE_NAMES
-    ])
+    @pytest.mark.parametrize(
+        "year,table",
+        [
+            (year, table)
+            for year in YEARS
+            for table in TABLES
+            if (table, year) in FILE_NAMES
+        ],
+    )
     def test_csv_has_required_columns(self, year, table):
         df = pd.read_csv(EXTRACTED_DIR / str(year) / f"{table}.csv")
         missing = EXTRACTED_COLUMNS - set(df.columns)
         assert not missing, f"{year}/{table} missing columns: {missing}"
 
-    @pytest.mark.parametrize("year,table", [
-        (year, table)
-        for year in YEARS
-        for table in TABLES
-        if (table, year) in FILE_NAMES
-    ])
+    @pytest.mark.parametrize(
+        "year,table",
+        [
+            (year, table)
+            for year in YEARS
+            for table in TABLES
+            if (table, year) in FILE_NAMES
+        ],
+    )
     def test_row_count_matches_data_rows(self, year, table):
-        """Row count = (last_row - first_row + 1) × number of specs for that year."""
+        """Row count = (last_row - first_row + 1)
+        × number of specs for that year."""
         first, last = DATA_ROWS[(table, year)]
         n_income_rows = last - first + 1
         n_specs = sum(1 for s in COLUMNS[table] if year in s["cols"])
         expected = n_income_rows * n_specs
         df = pd.read_csv(EXTRACTED_DIR / str(year) / f"{table}.csv")
-        assert len(df) == expected, (
-            f"{year}/{table}: expected {expected} rows, got {len(df)}"
-        )
+        assert (
+            len(df) == expected
+        ), f"{year}/{table}: expected {expected} rows, got {len(df)}"
 
-    @pytest.mark.parametrize("year,table", [
-        (year, table)
-        for year in YEARS
-        for table in TABLES
-        if (table, year) in FILE_NAMES
-    ])
+    @pytest.mark.parametrize(
+        "year,table",
+        [
+            (year, table)
+            for year in YEARS
+            for table in TABLES
+            if (table, year) in FILE_NAMES
+        ],
+    )
     def test_irs_col_header_nonempty(self, year, table):
         """Every row should have a non-empty IRS column header (validates
         that spanner/merged cell extraction is working)."""
         df = pd.read_csv(EXTRACTED_DIR / str(year) / f"{table}.csv")
-        blank = df["irs_col_header"].isna() | (df["irs_col_header"].str.strip() == "")
-        assert not blank.any(), (
-            f"{year}/{table}: {blank.sum()} rows have empty irs_col_header"
+        blank = df["irs_col_header"].isna() | (
+            df["irs_col_header"].str.strip() == ""
         )
+        assert (
+            not blank.any()
+        ), f"{year}/{table}: {blank.sum()} rows have empty irs_col_header"
 
     def test_wages_header_contains_salaries(self):
         """The wages column header should mention 'Salaries' — a regression
         test for merged-cell spanner extraction."""
         df = pd.read_csv(EXTRACTED_DIR / "2021" / "tab14.csv")
         wage_headers = df.loc[df.var_name == "wages", "irs_col_header"]
-        assert wage_headers.str.contains("Salaries", case=False).all(), (
-            "Wages column header should contain 'Salaries'"
-        )
+        assert wage_headers.str.contains(
+            "Salaries", case=False
+        ).all(), "Wages column header should contain 'Salaries'"
 
-    # ── Spot-check known IRS totals (require Excel files; skip if absent) ──────
+    # ── Spot-check known IRS totals (skip if Excel files absent) ────────────
 
-    @pytest.mark.parametrize("year,var_name,var_type,table,expected", [
-        (2021, "wages",  "amount", "tab14", 9_022_352_941_000),
-        (2022, "wages",  "amount", "tab14", 9_738_950_972_000),
-        (2021, "agi",    "amount", "tab11", 14_795_614_070_000),
-        (2022, "agi",    "amount", "tab11", 14_833_956_956_000),
-        (2021, "agi",    "count",  "tab11", 160_824_340),
-    ])
-    def test_all_returns_spot_check(self, year, var_name, var_type, table, expected):
+    @pytest.mark.parametrize(
+        "year,var_name,var_type,table,expected",
+        [
+            (2021, "wages", "amount", "tab14", 9_022_352_941_000),
+            (2022, "wages", "amount", "tab14", 9_738_950_972_000),
+            (2021, "agi", "amount", "tab11", 14_795_614_070_000),
+            (2022, "agi", "amount", "tab11", 14_833_956_956_000),
+            (2021, "agi", "count", "tab11", 160_824_340),
+        ],
+    )
+    def test_all_returns_spot_check(
+        self, year, var_name, var_type, table, expected
+    ):
         """Verify 'All returns' row against known IRS published totals."""
         df = pd.read_csv(EXTRACTED_DIR / str(year) / f"{table}.csv")
         row = df[
-            (df.var_name == var_name) &
-            (df.var_type == var_type) &
-            (df.marstat == "all") &
-            (df.value_filter.isin(["all", "nz"])) &
-            (df.incsort == 1)
+            (df.var_name == var_name)
+            & (df.var_type == var_type)
+            & (df.marstat == "all")
+            & (df.value_filter.isin(["all", "nz"]))
+            & (df.incsort == 1)
         ]
         assert len(row) == 1, (
-            f"{year}/{table} {var_name}/{var_type}: expected 1 All-returns row, got {len(row)}"
+            f"{year}/{table} {var_name}/{var_type}: "
+            f"expected 1 All-returns row, got {len(row)}"
         )
-        assert row.iloc[0]["raw_value"] == pytest.approx(expected, rel=1e-9), (
+        actual = row.iloc[0]["raw_value"]
+        assert actual == pytest.approx(expected, rel=1e-9), (
             f"{year}/{table} {var_name}/{var_type} all-returns: "
-            f"got {row.iloc[0]['raw_value']}, expected {expected}"
+            f"got {actual}, expected {expected}"
         )
 
     def test_incsort_is_contiguous_per_var(self):
-        """incsort should run 1..N with no gaps for each var within a table/year."""
+        """incsort should run 1..N with no gaps
+        for each var within a table/year."""
         for year in YEARS:
             for table in TABLES:
                 if (table, year) not in FILE_NAMES:
@@ -264,7 +311,7 @@ class TestExtractedCSVs:
                     )
 
 
-# ── 3. IRS aggregate values ───────────────────────────────────────────────────
+# ── 3. IRS aggregate values
 
 
 class TestPotentialTargets:
@@ -287,10 +334,24 @@ class TestPotentialTargets:
 
     def test_required_columns_present(self, potential_targets):
         required = {
-            "rownum", "idbase", "year", "table", "var_name", "var_type",
-            "var_description", "value_filter", "subgroup", "marstat",
-            "incsort", "incrange", "ptarget", "fname", "xlcell",
-            "xl_colnumber", "xlcolumn", "xlrownum",
+            "rownum",
+            "idbase",
+            "year",
+            "table",
+            "var_name",
+            "var_type",
+            "var_description",
+            "value_filter",
+            "subgroup",
+            "marstat",
+            "incsort",
+            "incrange",
+            "ptarget",
+            "fname",
+            "xlcell",
+            "xl_colnumber",
+            "xlcolumn",
+            "xlrownum",
         }
         missing = required - set(potential_targets.columns)
         assert not missing, f"Missing columns: {missing}"
@@ -300,7 +361,8 @@ class TestPotentialTargets:
         idbase is a per-variable-group key; incsort distinguishes income
         brackets.  Note: the same (idbase, incsort) CAN appear more than once
         across different tables — potential_targets preserves cross-table
-        redundancy by design.  Duplicates within a single table would be a bug."""
+        redundancy by design.  Duplicates within a single table would be a bug.
+        """
         pt = potential_targets
         assert not pt.duplicated(subset=["table", "idbase", "incsort"]).any()
 
@@ -311,43 +373,43 @@ class TestPotentialTargets:
 
     def test_wages_2021_total(self, potential_targets):
         val = potential_targets[
-            (potential_targets.year == 2021) &
-            (potential_targets.var_name == "wages") &
-            (potential_targets.var_type == "amount") &
-            (potential_targets.value_filter == "nz") &
-            (potential_targets.marstat == "all") &
-            (potential_targets.incsort == 1)
+            (potential_targets.year == 2021)
+            & (potential_targets.var_name == "wages")
+            & (potential_targets.var_type == "amount")
+            & (potential_targets.value_filter == "nz")
+            & (potential_targets.marstat == "all")
+            & (potential_targets.incsort == 1)
         ]["ptarget"].values[0]
         assert val == pytest.approx(9_022_352_941_000, rel=1e-9)
 
     def test_wages_2022_total(self, potential_targets):
         val = potential_targets[
-            (potential_targets.year == 2022) &
-            (potential_targets.var_name == "wages") &
-            (potential_targets.var_type == "amount") &
-            (potential_targets.value_filter == "nz") &
-            (potential_targets.marstat == "all") &
-            (potential_targets.incsort == 1)
+            (potential_targets.year == 2022)
+            & (potential_targets.var_name == "wages")
+            & (potential_targets.var_type == "amount")
+            & (potential_targets.value_filter == "nz")
+            & (potential_targets.marstat == "all")
+            & (potential_targets.incsort == 1)
         ]["ptarget"].values[0]
         assert val == pytest.approx(9_738_950_972_000, rel=1e-9)
 
     def test_agi_2021_total(self, potential_targets):
         val = potential_targets[
-            (potential_targets.year == 2021) &
-            (potential_targets.var_name == "agi") &
-            (potential_targets.var_type == "amount") &
-            (potential_targets.table == "tab11") &
-            (potential_targets.incsort == 1)
+            (potential_targets.year == 2021)
+            & (potential_targets.var_name == "agi")
+            & (potential_targets.var_type == "amount")
+            & (potential_targets.table == "tab11")
+            & (potential_targets.incsort == 1)
         ]["ptarget"].values[0]
         assert val == pytest.approx(14_795_614_070_000, rel=1e-9)
 
     def test_agi_2022_total(self, potential_targets):
         val = potential_targets[
-            (potential_targets.year == 2022) &
-            (potential_targets.var_name == "agi") &
-            (potential_targets.var_type == "amount") &
-            (potential_targets.table == "tab11") &
-            (potential_targets.incsort == 1)
+            (potential_targets.year == 2022)
+            & (potential_targets.var_name == "agi")
+            & (potential_targets.var_type == "amount")
+            & (potential_targets.table == "tab11")
+            & (potential_targets.incsort == 1)
         ]["ptarget"].values[0]
         assert val == pytest.approx(14_833_956_956_000, rel=1e-9)
 
@@ -356,21 +418,25 @@ class TestPotentialTargets:
         the 'all' total for the All-returns row (incsort=1)."""
         for year in [2021, 2022]:
             total_all = potential_targets[
-                (potential_targets.year == year) &
-                (potential_targets.table == "tab12") &
-                (potential_targets.var_name == "agi") &
-                (potential_targets.var_type == "count") &
-                (potential_targets.marstat == "all") &
-                (potential_targets.incsort == 1)
+                (potential_targets.year == year)
+                & (potential_targets.table == "tab12")
+                & (potential_targets.var_name == "agi")
+                & (potential_targets.var_type == "count")
+                & (potential_targets.marstat == "all")
+                & (potential_targets.incsort == 1)
             ]["ptarget"].values[0]
 
             total_parts = potential_targets[
-                (potential_targets.year == year) &
-                (potential_targets.table == "tab12") &
-                (potential_targets.var_name == "agi") &
-                (potential_targets.var_type == "count") &
-                (potential_targets.marstat.isin(["single", "mfjss", "mfs", "hoh"])) &
-                (potential_targets.incsort == 1)
+                (potential_targets.year == year)
+                & (potential_targets.table == "tab12")
+                & (potential_targets.var_name == "agi")
+                & (potential_targets.var_type == "count")
+                & (
+                    potential_targets.marstat.isin(
+                        ["single", "mfjss", "mfs", "hoh"]
+                    )
+                )
+                & (potential_targets.incsort == 1)
             ]["ptarget"].sum()
 
             assert total_parts == pytest.approx(total_all, rel=1e-6), (
@@ -382,23 +448,32 @@ class TestPotentialTargets:
         """2021 wages total should be ~9 trillion dollars, not ~9 billion
         (which would indicate a missing ×1000 conversion)."""
         wages = potential_targets[
-            (potential_targets.year == 2021) &
-            (potential_targets.var_name == "wages") &
-            (potential_targets.var_type == "amount") &
-            (potential_targets.incsort == 1)
+            (potential_targets.year == 2021)
+            & (potential_targets.var_name == "wages")
+            & (potential_targets.var_type == "amount")
+            & (potential_targets.incsort == 1)
         ]["ptarget"].values[0]
-        assert wages > 1e12, (
-            f"Wages appear to be in thousands, not dollars: {wages:.0f}"
-        )
+        assert (
+            wages > 1e12
+        ), f"Wages appear to be in thousands, not dollars: {wages:.0f}"
 
 
-# ── 4. soi.csv ─────────────────────────────────────────────────────────────────
+# ── 4. soi.csv
 
 
 SOI_COLUMNS = [
-    "Year", "SOI table", "XLSX column", "XLSX row", "Variable",
-    "Filing status", "AGI lower bound", "AGI upper bound",
-    "Count", "Taxable only", "Full population", "Value",
+    "Year",
+    "SOI table",
+    "XLSX column",
+    "XLSX row",
+    "Variable",
+    "Filing status",
+    "AGI lower bound",
+    "AGI upper bound",
+    "Count",
+    "Taxable only",
+    "Full population",
+    "Value",
 ]
 
 
@@ -422,23 +497,23 @@ class TestSoi:
     def test_employment_income_2021_total(self, soi):
         """employment_income (=wages) for 2021 All-returns should match IRS."""
         val = soi[
-            (soi.Year == 2021) &
-            (soi.Variable == "employment_income") &
-            (soi["Filing status"] == "All") &
-            (soi["AGI lower bound"] == -np.inf) &
-            (soi["AGI upper bound"] == np.inf) &
-            (~soi["Count"])
+            (soi.Year == 2021)
+            & (soi.Variable == "employment_income")
+            & (soi["Filing status"] == "All")
+            & (soi["AGI lower bound"] == -np.inf)
+            & (soi["AGI upper bound"] == np.inf)
+            & (~soi["Count"])
         ]["Value"].values[0]
         assert val == pytest.approx(9_022_352_941_000, rel=1e-9)
 
     def test_employment_income_2022_total(self, soi):
         val = soi[
-            (soi.Year == 2022) &
-            (soi.Variable == "employment_income") &
-            (soi["Filing status"] == "All") &
-            (soi["AGI lower bound"] == -np.inf) &
-            (soi["AGI upper bound"] == np.inf) &
-            (~soi["Count"])
+            (soi.Year == 2022)
+            & (soi.Variable == "employment_income")
+            & (soi["Filing status"] == "All")
+            & (soi["AGI lower bound"] == -np.inf)
+            & (soi["AGI upper bound"] == np.inf)
+            & (~soi["Count"])
         ]["Value"].values[0]
         assert val == pytest.approx(9_738_950_972_000, rel=1e-9)
 
@@ -446,10 +521,10 @@ class TestSoi:
         """Full population = True iff Filing status=All, AGI=(-inf,inf),
         Taxable only=False."""
         expected_full_pop = (
-            (soi["Filing status"] == "All") &
-            (soi["AGI lower bound"] == -np.inf) &
-            (soi["AGI upper bound"] == np.inf) &
-            (~soi["Taxable only"])
+            (soi["Filing status"] == "All")
+            & (soi["AGI lower bound"] == -np.inf)
+            & (soi["AGI upper bound"] == np.inf)
+            & (~soi["Taxable only"])
         )
         assert (soi["Full population"] == expected_full_pop).all()
 
@@ -460,23 +535,25 @@ class TestSoi:
 
     def test_partner_scorp_aggregation_2021(self, soi):
         """For 2021, partnership_and_s_corp_income should exceed
-        s_corporation_net_income alone (because S-corp was added to partnership)."""
+        s_corporation_net_income alone
+        (because S-corp was added to partnership).
+        """
         partner = soi[
-            (soi.Year == 2021) &
-            (soi.Variable == "partnership_and_s_corp_income") &
-            (soi["Filing status"] == "All") &
-            (soi["AGI lower bound"] == -np.inf) &
-            (soi["AGI upper bound"] == np.inf) &
-            (~soi["Count"])
+            (soi.Year == 2021)
+            & (soi.Variable == "partnership_and_s_corp_income")
+            & (soi["Filing status"] == "All")
+            & (soi["AGI lower bound"] == -np.inf)
+            & (soi["AGI upper bound"] == np.inf)
+            & (~soi["Count"])
         ]["Value"].values[0]
 
         scorp = soi[
-            (soi.Year == 2021) &
-            (soi.Variable == "s_corporation_net_income") &
-            (soi["Filing status"] == "All") &
-            (soi["AGI lower bound"] == -np.inf) &
-            (soi["AGI upper bound"] == np.inf) &
-            (~soi["Count"])
+            (soi.Year == 2021)
+            & (soi.Variable == "s_corporation_net_income")
+            & (soi["Filing status"] == "All")
+            & (soi["AGI lower bound"] == -np.inf)
+            & (soi["AGI upper bound"] == np.inf)
+            & (~soi["Count"])
         ]["Value"].values[0]
 
         assert partner > scorp, (
@@ -489,8 +566,13 @@ class TestSoi:
         AGI lower, AGI upper, Count, Taxable only) — that would mean the
         optimizer sees ambiguous targets."""
         key_cols = [
-            "Year", "Variable", "Filing status",
-            "AGI lower bound", "AGI upper bound", "Count", "Taxable only",
+            "Year",
+            "Variable",
+            "Filing status",
+            "AGI lower bound",
+            "AGI upper bound",
+            "Count",
+            "Taxable only",
         ]
         dupes = soi.duplicated(subset=key_cols, keep=False)
         assert not dupes.any(), (

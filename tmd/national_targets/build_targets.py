@@ -20,7 +20,7 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from tmd.national_targets.config.table_layouts import YEARS
+from tmd.national_targets.config.table_layouts import YEARS  # noqa: E402
 
 DATA_DIR = Path(__file__).parent / "data"
 EXTRACTED_DIR = DATA_DIR / "extracted"
@@ -154,13 +154,13 @@ def build_potential_targets(
         + combined["marstat"]
     )
 
-    result = combined[OUTPUT_COLUMNS].copy()
+    df_out = combined[OUTPUT_COLUMNS].copy()
 
     out_path = Path(output_path)
-    result.to_csv(out_path, index=False)
-    print(f"Wrote {len(result)} rows to {out_path.relative_to(Path.cwd())}")
+    df_out.to_csv(out_path, index=False)
+    print(f"Wrote {len(df_out)} rows to {out_path.relative_to(Path.cwd())}")
 
-    return result
+    return df_out
 
 
 if __name__ == "__main__":
