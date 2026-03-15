@@ -21,7 +21,7 @@ AUCOMP_INDEX = 15
 
 INPUT_FILE = {
     2021: "taxdata25_growfactors.csv",
-    2022: "taxdata25_growfactors.csv",  # TODO: change to taxdata26_...
+    2022: "taxdata26_growfactors.csv",
 }
 INFILE = STORAGE_FOLDER / "input" / INPUT_FILE[TAXYEAR]
 OUTFILE = STORAGE_FOLDER / "output" / "tmd_growfactors.csv"

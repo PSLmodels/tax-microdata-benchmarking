@@ -2,14 +2,14 @@
 Central location for assumptions about data generation and data imputation.
 """
 
-TAXYEAR = 2021  # single source of truth for the target tax year
+TAXYEAR = 2022  # single source of truth for the target tax year
 
 IMPUTATION_RF_RNG_SEED = 1928374  # random number seed used by RandomForest
 IMPUTATION_BETA_RNG_SEED = 37465  # random number seed used for Beta variates
 
 W2_WAGES_RATIO = {  # parameter used to impute pass-through W-2 wages
     2021: 0.15,
-    2022: 0.17,
+    2022: 0.15,
 }
 
 # RNG seeds used for demographic decoding and earnings splits in puf.py:
@@ -51,8 +51,8 @@ CLARABEL_MAX_ITER = 1000  # maximum solver iterations
 
 # parameters for MICE imputation of missing OBBBA deduction variables:
 # ... overtime_income:
-OTM_convert_zero_prob = {2021: 0.077, 2022: 0.077}
-OTM_scale = {2021: 2.4, 2022: 2.4}
+OTM_convert_zero_prob = {2021: 0.077, 2022: 0.079}
+OTM_scale = {2021: 2.4, 2022: 2.3}
 # ... tip_income:
 TIP_convert_zero_prob = {2021: 0.014, 2022: 0.014}
 TIP_scale = {2021: 1.0, 2022: 1.0}
@@ -63,6 +63,6 @@ ALI_scale = {2021: 4.0, 2022: 4.0}
 # population projection file used to extrapolate TAXYEAR sampling weights
 POP_FILE = {
     2021: "cbo25_population_forecast.yaml",
-    2022: "cbo25_population_forecast.yaml",  # TODO: change cbo25 to cbo26
+    2022: "cbo26_population_forecast.yaml",
 }
 POPULATION_FILE = POP_FILE[TAXYEAR]
