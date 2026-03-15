@@ -1,11 +1,11 @@
 """
-Convert potential_targets_preliminary.csv → soi.csv format.
+Convert irs_aggregate_values.csv → soi.csv format.
 
 This replaces the old pipeline:
   agi_targets.csv → soi_targets.py → soi.csv
 
 New pipeline:
-  potential_targets_preliminary.csv → this script → soi.csv
+  irs_aggregate_values.csv → this script → soi.csv
 
 Key differences from old pipeline:
 - potential_targets has ptarget in dollars (not thousands)
@@ -128,7 +128,7 @@ def get_tmd_variable_name(mapping, var_name, var_type, value_filter):
 
 
 def convert_potential_targets_to_soi(years=None, year_exclude_vars=None):
-    """Convert potential_targets_preliminary.csv → soi.csv DataFrame.
+    """Convert irs_aggregate_values.csv → soi.csv DataFrame.
 
     Args:
         years: List of years to include, or None for all available.
@@ -139,7 +139,7 @@ def convert_potential_targets_to_soi(years=None, year_exclude_vars=None):
     Returns:
         DataFrame in soi.csv format.
     """
-    pt = pd.read_csv(DATA_DIR / "potential_targets_preliminary.csv")
+    pt = pd.read_csv(DATA_DIR / "irs_aggregate_values.csv")
     mapping = load_mapping()
 
     if years:
@@ -223,8 +223,15 @@ def convert_potential_targets_to_soi(years=None, year_exclude_vars=None):
         for sv in sorted(skipped_vars):
             print(f"  {sv}")
 
-    # De-duplicate: when multiple tables provide the same variable for the
-    # same AGI bin, keep first occurrence (matches old pipeline behavior)
+    # De-duplicate: irs_aggregate_values.csv intentionally preserves
+    # all cross-table data including redundancy and minor integer differences
+    # between tables (that file is the full audit trail).  soi.csv must have
+    # exactly one row per (Year, Variable, Filing status, AGI bounds, Count)
+    # key for the optimizer.  Resolution rule: lowest table number wins
+    # (tab11 > tab12 > tab14 > tab21), which is the most comprehensive source.
+    # Value is excluded from the dedup key so that minor cross-table integer
+    # differences (e.g. tab11 reads 10134704, tab12 reads 10134703 for the
+    # same cell) don't bypass deduplication.
     dedup_cols = [
         "Year",
         "Variable",
@@ -233,10 +240,11 @@ def convert_potential_targets_to_soi(years=None, year_exclude_vars=None):
         "AGI upper bound",
         "Count",
         "Taxable only",
-        "Value",
     ]
     before = len(df)
-    df = df.groupby(dedup_cols).first().reset_index()
+    df = df.sort_values(["Year", "SOI table", "XLSX row"]).groupby(
+        dedup_cols, sort=False
+    ).first().reset_index()
     after = len(df)
     if before != after:
         print(
@@ -409,7 +417,7 @@ def compare_with_existing_soi(new_df, existing_soi_path, year=2021):
 if __name__ == "__main__":
     from tmd.storage import STORAGE_FOLDER
 
-    print("Converting potential_targets_preliminary.csv → soi.csv format...")
+    print("Converting irs_aggregate_values.csv → soi.csv format...")
     print()
 
     # Exclude rentroyalty and estateincome for 2022 (PUF variables

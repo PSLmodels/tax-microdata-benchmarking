@@ -206,6 +206,7 @@ def extract_all(
         overwrite:  If False (default), skip files that already exist.
     """
     output_dir = Path(output_dir)
+    n_written = 0
 
     for year in years:
         year_dir = output_dir / str(year)
@@ -230,6 +231,9 @@ def extract_all(
             df.to_csv(out_path, index=False)
             rel = out_path.relative_to(Path.cwd())
             print(f"{len(df)} rows → {rel}")
+            n_written += 1
+
+    return n_written
 
 
 if __name__ == "__main__":
@@ -262,10 +266,13 @@ if __name__ == "__main__":
     print(f"  Years:  {args.years}")
     print(f"  Tables: {args.tables}")
     print()
-    extract_all(
+    n_written = extract_all(
         years=args.years,
         tables=args.tables,
         overwrite=args.overwrite,
     )
     print()
-    print(f"Done. CSVs written to {EXTRACTED_DIR.relative_to(Path.cwd())}/")
+    if n_written:
+        print(f"Done. {n_written} CSVs written to {EXTRACTED_DIR.relative_to(Path.cwd())}/")
+    else:
+        print("Done. All CSVs already up to date (use --overwrite to re-extract).")

@@ -1,7 +1,7 @@
-"""Build potential_targets_preliminary.csv from extracted IRS CSV files.
+"""Build irs_aggregate_values.csv from extracted IRS CSV files.
 
 Reads the per-table CSV files produced by extract_irs_to_csv.py and
-assembles them into potential_targets_preliminary.csv — the input to
+assembles them into irs_aggregate_values.csv — the input to
 potential_targets_to_soi.py.
 
 The output schema matches the existing file so that potential_targets_to_soi.py
@@ -24,7 +24,7 @@ from tmd.national_targets.config.table_layouts import YEARS
 
 DATA_DIR = Path(__file__).parent / "data"
 EXTRACTED_DIR = DATA_DIR / "extracted"
-OUTPUT_PATH = DATA_DIR / "potential_targets_preliminary.csv"
+OUTPUT_PATH = DATA_DIR / "irs_aggregate_values.csv"
 
 TABLES = ("tab11", "tab12", "tab14", "tab21")
 
@@ -71,7 +71,7 @@ def build_potential_targets(
     extracted_dir=EXTRACTED_DIR,
     output_path=OUTPUT_PATH,
 ) -> pd.DataFrame:
-    """Read extracted CSVs and assemble potential_targets_preliminary.csv.
+    """Read extracted CSVs and assemble irs_aggregate_values.csv.
 
     Args:
         years:         Iterable of years to include.
@@ -167,7 +167,7 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(
-        description="Build potential_targets_preliminary.csv from extracted CSVs."
+        description="Build irs_aggregate_values.csv from extracted CSVs."
     )
     parser.add_argument(
         "--years",
@@ -184,7 +184,7 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    print("Building potential_targets_preliminary.csv...")
+    print("Building irs_aggregate_values.csv...")
     print(f"  Years:  {args.years}")
     print(f"  Tables: {args.tables}")
     print()
