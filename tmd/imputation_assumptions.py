@@ -1,8 +1,8 @@
 """
-Central location for data generation and data imputation assumptions.
+Central location for assumptions about data generation and data imputation.
 """
 
-TAXYEAR = 2022  # single source of truth for the target tax year
+TAXYEAR = 2021  # single source of truth for the target tax year
 
 IMPUTATION_RF_RNG_SEED = 1928374  # random number seed used by RandomForest
 IMPUTATION_BETA_RNG_SEED = 37465  # random number seed used for Beta variates
@@ -64,6 +64,5 @@ ALI_scale = {2021: 4.0, 2022: 4.0}
 POP_FILE = {
     2021: "cbo25_population_forecast.yaml",
     2022: "cbo25_population_forecast.yaml",  # TODO: change cbo25 to cbo26
-    # TODO: remove 2075 line from cbo25_population_forecast.yaml
 }
 POPULATION_FILE = POP_FILE[TAXYEAR]
