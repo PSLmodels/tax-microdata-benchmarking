@@ -59,3 +59,10 @@ TIP_scale = {2021: 1.0, 2022: 1.0}
 # ... auto_loan_interest:
 ALI_convert_zero_prob = {2021: 0.060, 2022: 0.060}
 ALI_scale = {2021: 4.0, 2022: 4.0}
+
+# population projection file used to extrapolate TAXYEAR sampling weights
+POP_FILE = {
+    2021: "cbo25_population_forecast.yaml",
+    2022: "cbo25_population_forecast.yaml",  # TODO: change cbo25 to cbo26
+}
+POPULATION_FILE = POP_FILE[TAXYEAR]

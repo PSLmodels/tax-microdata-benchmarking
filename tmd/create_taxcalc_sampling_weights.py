@@ -7,12 +7,12 @@ create_taxcalc_input_variable.py script.
 import yaml
 import pandas as pd
 from tmd.storage import STORAGE_FOLDER
-from tmd.imputation_assumptions import TAXYEAR
+from tmd.imputation_assumptions import TAXYEAR, POPULATION_FILE
 
 FIRST_YEAR = TAXYEAR
 LAST_YEAR = TAXYEAR + 53
 VARFILE = STORAGE_FOLDER / "output" / "tmd.csv.gz"
-POPFILE = STORAGE_FOLDER / "input" / "cbo_population_forecast.yaml"
+POPFILE = STORAGE_FOLDER / "input" / POPULATION_FILE
 WGTFILE = STORAGE_FOLDER / "output" / "tmd_weights.csv.gz"
 
 

@@ -21,13 +21,13 @@ import jax
 import jax.numpy as jnp
 from jax.experimental.sparse import BCOO
 from tmd.storage import STORAGE_FOLDER
-from tmd.imputation_assumptions import TAXYEAR
+from tmd.imputation_assumptions import TAXYEAR, POPULATION_FILE
 from tmd.areas import AREAS_FOLDER
 
 FIRST_YEAR = TAXYEAR
 LAST_YEAR = 2034
 INFILE_PATH = STORAGE_FOLDER / "output" / "tmd.csv.gz"
-POPFILE_PATH = STORAGE_FOLDER / "input" / "cbo_population_forecast.yaml"
+POPFILE_PATH = STORAGE_FOLDER / "input" / POPULATION_FILE
 
 # Tax-Calcultor calculated variable cache files:
 TAXCALC_AGI_CACHE = STORAGE_FOLDER / "output" / "cached_c00100.npy"
