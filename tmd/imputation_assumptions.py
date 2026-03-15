@@ -64,5 +64,6 @@ ALI_scale = {2021: 4.0, 2022: 4.0}
 POP_FILE = {
     2021: "cbo25_population_forecast.yaml",
     2022: "cbo25_population_forecast.yaml",  # TODO: change cbo25 to cbo26
+    # TODO: remove 2075 line from cbo25_population_forecast.yaml
 }
 POPULATION_FILE = POP_FILE[TAXYEAR]
