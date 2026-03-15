@@ -19,23 +19,23 @@ tab11,2015,15in11si.xls,agi,count,all,all,Number of returns,All returns | Number
 tab11,2015,15in11si.xls,agi,count,all,all,Number of returns,All returns | Number of returns | 1.0,B,2,18,"$2,000,000 under $5,000,000",27,116718.0
 tab11,2015,15in11si.xls,agi,count,all,all,Number of returns,All returns | Number of returns | 1.0,B,2,19,"$5,000,000 under $10,000,000",28,28680.0
 tab11,2015,15in11si.xls,agi,count,all,all,Number of returns,All returns | Number of returns | 1.0,B,2,20,"$10,000,000 or more",29,18061.0
-tab11,2015,15in11si.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | Amount | 3.0,D,4,1,All returns,10,10210310102000.0
-tab11,2015,15in11si.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | Amount | 3.0,D,4,2,No adjusted gross income,11,-203775058000.0
-tab11,2015,15in11si.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | Amount | 3.0,D,4,3,"$1 under $5,000",12,26240798000.0
-tab11,2015,15in11si.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | Amount | 3.0,D,4,4,"$5,000 under $10,000",13,86411986000.0
-tab11,2015,15in11si.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | Amount | 3.0,D,4,5,"$10,000 under $15,000",14,152752468000.0
-tab11,2015,15in11si.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | Amount | 3.0,D,4,6,"$15,000 under $20,000",15,195857688000.0
-tab11,2015,15in11si.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | Amount | 3.0,D,4,7,"$20,000 under $25,000",16,224230854000.0
-tab11,2015,15in11si.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | Amount | 3.0,D,4,8,"$25,000 under $30,000",17,242572775000.0
-tab11,2015,15in11si.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | Amount | 3.0,D,4,9,"$30,000 under $40,000",18,519525813000.0
-tab11,2015,15in11si.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | Amount | 3.0,D,4,10,"$40,000 under $50,000",19,520845982000.0
-tab11,2015,15in11si.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | Amount | 3.0,D,4,11,"$50,000 under $75,000",20,1228299087000.0
-tab11,2015,15in11si.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | Amount | 3.0,D,4,12,"$75,000 under $100,000",21,1111174843000.0
-tab11,2015,15in11si.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | Amount | 3.0,D,4,13,"$100,000 under $200,000",22,2506497828000.0
-tab11,2015,15in11si.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | Amount | 3.0,D,4,14,"$200,000 under $500,000",23,1546515483000.0
-tab11,2015,15in11si.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | Amount | 3.0,D,4,15,"$500,000 under $1,000,000",24,597676645000.0
-tab11,2015,15in11si.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | Amount | 3.0,D,4,16,"$1,000,000 under $1,500,000",25,236499605000.0
-tab11,2015,15in11si.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | Amount | 3.0,D,4,17,"$1,500,000 under $2,000,000",26,137686352000.0
-tab11,2015,15in11si.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | Amount | 3.0,D,4,18,"$2,000,000 under $5,000,000",27,346864436000.0
-tab11,2015,15in11si.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | Amount | 3.0,D,4,19,"$5,000,000 under $10,000,000",28,195661353000.0
-tab11,2015,15in11si.xls,agi,amount,all,all,Adjusted gross income,Adjusted gross income less deficit | Amount | 3.0,D,4,20,"$10,000,000 or more",29,538771167000.0
+tab11,2015,15in11si.xls,agi,amount,all,all,Adjusted gross income,All returns | Adjusted gross income less deficit | Amount | 3.0,D,4,1,All returns,10,10210310102000.0
+tab11,2015,15in11si.xls,agi,amount,all,all,Adjusted gross income,All returns | Adjusted gross income less deficit | Amount | 3.0,D,4,2,No adjusted gross income,11,-203775058000.0
+tab11,2015,15in11si.xls,agi,amount,all,all,Adjusted gross income,All returns | Adjusted gross income less deficit | Amount | 3.0,D,4,3,"$1 under $5,000",12,26240798000.0
+tab11,2015,15in11si.xls,agi,amount,all,all,Adjusted gross income,All returns | Adjusted gross income less deficit | Amount | 3.0,D,4,4,"$5,000 under $10,000",13,86411986000.0
+tab11,2015,15in11si.xls,agi,amount,all,all,Adjusted gross income,All returns | Adjusted gross income less deficit | Amount | 3.0,D,4,5,"$10,000 under $15,000",14,152752468000.0
+tab11,2015,15in11si.xls,agi,amount,all,all,Adjusted gross income,All returns | Adjusted gross income less deficit | Amount | 3.0,D,4,6,"$15,000 under $20,000",15,195857688000.0
+tab11,2015,15in11si.xls,agi,amount,all,all,Adjusted gross income,All returns | Adjusted gross income less deficit | Amount | 3.0,D,4,7,"$20,000 under $25,000",16,224230854000.0
+tab11,2015,15in11si.xls,agi,amount,all,all,Adjusted gross income,All returns | Adjusted gross income less deficit | Amount | 3.0,D,4,8,"$25,000 under $30,000",17,242572775000.0
+tab11,2015,15in11si.xls,agi,amount,all,all,Adjusted gross income,All returns | Adjusted gross income less deficit | Amount | 3.0,D,4,9,"$30,000 under $40,000",18,519525813000.0
+tab11,2015,15in11si.xls,agi,amount,all,all,Adjusted gross income,All returns | Adjusted gross income less deficit | Amount | 3.0,D,4,10,"$40,000 under $50,000",19,520845982000.0
+tab11,2015,15in11si.xls,agi,amount,all,all,Adjusted gross income,All returns | Adjusted gross income less deficit | Amount | 3.0,D,4,11,"$50,000 under $75,000",20,1228299087000.0
+tab11,2015,15in11si.xls,agi,amount,all,all,Adjusted gross income,All returns | Adjusted gross income less deficit | Amount | 3.0,D,4,12,"$75,000 under $100,000",21,1111174843000.0
+tab11,2015,15in11si.xls,agi,amount,all,all,Adjusted gross income,All returns | Adjusted gross income less deficit | Amount | 3.0,D,4,13,"$100,000 under $200,000",22,2506497828000.0
+tab11,2015,15in11si.xls,agi,amount,all,all,Adjusted gross income,All returns | Adjusted gross income less deficit | Amount | 3.0,D,4,14,"$200,000 under $500,000",23,1546515483000.0
+tab11,2015,15in11si.xls,agi,amount,all,all,Adjusted gross income,All returns | Adjusted gross income less deficit | Amount | 3.0,D,4,15,"$500,000 under $1,000,000",24,597676645000.0
+tab11,2015,15in11si.xls,agi,amount,all,all,Adjusted gross income,All returns | Adjusted gross income less deficit | Amount | 3.0,D,4,16,"$1,000,000 under $1,500,000",25,236499605000.0
+tab11,2015,15in11si.xls,agi,amount,all,all,Adjusted gross income,All returns | Adjusted gross income less deficit | Amount | 3.0,D,4,17,"$1,500,000 under $2,000,000",26,137686352000.0
+tab11,2015,15in11si.xls,agi,amount,all,all,Adjusted gross income,All returns | Adjusted gross income less deficit | Amount | 3.0,D,4,18,"$2,000,000 under $5,000,000",27,346864436000.0
+tab11,2015,15in11si.xls,agi,amount,all,all,Adjusted gross income,All returns | Adjusted gross income less deficit | Amount | 3.0,D,4,19,"$5,000,000 under $10,000,000",28,195661353000.0
+tab11,2015,15in11si.xls,agi,amount,all,all,Adjusted gross income,All returns | Adjusted gross income less deficit | Amount | 3.0,D,4,20,"$10,000,000 or more",29,538771167000.0

@@ -1,484 +1,484 @@
 table,year,fname,var_name,var_type,value_filter,marstat,description,irs_col_header,xlcolumn,xl_colnumber,incsort,incrange,xlrownum,raw_value
-tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns | 1.0,B,2,1,"All returns, total",10,44567263.0
-tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns | 1.0,B,2,2,"Under $5,000",11,317443.0
-tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns | 1.0,B,2,3,"$5,000 under $10,000",12,384355.0
-tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns | 1.0,B,2,4,"$10,000 under $15,000",13,662599.0
-tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns | 1.0,B,2,5,"$15,000 under $20,000",14,811728.0
-tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns | 1.0,B,2,6,"$20,000 under $25,000",15,941085.0
-tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns | 1.0,B,2,7,"$25,000 under $30,000",16,1081500.0
-tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns | 1.0,B,2,8,"$30,000 under $35,000",17,1192479.0
-tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns | 1.0,B,2,9,"$35,000 under $40,000",18,1372832.0
-tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns | 1.0,B,2,10,"$40,000 under $45,000",19,1463063.0
-tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns | 1.0,B,2,11,"$45,000 under $50,000",20,1520466.0
-tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns | 1.0,B,2,12,"$50,000 under $55,000",21,1535092.0
-tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns | 1.0,B,2,13,"$55,000 under $60,000",22,1546349.0
-tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns | 1.0,B,2,14,"$60,000 under $75,000",23,4436701.0
-tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns | 1.0,B,2,15,"$75,000 under $100,000",24,6957567.0
-tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns | 1.0,B,2,16,"$100,000 under $200,000",25,14038259.0
-tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns | 1.0,B,2,17,"$200,000 under $500,000",26,5083499.0
-tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns | 1.0,B,2,18,"$500,000 under $1,000,000",27,821784.0
-tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns | 1.0,B,2,19,"$1,000,000 under $1,500,000",28,177407.0
-tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns | 1.0,B,2,20,"$1,500,000 under $2,000,000",29,71685.0
-tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns | 1.0,B,2,21,"$2,000,000 under $5,000,000",30,106755.0
-tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns | 1.0,B,2,22,"$5,000,000 under $10,000,000",31,27125.0
-tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns | 1.0,B,2,23,"$10,000,000 or more",32,17490.0
-tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns | 62.0,BK,63,1,"All returns, total",10,8776985.0
-tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns | 62.0,BK,63,2,"Under $5,000",11,227519.0
-tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns | 62.0,BK,63,3,"$5,000 under $10,000",12,279663.0
-tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns | 62.0,BK,63,4,"$10,000 under $15,000",13,463596.0
-tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns | 62.0,BK,63,5,"$15,000 under $20,000",14,490746.0
-tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns | 62.0,BK,63,6,"$20,000 under $25,000",15,500858.0
-tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns | 62.0,BK,63,7,"$25,000 under $30,000",16,532022.0
-tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns | 62.0,BK,63,8,"$30,000 under $35,000",17,462326.0
-tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns | 62.0,BK,63,9,"$35,000 under $40,000",18,457498.0
-tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns | 62.0,BK,63,10,"$40,000 under $45,000",19,452333.0
-tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns | 62.0,BK,63,11,"$45,000 under $50,000",20,390758.0
-tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns | 62.0,BK,63,12,"$50,000 under $55,000",21,404991.0
-tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns | 62.0,BK,63,13,"$55,000 under $60,000",22,423434.0
-tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns | 62.0,BK,63,14,"$60,000 under $75,000",23,992870.0
-tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns | 62.0,BK,63,15,"$75,000 under $100,000",24,1222955.0
-tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns | 62.0,BK,63,16,"$100,000 under $200,000",25,1306677.0
-tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns | 62.0,BK,63,17,"$200,000 under $500,000",26,159468.0
-tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns | 62.0,BK,63,18,"$500,000 under $1,000,000",27,7735.0
-tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns | 62.0,BK,63,19,"$1,000,000 under $1,500,000",28,972.0
-tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns | 62.0,BK,63,20,"$1,500,000 under $2,000,000",29,301.0
-tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns | 62.0,BK,63,21,"$2,000,000 under $5,000,000",30,242.0
-tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns | 62.0,BK,63,22,"$5,000,000 under $10,000,000",31,22.0
-tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns | 62.0,BK,63,23,"$10,000,000 or more",32,0.0
-tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Amount | 63.0,BL,64,1,"All returns, total",10,86931032000.0
-tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Amount | 63.0,BL,64,2,"Under $5,000",11,2108042000.0
-tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Amount | 63.0,BL,64,3,"$5,000 under $10,000",12,3013542000.0
-tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Amount | 63.0,BL,64,4,"$10,000 under $15,000",13,3936086000.0
-tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Amount | 63.0,BL,64,5,"$15,000 under $20,000",14,4297932000.0
-tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Amount | 63.0,BL,64,6,"$20,000 under $25,000",15,4344639000.0
-tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Amount | 63.0,BL,64,7,"$25,000 under $30,000",16,4753902000.0
-tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Amount | 63.0,BL,64,8,"$30,000 under $35,000",17,4039786000.0
-tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Amount | 63.0,BL,64,9,"$35,000 under $40,000",18,4079939000.0
-tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Amount | 63.0,BL,64,10,"$40,000 under $45,000",19,3972063000.0
-tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Amount | 63.0,BL,64,11,"$45,000 under $50,000",20,3375631000.0
-tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Amount | 63.0,BL,64,12,"$50,000 under $55,000",21,3696461000.0
-tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Amount | 63.0,BL,64,13,"$55,000 under $60,000",22,3889988000.0
-tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Amount | 63.0,BL,64,14,"$60,000 under $75,000",23,9137304000.0
-tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Amount | 63.0,BL,64,15,"$75,000 under $100,000",24,12672435000.0
-tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Amount | 63.0,BL,64,16,"$100,000 under $200,000",25,14963159000.0
-tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Amount | 63.0,BL,64,17,"$200,000 under $500,000",26,3896808000.0
-tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Amount | 63.0,BL,64,18,"$500,000 under $1,000,000",27,565102000.0
-tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Amount | 63.0,BL,64,19,"$1,000,000 under $1,500,000",28,110275000.0
-tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Amount | 63.0,BL,64,20,"$1,500,000 under $2,000,000",29,32909000.0
-tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Amount | 63.0,BL,64,21,"$2,000,000 under $5,000,000",30,36553000.0
-tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Amount | 63.0,BL,64,22,"$5,000,000 under $10,000,000",31,8477000.0
-tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Amount | 63.0,BL,64,23,"$10,000,000 or more",32,0.0
-tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Total medical expenses | Number of returns | 64.0,BM,65,1,"All returns, total",10,8776985.0
-tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Total medical expenses | Number of returns | 64.0,BM,65,2,"Under $5,000",11,227519.0
-tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Total medical expenses | Number of returns | 64.0,BM,65,3,"$5,000 under $10,000",12,279663.0
-tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Total medical expenses | Number of returns | 64.0,BM,65,4,"$10,000 under $15,000",13,463596.0
-tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Total medical expenses | Number of returns | 64.0,BM,65,5,"$15,000 under $20,000",14,490746.0
-tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Total medical expenses | Number of returns | 64.0,BM,65,6,"$20,000 under $25,000",15,500858.0
-tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Total medical expenses | Number of returns | 64.0,BM,65,7,"$25,000 under $30,000",16,532022.0
-tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Total medical expenses | Number of returns | 64.0,BM,65,8,"$30,000 under $35,000",17,462326.0
-tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Total medical expenses | Number of returns | 64.0,BM,65,9,"$35,000 under $40,000",18,457498.0
-tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Total medical expenses | Number of returns | 64.0,BM,65,10,"$40,000 under $45,000",19,452333.0
-tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Total medical expenses | Number of returns | 64.0,BM,65,11,"$45,000 under $50,000",20,390758.0
-tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Total medical expenses | Number of returns | 64.0,BM,65,12,"$50,000 under $55,000",21,404991.0
-tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Total medical expenses | Number of returns | 64.0,BM,65,13,"$55,000 under $60,000",22,423434.0
-tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Total medical expenses | Number of returns | 64.0,BM,65,14,"$60,000 under $75,000",23,992870.0
-tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Total medical expenses | Number of returns | 64.0,BM,65,15,"$75,000 under $100,000",24,1222955.0
-tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Total medical expenses | Number of returns | 64.0,BM,65,16,"$100,000 under $200,000",25,1306677.0
-tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Total medical expenses | Number of returns | 64.0,BM,65,17,"$200,000 under $500,000",26,159468.0
-tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Total medical expenses | Number of returns | 64.0,BM,65,18,"$500,000 under $1,000,000",27,7735.0
-tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Total medical expenses | Number of returns | 64.0,BM,65,19,"$1,000,000 under $1,500,000",28,972.0
-tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Total medical expenses | Number of returns | 64.0,BM,65,20,"$1,500,000 under $2,000,000",29,301.0
-tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Total medical expenses | Number of returns | 64.0,BM,65,21,"$2,000,000 under $5,000,000",30,242.0
-tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Total medical expenses | Number of returns | 64.0,BM,65,22,"$5,000,000 under $10,000,000",31,22.0
-tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Total medical expenses | Number of returns | 64.0,BM,65,23,"$10,000,000 or more",32,0.0
-tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Amount | 65.0,BN,66,1,"All returns, total",10,133785340000.0
-tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Amount | 65.0,BN,66,2,"Under $5,000",11,2154665000.0
-tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Amount | 65.0,BN,66,3,"$5,000 under $10,000",12,3188696000.0
-tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Amount | 65.0,BN,66,4,"$10,000 under $15,000",13,4414676000.0
-tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Amount | 65.0,BN,66,5,"$15,000 under $20,000",14,5007572000.0
-tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Amount | 65.0,BN,66,6,"$20,000 under $25,000",15,5295009000.0
-tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Amount | 65.0,BN,66,7,"$25,000 under $30,000",16,6013365000.0
-tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Amount | 65.0,BN,66,8,"$30,000 under $35,000",17,5344248000.0
-tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Amount | 65.0,BN,66,9,"$35,000 under $40,000",18,5585290000.0
-tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Amount | 65.0,BN,66,10,"$40,000 under $45,000",19,5649836000.0
-tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Amount | 65.0,BN,66,11,"$45,000 under $50,000",20,5000049000.0
-tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Amount | 65.0,BN,66,12,"$50,000 under $55,000",21,5553125000.0
-tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Amount | 65.0,BN,66,13,"$55,000 under $60,000",22,6003880000.0
-tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Amount | 65.0,BN,66,14,"$60,000 under $75,000",23,14889171000.0
-tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Amount | 65.0,BN,66,15,"$75,000 under $100,000",24,21727339000.0
-tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Amount | 65.0,BN,66,16,"$100,000 under $200,000",25,29283649000.0
-tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Amount | 65.0,BN,66,17,"$200,000 under $500,000",26,7318921000.0
-tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Amount | 65.0,BN,66,18,"$500,000 under $1,000,000",27,977355000.0
-tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Amount | 65.0,BN,66,19,"$1,000,000 under $1,500,000",28,201698000.0
-tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Amount | 65.0,BN,66,20,"$1,500,000 under $2,000,000",29,74403000.0
-tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Amount | 65.0,BN,66,21,"$2,000,000 under $5,000,000",30,83393000.0
-tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Amount | 65.0,BN,66,22,"$5,000,000 under $10,000,000",31,18999000.0
-tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Amount | 65.0,BN,66,23,"$10,000,000 or more",32,0.0
-tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Taxes paid deduction | Total | Number of returns | 68.0,BQ,69,1,"All returns, total",10,44191436.0
-tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Taxes paid deduction | Total | Number of returns | 68.0,BQ,69,2,"Under $5,000",11,297983.0
-tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Taxes paid deduction | Total | Number of returns | 68.0,BQ,69,3,"$5,000 under $10,000",12,366055.0
-tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Taxes paid deduction | Total | Number of returns | 68.0,BQ,69,4,"$10,000 under $15,000",13,627733.0
-tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Taxes paid deduction | Total | Number of returns | 68.0,BQ,69,5,"$15,000 under $20,000",14,774558.0
-tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Taxes paid deduction | Total | Number of returns | 68.0,BQ,69,6,"$20,000 under $25,000",15,909333.0
-tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Taxes paid deduction | Total | Number of returns | 68.0,BQ,69,7,"$25,000 under $30,000",16,1055485.0
-tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Taxes paid deduction | Total | Number of returns | 68.0,BQ,69,8,"$30,000 under $35,000",17,1172960.0
-tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Taxes paid deduction | Total | Number of returns | 68.0,BQ,69,9,"$35,000 under $40,000",18,1348557.0
-tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Taxes paid deduction | Total | Number of returns | 68.0,BQ,69,10,"$40,000 under $45,000",19,1433569.0
-tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Taxes paid deduction | Total | Number of returns | 68.0,BQ,69,11,"$45,000 under $50,000",20,1508367.0
-tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Taxes paid deduction | Total | Number of returns | 68.0,BQ,69,12,"$50,000 under $55,000",21,1513839.0
-tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Taxes paid deduction | Total | Number of returns | 68.0,BQ,69,13,"$55,000 under $60,000",22,1531024.0
-tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Taxes paid deduction | Total | Number of returns | 68.0,BQ,69,14,"$60,000 under $75,000",23,4408450.0
-tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Taxes paid deduction | Total | Number of returns | 68.0,BQ,69,15,"$75,000 under $100,000",24,6930059.0
-tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Taxes paid deduction | Total | Number of returns | 68.0,BQ,69,16,"$100,000 under $200,000",25,14013820.0
-tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Taxes paid deduction | Total | Number of returns | 68.0,BQ,69,17,"$200,000 under $500,000",26,5078493.0
-tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Taxes paid deduction | Total | Number of returns | 68.0,BQ,69,18,"$500,000 under $1,000,000",27,821083.0
-tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Taxes paid deduction | Total | Number of returns | 68.0,BQ,69,19,"$1,000,000 under $1,500,000",28,177352.0
-tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Taxes paid deduction | Total | Number of returns | 68.0,BQ,69,20,"$1,500,000 under $2,000,000",29,71618.0
-tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Taxes paid deduction | Total | Number of returns | 68.0,BQ,69,21,"$2,000,000 under $5,000,000",30,106564.0
-tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Taxes paid deduction | Total | Number of returns | 68.0,BQ,69,22,"$5,000,000 under $10,000,000",31,27086.0
-tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Taxes paid deduction | Total | Number of returns | 68.0,BQ,69,23,"$10,000,000 or more",32,17449.0
-tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Amount | 69.0,BR,70,1,"All returns, total",10,553015621000.0
-tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Amount | 69.0,BR,70,2,"Under $5,000",11,1202092000.0
-tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Amount | 69.0,BR,70,3,"$5,000 under $10,000",12,1341118000.0
-tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Amount | 69.0,BR,70,4,"$10,000 under $15,000",13,2181494000.0
-tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Amount | 69.0,BR,70,5,"$15,000 under $20,000",14,2687159000.0
-tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Amount | 69.0,BR,70,6,"$20,000 under $25,000",15,3074264000.0
-tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Amount | 69.0,BR,70,7,"$25,000 under $30,000",16,3612496000.0
-tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Amount | 69.0,BR,70,8,"$30,000 under $35,000",17,4280465000.0
-tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Amount | 69.0,BR,70,9,"$35,000 under $40,000",18,5378442000.0
-tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Amount | 69.0,BR,70,10,"$40,000 under $45,000",19,6020858000.0
-tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Amount | 69.0,BR,70,11,"$45,000 under $50,000",20,6570716000.0
-tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Amount | 69.0,BR,70,12,"$50,000 under $55,000",21,7333689000.0
-tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Amount | 69.0,BR,70,13,"$55,000 under $60,000",22,8121461000.0
-tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Amount | 69.0,BR,70,14,"$60,000 under $75,000",23,25543705000.0
-tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Amount | 69.0,BR,70,15,"$75,000 under $100,000",24,49969183000.0
-tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Amount | 69.0,BR,70,16,"$100,000 under $200,000",25,155473408000.0
-tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Amount | 69.0,BR,70,17,"$200,000 under $500,000",26,115531174000.0
-tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Amount | 69.0,BR,70,18,"$500,000 under $1,000,000",27,44741560000.0
-tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Amount | 69.0,BR,70,19,"$1,000,000 under $1,500,000",28,17925210000.0
-tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Amount | 69.0,BR,70,20,"$1,500,000 under $2,000,000",29,10477365000.0
-tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Amount | 69.0,BR,70,21,"$2,000,000 under $5,000,000",30,26710615000.0
-tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Amount | 69.0,BR,70,22,"$5,000,000 under $10,000,000",31,14830289000.0
-tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Amount | 69.0,BR,70,23,"$10,000,000 or more",32,40008857000.0
-tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,State and local taxes | Total | Number of returns | 70.0,BS,71,1,"All returns, total",10,42690831.0
-tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,State and local taxes | Total | Number of returns | 70.0,BS,71,2,"Under $5,000",11,246102.0
-tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,State and local taxes | Total | Number of returns | 70.0,BS,71,3,"$5,000 under $10,000",12,320279.0
-tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,State and local taxes | Total | Number of returns | 70.0,BS,71,4,"$10,000 under $15,000",13,558434.0
-tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,State and local taxes | Total | Number of returns | 70.0,BS,71,5,"$15,000 under $20,000",14,713832.0
-tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,State and local taxes | Total | Number of returns | 70.0,BS,71,6,"$20,000 under $25,000",15,843241.0
-tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,State and local taxes | Total | Number of returns | 70.0,BS,71,7,"$25,000 under $30,000",16,985616.0
-tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,State and local taxes | Total | Number of returns | 70.0,BS,71,8,"$30,000 under $35,000",17,1102890.0
-tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,State and local taxes | Total | Number of returns | 70.0,BS,71,9,"$35,000 under $40,000",18,1272689.0
-tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,State and local taxes | Total | Number of returns | 70.0,BS,71,10,"$40,000 under $45,000",19,1367500.0
-tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,State and local taxes | Total | Number of returns | 70.0,BS,71,11,"$45,000 under $50,000",20,1441232.0
-tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,State and local taxes | Total | Number of returns | 70.0,BS,71,12,"$50,000 under $55,000",21,1458211.0
-tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,State and local taxes | Total | Number of returns | 70.0,BS,71,13,"$55,000 under $60,000",22,1487190.0
-tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,State and local taxes | Total | Number of returns | 70.0,BS,71,14,"$60,000 under $75,000",23,4246802.0
-tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,State and local taxes | Total | Number of returns | 70.0,BS,71,15,"$75,000 under $100,000",24,6750154.0
-tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,State and local taxes | Total | Number of returns | 70.0,BS,71,16,"$100,000 under $200,000",25,13687177.0
-tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,State and local taxes | Total | Number of returns | 70.0,BS,71,17,"$200,000 under $500,000",26,4996108.0
-tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,State and local taxes | Total | Number of returns | 70.0,BS,71,18,"$500,000 under $1,000,000",27,815393.0
-tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,State and local taxes | Total | Number of returns | 70.0,BS,71,19,"$1,000,000 under $1,500,000",28,176304.0
-tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,State and local taxes | Total | Number of returns | 70.0,BS,71,20,"$1,500,000 under $2,000,000",29,71240.0
-tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,State and local taxes | Total | Number of returns | 70.0,BS,71,21,"$2,000,000 under $5,000,000",30,106105.0
-tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,State and local taxes | Total | Number of returns | 70.0,BS,71,22,"$5,000,000 under $10,000,000",31,26956.0
-tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,State and local taxes | Total | Number of returns | 70.0,BS,71,23,"$10,000,000 or more",32,17376.0
-tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Amount | 71.0,BT,72,1,"All returns, total",10,352701327000.0
-tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Amount | 71.0,BT,72,2,"Under $5,000",11,334608000.0
-tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Amount | 71.0,BT,72,3,"$5,000 under $10,000",12,254813000.0
-tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Amount | 71.0,BT,72,4,"$10,000 under $15,000",13,484707000.0
-tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Amount | 71.0,BT,72,5,"$15,000 under $20,000",14,646722000.0
-tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Amount | 71.0,BT,72,6,"$20,000 under $25,000",15,862394000.0
-tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Amount | 71.0,BT,72,7,"$25,000 under $30,000",16,1167016000.0
-tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Amount | 71.0,BT,72,8,"$30,000 under $35,000",17,1444306000.0
-tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Amount | 71.0,BT,72,9,"$35,000 under $40,000",18,1951818000.0
-tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Amount | 71.0,BT,72,10,"$40,000 under $45,000",19,2475885000.0
-tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Amount | 71.0,BT,72,11,"$45,000 under $50,000",20,2773525000.0
-tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Amount | 71.0,BT,72,12,"$50,000 under $55,000",21,3222481000.0
-tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Amount | 71.0,BT,72,13,"$55,000 under $60,000",22,3569080000.0
-tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Amount | 71.0,BT,72,14,"$60,000 under $75,000",23,12039359000.0
-tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Amount | 71.0,BT,72,15,"$75,000 under $100,000",24,25702146000.0
-tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Amount | 71.0,BT,72,16,"$100,000 under $200,000",25,88169074000.0
-tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Amount | 71.0,BT,72,17,"$200,000 under $500,000",26,75495221000.0
-tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Amount | 71.0,BT,72,18,"$500,000 under $1,000,000",27,33498075000.0
-tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Amount | 71.0,BT,72,19,"$1,000,000 under $1,500,000",28,14501840000.0
-tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Amount | 71.0,BT,72,20,"$1,500,000 under $2,000,000",29,8760268000.0
-tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Amount | 71.0,BT,72,21,"$2,000,000 under $5,000,000",30,23381334000.0
-tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Amount | 71.0,BT,72,22,"$5,000,000 under $10,000,000",31,13555298000.0
-tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Amount | 71.0,BT,72,23,"$10,000,000 or more",32,38411360000.0
-tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Income tax | Number of returns | 72.0,BU,73,1,"All returns, total",10,33063383.0
-tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Income tax | Number of returns | 72.0,BU,73,2,"Under $5,000",11,74184.0
-tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Income tax | Number of returns | 72.0,BU,73,3,"$5,000 under $10,000",12,98328.0
-tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Income tax | Number of returns | 72.0,BU,73,4,"$10,000 under $15,000",13,192403.0
-tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Income tax | Number of returns | 72.0,BU,73,5,"$15,000 under $20,000",14,313094.0
-tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Income tax | Number of returns | 72.0,BU,73,6,"$20,000 under $25,000",15,406796.0
-tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Income tax | Number of returns | 72.0,BU,73,7,"$25,000 under $30,000",16,557060.0
-tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Income tax | Number of returns | 72.0,BU,73,8,"$30,000 under $35,000",17,693840.0
-tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Income tax | Number of returns | 72.0,BU,73,9,"$35,000 under $40,000",18,899962.0
-tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Income tax | Number of returns | 72.0,BU,73,10,"$40,000 under $45,000",19,955900.0
-tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Income tax | Number of returns | 72.0,BU,73,11,"$45,000 under $50,000",20,1049616.0
-tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Income tax | Number of returns | 72.0,BU,73,12,"$50,000 under $55,000",21,1103076.0
-tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Income tax | Number of returns | 72.0,BU,73,13,"$55,000 under $60,000",22,1126872.0
-tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Income tax | Number of returns | 72.0,BU,73,14,"$60,000 under $75,000",23,3290380.0
-tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Income tax | Number of returns | 72.0,BU,73,15,"$75,000 under $100,000",24,5511568.0
-tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Income tax | Number of returns | 72.0,BU,73,16,"$100,000 under $200,000",25,11533393.0
-tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Income tax | Number of returns | 72.0,BU,73,17,"$200,000 under $500,000",26,4212361.0
-tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Income tax | Number of returns | 72.0,BU,73,18,"$500,000 under $1,000,000",27,696445.0
-tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Income tax | Number of returns | 72.0,BU,73,19,"$1,000,000 under $1,500,000",28,152902.0
-tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Income tax | Number of returns | 72.0,BU,73,20,"$1,500,000 under $2,000,000",29,62412.0
-tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Income tax | Number of returns | 72.0,BU,73,21,"$2,000,000 under $5,000,000",30,93602.0
-tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Income tax | Number of returns | 72.0,BU,73,22,"$5,000,000 under $10,000,000",31,23772.0
-tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Income tax | Number of returns | 72.0,BU,73,23,"$10,000,000 or more",32,15419.0
-tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Amount | 73.0,BV,74,1,"All returns, total",10,335060168000.0
-tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Amount | 73.0,BV,74,2,"Under $5,000",11,247368000.0
-tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Amount | 73.0,BV,74,3,"$5,000 under $10,000",12,144224000.0
-tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Amount | 73.0,BV,74,4,"$10,000 under $15,000",13,242932000.0
-tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Amount | 73.0,BV,74,5,"$15,000 under $20,000",14,352591000.0
-tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Amount | 73.0,BV,74,6,"$20,000 under $25,000",15,503057000.0
-tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Amount | 73.0,BV,74,7,"$25,000 under $30,000",16,766251000.0
-tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Amount | 73.0,BV,74,8,"$30,000 under $35,000",17,1041293000.0
-tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Amount | 73.0,BV,74,9,"$35,000 under $40,000",18,1511583000.0
-tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Amount | 73.0,BV,74,10,"$40,000 under $45,000",19,1985224000.0
-tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Amount | 73.0,BV,74,11,"$45,000 under $50,000",20,2305387000.0
-tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Amount | 73.0,BV,74,12,"$50,000 under $55,000",21,2749265000.0
-tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Amount | 73.0,BV,74,13,"$55,000 under $60,000",22,3107467000.0
-tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Amount | 73.0,BV,74,14,"$60,000 under $75,000",23,10587597000.0
-tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Amount | 73.0,BV,74,15,"$75,000 under $100,000",24,23415401000.0
-tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Amount | 73.0,BV,74,16,"$100,000 under $200,000",25,82897472000.0
-tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Amount | 73.0,BV,74,17,"$200,000 under $500,000",26,72653258000.0
-tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Amount | 73.0,BV,74,18,"$500,000 under $1,000,000",27,32864770000.0
-tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Amount | 73.0,BV,74,19,"$1,000,000 under $1,500,000",28,14294115000.0
-tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Amount | 73.0,BV,74,20,"$1,500,000 under $2,000,000",29,8670169000.0
-tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Amount | 73.0,BV,74,21,"$2,000,000 under $5,000,000",30,23164930000.0
-tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Amount | 73.0,BV,74,22,"$5,000,000 under $10,000,000",31,13447411000.0
-tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Amount | 73.0,BV,74,23,"$10,000,000 or more",32,38108401000.0
-tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,General sales tax | Number of returns | 74.0,BW,75,1,"All returns, total",10,9627447.0
-tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,General sales tax | Number of returns | 74.0,BW,75,2,"Under $5,000",11,171918.0
-tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,General sales tax | Number of returns | 74.0,BW,75,3,"$5,000 under $10,000",12,221951.0
-tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,General sales tax | Number of returns | 74.0,BW,75,4,"$10,000 under $15,000",13,366031.0
-tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,General sales tax | Number of returns | 74.0,BW,75,5,"$15,000 under $20,000",14,400738.0
-tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,General sales tax | Number of returns | 74.0,BW,75,6,"$20,000 under $25,000",15,436445.0
-tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,General sales tax | Number of returns | 74.0,BW,75,7,"$25,000 under $30,000",16,428556.0
-tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,General sales tax | Number of returns | 74.0,BW,75,8,"$30,000 under $35,000",17,409050.0
-tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,General sales tax | Number of returns | 74.0,BW,75,9,"$35,000 under $40,000",18,372727.0
-tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,General sales tax | Number of returns | 74.0,BW,75,10,"$40,000 under $45,000",19,411600.0
-tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,General sales tax | Number of returns | 74.0,BW,75,11,"$45,000 under $50,000",20,391616.0
-tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,General sales tax | Number of returns | 74.0,BW,75,12,"$50,000 under $55,000",21,355135.0
-tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,General sales tax | Number of returns | 74.0,BW,75,13,"$55,000 under $60,000",22,360318.0
-tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,General sales tax | Number of returns | 74.0,BW,75,14,"$60,000 under $75,000",23,956422.0
-tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,General sales tax | Number of returns | 74.0,BW,75,15,"$75,000 under $100,000",24,1238586.0
-tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,General sales tax | Number of returns | 74.0,BW,75,16,"$100,000 under $200,000",25,2153784.0
-tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,General sales tax | Number of returns | 74.0,BW,75,17,"$200,000 under $500,000",26,783747.0
-tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,General sales tax | Number of returns | 74.0,BW,75,18,"$500,000 under $1,000,000",27,118949.0
-tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,General sales tax | Number of returns | 74.0,BW,75,19,"$1,000,000 under $1,500,000",28,23402.0
-tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,General sales tax | Number of returns | 74.0,BW,75,20,"$1,500,000 under $2,000,000",29,8828.0
-tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,General sales tax | Number of returns | 74.0,BW,75,21,"$2,000,000 under $5,000,000",30,12503.0
-tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,General sales tax | Number of returns | 74.0,BW,75,22,"$5,000,000 under $10,000,000",31,3184.0
-tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,General sales tax | Number of returns | 74.0,BW,75,23,"$10,000,000 or more",32,1957.0
-tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Amount | 75.0,BX,76,1,"All returns, total",10,17641159000.0
-tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Amount | 75.0,BX,76,2,"Under $5,000",11,87240000.0
-tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Amount | 75.0,BX,76,3,"$5,000 under $10,000",12,110588000.0
-tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Amount | 75.0,BX,76,4,"$10,000 under $15,000",13,241775000.0
-tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Amount | 75.0,BX,76,5,"$15,000 under $20,000",14,294130000.0
-tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Amount | 75.0,BX,76,6,"$20,000 under $25,000",15,359337000.0
-tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Amount | 75.0,BX,76,7,"$25,000 under $30,000",16,400764000.0
-tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Amount | 75.0,BX,76,8,"$30,000 under $35,000",17,403013000.0
-tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Amount | 75.0,BX,76,9,"$35,000 under $40,000",18,440235000.0
-tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Amount | 75.0,BX,76,10,"$40,000 under $45,000",19,490661000.0
-tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Amount | 75.0,BX,76,11,"$45,000 under $50,000",20,468137000.0
-tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Amount | 75.0,BX,76,12,"$50,000 under $55,000",21,473215000.0
-tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Amount | 75.0,BX,76,13,"$55,000 under $60,000",22,461612000.0
-tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Amount | 75.0,BX,76,14,"$60,000 under $75,000",23,1451762000.0
-tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Amount | 75.0,BX,76,15,"$75,000 under $100,000",24,2286745000.0
-tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Amount | 75.0,BX,76,16,"$100,000 under $200,000",25,5271602000.0
-tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Amount | 75.0,BX,76,17,"$200,000 under $500,000",26,2841962000.0
-tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Amount | 75.0,BX,76,18,"$500,000 under $1,000,000",27,633305000.0
-tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Amount | 75.0,BX,76,19,"$1,000,000 under $1,500,000",28,207725000.0
-tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Amount | 75.0,BX,76,20,"$1,500,000 under $2,000,000",29,90099000.0
-tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Amount | 75.0,BX,76,21,"$2,000,000 under $5,000,000",30,216404000.0
-tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Amount | 75.0,BX,76,22,"$5,000,000 under $10,000,000",31,107886000.0
-tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Amount | 75.0,BX,76,23,"$10,000,000 or more",32,302960000.0
-tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Real estate taxes | Number of returns | 76.0,BY,77,1,"All returns, total",10,37613402.0
-tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Real estate taxes | Number of returns | 76.0,BY,77,2,"Under $5,000",11,218583.0
-tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Real estate taxes | Number of returns | 76.0,BY,77,3,"$5,000 under $10,000",12,280431.0
-tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Real estate taxes | Number of returns | 76.0,BY,77,4,"$10,000 under $15,000",13,472620.0
-tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Real estate taxes | Number of returns | 76.0,BY,77,5,"$15,000 under $20,000",14,557094.0
-tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Real estate taxes | Number of returns | 76.0,BY,77,6,"$20,000 under $25,000",15,616136.0
-tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Real estate taxes | Number of returns | 76.0,BY,77,7,"$25,000 under $30,000",16,689101.0
-tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Real estate taxes | Number of returns | 76.0,BY,77,8,"$30,000 under $35,000",17,810615.0
-tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Real estate taxes | Number of returns | 76.0,BY,77,9,"$35,000 under $40,000",18,974691.0
-tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Real estate taxes | Number of returns | 76.0,BY,77,10,"$40,000 under $45,000",19,1069338.0
-tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Real estate taxes | Number of returns | 76.0,BY,77,11,"$45,000 under $50,000",20,1168152.0
-tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Real estate taxes | Number of returns | 76.0,BY,77,12,"$50,000 under $55,000",21,1190018.0
-tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Real estate taxes | Number of returns | 76.0,BY,77,13,"$55,000 under $60,000",22,1265965.0
-tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Real estate taxes | Number of returns | 76.0,BY,77,14,"$60,000 under $75,000",23,3667656.0
-tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Real estate taxes | Number of returns | 76.0,BY,77,15,"$75,000 under $100,000",24,6008425.0
-tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Real estate taxes | Number of returns | 76.0,BY,77,16,"$100,000 under $200,000",25,12792762.0
-tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Real estate taxes | Number of returns | 76.0,BY,77,17,"$200,000 under $500,000",26,4680598.0
-tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Real estate taxes | Number of returns | 76.0,BY,77,18,"$500,000 under $1,000,000",27,773517.0
-tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Real estate taxes | Number of returns | 76.0,BY,77,19,"$1,000,000 under $1,500,000",28,166703.0
-tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Real estate taxes | Number of returns | 76.0,BY,77,20,"$1,500,000 under $2,000,000",29,67912.0
-tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Real estate taxes | Number of returns | 76.0,BY,77,21,"$2,000,000 under $5,000,000",30,100774.0
-tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Real estate taxes | Number of returns | 76.0,BY,77,22,"$5,000,000 under $10,000,000",31,25647.0
-tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Real estate taxes | Number of returns | 76.0,BY,77,23,"$10,000,000 or more",32,16663.0
-tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Amount | 77.0,BZ,78,1,"All returns, total",10,188605843000.0
-tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Amount | 77.0,BZ,78,2,"Under $5,000",11,824302000.0
-tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Amount | 77.0,BZ,78,3,"$5,000 under $10,000",12,1007214000.0
-tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Amount | 77.0,BZ,78,4,"$10,000 under $15,000",13,1604278000.0
-tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Amount | 77.0,BZ,78,5,"$15,000 under $20,000",14,1916831000.0
-tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Amount | 77.0,BZ,78,6,"$20,000 under $25,000",15,2079351000.0
-tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Amount | 77.0,BZ,78,7,"$25,000 under $30,000",16,2261238000.0
-tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Amount | 77.0,BZ,78,8,"$30,000 under $35,000",17,2593568000.0
-tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Amount | 77.0,BZ,78,9,"$35,000 under $40,000",18,3149207000.0
-tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Amount | 77.0,BZ,78,10,"$40,000 under $45,000",19,3272842000.0
-tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Amount | 77.0,BZ,78,11,"$45,000 under $50,000",20,3506541000.0
-tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Amount | 77.0,BZ,78,12,"$50,000 under $55,000",21,3703059000.0
-tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Amount | 77.0,BZ,78,13,"$55,000 under $60,000",22,4220038000.0
-tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Amount | 77.0,BZ,78,14,"$60,000 under $75,000",23,12521110000.0
-tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Amount | 77.0,BZ,78,15,"$75,000 under $100,000",24,22612411000.0
-tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Amount | 77.0,BZ,78,16,"$100,000 under $200,000",25,63372425000.0
-tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Amount | 77.0,BZ,78,17,"$200,000 under $500,000",26,38337098000.0
-tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Amount | 77.0,BZ,78,18,"$500,000 under $1,000,000",27,10816724000.0
-tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Amount | 77.0,BZ,78,19,"$1,000,000 under $1,500,000",28,3286406000.0
-tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Amount | 77.0,BZ,78,20,"$1,500,000 under $2,000,000",29,1649775000.0
-tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Amount | 77.0,BZ,78,21,"$2,000,000 under $5,000,000",30,3177001000.0
-tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Amount | 77.0,BZ,78,22,"$5,000,000 under $10,000,000",31,1218981000.0
-tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Amount | 77.0,BZ,78,23,"$10,000,000 or more",32,1475443000.0
-tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Interest paid deduction | Total | Number of returns | 82.0,CE,83,1,"All returns, total",10,33301990.0
-tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Interest paid deduction | Total | Number of returns | 82.0,CE,83,2,"Under $5,000",11,172738.0
-tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Interest paid deduction | Total | Number of returns | 82.0,CE,83,3,"$5,000 under $10,000",12,194117.0
-tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Interest paid deduction | Total | Number of returns | 82.0,CE,83,4,"$10,000 under $15,000",13,347692.0
-tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Interest paid deduction | Total | Number of returns | 82.0,CE,83,5,"$15,000 under $20,000",14,428197.0
-tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Interest paid deduction | Total | Number of returns | 82.0,CE,83,6,"$20,000 under $25,000",15,460451.0
-tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Interest paid deduction | Total | Number of returns | 82.0,CE,83,7,"$25,000 under $30,000",16,587849.0
-tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Interest paid deduction | Total | Number of returns | 82.0,CE,83,8,"$30,000 under $35,000",17,666457.0
-tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Interest paid deduction | Total | Number of returns | 82.0,CE,83,9,"$35,000 under $40,000",18,841538.0
-tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Interest paid deduction | Total | Number of returns | 82.0,CE,83,10,"$40,000 under $45,000",19,948445.0
-tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Interest paid deduction | Total | Number of returns | 82.0,CE,83,11,"$45,000 under $50,000",20,1043221.0
-tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Interest paid deduction | Total | Number of returns | 82.0,CE,83,12,"$50,000 under $55,000",21,1073182.0
-tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Interest paid deduction | Total | Number of returns | 82.0,CE,83,13,"$55,000 under $60,000",22,1130318.0
-tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Interest paid deduction | Total | Number of returns | 82.0,CE,83,14,"$60,000 under $75,000",23,3249632.0
-tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Interest paid deduction | Total | Number of returns | 82.0,CE,83,15,"$75,000 under $100,000",24,5450663.0
-tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Interest paid deduction | Total | Number of returns | 82.0,CE,83,16,"$100,000 under $200,000",25,11629322.0
-tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Interest paid deduction | Total | Number of returns | 82.0,CE,83,17,"$200,000 under $500,000",26,4106793.0
-tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Interest paid deduction | Total | Number of returns | 82.0,CE,83,18,"$500,000 under $1,000,000",27,657620.0
-tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Interest paid deduction | Total | Number of returns | 82.0,CE,83,19,"$1,000,000 under $1,500,000",28,137332.0
-tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Interest paid deduction | Total | Number of returns | 82.0,CE,83,20,"$1,500,000 under $2,000,000",29,55881.0
-tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Interest paid deduction | Total | Number of returns | 82.0,CE,83,21,"$2,000,000 under $5,000,000",30,84234.0
-tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Interest paid deduction | Total | Number of returns | 82.0,CE,83,22,"$5,000,000 under $10,000,000",31,21758.0
-tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Interest paid deduction | Total | Number of returns | 82.0,CE,83,23,"$10,000,000 or more",32,14548.0
-tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Amount | 83.0,CF,84,1,"All returns, total",10,304461163000.0
-tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Amount | 83.0,CF,84,2,"Under $5,000",11,1231416000.0
-tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Amount | 83.0,CF,84,3,"$5,000 under $10,000",12,1284063000.0
-tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Amount | 83.0,CF,84,4,"$10,000 under $15,000",13,2148799000.0
-tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Amount | 83.0,CF,84,5,"$15,000 under $20,000",14,2699978000.0
-tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Amount | 83.0,CF,84,6,"$20,000 under $25,000",15,3181401000.0
-tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Amount | 83.0,CF,84,7,"$25,000 under $30,000",16,3748228000.0
-tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Amount | 83.0,CF,84,8,"$30,000 under $35,000",17,4214763000.0
-tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Amount | 83.0,CF,84,9,"$35,000 under $40,000",18,5435778000.0
-tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Amount | 83.0,CF,84,10,"$40,000 under $45,000",19,6009927000.0
-tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Amount | 83.0,CF,84,11,"$45,000 under $50,000",20,6888540000.0
-tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Amount | 83.0,CF,84,12,"$50,000 under $55,000",21,6955789000.0
-tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Amount | 83.0,CF,84,13,"$55,000 under $60,000",22,7424513000.0
-tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Amount | 83.0,CF,84,14,"$60,000 under $75,000",23,23294604000.0
-tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Amount | 83.0,CF,84,15,"$75,000 under $100,000",24,43398259000.0
-tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Amount | 83.0,CF,84,16,"$100,000 under $200,000",25,104846625000.0
-tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Amount | 83.0,CF,84,17,"$200,000 under $500,000",26,53562301000.0
-tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Amount | 83.0,CF,84,18,"$500,000 under $1,000,000",27,12836968000.0
-tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Amount | 83.0,CF,84,19,"$1,000,000 under $1,500,000",28,3505209000.0
-tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Amount | 83.0,CF,84,20,"$1,500,000 under $2,000,000",29,1666807000.0
-tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Amount | 83.0,CF,84,21,"$2,000,000 under $5,000,000",30,3412493000.0
-tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Amount | 83.0,CF,84,22,"$5,000,000 under $10,000,000",31,1535736000.0
-tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Amount | 83.0,CF,84,23,"$10,000,000 or more",32,5178966000.0
-tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Home mortgage interest | Total | Number of returns | 84.0,CG,85,1,"All returns, total",10,32715927.0
-tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Home mortgage interest | Total | Number of returns | 84.0,CG,85,2,"Under $5,000",11,167028.0
-tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Home mortgage interest | Total | Number of returns | 84.0,CG,85,3,"$5,000 under $10,000",12,185501.0
-tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Home mortgage interest | Total | Number of returns | 84.0,CG,85,4,"$10,000 under $15,000",13,338276.0
-tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Home mortgage interest | Total | Number of returns | 84.0,CG,85,5,"$15,000 under $20,000",14,418199.0
-tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Home mortgage interest | Total | Number of returns | 84.0,CG,85,6,"$20,000 under $25,000",15,447688.0
-tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Home mortgage interest | Total | Number of returns | 84.0,CG,85,7,"$25,000 under $30,000",16,578143.0
-tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Home mortgage interest | Total | Number of returns | 84.0,CG,85,8,"$30,000 under $35,000",17,654008.0
-tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Home mortgage interest | Total | Number of returns | 84.0,CG,85,9,"$35,000 under $40,000",18,830762.0
-tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Home mortgage interest | Total | Number of returns | 84.0,CG,85,10,"$40,000 under $45,000",19,939209.0
-tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Home mortgage interest | Total | Number of returns | 84.0,CG,85,11,"$45,000 under $50,000",20,1036215.0
-tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Home mortgage interest | Total | Number of returns | 84.0,CG,85,12,"$50,000 under $55,000",21,1064122.0
-tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Home mortgage interest | Total | Number of returns | 84.0,CG,85,13,"$55,000 under $60,000",22,1119573.0
-tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Home mortgage interest | Total | Number of returns | 84.0,CG,85,14,"$60,000 under $75,000",23,3210259.0
-tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Home mortgage interest | Total | Number of returns | 84.0,CG,85,15,"$75,000 under $100,000",24,5392086.0
-tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Home mortgage interest | Total | Number of returns | 84.0,CG,85,16,"$100,000 under $200,000",25,11482206.0
-tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Home mortgage interest | Total | Number of returns | 84.0,CG,85,17,"$200,000 under $500,000",26,3988588.0
-tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Home mortgage interest | Total | Number of returns | 84.0,CG,85,18,"$500,000 under $1,000,000",27,608613.0
-tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Home mortgage interest | Total | Number of returns | 84.0,CG,85,19,"$1,000,000 under $1,500,000",28,119694.0
-tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Home mortgage interest | Total | Number of returns | 84.0,CG,85,20,"$1,500,000 under $2,000,000",29,47055.0
-tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Home mortgage interest | Total | Number of returns | 84.0,CG,85,21,"$2,000,000 under $5,000,000",30,65385.0
-tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Home mortgage interest | Total | Number of returns | 84.0,CG,85,22,"$5,000,000 under $10,000,000",31,15000.0
-tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Home mortgage interest | Total | Number of returns | 84.0,CG,85,23,"$10,000,000 or more",32,8316.0
-tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Amount | 85.0,CH,86,1,"All returns, total",10,283004465000.0
-tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Amount | 85.0,CH,86,2,"Under $5,000",11,1174521000.0
-tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Amount | 85.0,CH,86,3,"$5,000 under $10,000",12,1237451000.0
-tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Amount | 85.0,CH,86,4,"$10,000 under $15,000",13,2083827000.0
-tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Amount | 85.0,CH,86,5,"$15,000 under $20,000",14,2589295000.0
-tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Amount | 85.0,CH,86,6,"$20,000 under $25,000",15,2992991000.0
-tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Amount | 85.0,CH,86,7,"$25,000 under $30,000",16,3591380000.0
-tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Amount | 85.0,CH,86,8,"$30,000 under $35,000",17,3946351000.0
-tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Amount | 85.0,CH,86,9,"$35,000 under $40,000",18,5122692000.0
-tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Amount | 85.0,CH,86,10,"$40,000 under $45,000",19,5651139000.0
-tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Amount | 85.0,CH,86,11,"$45,000 under $50,000",20,6411648000.0
-tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Amount | 85.0,CH,86,12,"$50,000 under $55,000",21,6543517000.0
-tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Amount | 85.0,CH,86,13,"$55,000 under $60,000",22,6985554000.0
-tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Amount | 85.0,CH,86,14,"$60,000 under $75,000",23,21825640000.0
-tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Amount | 85.0,CH,86,15,"$75,000 under $100,000",24,40897449000.0
-tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Amount | 85.0,CH,86,16,"$100,000 under $200,000",25,103319155000.0
-tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Amount | 85.0,CH,86,17,"$200,000 under $500,000",26,51606382000.0
-tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Amount | 85.0,CH,86,18,"$500,000 under $1,000,000",27,11335153000.0
-tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Amount | 85.0,CH,86,19,"$1,000,000 under $1,500,000",28,2559360000.0
-tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Amount | 85.0,CH,86,20,"$1,500,000 under $2,000,000",29,1043154000.0
-tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Amount | 85.0,CH,86,21,"$2,000,000 under $5,000,000",30,1521570000.0
-tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Amount | 85.0,CH,86,22,"$5,000,000 under $10,000,000",31,360807000.0
-tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Amount | 85.0,CH,86,23,"$10,000,000 or more",32,205431000.0
-tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Contributions deduction | Total | Number of returns | 96.0,CS,97,1,"All returns, total",10,36623657.0
-tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Contributions deduction | Total | Number of returns | 96.0,CS,97,2,"Under $5,000",11,186787.0
-tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Contributions deduction | Total | Number of returns | 96.0,CS,97,3,"$5,000 under $10,000",12,225979.0
-tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Contributions deduction | Total | Number of returns | 96.0,CS,97,4,"$10,000 under $15,000",13,423728.0
-tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Contributions deduction | Total | Number of returns | 96.0,CS,97,5,"$15,000 under $20,000",14,566996.0
-tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Contributions deduction | Total | Number of returns | 96.0,CS,97,6,"$20,000 under $25,000",15,645356.0
-tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Contributions deduction | Total | Number of returns | 96.0,CS,97,7,"$25,000 under $30,000",16,782028.0
-tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Contributions deduction | Total | Number of returns | 96.0,CS,97,8,"$30,000 under $35,000",17,845049.0
-tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Contributions deduction | Total | Number of returns | 96.0,CS,97,9,"$35,000 under $40,000",18,982127.0
-tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Contributions deduction | Total | Number of returns | 96.0,CS,97,10,"$40,000 under $45,000",19,1073843.0
-tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Contributions deduction | Total | Number of returns | 96.0,CS,97,11,"$45,000 under $50,000",20,1130376.0
-tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Contributions deduction | Total | Number of returns | 96.0,CS,97,12,"$50,000 under $55,000",21,1184881.0
-tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Contributions deduction | Total | Number of returns | 96.0,CS,97,13,"$55,000 under $60,000",22,1223037.0
-tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Contributions deduction | Total | Number of returns | 96.0,CS,97,14,"$60,000 under $75,000",23,3490689.0
-tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Contributions deduction | Total | Number of returns | 96.0,CS,97,15,"$75,000 under $100,000",24,5768411.0
-tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Contributions deduction | Total | Number of returns | 96.0,CS,97,16,"$100,000 under $200,000",25,12289353.0
-tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Contributions deduction | Total | Number of returns | 96.0,CS,97,17,"$200,000 under $500,000",26,4648589.0
-tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Contributions deduction | Total | Number of returns | 96.0,CS,97,18,"$500,000 under $1,000,000",27,772491.0
-tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Contributions deduction | Total | Number of returns | 96.0,CS,97,19,"$1,000,000 under $1,500,000",28,168980.0
-tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Contributions deduction | Total | Number of returns | 96.0,CS,97,20,"$1,500,000 under $2,000,000",29,68548.0
-tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Contributions deduction | Total | Number of returns | 96.0,CS,97,21,"$2,000,000 under $5,000,000",30,102964.0
-tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Contributions deduction | Total | Number of returns | 96.0,CS,97,22,"$5,000,000 under $10,000,000",31,26315.0
-tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Contributions deduction | Total | Number of returns | 96.0,CS,97,23,"$10,000,000 or more",32,17133.0
-tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Amount | 97.0,CT,98,1,"All returns, total",10,221850264000.0
-tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Amount | 97.0,CT,98,2,"Under $5,000",11,138539000.0
-tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Amount | 97.0,CT,98,3,"$5,000 under $10,000",12,316739000.0
-tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Amount | 97.0,CT,98,4,"$10,000 under $15,000",13,802263000.0
-tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Amount | 97.0,CT,98,5,"$15,000 under $20,000",14,1239419000.0
-tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Amount | 97.0,CT,98,6,"$20,000 under $25,000",15,1595153000.0
-tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Amount | 97.0,CT,98,7,"$25,000 under $30,000",16,2077193000.0
-tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Amount | 97.0,CT,98,8,"$30,000 under $35,000",17,2231311000.0
-tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Amount | 97.0,CT,98,9,"$35,000 under $40,000",18,2750188000.0
-tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Amount | 97.0,CT,98,10,"$40,000 under $45,000",19,3230088000.0
-tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Amount | 97.0,CT,98,11,"$45,000 under $50,000",20,3163725000.0
-tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Amount | 97.0,CT,98,12,"$50,000 under $55,000",21,3413481000.0
-tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Amount | 97.0,CT,98,13,"$55,000 under $60,000",22,3461286000.0
-tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Amount | 97.0,CT,98,14,"$60,000 under $75,000",23,10907307000.0
-tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Amount | 97.0,CT,98,15,"$75,000 under $100,000",24,20349620000.0
-tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Amount | 97.0,CT,98,16,"$100,000 under $200,000",25,51469427000.0
-tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Amount | 97.0,CT,98,17,"$200,000 under $500,000",26,34721825000.0
-tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Amount | 97.0,CT,98,18,"$500,000 under $1,000,000",27,13976256000.0
-tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Amount | 97.0,CT,98,19,"$1,000,000 under $1,500,000",28,6534530000.0
-tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Amount | 97.0,CT,98,20,"$1,500,000 under $2,000,000",29,3856554000.0
-tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Amount | 97.0,CT,98,21,"$2,000,000 under $5,000,000",30,11066495000.0
-tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Amount | 97.0,CT,98,22,"$5,000,000 under $10,000,000",31,7610740000.0
-tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Amount | 97.0,CT,98,23,"$10,000,000 or more",32,36938122000.0
+tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns,B,2,1,"All returns, total",10,44567263.0
+tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns,B,2,2,"Under $5,000",11,317443.0
+tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns,B,2,3,"$5,000 under $10,000",12,384355.0
+tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns,B,2,4,"$10,000 under $15,000",13,662599.0
+tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns,B,2,5,"$15,000 under $20,000",14,811728.0
+tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns,B,2,6,"$20,000 under $25,000",15,941085.0
+tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns,B,2,7,"$25,000 under $30,000",16,1081500.0
+tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns,B,2,8,"$30,000 under $35,000",17,1192479.0
+tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns,B,2,9,"$35,000 under $40,000",18,1372832.0
+tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns,B,2,10,"$40,000 under $45,000",19,1463063.0
+tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns,B,2,11,"$45,000 under $50,000",20,1520466.0
+tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns,B,2,12,"$50,000 under $55,000",21,1535092.0
+tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns,B,2,13,"$55,000 under $60,000",22,1546349.0
+tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns,B,2,14,"$60,000 under $75,000",23,4436701.0
+tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns,B,2,15,"$75,000 under $100,000",24,6957567.0
+tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns,B,2,16,"$100,000 under $200,000",25,14038259.0
+tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns,B,2,17,"$200,000 under $500,000",26,5083499.0
+tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns,B,2,18,"$500,000 under $1,000,000",27,821784.0
+tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns,B,2,19,"$1,000,000 under $1,500,000",28,177407.0
+tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns,B,2,20,"$1,500,000 under $2,000,000",29,71685.0
+tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns,B,2,21,"$2,000,000 under $5,000,000",30,106755.0
+tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns,B,2,22,"$5,000,000 under $10,000,000",31,27125.0
+tab21,2015,15in21id.xls,id,count,nz,all,Number of returns with itemized deductions,Number of returns,B,2,23,"$10,000,000 or more",32,17490.0
+tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns,BK,63,1,"All returns, total",10,8776985.0
+tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns,BK,63,2,"Under $5,000",11,227519.0
+tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns,BK,63,3,"$5,000 under $10,000",12,279663.0
+tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns,BK,63,4,"$10,000 under $15,000",13,463596.0
+tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns,BK,63,5,"$15,000 under $20,000",14,490746.0
+tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns,BK,63,6,"$20,000 under $25,000",15,500858.0
+tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns,BK,63,7,"$25,000 under $30,000",16,532022.0
+tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns,BK,63,8,"$30,000 under $35,000",17,462326.0
+tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns,BK,63,9,"$35,000 under $40,000",18,457498.0
+tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns,BK,63,10,"$40,000 under $45,000",19,452333.0
+tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns,BK,63,11,"$45,000 under $50,000",20,390758.0
+tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns,BK,63,12,"$50,000 under $55,000",21,404991.0
+tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns,BK,63,13,"$55,000 under $60,000",22,423434.0
+tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns,BK,63,14,"$60,000 under $75,000",23,992870.0
+tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns,BK,63,15,"$75,000 under $100,000",24,1222955.0
+tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns,BK,63,16,"$100,000 under $200,000",25,1306677.0
+tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns,BK,63,17,"$200,000 under $500,000",26,159468.0
+tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns,BK,63,18,"$500,000 under $1,000,000",27,7735.0
+tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns,BK,63,19,"$1,000,000 under $1,500,000",28,972.0
+tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns,BK,63,20,"$1,500,000 under $2,000,000",29,301.0
+tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns,BK,63,21,"$2,000,000 under $5,000,000",30,242.0
+tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns,BK,63,22,"$5,000,000 under $10,000,000",31,22.0
+tab21,2015,15in21id.xls,id_medical_capped,count,nz,all,Medical expenses (deductible/capped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Number of returns,BK,63,23,"$10,000,000 or more",32,0.0
+tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Amount,BL,64,1,"All returns, total",10,86931032000.0
+tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Amount,BL,64,2,"Under $5,000",11,2108042000.0
+tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Amount,BL,64,3,"$5,000 under $10,000",12,3013542000.0
+tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Amount,BL,64,4,"$10,000 under $15,000",13,3936086000.0
+tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Amount,BL,64,5,"$15,000 under $20,000",14,4297932000.0
+tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Amount,BL,64,6,"$20,000 under $25,000",15,4344639000.0
+tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Amount,BL,64,7,"$25,000 under $30,000",16,4753902000.0
+tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Amount,BL,64,8,"$30,000 under $35,000",17,4039786000.0
+tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Amount,BL,64,9,"$35,000 under $40,000",18,4079939000.0
+tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Amount,BL,64,10,"$40,000 under $45,000",19,3972063000.0
+tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Amount,BL,64,11,"$45,000 under $50,000",20,3375631000.0
+tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Amount,BL,64,12,"$50,000 under $55,000",21,3696461000.0
+tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Amount,BL,64,13,"$55,000 under $60,000",22,3889988000.0
+tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Amount,BL,64,14,"$60,000 under $75,000",23,9137304000.0
+tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Amount,BL,64,15,"$75,000 under $100,000",24,12672435000.0
+tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Amount,BL,64,16,"$100,000 under $200,000",25,14963159000.0
+tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Amount,BL,64,17,"$200,000 under $500,000",26,3896808000.0
+tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Amount,BL,64,18,"$500,000 under $1,000,000",27,565102000.0
+tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Amount,BL,64,19,"$1,000,000 under $1,500,000",28,110275000.0
+tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Amount,BL,64,20,"$1,500,000 under $2,000,000",29,32909000.0
+tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Amount,BL,64,21,"$2,000,000 under $5,000,000",30,36553000.0
+tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Amount,BL,64,22,"$5,000,000 under $10,000,000",31,8477000.0
+tab21,2015,15in21id.xls,id_medical_capped,amount,nz,all,Medical expenses (deductible/capped),Itemized deductions | Medical and dental expenses deduction | Total after subtracting AGI limitation | Amount,BL,64,23,"$10,000,000 or more",32,0.0
+tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Number of returns,BM,65,1,"All returns, total",10,8776985.0
+tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Number of returns,BM,65,2,"Under $5,000",11,227519.0
+tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Number of returns,BM,65,3,"$5,000 under $10,000",12,279663.0
+tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Number of returns,BM,65,4,"$10,000 under $15,000",13,463596.0
+tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Number of returns,BM,65,5,"$15,000 under $20,000",14,490746.0
+tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Number of returns,BM,65,6,"$20,000 under $25,000",15,500858.0
+tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Number of returns,BM,65,7,"$25,000 under $30,000",16,532022.0
+tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Number of returns,BM,65,8,"$30,000 under $35,000",17,462326.0
+tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Number of returns,BM,65,9,"$35,000 under $40,000",18,457498.0
+tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Number of returns,BM,65,10,"$40,000 under $45,000",19,452333.0
+tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Number of returns,BM,65,11,"$45,000 under $50,000",20,390758.0
+tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Number of returns,BM,65,12,"$50,000 under $55,000",21,404991.0
+tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Number of returns,BM,65,13,"$55,000 under $60,000",22,423434.0
+tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Number of returns,BM,65,14,"$60,000 under $75,000",23,992870.0
+tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Number of returns,BM,65,15,"$75,000 under $100,000",24,1222955.0
+tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Number of returns,BM,65,16,"$100,000 under $200,000",25,1306677.0
+tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Number of returns,BM,65,17,"$200,000 under $500,000",26,159468.0
+tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Number of returns,BM,65,18,"$500,000 under $1,000,000",27,7735.0
+tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Number of returns,BM,65,19,"$1,000,000 under $1,500,000",28,972.0
+tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Number of returns,BM,65,20,"$1,500,000 under $2,000,000",29,301.0
+tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Number of returns,BM,65,21,"$2,000,000 under $5,000,000",30,242.0
+tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Number of returns,BM,65,22,"$5,000,000 under $10,000,000",31,22.0
+tab21,2015,15in21id.xls,id_medical_uncapped,count,nz,all,Medical expenses (total/uncapped) — number of returns,Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Number of returns,BM,65,23,"$10,000,000 or more",32,0.0
+tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Amount,BN,66,1,"All returns, total",10,133785340000.0
+tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Amount,BN,66,2,"Under $5,000",11,2154665000.0
+tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Amount,BN,66,3,"$5,000 under $10,000",12,3188696000.0
+tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Amount,BN,66,4,"$10,000 under $15,000",13,4414676000.0
+tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Amount,BN,66,5,"$15,000 under $20,000",14,5007572000.0
+tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Amount,BN,66,6,"$20,000 under $25,000",15,5295009000.0
+tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Amount,BN,66,7,"$25,000 under $30,000",16,6013365000.0
+tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Amount,BN,66,8,"$30,000 under $35,000",17,5344248000.0
+tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Amount,BN,66,9,"$35,000 under $40,000",18,5585290000.0
+tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Amount,BN,66,10,"$40,000 under $45,000",19,5649836000.0
+tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Amount,BN,66,11,"$45,000 under $50,000",20,5000049000.0
+tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Amount,BN,66,12,"$50,000 under $55,000",21,5553125000.0
+tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Amount,BN,66,13,"$55,000 under $60,000",22,6003880000.0
+tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Amount,BN,66,14,"$60,000 under $75,000",23,14889171000.0
+tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Amount,BN,66,15,"$75,000 under $100,000",24,21727339000.0
+tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Amount,BN,66,16,"$100,000 under $200,000",25,29283649000.0
+tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Amount,BN,66,17,"$200,000 under $500,000",26,7318921000.0
+tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Amount,BN,66,18,"$500,000 under $1,000,000",27,977355000.0
+tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Amount,BN,66,19,"$1,000,000 under $1,500,000",28,201698000.0
+tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Amount,BN,66,20,"$1,500,000 under $2,000,000",29,74403000.0
+tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Amount,BN,66,21,"$2,000,000 under $5,000,000",30,83393000.0
+tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Amount,BN,66,22,"$5,000,000 under $10,000,000",31,18999000.0
+tab21,2015,15in21id.xls,id_medical_uncapped,amount,nz,all,Medical expenses (total/uncapped),Itemized deductions | Medical and dental expenses deduction | Total medical expenses | Amount,BN,66,23,"$10,000,000 or more",32,0.0
+tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Itemized deductions | Taxes paid deduction | Total | Number of returns,BQ,69,1,"All returns, total",10,44191436.0
+tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Itemized deductions | Taxes paid deduction | Total | Number of returns,BQ,69,2,"Under $5,000",11,297983.0
+tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Itemized deductions | Taxes paid deduction | Total | Number of returns,BQ,69,3,"$5,000 under $10,000",12,366055.0
+tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Itemized deductions | Taxes paid deduction | Total | Number of returns,BQ,69,4,"$10,000 under $15,000",13,627733.0
+tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Itemized deductions | Taxes paid deduction | Total | Number of returns,BQ,69,5,"$15,000 under $20,000",14,774558.0
+tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Itemized deductions | Taxes paid deduction | Total | Number of returns,BQ,69,6,"$20,000 under $25,000",15,909333.0
+tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Itemized deductions | Taxes paid deduction | Total | Number of returns,BQ,69,7,"$25,000 under $30,000",16,1055485.0
+tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Itemized deductions | Taxes paid deduction | Total | Number of returns,BQ,69,8,"$30,000 under $35,000",17,1172960.0
+tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Itemized deductions | Taxes paid deduction | Total | Number of returns,BQ,69,9,"$35,000 under $40,000",18,1348557.0
+tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Itemized deductions | Taxes paid deduction | Total | Number of returns,BQ,69,10,"$40,000 under $45,000",19,1433569.0
+tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Itemized deductions | Taxes paid deduction | Total | Number of returns,BQ,69,11,"$45,000 under $50,000",20,1508367.0
+tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Itemized deductions | Taxes paid deduction | Total | Number of returns,BQ,69,12,"$50,000 under $55,000",21,1513839.0
+tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Itemized deductions | Taxes paid deduction | Total | Number of returns,BQ,69,13,"$55,000 under $60,000",22,1531024.0
+tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Itemized deductions | Taxes paid deduction | Total | Number of returns,BQ,69,14,"$60,000 under $75,000",23,4408450.0
+tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Itemized deductions | Taxes paid deduction | Total | Number of returns,BQ,69,15,"$75,000 under $100,000",24,6930059.0
+tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Itemized deductions | Taxes paid deduction | Total | Number of returns,BQ,69,16,"$100,000 under $200,000",25,14013820.0
+tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Itemized deductions | Taxes paid deduction | Total | Number of returns,BQ,69,17,"$200,000 under $500,000",26,5078493.0
+tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Itemized deductions | Taxes paid deduction | Total | Number of returns,BQ,69,18,"$500,000 under $1,000,000",27,821083.0
+tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Itemized deductions | Taxes paid deduction | Total | Number of returns,BQ,69,19,"$1,000,000 under $1,500,000",28,177352.0
+tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Itemized deductions | Taxes paid deduction | Total | Number of returns,BQ,69,20,"$1,500,000 under $2,000,000",29,71618.0
+tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Itemized deductions | Taxes paid deduction | Total | Number of returns,BQ,69,21,"$2,000,000 under $5,000,000",30,106564.0
+tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Itemized deductions | Taxes paid deduction | Total | Number of returns,BQ,69,22,"$5,000,000 under $10,000,000",31,27086.0
+tab21,2015,15in21id.xls,id_taxpaid,count,nz,all,Taxes paid deduction — number of returns,Itemized deductions | Taxes paid deduction | Total | Number of returns,BQ,69,23,"$10,000,000 or more",32,17449.0
+tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Itemized deductions | Taxes paid deduction | Total | Amount,BR,70,1,"All returns, total",10,553015621000.0
+tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Itemized deductions | Taxes paid deduction | Total | Amount,BR,70,2,"Under $5,000",11,1202092000.0
+tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Itemized deductions | Taxes paid deduction | Total | Amount,BR,70,3,"$5,000 under $10,000",12,1341118000.0
+tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Itemized deductions | Taxes paid deduction | Total | Amount,BR,70,4,"$10,000 under $15,000",13,2181494000.0
+tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Itemized deductions | Taxes paid deduction | Total | Amount,BR,70,5,"$15,000 under $20,000",14,2687159000.0
+tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Itemized deductions | Taxes paid deduction | Total | Amount,BR,70,6,"$20,000 under $25,000",15,3074264000.0
+tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Itemized deductions | Taxes paid deduction | Total | Amount,BR,70,7,"$25,000 under $30,000",16,3612496000.0
+tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Itemized deductions | Taxes paid deduction | Total | Amount,BR,70,8,"$30,000 under $35,000",17,4280465000.0
+tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Itemized deductions | Taxes paid deduction | Total | Amount,BR,70,9,"$35,000 under $40,000",18,5378442000.0
+tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Itemized deductions | Taxes paid deduction | Total | Amount,BR,70,10,"$40,000 under $45,000",19,6020858000.0
+tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Itemized deductions | Taxes paid deduction | Total | Amount,BR,70,11,"$45,000 under $50,000",20,6570716000.0
+tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Itemized deductions | Taxes paid deduction | Total | Amount,BR,70,12,"$50,000 under $55,000",21,7333689000.0
+tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Itemized deductions | Taxes paid deduction | Total | Amount,BR,70,13,"$55,000 under $60,000",22,8121461000.0
+tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Itemized deductions | Taxes paid deduction | Total | Amount,BR,70,14,"$60,000 under $75,000",23,25543705000.0
+tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Itemized deductions | Taxes paid deduction | Total | Amount,BR,70,15,"$75,000 under $100,000",24,49969183000.0
+tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Itemized deductions | Taxes paid deduction | Total | Amount,BR,70,16,"$100,000 under $200,000",25,155473408000.0
+tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Itemized deductions | Taxes paid deduction | Total | Amount,BR,70,17,"$200,000 under $500,000",26,115531174000.0
+tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Itemized deductions | Taxes paid deduction | Total | Amount,BR,70,18,"$500,000 under $1,000,000",27,44741560000.0
+tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Itemized deductions | Taxes paid deduction | Total | Amount,BR,70,19,"$1,000,000 under $1,500,000",28,17925210000.0
+tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Itemized deductions | Taxes paid deduction | Total | Amount,BR,70,20,"$1,500,000 under $2,000,000",29,10477365000.0
+tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Itemized deductions | Taxes paid deduction | Total | Amount,BR,70,21,"$2,000,000 under $5,000,000",30,26710615000.0
+tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Itemized deductions | Taxes paid deduction | Total | Amount,BR,70,22,"$5,000,000 under $10,000,000",31,14830289000.0
+tab21,2015,15in21id.xls,id_taxpaid,amount,nz,all,Taxes paid deduction,Itemized deductions | Taxes paid deduction | Total | Amount,BR,70,23,"$10,000,000 or more",32,40008857000.0
+tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Total | Number of returns,BS,71,1,"All returns, total",10,42690831.0
+tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Total | Number of returns,BS,71,2,"Under $5,000",11,246102.0
+tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Total | Number of returns,BS,71,3,"$5,000 under $10,000",12,320279.0
+tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Total | Number of returns,BS,71,4,"$10,000 under $15,000",13,558434.0
+tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Total | Number of returns,BS,71,5,"$15,000 under $20,000",14,713832.0
+tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Total | Number of returns,BS,71,6,"$20,000 under $25,000",15,843241.0
+tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Total | Number of returns,BS,71,7,"$25,000 under $30,000",16,985616.0
+tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Total | Number of returns,BS,71,8,"$30,000 under $35,000",17,1102890.0
+tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Total | Number of returns,BS,71,9,"$35,000 under $40,000",18,1272689.0
+tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Total | Number of returns,BS,71,10,"$40,000 under $45,000",19,1367500.0
+tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Total | Number of returns,BS,71,11,"$45,000 under $50,000",20,1441232.0
+tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Total | Number of returns,BS,71,12,"$50,000 under $55,000",21,1458211.0
+tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Total | Number of returns,BS,71,13,"$55,000 under $60,000",22,1487190.0
+tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Total | Number of returns,BS,71,14,"$60,000 under $75,000",23,4246802.0
+tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Total | Number of returns,BS,71,15,"$75,000 under $100,000",24,6750154.0
+tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Total | Number of returns,BS,71,16,"$100,000 under $200,000",25,13687177.0
+tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Total | Number of returns,BS,71,17,"$200,000 under $500,000",26,4996108.0
+tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Total | Number of returns,BS,71,18,"$500,000 under $1,000,000",27,815393.0
+tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Total | Number of returns,BS,71,19,"$1,000,000 under $1,500,000",28,176304.0
+tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Total | Number of returns,BS,71,20,"$1,500,000 under $2,000,000",29,71240.0
+tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Total | Number of returns,BS,71,21,"$2,000,000 under $5,000,000",30,106105.0
+tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Total | Number of returns,BS,71,22,"$5,000,000 under $10,000,000",31,26956.0
+tab21,2015,15in21id.xls,id_salt,count,nz,all,State and local taxes (SALT) — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Total | Number of returns,BS,71,23,"$10,000,000 or more",32,17376.0
+tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Itemized deductions | Taxes paid deduction | State and local taxes | Total | Amount,BT,72,1,"All returns, total",10,352701327000.0
+tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Itemized deductions | Taxes paid deduction | State and local taxes | Total | Amount,BT,72,2,"Under $5,000",11,334608000.0
+tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Itemized deductions | Taxes paid deduction | State and local taxes | Total | Amount,BT,72,3,"$5,000 under $10,000",12,254813000.0
+tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Itemized deductions | Taxes paid deduction | State and local taxes | Total | Amount,BT,72,4,"$10,000 under $15,000",13,484707000.0
+tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Itemized deductions | Taxes paid deduction | State and local taxes | Total | Amount,BT,72,5,"$15,000 under $20,000",14,646722000.0
+tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Itemized deductions | Taxes paid deduction | State and local taxes | Total | Amount,BT,72,6,"$20,000 under $25,000",15,862394000.0
+tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Itemized deductions | Taxes paid deduction | State and local taxes | Total | Amount,BT,72,7,"$25,000 under $30,000",16,1167016000.0
+tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Itemized deductions | Taxes paid deduction | State and local taxes | Total | Amount,BT,72,8,"$30,000 under $35,000",17,1444306000.0
+tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Itemized deductions | Taxes paid deduction | State and local taxes | Total | Amount,BT,72,9,"$35,000 under $40,000",18,1951818000.0
+tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Itemized deductions | Taxes paid deduction | State and local taxes | Total | Amount,BT,72,10,"$40,000 under $45,000",19,2475885000.0
+tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Itemized deductions | Taxes paid deduction | State and local taxes | Total | Amount,BT,72,11,"$45,000 under $50,000",20,2773525000.0
+tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Itemized deductions | Taxes paid deduction | State and local taxes | Total | Amount,BT,72,12,"$50,000 under $55,000",21,3222481000.0
+tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Itemized deductions | Taxes paid deduction | State and local taxes | Total | Amount,BT,72,13,"$55,000 under $60,000",22,3569080000.0
+tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Itemized deductions | Taxes paid deduction | State and local taxes | Total | Amount,BT,72,14,"$60,000 under $75,000",23,12039359000.0
+tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Itemized deductions | Taxes paid deduction | State and local taxes | Total | Amount,BT,72,15,"$75,000 under $100,000",24,25702146000.0
+tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Itemized deductions | Taxes paid deduction | State and local taxes | Total | Amount,BT,72,16,"$100,000 under $200,000",25,88169074000.0
+tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Itemized deductions | Taxes paid deduction | State and local taxes | Total | Amount,BT,72,17,"$200,000 under $500,000",26,75495221000.0
+tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Itemized deductions | Taxes paid deduction | State and local taxes | Total | Amount,BT,72,18,"$500,000 under $1,000,000",27,33498075000.0
+tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Itemized deductions | Taxes paid deduction | State and local taxes | Total | Amount,BT,72,19,"$1,000,000 under $1,500,000",28,14501840000.0
+tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Itemized deductions | Taxes paid deduction | State and local taxes | Total | Amount,BT,72,20,"$1,500,000 under $2,000,000",29,8760268000.0
+tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Itemized deductions | Taxes paid deduction | State and local taxes | Total | Amount,BT,72,21,"$2,000,000 under $5,000,000",30,23381334000.0
+tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Itemized deductions | Taxes paid deduction | State and local taxes | Total | Amount,BT,72,22,"$5,000,000 under $10,000,000",31,13555298000.0
+tab21,2015,15in21id.xls,id_salt,amount,nz,all,State and local taxes (SALT),Itemized deductions | Taxes paid deduction | State and local taxes | Total | Amount,BT,72,23,"$10,000,000 or more",32,38411360000.0
+tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Number of returns,BU,73,1,"All returns, total",10,33063383.0
+tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Number of returns,BU,73,2,"Under $5,000",11,74184.0
+tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Number of returns,BU,73,3,"$5,000 under $10,000",12,98328.0
+tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Number of returns,BU,73,4,"$10,000 under $15,000",13,192403.0
+tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Number of returns,BU,73,5,"$15,000 under $20,000",14,313094.0
+tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Number of returns,BU,73,6,"$20,000 under $25,000",15,406796.0
+tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Number of returns,BU,73,7,"$25,000 under $30,000",16,557060.0
+tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Number of returns,BU,73,8,"$30,000 under $35,000",17,693840.0
+tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Number of returns,BU,73,9,"$35,000 under $40,000",18,899962.0
+tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Number of returns,BU,73,10,"$40,000 under $45,000",19,955900.0
+tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Number of returns,BU,73,11,"$45,000 under $50,000",20,1049616.0
+tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Number of returns,BU,73,12,"$50,000 under $55,000",21,1103076.0
+tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Number of returns,BU,73,13,"$55,000 under $60,000",22,1126872.0
+tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Number of returns,BU,73,14,"$60,000 under $75,000",23,3290380.0
+tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Number of returns,BU,73,15,"$75,000 under $100,000",24,5511568.0
+tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Number of returns,BU,73,16,"$100,000 under $200,000",25,11533393.0
+tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Number of returns,BU,73,17,"$200,000 under $500,000",26,4212361.0
+tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Number of returns,BU,73,18,"$500,000 under $1,000,000",27,696445.0
+tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Number of returns,BU,73,19,"$1,000,000 under $1,500,000",28,152902.0
+tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Number of returns,BU,73,20,"$1,500,000 under $2,000,000",29,62412.0
+tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Number of returns,BU,73,21,"$2,000,000 under $5,000,000",30,93602.0
+tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Number of returns,BU,73,22,"$5,000,000 under $10,000,000",31,23772.0
+tab21,2015,15in21id.xls,id_pit,count,nz,all,State income taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Number of returns,BU,73,23,"$10,000,000 or more",32,15419.0
+tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Amount,BV,74,1,"All returns, total",10,335060168000.0
+tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Amount,BV,74,2,"Under $5,000",11,247368000.0
+tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Amount,BV,74,3,"$5,000 under $10,000",12,144224000.0
+tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Amount,BV,74,4,"$10,000 under $15,000",13,242932000.0
+tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Amount,BV,74,5,"$15,000 under $20,000",14,352591000.0
+tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Amount,BV,74,6,"$20,000 under $25,000",15,503057000.0
+tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Amount,BV,74,7,"$25,000 under $30,000",16,766251000.0
+tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Amount,BV,74,8,"$30,000 under $35,000",17,1041293000.0
+tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Amount,BV,74,9,"$35,000 under $40,000",18,1511583000.0
+tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Amount,BV,74,10,"$40,000 under $45,000",19,1985224000.0
+tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Amount,BV,74,11,"$45,000 under $50,000",20,2305387000.0
+tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Amount,BV,74,12,"$50,000 under $55,000",21,2749265000.0
+tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Amount,BV,74,13,"$55,000 under $60,000",22,3107467000.0
+tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Amount,BV,74,14,"$60,000 under $75,000",23,10587597000.0
+tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Amount,BV,74,15,"$75,000 under $100,000",24,23415401000.0
+tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Amount,BV,74,16,"$100,000 under $200,000",25,82897472000.0
+tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Amount,BV,74,17,"$200,000 under $500,000",26,72653258000.0
+tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Amount,BV,74,18,"$500,000 under $1,000,000",27,32864770000.0
+tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Amount,BV,74,19,"$1,000,000 under $1,500,000",28,14294115000.0
+tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Amount,BV,74,20,"$1,500,000 under $2,000,000",29,8670169000.0
+tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Amount,BV,74,21,"$2,000,000 under $5,000,000",30,23164930000.0
+tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Amount,BV,74,22,"$5,000,000 under $10,000,000",31,13447411000.0
+tab21,2015,15in21id.xls,id_pit,amount,nz,all,State income taxes,Itemized deductions | Taxes paid deduction | State and local taxes | Income tax | Amount,BV,74,23,"$10,000,000 or more",32,38108401000.0
+tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Number of returns,BW,75,1,"All returns, total",10,9627447.0
+tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Number of returns,BW,75,2,"Under $5,000",11,171918.0
+tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Number of returns,BW,75,3,"$5,000 under $10,000",12,221951.0
+tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Number of returns,BW,75,4,"$10,000 under $15,000",13,366031.0
+tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Number of returns,BW,75,5,"$15,000 under $20,000",14,400738.0
+tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Number of returns,BW,75,6,"$20,000 under $25,000",15,436445.0
+tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Number of returns,BW,75,7,"$25,000 under $30,000",16,428556.0
+tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Number of returns,BW,75,8,"$30,000 under $35,000",17,409050.0
+tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Number of returns,BW,75,9,"$35,000 under $40,000",18,372727.0
+tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Number of returns,BW,75,10,"$40,000 under $45,000",19,411600.0
+tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Number of returns,BW,75,11,"$45,000 under $50,000",20,391616.0
+tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Number of returns,BW,75,12,"$50,000 under $55,000",21,355135.0
+tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Number of returns,BW,75,13,"$55,000 under $60,000",22,360318.0
+tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Number of returns,BW,75,14,"$60,000 under $75,000",23,956422.0
+tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Number of returns,BW,75,15,"$75,000 under $100,000",24,1238586.0
+tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Number of returns,BW,75,16,"$100,000 under $200,000",25,2153784.0
+tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Number of returns,BW,75,17,"$200,000 under $500,000",26,783747.0
+tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Number of returns,BW,75,18,"$500,000 under $1,000,000",27,118949.0
+tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Number of returns,BW,75,19,"$1,000,000 under $1,500,000",28,23402.0
+tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Number of returns,BW,75,20,"$1,500,000 under $2,000,000",29,8828.0
+tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Number of returns,BW,75,21,"$2,000,000 under $5,000,000",30,12503.0
+tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Number of returns,BW,75,22,"$5,000,000 under $10,000,000",31,3184.0
+tab21,2015,15in21id.xls,id_gst,count,nz,all,General sales taxes — number of returns,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Number of returns,BW,75,23,"$10,000,000 or more",32,1957.0
+tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Amount,BX,76,1,"All returns, total",10,17641159000.0
+tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Amount,BX,76,2,"Under $5,000",11,87240000.0
+tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Amount,BX,76,3,"$5,000 under $10,000",12,110588000.0
+tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Amount,BX,76,4,"$10,000 under $15,000",13,241775000.0
+tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Amount,BX,76,5,"$15,000 under $20,000",14,294130000.0
+tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Amount,BX,76,6,"$20,000 under $25,000",15,359337000.0
+tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Amount,BX,76,7,"$25,000 under $30,000",16,400764000.0
+tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Amount,BX,76,8,"$30,000 under $35,000",17,403013000.0
+tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Amount,BX,76,9,"$35,000 under $40,000",18,440235000.0
+tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Amount,BX,76,10,"$40,000 under $45,000",19,490661000.0
+tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Amount,BX,76,11,"$45,000 under $50,000",20,468137000.0
+tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Amount,BX,76,12,"$50,000 under $55,000",21,473215000.0
+tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Amount,BX,76,13,"$55,000 under $60,000",22,461612000.0
+tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Amount,BX,76,14,"$60,000 under $75,000",23,1451762000.0
+tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Amount,BX,76,15,"$75,000 under $100,000",24,2286745000.0
+tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Amount,BX,76,16,"$100,000 under $200,000",25,5271602000.0
+tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Amount,BX,76,17,"$200,000 under $500,000",26,2841962000.0
+tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Amount,BX,76,18,"$500,000 under $1,000,000",27,633305000.0
+tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Amount,BX,76,19,"$1,000,000 under $1,500,000",28,207725000.0
+tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Amount,BX,76,20,"$1,500,000 under $2,000,000",29,90099000.0
+tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Amount,BX,76,21,"$2,000,000 under $5,000,000",30,216404000.0
+tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Amount,BX,76,22,"$5,000,000 under $10,000,000",31,107886000.0
+tab21,2015,15in21id.xls,id_gst,amount,nz,all,General sales taxes,Itemized deductions | Taxes paid deduction | State and local taxes | General sales tax | Amount,BX,76,23,"$10,000,000 or more",32,302960000.0
+tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Itemized deductions | Taxes paid deduction | Real estate taxes | Number of returns,BY,77,1,"All returns, total",10,37613402.0
+tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Itemized deductions | Taxes paid deduction | Real estate taxes | Number of returns,BY,77,2,"Under $5,000",11,218583.0
+tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Itemized deductions | Taxes paid deduction | Real estate taxes | Number of returns,BY,77,3,"$5,000 under $10,000",12,280431.0
+tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Itemized deductions | Taxes paid deduction | Real estate taxes | Number of returns,BY,77,4,"$10,000 under $15,000",13,472620.0
+tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Itemized deductions | Taxes paid deduction | Real estate taxes | Number of returns,BY,77,5,"$15,000 under $20,000",14,557094.0
+tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Itemized deductions | Taxes paid deduction | Real estate taxes | Number of returns,BY,77,6,"$20,000 under $25,000",15,616136.0
+tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Itemized deductions | Taxes paid deduction | Real estate taxes | Number of returns,BY,77,7,"$25,000 under $30,000",16,689101.0
+tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Itemized deductions | Taxes paid deduction | Real estate taxes | Number of returns,BY,77,8,"$30,000 under $35,000",17,810615.0
+tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Itemized deductions | Taxes paid deduction | Real estate taxes | Number of returns,BY,77,9,"$35,000 under $40,000",18,974691.0
+tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Itemized deductions | Taxes paid deduction | Real estate taxes | Number of returns,BY,77,10,"$40,000 under $45,000",19,1069338.0
+tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Itemized deductions | Taxes paid deduction | Real estate taxes | Number of returns,BY,77,11,"$45,000 under $50,000",20,1168152.0
+tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Itemized deductions | Taxes paid deduction | Real estate taxes | Number of returns,BY,77,12,"$50,000 under $55,000",21,1190018.0
+tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Itemized deductions | Taxes paid deduction | Real estate taxes | Number of returns,BY,77,13,"$55,000 under $60,000",22,1265965.0
+tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Itemized deductions | Taxes paid deduction | Real estate taxes | Number of returns,BY,77,14,"$60,000 under $75,000",23,3667656.0
+tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Itemized deductions | Taxes paid deduction | Real estate taxes | Number of returns,BY,77,15,"$75,000 under $100,000",24,6008425.0
+tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Itemized deductions | Taxes paid deduction | Real estate taxes | Number of returns,BY,77,16,"$100,000 under $200,000",25,12792762.0
+tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Itemized deductions | Taxes paid deduction | Real estate taxes | Number of returns,BY,77,17,"$200,000 under $500,000",26,4680598.0
+tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Itemized deductions | Taxes paid deduction | Real estate taxes | Number of returns,BY,77,18,"$500,000 under $1,000,000",27,773517.0
+tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Itemized deductions | Taxes paid deduction | Real estate taxes | Number of returns,BY,77,19,"$1,000,000 under $1,500,000",28,166703.0
+tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Itemized deductions | Taxes paid deduction | Real estate taxes | Number of returns,BY,77,20,"$1,500,000 under $2,000,000",29,67912.0
+tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Itemized deductions | Taxes paid deduction | Real estate taxes | Number of returns,BY,77,21,"$2,000,000 under $5,000,000",30,100774.0
+tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Itemized deductions | Taxes paid deduction | Real estate taxes | Number of returns,BY,77,22,"$5,000,000 under $10,000,000",31,25647.0
+tab21,2015,15in21id.xls,id_retax,count,nz,all,Real estate taxes — number of returns,Itemized deductions | Taxes paid deduction | Real estate taxes | Number of returns,BY,77,23,"$10,000,000 or more",32,16663.0
+tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Itemized deductions | Taxes paid deduction | Real estate taxes | Amount,BZ,78,1,"All returns, total",10,188605843000.0
+tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Itemized deductions | Taxes paid deduction | Real estate taxes | Amount,BZ,78,2,"Under $5,000",11,824302000.0
+tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Itemized deductions | Taxes paid deduction | Real estate taxes | Amount,BZ,78,3,"$5,000 under $10,000",12,1007214000.0
+tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Itemized deductions | Taxes paid deduction | Real estate taxes | Amount,BZ,78,4,"$10,000 under $15,000",13,1604278000.0
+tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Itemized deductions | Taxes paid deduction | Real estate taxes | Amount,BZ,78,5,"$15,000 under $20,000",14,1916831000.0
+tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Itemized deductions | Taxes paid deduction | Real estate taxes | Amount,BZ,78,6,"$20,000 under $25,000",15,2079351000.0
+tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Itemized deductions | Taxes paid deduction | Real estate taxes | Amount,BZ,78,7,"$25,000 under $30,000",16,2261238000.0
+tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Itemized deductions | Taxes paid deduction | Real estate taxes | Amount,BZ,78,8,"$30,000 under $35,000",17,2593568000.0
+tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Itemized deductions | Taxes paid deduction | Real estate taxes | Amount,BZ,78,9,"$35,000 under $40,000",18,3149207000.0
+tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Itemized deductions | Taxes paid deduction | Real estate taxes | Amount,BZ,78,10,"$40,000 under $45,000",19,3272842000.0
+tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Itemized deductions | Taxes paid deduction | Real estate taxes | Amount,BZ,78,11,"$45,000 under $50,000",20,3506541000.0
+tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Itemized deductions | Taxes paid deduction | Real estate taxes | Amount,BZ,78,12,"$50,000 under $55,000",21,3703059000.0
+tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Itemized deductions | Taxes paid deduction | Real estate taxes | Amount,BZ,78,13,"$55,000 under $60,000",22,4220038000.0
+tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Itemized deductions | Taxes paid deduction | Real estate taxes | Amount,BZ,78,14,"$60,000 under $75,000",23,12521110000.0
+tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Itemized deductions | Taxes paid deduction | Real estate taxes | Amount,BZ,78,15,"$75,000 under $100,000",24,22612411000.0
+tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Itemized deductions | Taxes paid deduction | Real estate taxes | Amount,BZ,78,16,"$100,000 under $200,000",25,63372425000.0
+tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Itemized deductions | Taxes paid deduction | Real estate taxes | Amount,BZ,78,17,"$200,000 under $500,000",26,38337098000.0
+tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Itemized deductions | Taxes paid deduction | Real estate taxes | Amount,BZ,78,18,"$500,000 under $1,000,000",27,10816724000.0
+tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Itemized deductions | Taxes paid deduction | Real estate taxes | Amount,BZ,78,19,"$1,000,000 under $1,500,000",28,3286406000.0
+tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Itemized deductions | Taxes paid deduction | Real estate taxes | Amount,BZ,78,20,"$1,500,000 under $2,000,000",29,1649775000.0
+tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Itemized deductions | Taxes paid deduction | Real estate taxes | Amount,BZ,78,21,"$2,000,000 under $5,000,000",30,3177001000.0
+tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Itemized deductions | Taxes paid deduction | Real estate taxes | Amount,BZ,78,22,"$5,000,000 under $10,000,000",31,1218981000.0
+tab21,2015,15in21id.xls,id_retax,amount,nz,all,Real estate taxes,Itemized deductions | Taxes paid deduction | Real estate taxes | Amount,BZ,78,23,"$10,000,000 or more",32,1475443000.0
+tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Itemized deductions | Interest paid deduction | Total | Number of returns,CE,83,1,"All returns, total",10,33301990.0
+tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Itemized deductions | Interest paid deduction | Total | Number of returns,CE,83,2,"Under $5,000",11,172738.0
+tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Itemized deductions | Interest paid deduction | Total | Number of returns,CE,83,3,"$5,000 under $10,000",12,194117.0
+tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Itemized deductions | Interest paid deduction | Total | Number of returns,CE,83,4,"$10,000 under $15,000",13,347692.0
+tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Itemized deductions | Interest paid deduction | Total | Number of returns,CE,83,5,"$15,000 under $20,000",14,428197.0
+tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Itemized deductions | Interest paid deduction | Total | Number of returns,CE,83,6,"$20,000 under $25,000",15,460451.0
+tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Itemized deductions | Interest paid deduction | Total | Number of returns,CE,83,7,"$25,000 under $30,000",16,587849.0
+tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Itemized deductions | Interest paid deduction | Total | Number of returns,CE,83,8,"$30,000 under $35,000",17,666457.0
+tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Itemized deductions | Interest paid deduction | Total | Number of returns,CE,83,9,"$35,000 under $40,000",18,841538.0
+tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Itemized deductions | Interest paid deduction | Total | Number of returns,CE,83,10,"$40,000 under $45,000",19,948445.0
+tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Itemized deductions | Interest paid deduction | Total | Number of returns,CE,83,11,"$45,000 under $50,000",20,1043221.0
+tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Itemized deductions | Interest paid deduction | Total | Number of returns,CE,83,12,"$50,000 under $55,000",21,1073182.0
+tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Itemized deductions | Interest paid deduction | Total | Number of returns,CE,83,13,"$55,000 under $60,000",22,1130318.0
+tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Itemized deductions | Interest paid deduction | Total | Number of returns,CE,83,14,"$60,000 under $75,000",23,3249632.0
+tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Itemized deductions | Interest paid deduction | Total | Number of returns,CE,83,15,"$75,000 under $100,000",24,5450663.0
+tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Itemized deductions | Interest paid deduction | Total | Number of returns,CE,83,16,"$100,000 under $200,000",25,11629322.0
+tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Itemized deductions | Interest paid deduction | Total | Number of returns,CE,83,17,"$200,000 under $500,000",26,4106793.0
+tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Itemized deductions | Interest paid deduction | Total | Number of returns,CE,83,18,"$500,000 under $1,000,000",27,657620.0
+tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Itemized deductions | Interest paid deduction | Total | Number of returns,CE,83,19,"$1,000,000 under $1,500,000",28,137332.0
+tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Itemized deductions | Interest paid deduction | Total | Number of returns,CE,83,20,"$1,500,000 under $2,000,000",29,55881.0
+tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Itemized deductions | Interest paid deduction | Total | Number of returns,CE,83,21,"$2,000,000 under $5,000,000",30,84234.0
+tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Itemized deductions | Interest paid deduction | Total | Number of returns,CE,83,22,"$5,000,000 under $10,000,000",31,21758.0
+tab21,2015,15in21id.xls,id_intpaid,count,nz,all,Interest paid — number of returns,Itemized deductions | Interest paid deduction | Total | Number of returns,CE,83,23,"$10,000,000 or more",32,14548.0
+tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Itemized deductions | Interest paid deduction | Total | Amount,CF,84,1,"All returns, total",10,304461163000.0
+tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Itemized deductions | Interest paid deduction | Total | Amount,CF,84,2,"Under $5,000",11,1231416000.0
+tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Itemized deductions | Interest paid deduction | Total | Amount,CF,84,3,"$5,000 under $10,000",12,1284063000.0
+tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Itemized deductions | Interest paid deduction | Total | Amount,CF,84,4,"$10,000 under $15,000",13,2148799000.0
+tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Itemized deductions | Interest paid deduction | Total | Amount,CF,84,5,"$15,000 under $20,000",14,2699978000.0
+tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Itemized deductions | Interest paid deduction | Total | Amount,CF,84,6,"$20,000 under $25,000",15,3181401000.0
+tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Itemized deductions | Interest paid deduction | Total | Amount,CF,84,7,"$25,000 under $30,000",16,3748228000.0
+tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Itemized deductions | Interest paid deduction | Total | Amount,CF,84,8,"$30,000 under $35,000",17,4214763000.0
+tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Itemized deductions | Interest paid deduction | Total | Amount,CF,84,9,"$35,000 under $40,000",18,5435778000.0
+tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Itemized deductions | Interest paid deduction | Total | Amount,CF,84,10,"$40,000 under $45,000",19,6009927000.0
+tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Itemized deductions | Interest paid deduction | Total | Amount,CF,84,11,"$45,000 under $50,000",20,6888540000.0
+tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Itemized deductions | Interest paid deduction | Total | Amount,CF,84,12,"$50,000 under $55,000",21,6955789000.0
+tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Itemized deductions | Interest paid deduction | Total | Amount,CF,84,13,"$55,000 under $60,000",22,7424513000.0
+tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Itemized deductions | Interest paid deduction | Total | Amount,CF,84,14,"$60,000 under $75,000",23,23294604000.0
+tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Itemized deductions | Interest paid deduction | Total | Amount,CF,84,15,"$75,000 under $100,000",24,43398259000.0
+tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Itemized deductions | Interest paid deduction | Total | Amount,CF,84,16,"$100,000 under $200,000",25,104846625000.0
+tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Itemized deductions | Interest paid deduction | Total | Amount,CF,84,17,"$200,000 under $500,000",26,53562301000.0
+tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Itemized deductions | Interest paid deduction | Total | Amount,CF,84,18,"$500,000 under $1,000,000",27,12836968000.0
+tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Itemized deductions | Interest paid deduction | Total | Amount,CF,84,19,"$1,000,000 under $1,500,000",28,3505209000.0
+tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Itemized deductions | Interest paid deduction | Total | Amount,CF,84,20,"$1,500,000 under $2,000,000",29,1666807000.0
+tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Itemized deductions | Interest paid deduction | Total | Amount,CF,84,21,"$2,000,000 under $5,000,000",30,3412493000.0
+tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Itemized deductions | Interest paid deduction | Total | Amount,CF,84,22,"$5,000,000 under $10,000,000",31,1535736000.0
+tab21,2015,15in21id.xls,id_intpaid,amount,nz,all,Interest paid,Itemized deductions | Interest paid deduction | Total | Amount,CF,84,23,"$10,000,000 or more",32,5178966000.0
+tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Number of returns,CG,85,1,"All returns, total",10,32715927.0
+tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Number of returns,CG,85,2,"Under $5,000",11,167028.0
+tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Number of returns,CG,85,3,"$5,000 under $10,000",12,185501.0
+tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Number of returns,CG,85,4,"$10,000 under $15,000",13,338276.0
+tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Number of returns,CG,85,5,"$15,000 under $20,000",14,418199.0
+tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Number of returns,CG,85,6,"$20,000 under $25,000",15,447688.0
+tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Number of returns,CG,85,7,"$25,000 under $30,000",16,578143.0
+tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Number of returns,CG,85,8,"$30,000 under $35,000",17,654008.0
+tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Number of returns,CG,85,9,"$35,000 under $40,000",18,830762.0
+tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Number of returns,CG,85,10,"$40,000 under $45,000",19,939209.0
+tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Number of returns,CG,85,11,"$45,000 under $50,000",20,1036215.0
+tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Number of returns,CG,85,12,"$50,000 under $55,000",21,1064122.0
+tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Number of returns,CG,85,13,"$55,000 under $60,000",22,1119573.0
+tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Number of returns,CG,85,14,"$60,000 under $75,000",23,3210259.0
+tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Number of returns,CG,85,15,"$75,000 under $100,000",24,5392086.0
+tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Number of returns,CG,85,16,"$100,000 under $200,000",25,11482206.0
+tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Number of returns,CG,85,17,"$200,000 under $500,000",26,3988588.0
+tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Number of returns,CG,85,18,"$500,000 under $1,000,000",27,608613.0
+tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Number of returns,CG,85,19,"$1,000,000 under $1,500,000",28,119694.0
+tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Number of returns,CG,85,20,"$1,500,000 under $2,000,000",29,47055.0
+tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Number of returns,CG,85,21,"$2,000,000 under $5,000,000",30,65385.0
+tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Number of returns,CG,85,22,"$5,000,000 under $10,000,000",31,15000.0
+tab21,2015,15in21id.xls,id_mortgage,count,nz,all,Home mortgage interest — number of returns,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Number of returns,CG,85,23,"$10,000,000 or more",32,8316.0
+tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Amount,CH,86,1,"All returns, total",10,283004465000.0
+tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Amount,CH,86,2,"Under $5,000",11,1174521000.0
+tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Amount,CH,86,3,"$5,000 under $10,000",12,1237451000.0
+tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Amount,CH,86,4,"$10,000 under $15,000",13,2083827000.0
+tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Amount,CH,86,5,"$15,000 under $20,000",14,2589295000.0
+tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Amount,CH,86,6,"$20,000 under $25,000",15,2992991000.0
+tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Amount,CH,86,7,"$25,000 under $30,000",16,3591380000.0
+tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Amount,CH,86,8,"$30,000 under $35,000",17,3946351000.0
+tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Amount,CH,86,9,"$35,000 under $40,000",18,5122692000.0
+tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Amount,CH,86,10,"$40,000 under $45,000",19,5651139000.0
+tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Amount,CH,86,11,"$45,000 under $50,000",20,6411648000.0
+tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Amount,CH,86,12,"$50,000 under $55,000",21,6543517000.0
+tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Amount,CH,86,13,"$55,000 under $60,000",22,6985554000.0
+tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Amount,CH,86,14,"$60,000 under $75,000",23,21825640000.0
+tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Amount,CH,86,15,"$75,000 under $100,000",24,40897449000.0
+tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Amount,CH,86,16,"$100,000 under $200,000",25,103319155000.0
+tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Amount,CH,86,17,"$200,000 under $500,000",26,51606382000.0
+tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Amount,CH,86,18,"$500,000 under $1,000,000",27,11335153000.0
+tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Amount,CH,86,19,"$1,000,000 under $1,500,000",28,2559360000.0
+tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Amount,CH,86,20,"$1,500,000 under $2,000,000",29,1043154000.0
+tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Amount,CH,86,21,"$2,000,000 under $5,000,000",30,1521570000.0
+tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Amount,CH,86,22,"$5,000,000 under $10,000,000",31,360807000.0
+tab21,2015,15in21id.xls,id_mortgage,amount,nz,all,Home mortgage interest,Itemized deductions | Interest paid deduction | Home mortgage interest | Total | Amount,CH,86,23,"$10,000,000 or more",32,205431000.0
+tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Itemized deductions | Contributions deduction | Total | Number of returns,CS,97,1,"All returns, total",10,36623657.0
+tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Itemized deductions | Contributions deduction | Total | Number of returns,CS,97,2,"Under $5,000",11,186787.0
+tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Itemized deductions | Contributions deduction | Total | Number of returns,CS,97,3,"$5,000 under $10,000",12,225979.0
+tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Itemized deductions | Contributions deduction | Total | Number of returns,CS,97,4,"$10,000 under $15,000",13,423728.0
+tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Itemized deductions | Contributions deduction | Total | Number of returns,CS,97,5,"$15,000 under $20,000",14,566996.0
+tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Itemized deductions | Contributions deduction | Total | Number of returns,CS,97,6,"$20,000 under $25,000",15,645356.0
+tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Itemized deductions | Contributions deduction | Total | Number of returns,CS,97,7,"$25,000 under $30,000",16,782028.0
+tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Itemized deductions | Contributions deduction | Total | Number of returns,CS,97,8,"$30,000 under $35,000",17,845049.0
+tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Itemized deductions | Contributions deduction | Total | Number of returns,CS,97,9,"$35,000 under $40,000",18,982127.0
+tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Itemized deductions | Contributions deduction | Total | Number of returns,CS,97,10,"$40,000 under $45,000",19,1073843.0
+tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Itemized deductions | Contributions deduction | Total | Number of returns,CS,97,11,"$45,000 under $50,000",20,1130376.0
+tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Itemized deductions | Contributions deduction | Total | Number of returns,CS,97,12,"$50,000 under $55,000",21,1184881.0
+tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Itemized deductions | Contributions deduction | Total | Number of returns,CS,97,13,"$55,000 under $60,000",22,1223037.0
+tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Itemized deductions | Contributions deduction | Total | Number of returns,CS,97,14,"$60,000 under $75,000",23,3490689.0
+tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Itemized deductions | Contributions deduction | Total | Number of returns,CS,97,15,"$75,000 under $100,000",24,5768411.0
+tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Itemized deductions | Contributions deduction | Total | Number of returns,CS,97,16,"$100,000 under $200,000",25,12289353.0
+tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Itemized deductions | Contributions deduction | Total | Number of returns,CS,97,17,"$200,000 under $500,000",26,4648589.0
+tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Itemized deductions | Contributions deduction | Total | Number of returns,CS,97,18,"$500,000 under $1,000,000",27,772491.0
+tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Itemized deductions | Contributions deduction | Total | Number of returns,CS,97,19,"$1,000,000 under $1,500,000",28,168980.0
+tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Itemized deductions | Contributions deduction | Total | Number of returns,CS,97,20,"$1,500,000 under $2,000,000",29,68548.0
+tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Itemized deductions | Contributions deduction | Total | Number of returns,CS,97,21,"$2,000,000 under $5,000,000",30,102964.0
+tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Itemized deductions | Contributions deduction | Total | Number of returns,CS,97,22,"$5,000,000 under $10,000,000",31,26315.0
+tab21,2015,15in21id.xls,id_contributions,count,nz,all,Charitable contributions — number of returns,Itemized deductions | Contributions deduction | Total | Number of returns,CS,97,23,"$10,000,000 or more",32,17133.0
+tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Itemized deductions | Contributions deduction | Total | Amount,CT,98,1,"All returns, total",10,221850264000.0
+tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Itemized deductions | Contributions deduction | Total | Amount,CT,98,2,"Under $5,000",11,138539000.0
+tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Itemized deductions | Contributions deduction | Total | Amount,CT,98,3,"$5,000 under $10,000",12,316739000.0
+tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Itemized deductions | Contributions deduction | Total | Amount,CT,98,4,"$10,000 under $15,000",13,802263000.0
+tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Itemized deductions | Contributions deduction | Total | Amount,CT,98,5,"$15,000 under $20,000",14,1239419000.0
+tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Itemized deductions | Contributions deduction | Total | Amount,CT,98,6,"$20,000 under $25,000",15,1595153000.0
+tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Itemized deductions | Contributions deduction | Total | Amount,CT,98,7,"$25,000 under $30,000",16,2077193000.0
+tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Itemized deductions | Contributions deduction | Total | Amount,CT,98,8,"$30,000 under $35,000",17,2231311000.0
+tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Itemized deductions | Contributions deduction | Total | Amount,CT,98,9,"$35,000 under $40,000",18,2750188000.0
+tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Itemized deductions | Contributions deduction | Total | Amount,CT,98,10,"$40,000 under $45,000",19,3230088000.0
+tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Itemized deductions | Contributions deduction | Total | Amount,CT,98,11,"$45,000 under $50,000",20,3163725000.0
+tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Itemized deductions | Contributions deduction | Total | Amount,CT,98,12,"$50,000 under $55,000",21,3413481000.0
+tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Itemized deductions | Contributions deduction | Total | Amount,CT,98,13,"$55,000 under $60,000",22,3461286000.0
+tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Itemized deductions | Contributions deduction | Total | Amount,CT,98,14,"$60,000 under $75,000",23,10907307000.0
+tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Itemized deductions | Contributions deduction | Total | Amount,CT,98,15,"$75,000 under $100,000",24,20349620000.0
+tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Itemized deductions | Contributions deduction | Total | Amount,CT,98,16,"$100,000 under $200,000",25,51469427000.0
+tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Itemized deductions | Contributions deduction | Total | Amount,CT,98,17,"$200,000 under $500,000",26,34721825000.0
+tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Itemized deductions | Contributions deduction | Total | Amount,CT,98,18,"$500,000 under $1,000,000",27,13976256000.0
+tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Itemized deductions | Contributions deduction | Total | Amount,CT,98,19,"$1,000,000 under $1,500,000",28,6534530000.0
+tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Itemized deductions | Contributions deduction | Total | Amount,CT,98,20,"$1,500,000 under $2,000,000",29,3856554000.0
+tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Itemized deductions | Contributions deduction | Total | Amount,CT,98,21,"$2,000,000 under $5,000,000",30,11066495000.0
+tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Itemized deductions | Contributions deduction | Total | Amount,CT,98,22,"$5,000,000 under $10,000,000",31,7610740000.0
+tab21,2015,15in21id.xls,id_contributions,amount,nz,all,Charitable contributions,Itemized deductions | Contributions deduction | Total | Amount,CT,98,23,"$10,000,000 or more",32,36938122000.0

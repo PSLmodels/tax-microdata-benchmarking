@@ -82,7 +82,7 @@ def read_irs_table(table: str, year: int) -> pd.DataFrame:
         return pd.DataFrame()
 
     first_row, last_row = DATA_ROWS[key]
-    wb = xlrd.open_workbook(str(fpath))
+    wb = xlrd.open_workbook(str(fpath), formatting_info=True)
     ws = wb.sheet_by_index(0)
 
     # Income range labels are always in column A (index 0).
@@ -92,15 +92,57 @@ def read_irs_table(table: str, year: int) -> pd.DataFrame:
         for r in range(first_row, last_row + 1)
     ]
 
+    # Build merge map: expand merged-cell values to every covered cell.
+    # Without this, only the top-left cell of a spanner carries the value;
+    # all other cells in the span read as empty.
+    merge_map: dict = {}
+    for row_lo, row_hi, col_lo, col_hi in ws.merged_cells:
+        val = ws.cell_value(row_lo, col_lo)
+        for r in range(row_lo, row_hi):
+            for c in range(col_lo, col_hi):
+                merge_map[(r, c)] = val
+
+    def cell_text(row_0: int, col_0: int) -> str:
+        """Return cell value, falling back to merged-region value if blank."""
+        v = ws.cell_value(row_0, col_0)
+        if v == "" or v is None:
+            v = merge_map.get((row_0, col_0), "")
+        return str(v).strip().replace("\n", " ").replace("  ", " ")
+
     def get_col_header(col_idx: int) -> str:
-        """Collect IRS header text for a column from all rows above the data."""
-        parts = []
-        for r in range(first_row - 1):  # rows 0..(first_row-2) in 0-based
-            v = str(ws.cell_value(r, col_idx)).strip()
+        """Build a clean hierarchical header string for one column.
+
+        Skips:
+          row 1  — table title (boilerplate, same for every column)
+          row 2  — "All figures are estimates..." (boilerplate)
+          row first_row-1  — IRS column-number row (numeric labels 1.0, 2.0…)
+
+        Expands merged/spanner cells so that every column gets the full
+        parent header text, not just the first column in the span.
+
+        Deduplicates consecutive identical tokens (artefact of multi-row
+        merges where the same text is stored in both covered rows).
+        """
+        skip_rows_0based = {
+            0,               # row 1: table title
+            1,               # row 2: "All figures..." note
+            first_row - 2,   # last header row: IRS column numbers
+        }
+        raw_parts = []
+        for r in range(first_row - 1):  # 0-based rows before first data row
+            if r in skip_rows_0based:
+                continue
+            v = cell_text(r, col_idx)
             if v:
-                # Normalise multi-line cells (xlrd preserves \n)
-                parts.append(v.replace("\n", " ").replace("  ", " "))
-        return " | ".join(parts) if parts else ""
+                raw_parts.append(v)
+
+        # Deduplicate consecutive identical values produced by multi-row merges
+        deduped = []
+        for part in raw_parts:
+            if not deduped or part != deduped[-1]:
+                deduped.append(part)
+
+        return " | ".join(deduped)
 
     rows = []
     for spec in COLUMNS[table]:
