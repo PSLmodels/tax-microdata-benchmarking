@@ -28,7 +28,7 @@ FILER_MIN_INCOME = {
 }
 EITC_CLAIM_THD = {
     2021: 1800,  # reduces 2023 EITC from $82.3b to $71.6b, a claim rate of 87%
-    2022: 1400,  # reduces 2023 EITC from $79.1b to $71.4b, a claim rate of 90%
+    2022: 1400,  # reduces 2023 EITC from $78.2b to $70.7b, a claim rate of 90%
 }
 ACTC_CLAIM_THD = {
     2021: 0,  # always leave 2021 value at zero

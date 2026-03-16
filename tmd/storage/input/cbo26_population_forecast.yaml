@@ -1,10 +1,11 @@
-# SOURCE:
-# CBO, "The Demographic Outlook: 2026 to 2056" (January 2026).
+# SOURCE: CBO, "The Demographic Outlook: 2026 to 2056" (January 2026).
 # URL: https://www.cbo.gov/publication/61879
-# - Data Underlying Figures, Figure 2 spreadsheet tab,
-#     Total Population (millions) [for years from 2026 through 2075]
-# - Demographic Projections, Population and growth spreadsheet tab,
-#     Total Social Security area population (millions) [for years before 2026]
+# The following population data are extracted from two separate spreadsheets
+# that contain the same population data for the years 2026-2056:
+# - Data Underlying Figures, 61879-Data.xlsx,
+#   sheet "Figure 2", column "Total" (years 2010–2025 extracted)
+# - Demographic Projections, 61879-Demographic-Projections.xlsx,
+#   sheet "1. Population and growth", row "Total" (years 2026–2075 extracted)
 2010: 313.988
 2011: 316.290
 2012: 318.428
