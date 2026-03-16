@@ -14,13 +14,14 @@ from tmd.areas.create_area_weights import (
 )
 from tmd.areas import AREAS_FOLDER
 from tmd.storage import STORAGE_FOLDER
+from tmd.imputation_assumptions import POPULATION_FILE
 
 OTHER_DEPENDENCIES = [
     AREAS_FOLDER / "create_area_weights.py",
     STORAGE_FOLDER / "output" / "tmd.csv.gz",
     STORAGE_FOLDER / "output" / "tmd_weights.csv.gz",
     STORAGE_FOLDER / "output" / "tmd_growfactors.csv",
-    STORAGE_FOLDER / "input" / "cbo_population_forecast.yaml",
+    STORAGE_FOLDER / "input" / POPULATION_FILE,
     # Tax-Calculator is a dependency, so do "make tmd_files" when upgrading T-C
 ]
 

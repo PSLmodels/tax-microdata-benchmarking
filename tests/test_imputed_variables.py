@@ -55,9 +55,9 @@ def test_obbba_deduction_tax_benefits(
             # https://taxpolicycenter.org/taxvox/
             #         budget-laws-tax-cuts-overtime-and-
             #         tips-are-popular-few-will-benefit
-            "exp_totben_2022": 24.38,
+            "exp_totben_2022": 24.26,
             "exp_affpct_2022": 8.77,
-            "exp_affben_2022": 1399,
+            "exp_affben_2022": 1403,
         },
         "TIP": {  # new OBBBA tip income deduction
             "reform_dict": {"TipIncomeDed_c": {simyear: 0}},
@@ -72,8 +72,8 @@ def test_obbba_deduction_tax_benefits(
             # https://taxpolicycenter.org/taxvox/
             #         budget-laws-tax-cuts-overtime-and-
             #         tips-are-popular-few-will-benefit
-            "exp_totben_2022": 7.39,
-            "exp_affpct_2022": 2.64,
+            "exp_totben_2022": 7.24,
+            "exp_affpct_2022": 2.61,
             "exp_affben_2022": 1409,
         },
         "ALI": {  # new OBBBA auto loan interest deduction
@@ -87,9 +87,9 @@ def test_obbba_deduction_tax_benefits(
             # because the Tax Policy Center did not provide any
             # statistics for this new deduction.  However, see the
             # following reform analysis for FOUR reforms.
-            "exp_totben_2022": 8.82,
-            "exp_affpct_2022": 12.66,
-            "exp_affben_2022": 350,
+            "exp_totben_2022": 7.75,
+            "exp_affpct_2022": 12.15,
+            "exp_affben_2022": 324,
         },
         "ALL": {  # above three deductions plus new OBBBA senior deduction
             "reform_dict": {
@@ -107,9 +107,9 @@ def test_obbba_deduction_tax_benefits(
             # https://taxpolicycenter.org/model-estimates/T25-0257
             # Note that the $1081 TPC estimate is derived by dividing
             # the all-unit average of $320 by the 0.296 affpct.
-            "exp_totben_2022": 63.35,
-            "exp_affpct_2022": 29.08,
-            "exp_affben_2022": 1095,
+            "exp_totben_2022": 61.82,
+            "exp_affpct_2022": 28.86,
+            "exp_affben_2022": 1087,
         },
     }
     output_variables = [

@@ -19,17 +19,20 @@ ACGNS_INDEX = 13
 ASOCSEC_INDEX = 14
 AUCOMP_INDEX = 15
 
-
-PGFFILE = STORAGE_FOLDER / "input" / "puf_growfactors.csv"
-TGFFILE = STORAGE_FOLDER / "output" / "tmd_growfactors.csv"
+INPUT_FILE = {
+    2021: "taxdata25_growfactors.csv",
+    2022: "taxdata26_growfactors.csv",
+}
+INFILE = STORAGE_FOLDER / "input" / INPUT_FILE[TAXYEAR]
+OUTFILE = STORAGE_FOLDER / "output" / "tmd_growfactors.csv"
 
 
 def create_factors_file():
     """
     Create Tax-Calculator-style factors file for FIRST_YEAR through LAST_YEAR.
     """
-    # read PUF-factors from PGFFILE
-    gfdf = pd.read_csv(PGFFILE)
+    # read PUF-factors from INFILE
+    gfdf = pd.read_csv(INFILE)
     first_puf_year = gfdf.YEAR.iat[0]
     last_puf_year = gfdf.YEAR.iat[-1]
 
@@ -88,7 +91,7 @@ def create_factors_file():
 
     # write gfdf to CSV-formatted file
     gfdf.YEAR = gfdf.YEAR.astype(int)
-    gfdf.to_csv(TGFFILE, index=False, float_format="%.6f")
+    gfdf.to_csv(OUTFILE, index=False, float_format="%.6f")
 
 
 if __name__ == "__main__":
