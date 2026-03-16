@@ -1,9 +1,0 @@
-# Mapping table
-
-| Col1 | Col2 | Col3 |
-|------|------|------|
-|      |      |      |
-|      |      |      |
-|      |      |      |
-
-: Mapping variables
