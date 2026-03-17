@@ -21,6 +21,12 @@ EARN_SPLIT_RNG_SEED = 18374659
 ITMDED_GROW_RATE = 0.02  # annual growth rate in itemized deduction amounts
 # grow rate applied to inflate 2015 amounts to 2021+ amounts in uprate_puf.py
 
+# parameters used to impute CPS variables:
+CPS_TAXABLE_INTEREST_FRACTION = 0.680  # from SOI 2020 data
+CPS_QUALIFIED_DIVIDEND_FRACTION = 0.448  # from SOI 2018 data
+CPS_TAXABLE_PENSION_FRACTION = 1.0  # no source, so arbitrary assumption
+CPS_LONG_TERM_CAPGAIN_FRACTION = 0.880  # from SOI 2012 data
+
 # parameters used to identify CPS nonfilers:
 FILER_MIN_INCOME = {
     2021: 8600,

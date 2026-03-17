@@ -3,14 +3,20 @@ from pathlib import Path
 import json
 from io import BytesIO
 from zipfile import ZipFile
-import yaml
 import requests
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
 import taxcalc
 from tmd.storage import STORAGE_FOLDER
-from tmd.imputation_assumptions import CPS_FILER_MIN_INCOME, CREDIT_CLAIMING
+from tmd.imputation_assumptions import (
+    CREDIT_CLAIMING,
+    CPS_FILER_MIN_INCOME,
+    CPS_TAXABLE_INTEREST_FRACTION,
+    CPS_QUALIFIED_DIVIDEND_FRACTION,
+    CPS_TAXABLE_PENSION_FRACTION,
+    CPS_LONG_TERM_CAPGAIN_FRACTION,
+)
 
 TAX_UNIT_COLUMNS = [
     "ACTC_CRD",
@@ -375,15 +381,6 @@ def create_tc_cps(taxyear: int) -> (pd.DataFrame, pd.Series):
     person = load_raw_cps_person_data(taxyear)
     print(f"Creating CPS dataframe for year {taxyear}...")
 
-    # load imputation parameters
-    yamlfilename = os.path.join(
-        os.path.abspath(os.path.dirname(__file__)),
-        STORAGE_FOLDER / "input" / "imputation_parameters.yaml",
-    )
-    with open(yamlfilename, "r", encoding="utf-8") as yamlfile:
-        p = yaml.safe_load(yamlfile)
-    assert isinstance(p, dict)
-
     # identify head, spouse, dependent for each person
     is_head, is_spouse, is_dependent = _identify_head_spouse_dependent(person)
     is_non_dep = ~is_dependent
@@ -457,19 +454,17 @@ def create_tc_cps(taxyear: int) -> (pd.DataFrame, pd.Series):
     var["e02100s"] = map_spouse(farm_income)
 
     # ... interest income
-    var["E00300"] = sum_nondep(
-        interest_income * p["taxable_interest_fraction"]
-    )
+    var["E00300"] = sum_nondep(interest_income * CPS_TAXABLE_INTEREST_FRACTION)
     var["E00400"] = sum_nondep(
-        interest_income * (1 - p["taxable_interest_fraction"])
+        interest_income * (1 - CPS_TAXABLE_INTEREST_FRACTION)
     )
 
     # ... dividend income
     var["E00650"] = sum_nondep(
-        dividend_income * p["qualified_dividend_fraction"]
+        dividend_income * CPS_QUALIFIED_DIVIDEND_FRACTION
     )
     non_qual_div = sum_nondep(
-        dividend_income * (1 - p["qualified_dividend_fraction"])
+        dividend_income * (1 - CPS_QUALIFIED_DIVIDEND_FRACTION)
     )
     var["E00600"] = non_qual_div + var["E00650"]
 
@@ -483,16 +478,16 @@ def create_tc_cps(taxyear: int) -> (pd.DataFrame, pd.Series):
     var["E02300"] = sum_nondep(uc_val)
 
     # ... pensions and annuities
-    taxable_pension = sum_nondep(pension_val * p["taxable_pension_fraction"])
+    taxable_pension = sum_nondep(pension_val * CPS_TAXABLE_PENSION_FRACTION)
     tax_exempt_pension = sum_nondep(
-        pension_val * (1 - p["taxable_pension_fraction"])
+        pension_val * (1 - CPS_TAXABLE_PENSION_FRACTION)
     )
     var["E01700"] = taxable_pension
     var["E01500"] = taxable_pension + tax_exempt_pension
 
     # ... capital gains
-    var["P23250"] = sum_nondep(cap_val * p["long_term_capgain_fraction"])
-    var["P22250"] = sum_nondep(cap_val * (1 - p["long_term_capgain_fraction"]))
+    var["P23250"] = sum_nondep(cap_val * CPS_LONG_TERM_CAPGAIN_FRACTION)
+    var["P22250"] = sum_nondep(cap_val * (1 - CPS_LONG_TERM_CAPGAIN_FRACTION))
 
     # ... alimony income (OI_OFF code 20)
     var["E00800"] = sum_nondep((oi_off == 20) * oi_val)
@@ -518,8 +513,7 @@ def create_tc_cps(taxyear: int) -> (pd.DataFrame, pd.Series):
 
     var["E01400"] = sum_nondep(retirement_dist["regular_ira"])
 
-    # ... IRA contributions (traditional_ira_contributions from RETCB_VAL)
-    #     (use same allocation logic as in add_personal_income_variables)
+    # ... IRA and 401(k) contributions
     LIMIT_401K = 20_500
     LIMIT_401K_CATCH_UP = 6_500
     LIMIT_IRA = 6_000
