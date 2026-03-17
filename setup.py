@@ -10,6 +10,7 @@ setup(
         "clarabel",
         "scikit-learn",
         "scipy",
+        "xlrd",
         "jax",
         "black>=26.1.0",
         "pycodestyle>=2.14.0",
