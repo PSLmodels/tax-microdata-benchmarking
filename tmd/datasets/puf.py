@@ -1,7 +1,9 @@
-import yaml
+from pathlib import Path
+import json
 import numpy as np
 import pandas as pd
 from microdf import MicroDataFrame
+import taxcalc
 from tmd.storage import STORAGE_FOLDER
 from tmd.datasets.uprate_puf import uprate_puf
 from tmd.utils.imputation import Imputation
@@ -507,17 +509,14 @@ def create_tc_puf(taxyear: int) -> pd.DataFrame:
     tcdf = pd.DataFrame(var)
 
     # correct variable name casing for Tax-Calculator via renaming
-    with open(
-        STORAGE_FOLDER / "input" / "tc_variable_metadata.yaml",
-        "r",
-        encoding="utf-8",
-    ) as yfile:
-        tc_variable_metadata = yaml.safe_load(yfile)
+    json_file_path = Path(taxcalc.__file__).parent / "records_variables.json"
+    with open(json_file_path, "r", encoding="utf-8") as jfile:
+        taxcalc_variable_metadata = json.load(jfile)
     renames = {}
     for variable in tcdf.columns:
-        if variable.upper() in tc_variable_metadata["read"]:
+        if variable.upper() in taxcalc_variable_metadata["read"]:
             renames[variable] = variable.upper()
-        elif variable.lower() in tc_variable_metadata["read"]:
+        elif variable.lower() in taxcalc_variable_metadata["read"]:
             renames[variable] = variable.lower()
     tcdf.rename(columns=renames, inplace=True)
 

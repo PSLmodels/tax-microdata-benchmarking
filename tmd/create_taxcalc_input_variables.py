@@ -13,7 +13,6 @@ from tmd.imputation_assumptions import (
     CPS_WEIGHTS_SCALE,
 )
 from tmd.storage import STORAGE_FOLDER
-from tmd.utils.taxcalc_utils import update_tc_variable_metadata
 
 DUMP_ALL_UNROUNDED_VARIABLES = False
 
@@ -29,7 +28,6 @@ def create_variable_file(write_file=True):
     print(f"  ASSUMED ITMDED_GROW_RATE = {ITMDED_GROW_RATE:.3f}")
     print(f"  ASSUMED W2_WAGES_RATIO = {W2_WAGES_RATIO[TAXYEAR]:.5f}")
     print(f"  ASSUMED CPS_WEIGHTS_SCALE = {CPS_WEIGHTS_SCALE[TAXYEAR]:.2f}")
-    update_tc_variable_metadata()
     vdf = create_tmd_dataframe(TAXYEAR)
     vdf.FLPDYR = TAXYEAR
     vdf.agi_bin = 0

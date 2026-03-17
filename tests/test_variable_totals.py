@@ -4,16 +4,18 @@ checking that the variable total is within the ballpark of
 the taxdata TAXYEAR PUF's totals.
 """
 
+from pathlib import Path
+import json
 import yaml
 import pytest
-from tmd.storage import STORAGE_FOLDER
+import taxcalc
 
 
 @pytest.mark.skip(reason="See issue #410: expected values need updating")
 def test_variable_totals(tests_folder, tmd_variables):
-    vpath = STORAGE_FOLDER / "input" / "tc_variable_metadata.yaml"
-    with open(vpath, "r", encoding="utf-8") as f:
-        tc_variable_metadata = yaml.safe_load(f)
+    json_file_path = Path(taxcalc.__file__).parent / "records_variables.json"
+    with open(json_file_path, "r", encoding="utf-8") as jfile:
+        taxcalc_variable_metadata = json.load(jfile)
     vpath = tests_folder / "taxdata_variable_totals.yaml"
     with open(vpath, "r", encoding="utf-8") as f:
         td_variable_totals = yaml.safe_load(f)
@@ -46,7 +48,7 @@ def test_variable_totals(tests_folder, tmd_variables):
     # also exempt any variable split between head and spouse
     test_exempted_variables += [
         variable
-        for variable in tc_variable_metadata["read"]
+        for variable in taxcalc_variable_metadata["read"]
         if variable.endswith("p") or variable.endswith("s")
     ]
     variables_to_test = [
@@ -58,7 +60,7 @@ def test_variable_totals(tests_folder, tmd_variables):
     puf_record = tmd_variables.data_source == 1
     emsg = ""
     for var in variables_to_test:
-        meta = tc_variable_metadata["read"][var]
+        meta = taxcalc_variable_metadata["read"][var]
         name = meta.get("desc")
         total = (tmd_variables[var] * weight * puf_record).sum()
         if td_variable_totals[var] == 0:

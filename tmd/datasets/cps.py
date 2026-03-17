@@ -1,4 +1,6 @@
 import os
+from pathlib import Path
+import json
 from io import BytesIO
 from zipfile import ZipFile
 import yaml
@@ -6,7 +8,7 @@ import requests
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
-import taxcalc as tc
+import taxcalc
 from tmd.storage import STORAGE_FOLDER
 from tmd.imputation_assumptions import CPS_FILER_MIN_INCOME, CREDIT_CLAIMING
 
@@ -339,7 +341,7 @@ def _is_tax_filer(tcdf: pd.DataFrame, taxyear: int) -> pd.Series:
         + tcdf["p22250"]
         + tcdf["p23250"]
     )
-    rec = tc.Records(
+    rec = taxcalc.Records(
         data=tcdf,
         start_year=taxyear,
         gfactors=None,
@@ -348,9 +350,9 @@ def _is_tax_filer(tcdf: pd.DataFrame, taxyear: int) -> pd.Series:
         exact_calculations=True,
         weights_scale=1.0,
     )
-    pol = tc.Policy()
+    pol = taxcalc.Policy()
     pol.implement_reform(CREDIT_CLAIMING)
-    calc = tc.Calculator(records=rec, policy=pol)
+    calc = taxcalc.Calculator(records=rec, policy=pol)
     calc.advance_to_year(taxyear)
     calc.calc_all()
     output = calc.dataframe(["eitc", "c11070"])
@@ -658,17 +660,14 @@ def create_tc_cps(taxyear: int) -> (pd.DataFrame, pd.Series):
     tcdf = pd.DataFrame(var)
 
     # correct variable name casing for Tax-Calculator
-    with open(
-        STORAGE_FOLDER / "input" / "tc_variable_metadata.yaml",
-        "r",
-        encoding="utf-8",
-    ) as yfile:
-        tc_variable_metadata = yaml.safe_load(yfile)
+    json_file_path = Path(taxcalc.__file__).parent / "records_variables.json"
+    with open(json_file_path, "r", encoding="utf-8") as jfile:
+        taxcalc_variable_metadata = json.load(jfile)
     renames = {}
     for variable in tcdf.columns:
-        if variable.upper() in tc_variable_metadata["read"]:
+        if variable.upper() in taxcalc_variable_metadata["read"]:
             renames[variable] = variable.upper()
-        elif variable.lower() in tc_variable_metadata["read"]:
+        elif variable.lower() in taxcalc_variable_metadata["read"]:
             renames[variable] = variable.lower()
     tcdf.rename(columns=renames, inplace=True)
 
