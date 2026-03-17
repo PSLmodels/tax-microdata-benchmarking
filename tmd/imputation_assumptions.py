@@ -68,7 +68,7 @@ ALI_scale = {2021: 4.0, 2022: 4.0}
 
 # population projection file used to extrapolate TAXYEAR sampling weights
 POP_FILE = {
-    2021: "cbo25_population_forecast.yaml",
-    2022: "cbo26_population_forecast.yaml",
+    2021: "cbo25_population.yaml",
+    2022: "cbo26_population.yaml",
 }
 POPULATION_FILE = POP_FILE[TAXYEAR]
