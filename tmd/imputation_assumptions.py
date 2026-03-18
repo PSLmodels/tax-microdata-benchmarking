@@ -61,11 +61,11 @@ CLARABEL_MAX_ITER = 1000  # maximum solver iterations
 
 # parameters for MICE imputation of missing OBBBA deduction variables:
 # ... overtime_income:
-OTM_convert_zero_prob = {2021: 0.077, 2022: 0.079}
-OTM_scale = {2021: 2.4, 2022: 2.3}
+OTM_convert_zero_prob = {2021: 0.077, 2022: 0.078}
+OTM_scale = {2021: 2.4, 2022: 2.4}
 # ... tip_income:
 TIP_convert_zero_prob = {2021: 0.014, 2022: 0.014}
-TIP_scale = {2021: 1.0, 2022: 1.0}
+TIP_scale = {2021: 1.0, 2022: 0.96}
 # ... auto_loan_interest:
 ALI_convert_zero_prob = {2021: 0.060, 2022: 0.060}
 ALI_scale = {2021: 4.0, 2022: 4.0}
