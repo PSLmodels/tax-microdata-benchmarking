@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from tmd.imputation_assumptions import ITMDED_GROW_RATE
+from tmd.imputation_assumptions import ITMDED_GROW_RATE, SALT_GROW_RATE
 from tmd.storage import STORAGE_FOLDER
 
 USE_VARIABLE_SPECIFIC_POPULATION_GROWTH_DIVISORS = False
@@ -138,16 +138,18 @@ def uprate_puf(puf, from_year, to_year):
     for variable, puf_variable in SOI_TO_PUF_STRAIGHT_RENAMES.items():
         growth = get_growth(variable, from_year, to_year)
         if variable in [
-            "medical_expense_deductions_uncapped",
             "itemized_state_income_tax_deductions",
             "itemized_real_estate_tax_deductions",
+        ]:
+            nyears = to_year - from_year
+            growth = (1.0 + SALT_GROW_RATE) ** nyears
+        elif variable in [
+            "medical_expense_deductions_uncapped",
             "interest_paid_deductions",
             "charitable_contributions_deductions",
         ]:
-            # print("%% OLD_VAR_GROWTH:", variable, growth)
             nyears = to_year - from_year
             growth = (1.0 + ITMDED_GROW_RATE) ** nyears
-            # print("%% NEW_VAR_GROWTH:", variable, growth)
         puf[puf_variable] *= growth
 
     # positive and negative split variables
