@@ -8,8 +8,8 @@ IMPUTATION_RF_RNG_SEED = 1928374  # random number seed used by RandomForest
 IMPUTATION_BETA_RNG_SEED = 37465  # random number seed used for Beta variates
 
 W2_WAGES_RATIO = {  # parameter used to impute pass-through W-2 wages
-    2021: 0.15,
-    2022: 0.15,
+    2021: 0.150,
+    2022: 0.155,
 }
 
 # RNG seeds used for demographic decoding and earnings splits in puf.py:
@@ -18,15 +18,12 @@ FILER_AGE_SPOUSE_RNG_SEED = 64963753
 DEP_AGE_RNG_SEED = 24354657
 EARN_SPLIT_RNG_SEED = 18374659
 
-ITMDED_GROW_RATE = 0.02  # annual per-return growth rate for non-SALT itmded
-SALT_GROW_RATE = (
-    0.047  # annual per-return growth rate for SALT (E18400, E18500)
-)
-# SALT_GROW_RATE is based on growth in state and local property, general
-# sales, and individual income taxes from 2015 to 2022 per the Census
-# Bureau Annual Survey of State and Local Government Finances.
-# ITMDED_GROW_RATE applies to non-SALT itemized deductions.
-# Both rates are applied in uprate_puf.py to inflate 2015 amounts.
+# annual growth rates for SALT and all other itemized deductions in PUF dataset
+SALT_GROW_RATE = 0.047  # for SALT (E18400, E18500) itemized deduction amounts
+ITMDED_GROW_RATE = 0.02  # for non-SALT itemized deduction amounts
+# The SALT_GROW_RATE is based on growth in state and local property,
+# general sales, and individual income taxes, from 2015 to 2022, per the
+# Census Bureau Annual Survey of State and Local Government Finances.
 
 # parameters used to impute CPS variables:
 CPS_TAXABLE_INTEREST_FRACTION = 0.680  # from SOI 2020 data
@@ -37,11 +34,11 @@ CPS_LONG_TERM_CAPGAIN_FRACTION = 0.880  # from SOI 2012 data
 # parameters used to identify CPS nonfilers:
 FILER_MIN_INCOME = {
     2021: 8600,
-    2022: 10000,
+    2022: 9300,
 }
 EITC_CLAIM_THD = {
     2021: 1800,  # reduces 2023 EITC from $82.3b to $71.6b, a claim rate of 87%
-    2022: 1400,  # reduces 2023 EITC from $78.2b to $70.7b, a claim rate of 90%
+    2022: 1600,  # reduces 2023 EITC from $80.5b to $72.0b, a claim rate of 89%
 }
 ACTC_CLAIM_THD = {
     2021: 0,  # always leave 2021 value at zero
