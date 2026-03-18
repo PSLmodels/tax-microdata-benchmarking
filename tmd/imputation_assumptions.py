@@ -18,8 +18,15 @@ FILER_AGE_SPOUSE_RNG_SEED = 64963753
 DEP_AGE_RNG_SEED = 24354657
 EARN_SPLIT_RNG_SEED = 18374659
 
-ITMDED_GROW_RATE = 0.02  # annual growth rate in itemized deduction amounts
-# grow rate applied to inflate 2015 amounts to 2021+ amounts in uprate_puf.py
+ITMDED_GROW_RATE = 0.02  # annual per-return growth rate for non-SALT itmded
+SALT_GROW_RATE = (
+    0.047  # annual per-return growth rate for SALT (E18400, E18500)
+)
+# SALT_GROW_RATE is based on growth in state and local property, general
+# sales, and individual income taxes from 2015 to 2022 per the Census
+# Bureau Annual Survey of State and Local Government Finances.
+# ITMDED_GROW_RATE applies to non-SALT itemized deductions.
+# Both rates are applied in uprate_puf.py to inflate 2015 amounts.
 
 # parameters used to impute CPS variables:
 CPS_TAXABLE_INTEREST_FRACTION = 0.680  # from SOI 2020 data
