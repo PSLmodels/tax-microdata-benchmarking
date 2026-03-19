@@ -8,6 +8,7 @@ from tmd.imputation_assumptions import (
     TAXYEAR,
     IMPUTATION_RF_RNG_SEED,
     IMPUTATION_BETA_RNG_SEED,
+    SALT_GROW_RATE,
     ITMDED_GROW_RATE,
     W2_WAGES_RATIO,
     CPS_WEIGHTS_SCALE,
@@ -21,10 +22,12 @@ def create_variable_file(write_file=True):
     """
     Create Tax-Calculator-style input variable file for TAXYEAR.
     """
+    assert TAXYEAR == 2022, "Assumptions for obsolete 2021 data not calibrated"
     # construct dataframe containing input and output variables
     print(f"Creating {TAXYEAR} PUF+CPS file assuming:")
     print(f"  IMPUTATION_RF_RNG_SEED = {IMPUTATION_RF_RNG_SEED}")
     print(f"  IMPUTATION_BETA_RNG_SEED = {IMPUTATION_BETA_RNG_SEED}")
+    print(f"  ASSUMED SALT_GROW_RATE = {SALT_GROW_RATE:.3f}")
     print(f"  ASSUMED ITMDED_GROW_RATE = {ITMDED_GROW_RATE:.3f}")
     print(f"  ASSUMED W2_WAGES_RATIO = {W2_WAGES_RATIO[TAXYEAR]:.5f}")
     print(f"  ASSUMED CPS_WEIGHTS_SCALE = {CPS_WEIGHTS_SCALE[TAXYEAR]:.2f}")
