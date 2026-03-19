@@ -28,7 +28,7 @@ import time
 import numpy as np
 import pandas as pd
 
-from tmd.areas.create_area_weights_clarabel import (
+from tmd.areas.create_area_weights import (
     AREA_MULTIPLIER_MAX,
     STATE_TARGET_DIR,
     STATE_WEIGHT_DIR,

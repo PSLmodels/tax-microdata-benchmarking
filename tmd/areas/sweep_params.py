@@ -20,7 +20,7 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 import numpy as np
 import yaml
 
-from tmd.areas.create_area_weights_clarabel import (
+from tmd.areas.create_area_weights import (
     AREA_CONSTRAINT_TOL,
     AREA_MAX_ITER,
     AREA_MULTIPLIER_MIN,

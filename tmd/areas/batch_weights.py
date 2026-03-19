@@ -23,8 +23,6 @@ import numpy as np
 import pandas as pd
 import yaml
 
-from tmd.areas.create_area_weights import valid_area
-
 # Module-level cache for TMD data (one per worker process)
 _WORKER_VDF = None
 _WORKER_POP = None
@@ -42,7 +40,7 @@ def _init_worker(target_dir=None, weight_dir=None):
         _WORKER_WEIGHT_DIR = Path(weight_dir)
     if _WORKER_VDF is not None:
         return
-    from tmd.areas.create_area_weights_clarabel import (
+    from tmd.areas.create_area_weights import (
         POPFILE_PATH,
         _load_taxcalc_data,
     )
@@ -59,7 +57,7 @@ def _solve_one_area(area):
     Returns (area, elapsed, n_targets, n_violated, status, max_viol_pct).
     """
     _init_worker()
-    from tmd.areas.create_area_weights_clarabel import (
+    from tmd.areas.create_area_weights import (
         AREA_CONSTRAINT_TOL,
         AREA_MAX_ITER,
         AREA_MULTIPLIER_MAX,
@@ -182,19 +180,11 @@ def _solve_one_area(area):
 
 def _list_target_areas(target_dir=None):
     """Return sorted list of area codes with target files."""
-    from tmd.areas.create_area_weights_clarabel import STATE_TARGET_DIR
+    from tmd.areas.create_area_weights import STATE_TARGET_DIR
 
     tfolder = target_dir or STATE_TARGET_DIR
     tpaths = sorted(tfolder.glob("*_targets.csv"))
-    areas = []
-    for tpath in tpaths:
-        area = tpath.name.split("_")[0]
-        old_stderr = sys.stderr
-        sys.stderr = io.StringIO()
-        ok = valid_area(area)
-        sys.stderr = old_stderr
-        if ok:
-            areas.append(area)
+    areas = [tpath.name.split("_")[0] for tpath in tpaths]
     return areas
 
 
@@ -234,7 +224,7 @@ def run_batch(
     weight_dir : Path, optional
         Directory for weight output.
     """
-    from tmd.areas.create_area_weights_clarabel import (
+    from tmd.areas.create_area_weights import (
         STATE_TARGET_DIR,
         STATE_WEIGHT_DIR,
     )

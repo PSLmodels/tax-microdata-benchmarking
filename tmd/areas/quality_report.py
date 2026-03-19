@@ -21,7 +21,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from tmd.areas.create_area_weights_clarabel import (
+from tmd.areas.create_area_weights import (
     AREA_CONSTRAINT_TOL,
     STATE_WEIGHT_DIR,
 )

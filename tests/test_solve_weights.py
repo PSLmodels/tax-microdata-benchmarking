@@ -18,13 +18,13 @@ import pytest
 
 from tmd.areas import AREAS_FOLDER
 from tmd.areas.batch_weights import _filter_areas
-from tmd.areas.create_area_weights_clarabel import (
+from tmd.areas.create_area_weights import (
     AREA_CONSTRAINT_TOL,
     _build_constraint_matrix,
     _drop_impossible_targets,
     _load_taxcalc_data,
     _solve_area_qp,
-    create_area_weights_file_clarabel,
+    create_area_weights_file,
 )
 from tmd.areas.quality_report import (
     _humanize_desc,
@@ -47,14 +47,14 @@ def test_clarabel_solver_xx():
 
     with tempfile.TemporaryDirectory() as tmpdir:
         weight_dir = Path(tmpdir)
-        rc = create_area_weights_file_clarabel(
+        rc = create_area_weights_file(
             "xx",
             write_log=True,
             write_file=True,
             target_dir=target_dir,
             weight_dir=weight_dir,
         )
-        assert rc == 0, "create_area_weights_file_clarabel returned non-zero"
+        assert rc == 0, "create_area_weights_file returned non-zero"
 
         # Verify weights file was created
         wpath = weight_dir / "xx_tmd_weights.csv.gz"
