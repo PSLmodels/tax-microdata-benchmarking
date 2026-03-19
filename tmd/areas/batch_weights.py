@@ -101,6 +101,18 @@ def _solve_one_area(area):
     )
 
     n_records = B_csc.shape[1]
+
+    # Check for per-record multiplier caps (from exhaustion limiting)
+    caps_path = wgt_dir / f"{area}_record_caps.npy"
+    if caps_path.exists():
+        record_caps = np.load(caps_path)
+        multiplier_max = np.minimum(multiplier_max, record_caps)
+        n_capped = int((record_caps < AREA_MULTIPLIER_MAX).sum())
+        out.write(
+            f"USING PER-RECORD MULTIPLIER CAPS"
+            f" ({n_capped} records capped)\n"
+        )
+
     x_opt, s_lo, s_hi, info = _solve_area_qp(
         B_csc,
         targets,

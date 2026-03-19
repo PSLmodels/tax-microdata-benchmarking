@@ -261,10 +261,18 @@ def _solve_area_qp(  # pylint: disable=unused-argument
     max_iter=AREA_MAX_ITER,
     multiplier_min=AREA_MULTIPLIER_MIN,
     multiplier_max=AREA_MULTIPLIER_MAX,
+    weight_penalty=1.0,
     out=None,
 ):
     """
     Solve the area reweighting QP using Clarabel.
+
+    Parameters
+    ----------
+    weight_penalty : float
+        Penalty weight on (x-1)^2 relative to constraint
+        slack. Higher values keep multipliers closer to 1.0
+        at the cost of more target violations.
 
     Returns (x_opt, s_lo, s_hi, info_dict).
     """
@@ -280,15 +288,15 @@ def _solve_area_qp(  # pylint: disable=unused-argument
     cl = targets - tol_band
     cu = targets + tol_band
 
-    # diagonal Hessian: 2 for x, 2*M for slacks
+    # diagonal Hessian: 2*alpha for x, 2*M for slacks
     hess_diag = np.empty(n_total)
-    hess_diag[:n_records] = 2.0
+    hess_diag[:n_records] = 2.0 * weight_penalty
     hess_diag[n_records:] = 2.0 * slack_penalty
     P = spdiags(hess_diag, format="csc")
 
-    # linear term: -2 for x (from (x-1)^2 = x^2 - 2x + 1)
+    # linear term: -2*alpha for x
     q = np.zeros(n_total)
-    q[:n_records] = -2.0
+    q[:n_records] = -2.0 * weight_penalty
 
     # extended constraint matrix: [B | I_m | -I_m]
     I_m = speye(m, format="csc")

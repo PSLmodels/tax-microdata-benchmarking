@@ -440,9 +440,20 @@ def _weight_diagnostics(areas, weight_dir=None):
 
     lines = []
 
-    # Load national data (only needed columns)
+    # Load national data
     tmd_path = STORAGE_FOLDER / "output" / "tmd.csv.gz"
-    tmd_cols = ["s006", "e00200", "p22250", "p23250"]
+    tmd_cols = [
+        "s006",
+        "MARS",
+        "XTOT",
+        "data_source",
+        "e00200",
+        "e00300",
+        "e00600",
+        "e26270",
+        "p22250",
+        "p23250",
+    ]
     tmd = pd.read_csv(tmd_path, usecols=tmd_cols)
     tmd["capgains_net"] = tmd["p22250"] + tmd["p23250"]
     n_records = len(tmd)
@@ -502,6 +513,46 @@ def _weight_diagnostics(areas, weight_dir=None):
         f"Under-used (<0.90):"
         f" {n_under} ({100 * n_under / n_records:.1f}%)"
     )
+    for thresh in [2, 5, 10]:
+        ct = int((usage > thresh).sum())
+        if ct > 0:
+            lines.append(f"  Exhaustion > {thresh}x: {ct} records")
+    lines.append("")
+
+    # Most exhausted records — profile and top states
+    _mars = {1: "Single", 2: "MFJ", 3: "MFS", 4: "HoH", 5: "Wid"}
+    _ds = {0: "CPS", 1: "PUF"}
+    top_idx = np.argsort(usage)[::-1][:5]
+    lines.append("MOST EXHAUSTED RECORDS (top 5):")
+    for rank, idx in enumerate(top_idx, 1):
+        r = tmd.iloc[idx]
+        exh = usage[idx]
+        mars = _mars.get(int(r.MARS), f"fs{int(r.MARS)}")
+        ds = _ds.get(int(r.data_source), "?")
+        agi = tmd["c00100"].iloc[idx] if "c00100" in tmd else 0
+        # Top 3 states by weight for this record
+        st_wts = []
+        for st, w in state_weights.items():
+            if w[idx] > 0:
+                st_wts.append((st, w[idx]))
+        st_wts.sort(key=lambda x: -x[1])
+        top3 = ", ".join(f"{st}={wt:.1f}" for st, wt in st_wts[:3])
+        lines.append(
+            f"  {rank}. rec {idx}: exh={exh:.1f}x,"
+            f" s006={r.s006:.1f},"
+            f" {ds} {mars},"
+            f" AGI=${agi:,.0f}"
+        )
+        lines.append(
+            f"     wages=${r.e00200:,.0f},"
+            f" int=${r.e00300:,.0f},"
+            f" div=${r.e00600:,.0f},"
+            f" ptshp=${r.e26270:,.0f}"
+        )
+        lines.append(
+            f"     top states: {top3}"
+            f" ({len(st_wts)} nonzero of {n_loaded})"
+        )
     lines.append("")
 
     # Cross-state aggregation vs national totals
