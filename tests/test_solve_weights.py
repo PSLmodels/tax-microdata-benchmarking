@@ -1,8 +1,8 @@
 """
-Tests for the Clarabel-based state weight solver pipeline.
+Tests for the state weight solver pipeline.
 
 Tests:
-  - Clarabel solver on faux xx area
+  - Solver on faux xx area
   - Quality report log parser
   - CLI scope parsing
   - Batch area filtering
@@ -38,9 +38,9 @@ from tmd.imputation_assumptions import TAXYEAR
 # --- Solver test on faux xx area ---
 
 
-def test_clarabel_solver_xx():
+def test_solver_xx():
     """
-    Solve faux xx area with Clarabel and verify targets are hit.
+    Solve faux xx area and verify targets are hit.
     """
     # xx targets are in the flat targets/ directory
     target_dir = AREAS_FOLDER / "targets"
@@ -78,9 +78,9 @@ def test_clarabel_solver_xx():
         assert "TARGET ACCURACY" in log_text
 
 
-def test_clarabel_solver_xx_targets_hit():
+def test_solver_xx_targets_hit():
     """
-    Verify the Clarabel solver actually hits the xx area targets
+    Verify the solver actually hits the xx area targets
     within the constraint tolerance.
     """
     target_dir = AREAS_FOLDER / "targets"
