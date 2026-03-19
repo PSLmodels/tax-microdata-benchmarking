@@ -443,6 +443,7 @@ def _weight_diagnostics(areas, weight_dir=None):
     # Load national data
     tmd_path = STORAGE_FOLDER / "output" / "tmd.csv.gz"
     tmd_cols = [
+        "RECID",
         "s006",
         "MARS",
         "XTOT",
@@ -537,8 +538,9 @@ def _weight_diagnostics(areas, weight_dir=None):
                 st_wts.append((st, w[idx]))
         st_wts.sort(key=lambda x: -x[1])
         top3 = ", ".join(f"{st}={wt:.1f}" for st, wt in st_wts[:3])
+        recid = int(r.RECID)
         lines.append(
-            f"  {rank}. rec {idx}: exh={exh:.1f}x,"
+            f"  {rank}. RECID {recid}: exh={exh:.1f}x,"
             f" s006={r.s006:.1f},"
             f" {ds} {mars},"
             f" AGI=${agi:,.0f}"
