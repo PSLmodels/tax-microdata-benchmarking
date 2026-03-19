@@ -1,0 +1,114 @@
+// Full state recipe for 2022 SOI data.
+//
+// Keywords:
+//   areatype: "state" or "cd" — determines AGI bin structure
+//   arealist: "all" or a list of state codes to include
+//   notzero: if true, drop targets where the target value is zero
+//   notnegative: if true, drop targets where the target value is negative
+//
+// Target entry fields:
+//   varname: TMD variable name (must have a row in state_variable_mapping.csv)
+//   scope: 0 = all records (XTOT only), 1 = PUF-derived records
+//   count: 0 = dollar amount, 1 = all-return count, 2 = nonzero count
+//   fstatus: 0 = all filers, 1 = single, 2 = MFJ, 4 = HoH
+//   agi_exclude: list of AGI stub numbers to skip (optional)
+//
+// AGI stubs for states (10 bins):
+//   1: <$1K, 2: $1K-$10K, 3: $10K-$25K, 4: $25K-$50K, 5: $50K-$75K,
+//   6: $75K-$100K, 7: $100K-$200K, 8: $200K-$500K, 9: $500K-$1M, 10: $1M+
+//
+// Each target entry is crossed with all AGI stubs (minus agi_exclude)
+// to produce one constraint per stub. XTOT (population) is added
+// automatically as the first target.
+//
+// Design notes:
+// - SALT targets c18300 (actual SALT from Tax-Calculator) using SOI
+//   A18300 shares. Amount only — nz-count causes solver infeasibility.
+// - Filing-status counts (fs=1,2,4) and wage nz-count excluded from
+//   $1M+ bin (stub 10). Dual variable analysis showed these small-cell
+//   count targets are the dominant source of weight distortion.
+// - Total return count (fs=0) retained for $1M+ as an anchor.
+{
+  "areatype": "state",
+  "arealist": "all",
+  "notzero": true,
+  "notnegative": false,
+  "targets": [
+    {
+      "varname": "c00100",
+      "scope": 1,
+      "count": 0,
+      "fstatus": 0
+    },
+    {
+      "varname": "c00100",
+      "scope": 1,
+      "count": 1,
+      "fstatus": 0
+    },
+    {
+      "varname": "c00100",
+      "scope": 1,
+      "count": 1,
+      "fstatus": 1,
+      "agi_exclude": [10]
+    },
+    {
+      "varname": "c00100",
+      "scope": 1,
+      "count": 1,
+      "fstatus": 2,
+      "agi_exclude": [10]
+    },
+    {
+      "varname": "c00100",
+      "scope": 1,
+      "count": 1,
+      "fstatus": 4,
+      "agi_exclude": [10]
+    },
+    {
+      "varname": "e00200",
+      "scope": 1,
+      "count": 0,
+      "fstatus": 0
+    },
+    {
+      "varname": "e00200",
+      "scope": 1,
+      "count": 2,
+      "fstatus": 0,
+      "agi_exclude": [10]
+    },
+    {
+      "varname": "e00300",
+      "scope": 1,
+      "count": 0,
+      "fstatus": 0
+    },
+    {
+      "varname": "e01500",
+      "scope": 1,
+      "count": 0,
+      "fstatus": 0
+    },
+    {
+      "varname": "e02400",
+      "scope": 1,
+      "count": 0,
+      "fstatus": 0
+    },
+    {
+      "varname": "c18300",
+      "scope": 1,
+      "count": 0,
+      "fstatus": 0
+    },
+    {
+      "varname": "e26270",
+      "scope": 1,
+      "count": 0,
+      "fstatus": 0
+    }
+  ]
+}
