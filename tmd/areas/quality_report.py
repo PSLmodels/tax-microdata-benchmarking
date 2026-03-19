@@ -450,8 +450,19 @@ def _weight_diagnostics(areas, weight_dir=None):
         "data_source",
         "e00200",
         "e00300",
+        "e00400",
         "e00600",
+        "e00650",
+        "e00900",
+        "e01400",
+        "e01700",
+        "e02000",
+        "e02300",
+        "e02400",
+        "e17500",
+        "e19200",
         "e26270",
+        "n24",
         "p22250",
         "p23250",
     ]
@@ -466,10 +477,22 @@ def _weight_diagnostics(areas, weight_dir=None):
 
     allvars_path = STORAGE_FOLDER / "output" / "cached_allvars.csv"
     if allvars_path.exists():
-        needed_tc = ["c18300", "iitax"]
-        allvars = pd.read_csv(allvars_path, usecols=needed_tc)
-        for col in needed_tc:
-            if col in allvars.columns:
+        needed_tc = [
+            "c04470",
+            "c07100",
+            "c09600",
+            "c18300",
+            "c19200",
+            "c19700",
+            "iitax",
+            "payrolltax",
+            "standard",
+        ]
+        avail = pd.read_csv(allvars_path, nrows=0).columns
+        load_tc = [c for c in needed_tc if c in avail]
+        if load_tc:
+            allvars = pd.read_csv(allvars_path, usecols=load_tc)
+            for col in load_tc:
                 tmd[col] = allvars[col].values
 
     # Load all state weights once
@@ -614,6 +637,113 @@ def _weight_diagnostics(areas, weight_dir=None):
                 f" ${sos / 1e9:>14.1f}B"
                 f" {diff_pct:>+7.2f}%"
             )
+    lines.append("")
+
+    # Bystander check: untargeted variables
+    lines.extend(_bystander_check(tmd, s006, state_weights, n_loaded))
+
+    return lines
+
+
+def _bystander_check(tmd, s006, state_weights, n_loaded):
+    """
+    Check untargeted variables for cross-state aggregation
+    distortion. These are 'innocent bystanders' that may be
+    jerked around by weight adjustments aimed at targeted
+    variables.
+    """
+    lines = []
+
+    # Untargeted variables to check, grouped by category
+    # Format: (label, varname, is_count)
+    bystander_vars = [
+        # Tax liability / credits
+        ("Income tax (iitax)", "iitax", False),
+        ("Payroll tax", "payrolltax", False),
+        ("AMT (c09600)", "c09600", False),
+        ("Total credits (c07100)", "c07100", False),
+        # Deductions
+        ("Medical expenses (e17500)", "e17500", False),
+        ("Student loan int (e19200)", "e19200", False),
+        ("Itemized ded (c04470)", "c04470", False),
+        ("Standard deduction", "standard", False),
+        ("Mortgage int (c19200)", "c19200", False),
+        ("Charitable (c19700)", "c19700", False),
+        # Income not directly targeted
+        ("Tax-exempt int (e00400)", "e00400", False),
+        ("Qual dividends (e00650)", "e00650", False),
+        ("Sch C income (e00900)", "e00900", False),
+        ("IRA distrib (e01400)", "e01400", False),
+        ("Taxable pensions (e01700)", "e01700", False),
+        ("Sch E net (e02000)", "e02000", False),
+        ("Unemployment (e02300)", "e02300", False),
+        # Demographics
+        ("Total persons (XTOT)", "XTOT", True),
+        ("Children <17 (n24)", "n24", True),
+    ]
+
+    # Compute national and sum-of-states for each
+    results = []
+    for label, var, is_count in bystander_vars:
+        if var not in tmd.columns:
+            continue
+        if var == "XTOT":
+            nat = float((s006 * tmd[var].values).sum())
+        elif is_count:
+            nat = float((s006 * tmd[var].values).sum())
+        else:
+            nat = float((s006 * tmd[var].values).sum())
+        if abs(nat) < 1:
+            continue
+        sos = 0.0
+        for _st, w in state_weights.items():
+            sos += float((w * tmd[var].values).sum())
+        diff_pct = (sos / nat - 1) * 100
+        results.append((label, var, is_count, nat, sos, diff_pct))
+
+    # Sort by absolute distortion
+    results.sort(key=lambda x: -abs(x[5]))
+
+    lines.append(
+        "BYSTANDER CHECK: UNTARGETED VARIABLES" f" ({n_loaded} states):"
+    )
+    lines.append(
+        "  Variables NOT directly targeted — distortion"
+        " from weight adjustments."
+    )
+    lines.append(
+        f"  {'Variable':<30} {'National':>16}"
+        f" {'Sum-of-States':>16} {'Diff%':>8}"
+    )
+    lines.append("  " + "-" * 72)
+    for label, _var, is_count, nat, sos, diff_pct in results:
+        flag = " ***" if abs(diff_pct) > 2 else ""
+        if is_count:
+            lines.append(
+                f"  {label:<30} {nat:>16,.0f}"
+                f" {sos:>16,.0f}"
+                f" {diff_pct:>+7.2f}%{flag}"
+            )
+        else:
+            lines.append(
+                f"  {label:<30}"
+                f" ${nat / 1e9:>14.1f}B"
+                f" ${sos / 1e9:>14.1f}B"
+                f" {diff_pct:>+7.2f}%{flag}"
+            )
+
+    n_flagged = sum(1 for *_, d in results if abs(d) > 2)
+    lines.append("")
+    if n_flagged:
+        lines.append(
+            f"  *** = {n_flagged} variables with"
+            f" >2% aggregation distortion"
+        )
+    else:
+        lines.append(
+            "  All untargeted variables within"
+            + " 2% aggregation tolerance."
+        )
     lines.append("")
 
     return lines

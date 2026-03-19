@@ -128,6 +128,49 @@ SOI actual SALT by state.
 | wRMSE avg | 0.479 | 0.289 |
 | SALT aggregation error | -6.23% | -0.18% |
 
+## Bystander variables (untargeted collateral distortion)
+
+Area weighting optimizes ~178 targets per state. Variables not
+in the target set can be distorted as a side effect — "innocent
+bystanders" pulled by weight adjustments aimed at other variables.
+
+The quality report includes a bystander check showing cross-state
+aggregation error (sum-of-states vs national) for untargeted
+variables. Variables with >2% distortion are flagged.
+
+### Observed bystanders (2023, mult_max=25)
+
+| Variable | Diff% | Why |
+|----------|-------|-----|
+| Student loan int (e19200) | -10.5% | Concentrated on middle-income records that get under-weighted |
+| AMT (c09600) | -10.3% | Very small base ($1.1B); volatile under any reweighting |
+| Tax-exempt int (e00400) | +7.4% | On same wealthy records that get over-weighted for AGI targets |
+| Qualified dividends (e00650) | -4.1% | Total dividends (e00600) targeted but not qualified portion |
+| Unemployment comp (e02300) | -4.0% | Low-income variable squeezed when high-income records upweighted |
+| Medical expenses (e17500) | -2.9% | Itemized deduction bystander |
+| Total credits (c07100) | -2.2% | EITC/CTC targeted but not total credits |
+
+### Well-behaved bystanders (<1%)
+
+Income tax, payroll tax, standard deduction, itemized total,
+Sch C, IRA distributions, taxable pensions, Sch E, total persons,
+children under 17. These are either targeted directly or highly
+correlated with targeted variables.
+
+### When to worry
+
+Bystander distortion matters when the variable is **policy-relevant
+at the state level** and **not closely correlated** with any targeted
+variable. Student loan interest at -10.5% would matter for a state-
+level student debt analysis; AMT at -10.3% on a $1.1B base is less
+consequential.
+
+If a bystander becomes important for a specific analysis, the fix is
+to add it (or a correlated variable) as a target. The dual variable
+analysis showed that extended targets are essentially "free" — near-
+zero constraint cost — so adding targets is low-risk as long as they
+don't conflict with existing targets in small AGI bins.
+
 ## OA (Other Areas) share rescaling
 
 SOI's "Other Areas" category (~0.5% of returns, covers territories
