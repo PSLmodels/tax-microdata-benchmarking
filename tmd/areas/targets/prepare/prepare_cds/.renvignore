@@ -1,7 +1,0 @@
-
-# folders to avoid scanning by renv
-_cdprep/
-archive/
-data/
-images/
-
