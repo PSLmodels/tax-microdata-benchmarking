@@ -51,14 +51,59 @@ charitable contributions, SALT by source (Census), EITC, CTC.
 Filing-status count targets are excluded from the $1M+ AGI bin to
 avoid excessive weight distortion on small cells.
 
+## Solving for State Weights
+
+```bash
+# All 51 states, 8 parallel workers:
+python -m tmd.areas.solve_weights --scope states --workers 8
+
+# Specific states:
+python -m tmd.areas.solve_weights --scope MN,CA,TX --workers 4
+```
+
+Uses the Clarabel constrained QP solver to find per-record weight
+multipliers that hit each state's targets within 0.5% tolerance.
+
+Output: weight files in `tmd/areas/weights/states/` and solver
+logs alongside them.
+
+## Quality Report
+
+```bash
+python -m tmd.areas.quality_report
+python -m tmd.areas.quality_report --scope CA,NY
+```
+
+Cross-state summary: solve status, target accuracy, weight
+distortion, weight exhaustion, and national aggregation checks.
+
 ## Pipeline Modules
+
+**Target preparation** (PR 1):
 
 | Module | Purpose |
 |--------|---------|
 | `prepare_targets.py` | CLI entry point |
 | `prepare/soi_state_data.py` | SOI state CSV ingestion |
-| `prepare/target_sharing.py` | TMD × SOI share computation |
+| `prepare/target_sharing.py` | TMD x SOI share computation |
 | `prepare/target_file_writer.py` | Recipe expansion, CSV output |
 | `prepare/extended_targets.py` | Census/SOI extended targets |
 | `prepare/constants.py` | AGI bins, mappings, metadata |
 | `prepare/census_population.py` | State population data |
+
+**Weight solving** (PR 2):
+
+| Module | Purpose |
+|--------|---------|
+| `solve_weights.py` | CLI entry point |
+| `create_area_weights_clarabel.py` | Clarabel QP solver |
+| `batch_weights.py` | Parallel batch runner |
+| `quality_report.py` | Cross-state diagnostics |
+| `sweep_params.py` | Parameter grid search utility |
+
+## Lessons Learned
+
+See [AREA_WEIGHTING_LESSONS.md](AREA_WEIGHTING_LESSONS.md) for
+practical guidance on parameter tuning, weight exhaustion, SALT
+targeting, dual variable analysis, and recommendations for
+extending to Congressional districts.
