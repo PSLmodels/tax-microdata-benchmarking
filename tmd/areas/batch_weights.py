@@ -259,8 +259,22 @@ def run_batch(
         print("All areas up-to-date. Use --force to recompute.")
         return
 
+    # Count targets from first area's CSV
+    first_tpath = target_dir / f"{areas[0]}_targets.csv"
+    n_targets = (
+        sum(
+            1
+            for line in first_tpath.read_text().splitlines()
+            if line.strip() and not line.startswith("#")
+        )
+        - 1
+    )  # subtract header
     n = len(areas)
-    print(f"Processing {n} areas with {num_workers} workers...")
+    print(
+        f"Processing {n} areas"
+        f" (up to {n_targets} targets each)"
+        f" with {num_workers} workers..."
+    )
     print(
         "(Areas shown in completion order, which varies with"
         " parallel workers.)"
