@@ -741,8 +741,7 @@ def _bystander_check(tmd, s006, state_weights, n_loaded):
         )
     else:
         lines.append(
-            "  All untargeted variables within"
-            + " 2% aggregation tolerance."
+            "  All untargeted variables within" + " 2% aggregation tolerance."
         )
     lines.append("")
 
