@@ -5,7 +5,7 @@ This module provides utilities for working with Tax-Calculator.
 import pathlib
 import numpy as np
 import pandas as pd
-import taxcalc as tc
+import taxcalc
 from tmd.storage import STORAGE_FOLDER
 from tmd.imputation_assumptions import TAXYEAR, CREDIT_CLAIMING
 
@@ -34,10 +34,10 @@ def add_taxcalc_outputs(
     else:
         wghts = weights
     if isinstance(growfactors, pathlib.PosixPath):
-        growf = tc.GrowFactors(growfactors_filename=str(growfactors))
+        growf = taxcalc.GrowFactors(growfactors_filename=str(growfactors))
     else:
         growf = growfactors
-    rec = tc.Records(
+    rec = taxcalc.Records(
         data=flat_file,
         start_year=input_data_year,
         gfactors=growf,
@@ -46,11 +46,11 @@ def add_taxcalc_outputs(
         exact_calculations=True,
         weights_scale=1.0,
     )
-    pol = tc.Policy()
+    pol = taxcalc.Policy()
     pol.implement_reform(CREDIT_CLAIMING)
     if reform:
         pol.implement_reform(reform)
-    simulation = tc.Calculator(records=rec, policy=pol)
+    simulation = taxcalc.Calculator(records=rec, policy=pol)
     simulation.advance_to_year(simulation_year)
     simulation.calc_all()
     output = simulation.dataframe(None, all_vars=True)

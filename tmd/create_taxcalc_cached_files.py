@@ -4,7 +4,7 @@ Generate tmd/storage/output/cached_*.npy files for TAXYEAR.
 
 import numpy as np
 import pandas as pd
-import taxcalc as tc
+import taxcalc
 from tmd.storage import STORAGE_FOLDER, CACHED_TAXCALC_VARIABLES
 from tmd.imputation_assumptions import TAXYEAR, CREDIT_CLAIMING
 
@@ -21,18 +21,18 @@ def create_cached_files():
     # calculate all Tax-Calculator variables for TAXYEAR
     # Construct Records directly (bypassing tmd_constructor which
     # hardcodes start_year=2021 in the taxcalc library).
-    pol = tc.Policy()
+    pol = taxcalc.Policy()
     pol.implement_reform(CREDIT_CLAIMING)
-    rec = tc.Records(
+    rec = taxcalc.Records(
         data=pd.read_csv(INFILE_PATH),
         start_year=TAXYEAR,
-        gfactors=tc.GrowFactors(growfactors_filename=str(GFFILE_PATH)),
+        gfactors=taxcalc.GrowFactors(growfactors_filename=str(GFFILE_PATH)),
         weights=pd.read_csv(WTFILE_PATH),
         adjust_ratios=None,
         exact_calculations=True,
         weights_scale=1.0,
     )
-    calc = tc.Calculator(policy=pol, records=rec)
+    calc = taxcalc.Calculator(policy=pol, records=rec)
     calc.advance_to_year(TAXYEAR)
     calc.calc_all()
 

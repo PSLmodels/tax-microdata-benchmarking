@@ -6,7 +6,7 @@ import sys
 import numpy as np
 import pandas as pd
 
-USAGE = "USAGE: python bootstrap_sampling.py tc_dump_output_csv_file_name\n"
+USAGE = "USAGE: python bootstrap_sampling.py taxcalc_dump_output_csv_fname\n"
 
 SS_FRAC = 1.00  # 0.1
 SS_RNSEED = 902345678

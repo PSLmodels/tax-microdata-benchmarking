@@ -41,7 +41,7 @@ from scipy.sparse import (
 )
 import clarabel
 from tmd.storage import STORAGE_FOLDER
-from tmd.utils.soi_replication import tc_to_soi
+from tmd.utils.soi_replication import taxcalc_to_soi
 from tmd.imputation_assumptions import (
     TAXYEAR,
     REWEIGHT_MULTIPLIER_MIN,
@@ -77,7 +77,7 @@ def build_loss_matrix(df, targets, time_period):
     corresponding SOI target values.
     """
     columns = {}
-    df = tc_to_soi(df, time_period)
+    df = taxcalc_to_soi(df, time_period)
     agi = df["adjusted_gross_income"].values
     filer = df["is_tax_filer"].values
     targets_array = []
@@ -100,13 +100,13 @@ def build_loss_matrix(df, targets, time_period):
         "business_net_losses",
         "capital_gains_distributions",
         "capital_gains_losses",
-        # "estate_income",  # all zeros in tc_to_soi (not in Tax-Calculator)
-        # "estate_losses",  # all zeros in tc_to_soi (not in Tax-Calculator)
+        # "estate_income",  # all zeros in Tax-Calculator
+        # "estate_losses",  # all zeros in Tax-Calculator
         "exempt_interest",
         "ira_distributions",
         "partnership_and_s_corp_losses",
-        # "rent_and_royalty_net_income",  # all zeros in tc_to_soi (not in TC)
-        # "rent_and_royalty_net_losses",  # all zeros in tc_to_soi (not in TC)
+        # "rent_and_royalty_net_income",  # all zeros in Tax-Calculator
+        # "rent_and_royalty_net_losses",  # all zeros in Tax-Calculator
         "taxable_pension_income",
         "taxable_social_security",
         "unemployment_compensation",
@@ -561,7 +561,7 @@ def reweight(
     ]
     if len(soi_filer_total_row) == 1:
         target_filer_total = soi_filer_total_row["Value"].values[0]
-        soi_df = tc_to_soi(flat_file.copy(), time_period)
+        soi_df = taxcalc_to_soi(flat_file.copy(), time_period)
         filer_mask = soi_df["is_tax_filer"].values.astype(bool)
         current_filer_total = (flat_file.s006.values * filer_mask).sum()
         prescale = target_filer_total / current_filer_total

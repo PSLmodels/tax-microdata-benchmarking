@@ -2,7 +2,7 @@
 Construct tmd.csv, a Tax-Calculator-style input variable file for TAXYEAR.
 """
 
-import taxcalc as tc
+import taxcalc
 from tmd.datasets.tmd import create_tmd_dataframe
 from tmd.imputation_assumptions import (
     TAXYEAR,
@@ -41,7 +41,7 @@ def create_variable_file(write_file=True):
         vdf.to_csv(fname, index=False)
     # streamline dataframe so that it includes only input variables
     print("Removing output variables from PUF+CPS dataframe...")
-    rec = tc.Records(
+    rec = taxcalc.Records(
         data=vdf,
         start_year=TAXYEAR,
         gfactors=None,
