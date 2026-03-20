@@ -3,7 +3,7 @@ import pandas as pd
 from tmd.imputation_assumptions import TAXYEAR, CPS_WEIGHTS_SCALE
 from tmd.datasets.puf import create_taxcalc_puf
 from tmd.datasets.cps import create_taxcalc_cps
-from tmd.utils.taxcalc_utils import add_taxcalc_outputs
+from tmd.utils.taxcalc_output import add_taxcalc_outputs
 from tmd.utils.reweight import reweight
 
 
