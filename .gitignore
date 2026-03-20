@@ -6,7 +6,6 @@
 **/*.pyc
 **/*.egg-info
 **/_build/
-**/*tfevents*
 tmd/storage/output/cached_files
 tmd/storage/output/tax_expenditures
 !tmd/storage/input/*.csv
@@ -16,15 +15,8 @@ tmd/storage/output/tax_expenditures
 **demographics_2015.csv
 **puf_2015.csv
 *.DS_STORE
-.Rproj.user
 
-# Local Netlify folder
-.netlify
-
-# Quarto output directories
-**/.quarto/
-
-# Claude AI assistant files
+# Claude Code AI assistant files
 claude/
 
 # local environment

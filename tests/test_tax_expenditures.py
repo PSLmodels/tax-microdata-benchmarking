@@ -1,5 +1,5 @@
 """
-Test 2023 tax expenditures calculated using tmd files
+Test 2023 tax expenditures calculated using TMD files
 against expected tax expenditure values in the tests folder.
 """
 
@@ -7,7 +7,7 @@ import pytest
 import numpy as np
 from tmd.storage import STORAGE_FOLDER
 from tmd.imputation_assumptions import TAXYEAR
-from tmd.utils.taxcalc_utils import get_tax_expenditure_results
+from tmd.utils.tax_expenditures import get_tax_expenditure_results
 
 
 @pytest.mark.taxexp

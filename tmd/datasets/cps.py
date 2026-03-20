@@ -138,7 +138,7 @@ PERSON_COLUMNS = [
     "WKSWORK",
 ]
 
-TC_CPS_AGED_RNG = np.random.default_rng(seed=374651932)
+TAXCALC_CPS_AGED_RNG = np.random.default_rng(seed=374651932)
 
 CPS_URL_BY_YEAR = {
     2018: (
@@ -305,7 +305,7 @@ def _derive_age(person: pd.DataFrame) -> np.ndarray:
     """
     return np.where(
         person.A_AGE == 80,
-        TC_CPS_AGED_RNG.integers(
+        TAXCALC_CPS_AGED_RNG.integers(
             low=80, high=85, endpoint=False, size=len(person)
         ),
         person.A_AGE.values,
@@ -373,7 +373,7 @@ def _is_tax_filer(tcdf: pd.DataFrame, taxyear: int) -> pd.Series:
     return filer
 
 
-def create_tc_cps(taxyear: int) -> (pd.DataFrame, pd.Series):
+def create_taxcalc_cps(taxyear: int) -> (pd.DataFrame, pd.Series):
     """
     Create a Tax-Calculator-compatible CPS DataFrame for the given taxyear
     directly from the Census raw CPS data.
@@ -583,7 +583,7 @@ def create_tc_cps(taxyear: int) -> (pd.DataFrame, pd.Series):
     var["f2441"] = sum_all((age < 13) * dep_flag).astype(int)
 
     # variables with no CPS source are set to zero
-    zero_tc_names = [
+    zero_taxcalc_names = [
         "a_lineno",
         "agi_bin",
         "h_seq",
@@ -646,7 +646,7 @@ def create_tc_cps(taxyear: int) -> (pd.DataFrame, pd.Series):
         "e09700",  # recapture of investment credit
         "e09800",  # unreported payroll tax
     ]
-    for tcname in zero_tc_names:
+    for tcname in zero_taxcalc_names:
         if tcname not in var:
             var[tcname] = zeros
 

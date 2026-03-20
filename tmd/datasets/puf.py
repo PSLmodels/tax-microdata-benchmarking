@@ -170,7 +170,7 @@ def preprocess_puf(puf: pd.DataFrame) -> pd.DataFrame:
     return puf
 
 
-def create_tc_puf(taxyear: int) -> pd.DataFrame:
+def create_taxcalc_puf(taxyear: int) -> pd.DataFrame:
     """
     Create a Tax-Calculator-compatible PUF DataFrame for
     the given taxyear directly from raw PUF data.
@@ -309,7 +309,7 @@ def create_tc_puf(taxyear: int) -> pd.DataFrame:
     # mapping from TC variable name to PE-named column in pre-processed PUF:
     #  for person-level variables, the tax-unit total is scaled by
     #  person_scale (= head_frac + (1-head_frac)*is_joint)
-    tc_to_pe = {
+    taxcalc_to_policyengine = {
         "RECID": "household_id",
         "S006": "household_weight",
         "E03500": "alimony_expense",
@@ -413,7 +413,7 @@ def create_tc_puf(taxyear: int) -> pd.DataFrame:
     # create dictionary that will be used to create Tax-Calculator DataFrame
     NO_SCALE = {"RECID", "S006", "XTOT"}
     var = {}
-    for tcname, pename in tc_to_pe.items():
+    for tcname, pename in taxcalc_to_policyengine.items():
         if tcname in NO_SCALE:
             var[tcname] = puf[pename].values
         elif pename in PERSON_LEVEL_VARS:

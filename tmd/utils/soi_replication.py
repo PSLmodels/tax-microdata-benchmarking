@@ -1,12 +1,12 @@
 import pandas as pd
-import taxcalc as tc
+import taxcalc
 from tmd.imputation_assumptions import CREDIT_CLAIMING
 
 
-def tc_to_soi(puf: pd.DataFrame, year: int) -> pd.DataFrame:
-    pol = tc.Policy()
+def taxcalc_to_soi(puf: pd.DataFrame, year: int) -> pd.DataFrame:
+    pol = taxcalc.Policy()
     pol.implement_reform(CREDIT_CLAIMING)
-    rec = tc.Records(
+    rec = taxcalc.Records(
         data=puf,
         start_year=year,
         gfactors=None,
@@ -14,7 +14,7 @@ def tc_to_soi(puf: pd.DataFrame, year: int) -> pd.DataFrame:
         adjust_ratios=None,
         exact_calculations=True,
     )
-    calculator = tc.Calculator(policy=pol, records=rec)
+    calculator = taxcalc.Calculator(policy=pol, records=rec)
     calculator.advance_to_year(year)
     calculator.calc_all()
     pdf = calculator.dataframe(None, all_vars=True)
