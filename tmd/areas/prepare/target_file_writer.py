@@ -20,6 +20,7 @@ import pandas as pd
 
 from tmd.areas.prepare.constants import (
     ALLCOUNT_VARS,
+    CD_NUM_AGI_STUBS,
     STATE_NUM_AGI_STUBS,
 )
 
@@ -132,21 +133,39 @@ def _build_match_frame(
                     target_stubs["_merge"] == "left_only"
                 ].drop(columns=["_merge"])
 
-    # Add sort numbers and XTOT row
+    # Add sort numbers, XTOT row, and total count rows
     target_stubs["sort"] = range(2, len(target_stubs) + 2)
-    xtot = pd.DataFrame(
-        [
-            {
-                "varname": "XTOT",
-                "scope": 0,
-                "count": 0,
-                "fstatus": 0,
-                "agistub": 0,
-                "sort": 1,
-            }
-        ]
-    )
-    target_stubs = pd.concat([xtot, target_stubs], ignore_index=True)
+    # XTOT is always first
+    extra_rows = [
+        {
+            "varname": "XTOT",
+            "scope": 0,
+            "count": 0,
+            "fstatus": 0,
+            "agistub": 0,
+            "sort": 1,
+        }
+    ]
+    # Add agistub=0 (total) rows for count targets that either
+    # have filing-status breakdowns or have all bins excluded
+    # (indicating they want only the total).
+    if recipe.get("include_totals", False):
+        next_sort = len(target_stubs) + 2
+        for _, row in target_rules.iterrows():
+            if row["count"] == 1:
+                extra_rows.append(
+                    {
+                        "varname": row["varname"],
+                        "scope": row["scope"],
+                        "count": int(row["count"]),
+                        "fstatus": int(row["fstatus"]),
+                        "agistub": 0,
+                        "sort": next_sort,
+                    }
+                )
+                next_sort += 1
+    extras = pd.DataFrame(extra_rows)
+    target_stubs = pd.concat([extras, target_stubs], ignore_index=True)
 
     # Cross variable mapping with count values 0-4
     counts_df = pd.DataFrame({"count": range(5)})
@@ -229,6 +248,8 @@ def write_area_target_files(
     areatype = recipe["areatype"]
     if areatype == "state":
         top_agistub = STATE_NUM_AGI_STUBS
+    elif areatype == "cd":
+        top_agistub = CD_NUM_AGI_STUBS
     else:
         raise ValueError(f"Unknown areatype: {areatype}")
 

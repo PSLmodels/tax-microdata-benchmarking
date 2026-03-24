@@ -1,0 +1,107 @@
+// CD recipe for 2022 SOI data.
+//
+// AGI stubs for CDs (9 bins):
+//   1: <$1K, 2: $1K-$10K, 3: $10K-$25K, 4: $25K-$50K, 5: $50K-$75K,
+//   6: $75K-$100K, 7: $100K-$200K, 8: $200K-$500K, 9: $500K+
+//
+// Design notes:
+// - Dollar amounts (count=0): all 7 income variables across all 9 AGI
+//   bins (minus e02400 in stub 1). These carry the geographic income
+//   distribution story.
+// - Total return counts (count=1, fs=0): bins 4-9 only ($25K+).
+//   Low-AGI bins (1-3) excluded — small cells with extreme profiles
+//   cause the most infeasibility in unusual CDs.
+// - Filing-status totals (count=1, fs=1/2/4): one target each across
+//   all bins (agistub=0 via include_totals). Anchors the overall
+//   demographic mix. The sum implicitly constrains total returns.
+// - Wage nz-count (count=2): bins 2-8 (stubs 1 and 9 excluded).
+// - e02400 excluded from stub 1: SS income in the negative-AGI bin
+//   is concentrated among high-retiree CDs, creating infeasible
+//   constraint interactions.
+{
+  "areatype": "cd",
+  "arealist": "all",
+  "notzero": true,
+  "notnegative": false,
+  "include_totals": true,
+  "targets": [
+    {
+      "varname": "c00100",
+      "scope": 1,
+      "count": 0,
+      "fstatus": 0
+    },
+    {
+      "varname": "c00100",
+      "scope": 1,
+      "count": 1,
+      "fstatus": 0,
+      "agi_exclude": [1, 2, 3]
+    },
+    {
+      "varname": "c00100",
+      "scope": 1,
+      "count": 1,
+      "fstatus": 1,
+      "agi_exclude": [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    },
+    {
+      "varname": "c00100",
+      "scope": 1,
+      "count": 1,
+      "fstatus": 2,
+      "agi_exclude": [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    },
+    {
+      "varname": "c00100",
+      "scope": 1,
+      "count": 1,
+      "fstatus": 4,
+      "agi_exclude": [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    },
+    {
+      "varname": "e00200",
+      "scope": 1,
+      "count": 0,
+      "fstatus": 0
+    },
+    {
+      "varname": "e00200",
+      "scope": 1,
+      "count": 2,
+      "fstatus": 0,
+      "agi_exclude": [1, 9]
+    },
+    {
+      "varname": "e00300",
+      "scope": 1,
+      "count": 0,
+      "fstatus": 0
+    },
+    {
+      "varname": "e01500",
+      "scope": 1,
+      "count": 0,
+      "fstatus": 0
+    },
+    {
+      "varname": "e02400",
+      "scope": 1,
+      "count": 0,
+      "fstatus": 0,
+      "agi_exclude": [1]
+    },
+    {
+      "varname": "c18300",
+      "scope": 1,
+      "count": 0,
+      "fstatus": 0
+    },
+    {
+      "varname": "e26270",
+      "scope": 1,
+      "count": 0,
+      "fstatus": 0
+    }
+  ]
+}

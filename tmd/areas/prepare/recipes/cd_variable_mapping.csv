@@ -1,0 +1,13 @@
+varname,basesoivname,description,fstatus
+XTOT,XTOT,Population,0
+c00100,tmd00100_shared_by_soin1,Total number of returns,0
+c00100,tmd00100_shared_by_soimars1,fstatus == 1,1
+c00100,tmd00100_shared_by_soimars2,fstatus == 2,2
+c00100,tmd00100_shared_by_soimars4,fstatus == 4,4
+c00100,tmd00100_shared_by_soi00100,Adjusted gross income,0
+e00200,tmd00200_shared_by_soi00200,Wages,0
+e00300,tmd00300_shared_by_soi00300,Taxable interest income,0
+e01500,tmd01500_shared_by_soi01700,Pensions total shared by taxable,0
+e02400,tmd02400_shared_by_soi02500,Social Security total shared by taxable,0
+c18300,tmd18300_shared_by_soi18300,Actual SALT deduction (after cap),0
+e26270,tmd26270_shared_by_soi26270,Combined partnership and S corporation net income/loss,0
