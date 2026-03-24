@@ -232,7 +232,9 @@ class TestCDShares:
         """Load the pre-computed CD shares CSV."""
         path = _PREPARE / "data" / "cds_shares.csv"
         if not path.exists():
-            pytest.skip("CD shares file not found (run prepare_shares first)")
+            pytest.skip(
+                "CD shares file not found (run prepare_shares first)"
+            )
         return pd.read_csv(path)
 
     def test_no_duplicate_cd_shares(self, cd_shares):
