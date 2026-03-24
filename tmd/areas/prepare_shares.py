@@ -69,10 +69,12 @@ def _add_ctc_total(base_targets):
     if ctc_parts.empty:
         return base_targets
 
-    # Group by area + count + agistub and sum the two components
-    area_col = "area" if "area" in ctc_parts.columns else "stabbr"
-    group_cols = [
-        area_col,
+    # Group by all geographic + classification columns and sum
+    # the two CTC components (07225 + 11070).
+    # Include both 'area' and 'stabbr' if present so neither is lost.
+    group_candidates = [
+        "stabbr",
+        "area",
         "count",
         "scope",
         "fstatus",
@@ -80,13 +82,14 @@ def _add_ctc_total(base_targets):
         "agilo",
         "agihi",
     ]
-    group_cols = [c for c in group_cols if c in ctc_parts.columns]
+    group_cols = [c for c in group_candidates if c in ctc_parts.columns]
 
     ctc_sum = ctc_parts.groupby(group_cols)["target"].sum().reset_index()
-    # Copy metadata from one of the source rows
+    # Copy non-grouped metadata from a sample row
     sample = ctc_parts.iloc[0].copy()
-    for col in ctc_sum.columns:
-        if col not in group_cols and col != "target":
+    existing = set(ctc_sum.columns)
+    for col in ctc_parts.columns:
+        if col not in existing and col != "target":
             ctc_sum[col] = sample.get(col)
     ctc_sum["basesoivname"] = "07225"  # use 07225 as share basis
 
@@ -213,8 +216,12 @@ def _compute_state_shares(repo_root, area_data_year):
     pop_df = get_state_population(area_data_year)
     base_targets = create_state_base_targets(soilong, pop_df, area_data_year)
 
-    # Compute SOI shares
-    soi_shares = compute_soi_shares(base_targets, ALL_SHARING_MAPPINGS)
+    # Add derived CTC total (07225 + 11070) to base_targets
+    base_targets = _add_ctc_total(base_targets)
+
+    # Compute SOI shares for base + extended mappings
+    all_mappings = ALL_SHARING_MAPPINGS + EXTENDED_SHARING_MAPPINGS
+    soi_shares = compute_soi_shares(base_targets, all_mappings)
 
     # Filter to exact mapping combos
     wanted = pd.DataFrame(
@@ -224,7 +231,7 @@ def _compute_state_shares(repo_root, area_data_year):
                 "count": m[2],
                 "fstatus": m[3],
             }
-            for m in ALL_SHARING_MAPPINGS
+            for m in all_mappings
         ]
     ).drop_duplicates()
     soi_shares = soi_shares.merge(
@@ -238,7 +245,13 @@ def _compute_state_shares(repo_root, area_data_year):
     soi_shares = soi_shares[~soi_shares["stabbr"].isin(_EXCLUDE)].copy()
     soi_shares["area"] = soi_shares["stabbr"]
 
-    return _format_shares(soi_shares, base_targets, agi_cuts, area_col="area")
+    return _format_shares(
+        soi_shares,
+        base_targets,
+        agi_cuts,
+        area_col="area",
+        all_mappings=all_mappings,
+    )
 
 
 def _format_shares(

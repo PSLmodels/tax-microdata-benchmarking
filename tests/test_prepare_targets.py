@@ -219,3 +219,95 @@ def test_prepare_mn_end_to_end(tmp_path):
         rows = list(csv.DictReader(f))
     assert len(rows) == result["MN"]
     assert rows[0]["varname"] == "XTOT"
+
+
+# ---- CD share and target tests ----
+
+
+class TestCDShares:
+    """Validate the pre-computed CD shares file."""
+
+    @pytest.fixture(scope="class")
+    def cd_shares(self):
+        """Load the pre-computed CD shares CSV."""
+        path = _PREPARE / "data" / "cds_shares.csv"
+        if not path.exists():
+            pytest.skip("CD shares file not found (run prepare_shares first)")
+        return pd.read_csv(path)
+
+    def test_no_duplicate_cd_shares(self, cd_shares):
+        """Each (area, var, count, fstatus, agistub) has one share."""
+        group_cols = [
+            "area",
+            "varname",
+            "count",
+            "fstatus",
+            "agistub",
+        ]
+        counts = cd_shares.groupby(group_cols).size()
+        dupes = counts[counts > 1]
+        assert len(dupes) == 0, (
+            f"Found {len(dupes)} duplicate CD share groups. "
+            f"First few: {dupes.head(5).to_dict()}"
+        )
+
+    def test_cd_shares_sum_to_one(self, cd_shares):
+        """Non-XTOT shares for 436 CDs sum to ~1.0 per var/bin."""
+        shared = cd_shares[cd_shares["varname"] != "XTOT"].copy()
+        shared = shared.dropna(subset=["soi_share"])
+        group_cols = ["varname", "count", "fstatus", "agistub"]
+        group_sums = shared.groupby(group_cols)["soi_share"].sum()
+        nonzero = group_sums[group_sums.abs() > 0.01]
+        np.testing.assert_allclose(
+            nonzero.values,
+            1.0,
+            atol=0.01,
+            err_msg="436-CD shares should sum to ~1.0",
+        )
+
+    def test_cd_count_is_436(self, cd_shares):
+        """Should have exactly 436 congressional districts."""
+        n_areas = cd_shares["area"].nunique()
+        assert n_areas == 436, f"Expected 436 CDs, got {n_areas}"
+
+
+class TestCDTargetFiles:
+    """Validate CD target file structure (no solving)."""
+
+    @pytest.fixture(scope="class")
+    def cd_target_dir(self):
+        """Path to CD target files."""
+        path = REPO_ROOT / "tmd" / "areas" / "targets" / "cds"
+        if not path.exists() or not list(path.glob("*_targets.csv")):
+            pytest.skip(
+                "CD target files not found"
+                " (run prepare_targets --scope cds first)"
+            )
+        return path
+
+    def test_cd_target_count(self, cd_target_dir):
+        """Should have 436 CD target files."""
+        files = list(cd_target_dir.glob("*_targets.csv"))
+        assert (
+            len(files) == 436
+        ), f"Expected 436 CD target files, got {len(files)}"
+
+    def test_cd_target_structure(self, cd_target_dir):
+        """Spot-check AL01 target file for correct structure."""
+        fpath = cd_target_dir / "al01_targets.csv"
+        if not fpath.exists():
+            pytest.skip("al01_targets.csv not found")
+        rows = pd.read_csv(fpath, comment="#")
+        expected_cols = {
+            "varname",
+            "count",
+            "scope",
+            "agilo",
+            "agihi",
+            "fstatus",
+            "target",
+        }
+        assert set(rows.columns) == expected_cols
+        assert rows.iloc[0]["varname"] == "XTOT"
+        assert not rows["target"].isna().any()
+        assert len(rows) == 107

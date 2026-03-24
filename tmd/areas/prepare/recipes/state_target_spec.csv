@@ -162,18 +162,8 @@ c19700,0,1,0,100000.0,200000.0,c19700 amount $100K-$200K
 c19700,0,1,0,200000.0,500000.0,c19700 amount $200K-$500K
 c19700,0,1,0,500000.0,1000000.0,c19700 amount $500K-$1000K
 c19700,0,1,0,1000000.0,9e+99,c19700 amount $1000K+
-e18400,0,1,0,50000.0,75000.0,SALT income/sales amount $50K-$75K
-e18400,0,1,0,75000.0,100000.0,SALT income/sales amount $75K-$100K
-e18400,0,1,0,100000.0,200000.0,SALT income/sales amount $100K-$200K
-e18400,0,1,0,200000.0,500000.0,SALT income/sales amount $200K-$500K
-e18400,0,1,0,500000.0,1000000.0,SALT income/sales amount $500K-$1000K
-e18400,0,1,0,1000000.0,9e+99,SALT income/sales amount $1000K+
-e18500,0,1,0,50000.0,75000.0,SALT real estate amount $50K-$75K
-e18500,0,1,0,75000.0,100000.0,SALT real estate amount $75K-$100K
-e18500,0,1,0,100000.0,200000.0,SALT real estate amount $100K-$200K
-e18500,0,1,0,200000.0,500000.0,SALT real estate amount $200K-$500K
-e18500,0,1,0,500000.0,1000000.0,SALT real estate amount $500K-$1000K
-e18500,0,1,0,1000000.0,9e+99,SALT real estate amount $1000K+
+e18400,0,1,0,-9e+99,9e+99,SALT income/sales amount all bins (Census)
+e18500,0,1,0,-9e+99,9e+99,SALT real estate amount all bins (Census)
 eitc,0,1,0,-9e+99,9e+99,EITC amount all bins
 eitc,2,1,0,-9e+99,9e+99,EITC nz-count all bins
 ctc_total,0,1,0,-9e+99,9e+99,Child tax credit amount all bins

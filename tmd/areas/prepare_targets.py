@@ -222,7 +222,9 @@ def prepare_targets_from_spec(
 
     scope_lower = scope.lower().strip()
     first_code = scope.split(",")[0].strip()
-    is_cd = scope_lower == "cds" or len(first_code) > 2
+    is_cd = scope_lower == "cds" or (
+        scope_lower not in ("states", "all") and len(first_code) > 2
+    )
 
     if is_cd:
         spec_path = _CD_SPEC
@@ -280,7 +282,23 @@ def prepare_targets_from_spec(
         )
         tmd_lookup[key] = r["tmdsum"]
 
-    # 4. For each area, compute targets by joining spec + shares
+    # 4a. For states, precompute Census SALT shares for e18400/e18500.
+    # Census state/local finance data provides the geographic
+    # distribution of available (uncapped) SALT. SOI SALT is capped
+    # at $10K post-TCJA and understates high-SALT states.
+    # These variables are targeted as all-bins totals only — we don't
+    # have a reliable per-bin source (SOI bins are cap-distorted).
+    _CENSUS_SALT = {}
+    if not is_cd:
+        from tmd.areas.prepare.extended_targets import load_census_shares
+
+        comb, prop = load_census_shares()
+        _CENSUS_SALT = {
+            "e18400": comb,  # income/sales → Census combined
+            "e18500": prop,  # real estate → Census property
+        }
+
+    # 4b. For each area, compute targets by joining spec + shares
     output_dir.mkdir(parents=True, exist_ok=True)
     areas = sorted(shares["area"].unique())
     n_written = 0
@@ -332,7 +350,13 @@ def prepare_targets_from_spec(
                 if tmdsum is None:
                     continue
 
-                target_val = tmdsum * soi_share
+                # Census SALT: use Census share for state
+                # total-only e18400/e18500 targets
+                if vn in _CENSUS_SALT and cnt == 0 and fs == 0:
+                    c_share = _CENSUS_SALT[vn].get(area, 0)
+                    target_val = tmdsum * c_share
+                else:
+                    target_val = tmdsum * soi_share
 
             bin_targets.append(
                 {
@@ -433,36 +457,12 @@ def main():
         default=2022,
         help="SOI area data year (default: 2022)",
     )
-    parser.add_argument(
-        "--national-year",
-        type=int,
-        default=0,
-        help="TMD national data year (default: same as --year)",
-    )
-    parser.add_argument(
-        "--pop-year",
-        type=int,
-        default=0,
-        help="Population year (default: same as --year)",
-    )
     args = parser.parse_args()
 
-    scope_lower = args.scope.lower().strip()
-    if scope_lower == "cds" or (
-        "," in args.scope and len(args.scope.split(",")[0].strip()) > 2
-    ):
-        prepare_cd_targets(
-            scope=args.scope,
-            area_data_year=args.year,
-            national_data_year=args.national_year,
-        )
-    else:
-        prepare_state_targets(
-            scope=args.scope,
-            area_data_year=args.year,
-            national_data_year=args.national_year,
-            pop_year=args.pop_year,
-        )
+    prepare_targets_from_spec(
+        scope=args.scope,
+        area_data_year=args.year,
+    )
 
 
 if __name__ == "__main__":
