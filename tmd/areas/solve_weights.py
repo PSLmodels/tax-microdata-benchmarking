@@ -71,8 +71,7 @@ def solve_state_weights(
 
     t0 = time.time()
 
-    # --- Pass 1: unconstrained solve ---
-    print("Pass 1: solving state weights...")
+    print("Solving state weights...")
     run_batch(
         num_workers=num_workers,
         area_filter=area_filter,
