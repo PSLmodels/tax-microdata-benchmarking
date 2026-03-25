@@ -1,0 +1,108 @@
+varname,count,scope,fstatus,agilo,agihi,description
+XTOT,0,0,0,-9e+99,9e+99,Population amount all bins
+c00100,0,1,0,-9e+99,1.0,AGI amount <$0K
+c00100,0,1,0,1.0,10000.0,AGI amount $0K-$10K
+c00100,0,1,0,10000.0,25000.0,AGI amount $10K-$25K
+c00100,0,1,0,25000.0,50000.0,AGI amount $25K-$50K
+c00100,0,1,0,50000.0,75000.0,AGI amount $50K-$75K
+c00100,0,1,0,75000.0,100000.0,AGI amount $75K-$100K
+c00100,0,1,0,100000.0,200000.0,AGI amount $100K-$200K
+c00100,0,1,0,200000.0,500000.0,AGI amount $200K-$500K
+c00100,0,1,0,500000.0,9e+99,AGI amount $500K+
+c00100,1,1,0,25000.0,50000.0,AGI returns $25K-$50K
+c00100,1,1,0,50000.0,75000.0,AGI returns $50K-$75K
+c00100,1,1,0,75000.0,100000.0,AGI returns $75K-$100K
+c00100,1,1,0,100000.0,200000.0,AGI returns $100K-$200K
+c00100,1,1,0,200000.0,500000.0,AGI returns $200K-$500K
+c00100,1,1,0,500000.0,9e+99,AGI returns $500K+
+e00200,0,1,0,-9e+99,1.0,Wages amount <$0K
+e00200,0,1,0,1.0,10000.0,Wages amount $0K-$10K
+e00200,0,1,0,10000.0,25000.0,Wages amount $10K-$25K
+e00200,0,1,0,25000.0,50000.0,Wages amount $25K-$50K
+e00200,0,1,0,50000.0,75000.0,Wages amount $50K-$75K
+e00200,0,1,0,75000.0,100000.0,Wages amount $75K-$100K
+e00200,0,1,0,100000.0,200000.0,Wages amount $100K-$200K
+e00200,0,1,0,200000.0,500000.0,Wages amount $200K-$500K
+e00200,0,1,0,500000.0,9e+99,Wages amount $500K+
+e00200,2,1,0,1.0,10000.0,Wages nz-count $0K-$10K
+e00200,2,1,0,10000.0,25000.0,Wages nz-count $10K-$25K
+e00200,2,1,0,25000.0,50000.0,Wages nz-count $25K-$50K
+e00200,2,1,0,50000.0,75000.0,Wages nz-count $50K-$75K
+e00200,2,1,0,75000.0,100000.0,Wages nz-count $75K-$100K
+e00200,2,1,0,100000.0,200000.0,Wages nz-count $100K-$200K
+e00200,2,1,0,200000.0,500000.0,Wages nz-count $200K-$500K
+e00300,0,1,0,-9e+99,1.0,Interest amount <$0K
+e00300,0,1,0,1.0,10000.0,Interest amount $0K-$10K
+e00300,0,1,0,10000.0,25000.0,Interest amount $10K-$25K
+e00300,0,1,0,25000.0,50000.0,Interest amount $25K-$50K
+e00300,0,1,0,50000.0,75000.0,Interest amount $50K-$75K
+e00300,0,1,0,75000.0,100000.0,Interest amount $75K-$100K
+e00300,0,1,0,100000.0,200000.0,Interest amount $100K-$200K
+e00300,0,1,0,200000.0,500000.0,Interest amount $200K-$500K
+e00300,0,1,0,500000.0,9e+99,Interest amount $500K+
+e01500,0,1,0,-9e+99,1.0,Pensions amount <$0K
+e01500,0,1,0,1.0,10000.0,Pensions amount $0K-$10K
+e01500,0,1,0,10000.0,25000.0,Pensions amount $10K-$25K
+e01500,0,1,0,25000.0,50000.0,Pensions amount $25K-$50K
+e01500,0,1,0,50000.0,75000.0,Pensions amount $50K-$75K
+e01500,0,1,0,75000.0,100000.0,Pensions amount $75K-$100K
+e01500,0,1,0,100000.0,200000.0,Pensions amount $100K-$200K
+e01500,0,1,0,200000.0,500000.0,Pensions amount $200K-$500K
+e01500,0,1,0,500000.0,9e+99,Pensions amount $500K+
+e02400,0,1,0,1.0,10000.0,Social Security amount $0K-$10K
+e02400,0,1,0,10000.0,25000.0,Social Security amount $10K-$25K
+e02400,0,1,0,25000.0,50000.0,Social Security amount $25K-$50K
+e02400,0,1,0,50000.0,75000.0,Social Security amount $50K-$75K
+e02400,0,1,0,75000.0,100000.0,Social Security amount $75K-$100K
+e02400,0,1,0,100000.0,200000.0,Social Security amount $100K-$200K
+e02400,0,1,0,200000.0,500000.0,Social Security amount $200K-$500K
+e02400,0,1,0,500000.0,9e+99,Social Security amount $500K+
+c18300,0,1,0,10000.0,25000.0,SALT ded amount $10K-$25K
+c18300,0,1,0,25000.0,50000.0,SALT ded amount $25K-$50K
+c18300,0,1,0,50000.0,75000.0,SALT ded amount $50K-$75K
+c18300,0,1,0,75000.0,100000.0,SALT ded amount $75K-$100K
+c18300,0,1,0,100000.0,200000.0,SALT ded amount $100K-$200K
+c18300,0,1,0,200000.0,500000.0,SALT ded amount $200K-$500K
+c18300,0,1,0,500000.0,9e+99,SALT ded amount $500K+
+e26270,0,1,0,-9e+99,1.0,Partnership/S-corp amount <$0K
+e26270,0,1,0,1.0,10000.0,Partnership/S-corp amount $0K-$10K
+e26270,0,1,0,10000.0,25000.0,Partnership/S-corp amount $10K-$25K
+e26270,0,1,0,25000.0,50000.0,Partnership/S-corp amount $25K-$50K
+e26270,0,1,0,50000.0,75000.0,Partnership/S-corp amount $50K-$75K
+e26270,0,1,0,75000.0,100000.0,Partnership/S-corp amount $75K-$100K
+e26270,0,1,0,100000.0,200000.0,Partnership/S-corp amount $100K-$200K
+e26270,0,1,0,200000.0,500000.0,Partnership/S-corp amount $200K-$500K
+e26270,0,1,0,500000.0,9e+99,Partnership/S-corp amount $500K+
+c00100,1,1,0,-9e+99,9e+99,AGI returns all bins
+c00100,1,1,1,-9e+99,9e+99,AGI returns single all bins
+c00100,1,1,2,-9e+99,9e+99,AGI returns MFJ all bins
+c00100,1,1,4,-9e+99,9e+99,AGI returns HoH all bins
+e01700,0,1,0,-9e+99,9e+99,Taxable pensions amount all bins
+c02500,0,1,0,-9e+99,9e+99,Taxable SS amount all bins
+e01400,0,1,0,-9e+99,9e+99,IRA distributions amount all bins
+capgains_net,0,1,0,-9e+99,9e+99,Net capital gains amount all bins
+e00600,0,1,0,-9e+99,9e+99,Ordinary dividends amount all bins
+e00900,0,1,0,-9e+99,9e+99,Business income amount all bins
+c19200,0,1,0,-9e+99,9e+99,Interest deduction amount all bins
+c19700,0,1,0,-9e+99,9e+99,Charitable contributions amount all bins
+e18400,0,1,0,-9e+99,9e+99,SALT income/sales amount all bins
+e18500,0,1,0,-9e+99,9e+99,SALT real estate amount all bins
+eitc,0,1,0,-9e+99,9e+99,EITC amount all bins
+ctc_total,0,1,0,-9e+99,9e+99,CTC+ACTC amount all bins
+eitc,2,1,0,-9e+99,9e+99,EITC nz-count all bins
+ctc_total,2,1,0,-9e+99,9e+99,CTC+ACTC nz-count all bins
+capgains_net,0,1,0,100000.0,200000.0,Net capital gains amount $100K-$200K
+capgains_net,0,1,0,200000.0,500000.0,Net capital gains amount $200K-$500K
+capgains_net,0,1,0,500000.0,9e+99,Net capital gains amount $500K+
+eitc,0,1,0,1.0,10000.0,EITC amount $0K-$10K
+eitc,0,1,0,10000.0,25000.0,EITC amount $10K-$25K
+eitc,0,1,0,25000.0,50000.0,EITC amount $25K-$50K
+eitc,2,1,0,1.0,10000.0,EITC nz-count $0K-$10K
+eitc,2,1,0,10000.0,25000.0,EITC nz-count $10K-$25K
+eitc,2,1,0,25000.0,50000.0,EITC nz-count $25K-$50K
+ctc_total,0,1,0,10000.0,25000.0,CTC+ACTC amount $10K-$25K
+ctc_total,0,1,0,25000.0,50000.0,CTC+ACTC amount $25K-$50K
+ctc_total,0,1,0,50000.0,75000.0,CTC+ACTC amount $50K-$75K
+ctc_total,2,1,0,10000.0,25000.0,CTC+ACTC nz-count $10K-$25K
+ctc_total,2,1,0,25000.0,50000.0,CTC+ACTC nz-count $25K-$50K
+ctc_total,2,1,0,50000.0,75000.0,CTC+ACTC nz-count $50K-$75K

@@ -1,5 +1,6 @@
+# pylint: disable=import-outside-toplevel
 """
-Target sharing — derive state targets from TMD national totals.
+Target sharing — derive area targets from TMD national totals.
 
 Every targeted variable uses TMD national totals scaled by SOI
 geographic shares:
@@ -14,7 +15,7 @@ Year flexibility:
     function ``prepare_area_targets()`` handles path resolution and
     loading for both years.
 
-Note: Congressional District (CD) support will be added in a future PR.
+Supports both states and congressional districts.
 """
 
 from pathlib import Path
@@ -25,6 +26,7 @@ import pandas as pd
 
 from tmd.areas.prepare.constants import (
     ALL_SHARING_MAPPINGS,
+    CD_AGI_CUTS,
     STATE_AGI_CUTS,
     AreaType,
 )
@@ -69,6 +71,11 @@ def compute_tmd_national_sums(
     """
     tmd = pd.read_csv(cached_allvars_path)
     tmd = tmd.loc[tmd["data_source"] == 1].copy()
+
+    # Synthetic variables (not in cached_allvars directly)
+    if "p22250" in tmd.columns and "p23250" in tmd.columns:
+        tmd["capgains_net"] = tmd["p22250"] + tmd["p23250"]
+    # Note: ctc_total and eitc are already in cached_allvars
 
     tmd["agistub"] = (
         pd.cut(
@@ -183,6 +190,47 @@ def compute_soi_shares(
         group_sums > 0,
         df.loc[state_mask, "soi_share"] / group_sums,
         0,
+    )
+    return df
+
+
+# ---- CD SOI geographic shares ----------------------------
+
+
+def compute_cd_soi_shares(
+    base_targets: pd.DataFrame,
+    sharing_mappings: List[Tuple],
+) -> pd.DataFrame:
+    """
+    Compute each CD's share of the national total for sharer variables.
+
+    Unlike state shares, CD base_targets have no "US" row — the
+    national total is computed by summing all CDs. Shares are
+    already internally consistent (sum to 1.0) so no rescaling
+    is needed.
+
+    The ``area`` column (e.g., "AL01") is the geographic identifier.
+    """
+    soi_bases = [m[1] for m in sharing_mappings]
+    df = base_targets.loc[base_targets["basesoivname"].isin(soi_bases)].copy()
+
+    # Compute national totals by summing all CDs
+    group_cols = [
+        "basesoivname",
+        "count",
+        "scope",
+        "fstatus",
+        "agistub",
+    ]
+    us_totals = (
+        df.groupby(group_cols)["target"]
+        .sum()
+        .reset_index()
+        .rename(columns={"target": "soi_ussum"})
+    )
+    df = df.merge(us_totals, on=group_cols, how="left")
+    df["soi_share"] = np.where(
+        df["soi_ussum"] == 0, 0, df["target"] / df["soi_ussum"]
     )
     return df
 
@@ -357,6 +405,153 @@ def build_all_shares_targets(
     return stack
 
 
+def build_cd_shares_targets(
+    base_targets: pd.DataFrame,
+    cached_allvars_path: Path,
+    all_mappings: List[Tuple[str, str, int, int, str]],
+    agi_cuts: List[float],
+) -> pd.DataFrame:
+    """
+    Build enhanced targets for CDs using TMD × SOI shares.
+
+    Like ``build_all_shares_targets`` but uses CD-specific share
+    computation (national total = sum of all CDs) and groups by
+    ``area`` (CD code) instead of ``stabbr``.
+    """
+    tmd_sums = compute_tmd_national_sums(
+        cached_allvars_path, all_mappings, agi_cuts
+    )
+
+    soi_shares = compute_cd_soi_shares(base_targets, all_mappings)
+
+    # Filter to only the exact combos in all_mappings
+    wanted = pd.DataFrame(
+        [
+            {
+                "basesoivname": m[1],
+                "count": m[2],
+                "fstatus": m[3],
+            }
+            for m in all_mappings
+        ]
+    ).drop_duplicates()
+    soi_shares = soi_shares.merge(
+        wanted,
+        on=["basesoivname", "count", "fstatus"],
+        how="inner",
+    )
+
+    shared = _apply_cd_sharing(soi_shares, tmd_sums)
+
+    # Construct shared variable names
+    shared["basesoivname"] = (
+        "tmd"
+        + shared["tmdvar"].str[1:]
+        + "_shared_by_soi"
+        + shared["basesoivname"]
+    )
+    shared["soivname"] = np.where(
+        shared["count"] == 0,
+        "a" + shared["basesoivname"],
+        "n" + shared["basesoivname"],
+    )
+
+    xtot = base_targets.loc[base_targets["basesoivname"] == "XTOT"].copy()
+
+    out_cols = [
+        "stabbr",
+        "area",
+        "count",
+        "scope",
+        "agilo",
+        "agihi",
+        "fstatus",
+        "target",
+        "basesoivname",
+        "soivname",
+        "agistub",
+        "agilabel",
+    ]
+    shared_out = shared[[c for c in out_cols if c in shared.columns]]
+    xtot_out = xtot[[c for c in out_cols if c in xtot.columns]]
+
+    stack = pd.concat([xtot_out, shared_out], ignore_index=True)
+
+    is_xtot = (stack["basesoivname"] == "XTOT") & (stack["scope"] == 0)
+    stack["_xtot"] = is_xtot.astype(int)
+    stack = stack.sort_values(
+        [
+            "area",
+            "_xtot",
+            "scope",
+            "fstatus",
+            "basesoivname",
+            "count",
+            "agistub",
+        ],
+        ascending=[True, False, True, True, True, True, True],
+    ).reset_index(drop=True)
+    stack["sort"] = stack.groupby("area").cumcount() + 1
+    stack = stack.drop(columns=["_xtot"])
+    return stack
+
+
+def _apply_cd_sharing(
+    soi_shares: pd.DataFrame,
+    tmd_sums: pd.DataFrame,
+) -> pd.DataFrame:
+    """
+    Join CD SOI shares with TMD sums and compute targets.
+
+    Like ``_apply_sharing`` but groups by ``area`` (CD code)
+    instead of ``stabbr``.
+    """
+    join_keys = [
+        "basesoivname",
+        "scope",
+        "fstatus",
+        "count",
+        "agistub",
+    ]
+    joined = soi_shares.merge(
+        tmd_sums[join_keys + ["tmdvar", "tmdsum"]],
+        on=join_keys,
+        how="left",
+    )
+
+    # Compute bin-level targets
+    joined["target"] = np.where(
+        joined["agistub"] != 0,
+        joined["tmdsum"] * joined["soi_share"],
+        np.nan,
+    )
+
+    # Compute totals (agistub=0) as sum of bin targets
+    group_cols = [
+        "area",
+        "tmdvar",
+        "basesoivname",
+        "scope",
+        "fstatus",
+        "count",
+    ]
+    group_cols = [c for c in group_cols if c in joined.columns]
+
+    bin_sums = (
+        joined.loc[joined["agistub"] != 0]
+        .groupby(group_cols)["target"]
+        .sum()
+        .reset_index()
+        .rename(columns={"target": "target_total"})
+    )
+    joined = joined.merge(bin_sums, on=group_cols, how="left")
+    joined.loc[joined["agistub"] == 0, "target"] = joined.loc[
+        joined["agistub"] == 0, "target_total"
+    ]
+    joined = joined.drop(columns=["target_total"])
+    return joined
+
+
 # ---- Convenience orchestrator ----------------------------
 
 
@@ -378,7 +573,7 @@ def prepare_area_targets(
     Parameters
     ----------
     area_type : AreaType
-        Currently only STATE is supported.
+        STATE or CD.
     area_data_year : int
         Year for SOI data (geographic distribution).
     national_data_year : int, optional
@@ -388,18 +583,13 @@ def prepare_area_targets(
     cached_allvars_path : Path, optional
         Path to cached_allvars.csv.
     soi_raw_data_dir : Path, optional
-        Directory containing raw SOI state CSV files.
+        Directory containing raw SOI CSV files.
 
     Returns
     -------
     pd.DataFrame
         Enhanced targets ready for target_file_writer.
     """
-    if area_type != AreaType.STATE:
-        raise ValueError(
-            f"Only STATE is supported in this PR. Got: {area_type}"
-        )
-
     if national_data_year == 0:
         national_data_year = area_data_year
     if pop_year == 0:
@@ -411,19 +601,56 @@ def prepare_area_targets(
             repo_root / "tmd" / "storage" / "output" / "cached_allvars.csv"
         )
 
-    agi_cuts = STATE_AGI_CUTS
-    if soi_raw_data_dir is None:
-        soi_raw_data_dir = (
-            repo_root / "tmd" / "areas" / "prepare" / "data" / "soi_states"
+    if area_type == AreaType.STATE:
+        agi_cuts = STATE_AGI_CUTS
+        if soi_raw_data_dir is None:
+            soi_raw_data_dir = (
+                repo_root / "tmd" / "areas" / "prepare" / "data" / "soi_states"
+            )
+
+        soilong = create_soilong(soi_raw_data_dir, years=[area_data_year])
+        pop_df = get_state_population(pop_year)
+        base_targets = create_state_base_targets(
+            soilong, pop_df, area_data_year
         )
 
-    soilong = create_soilong(soi_raw_data_dir, years=[area_data_year])
-    pop_df = get_state_population(pop_year)
-    base_targets = create_state_base_targets(soilong, pop_df, area_data_year)
+        return build_all_shares_targets(
+            base_targets=base_targets,
+            cached_allvars_path=cached_allvars_path,
+            all_mappings=ALL_SHARING_MAPPINGS,
+            agi_cuts=agi_cuts,
+        )
 
-    return build_all_shares_targets(
-        base_targets=base_targets,
-        cached_allvars_path=cached_allvars_path,
-        all_mappings=ALL_SHARING_MAPPINGS,
-        agi_cuts=agi_cuts,
-    )
+    if area_type == AreaType.CD:
+        from tmd.areas.prepare.soi_cd_data import (
+            apply_crosswalk,
+            compute_cd_population,
+            create_cd_base_targets,
+            create_cd_soilong,
+            load_crosswalk,
+        )
+
+        agi_cuts = CD_AGI_CUTS
+        if soi_raw_data_dir is None:
+            soi_raw_data_dir = (
+                repo_root / "tmd" / "areas" / "prepare" / "data" / "soi_cds"
+            )
+
+        cd117_long = create_cd_soilong(
+            soi_raw_data_dir, years=[area_data_year]
+        )
+        crosswalk = load_crosswalk()
+        cd118_long = apply_crosswalk(cd117_long, crosswalk)
+        cd_pop = compute_cd_population()
+        base_targets = create_cd_base_targets(
+            cd118_long, cd_pop, area_data_year
+        )
+
+        return build_cd_shares_targets(
+            base_targets=base_targets,
+            cached_allvars_path=cached_allvars_path,
+            all_mappings=ALL_SHARING_MAPPINGS,
+            agi_cuts=agi_cuts,
+        )
+
+    raise ValueError(f"Unsupported area_type: {area_type}")

@@ -1,11 +1,9 @@
 """
-Shared constants for state target preparation.
+Shared constants for area target preparation.
 
 AGI cut points, SOI file patterns, variable mappings, and area
-type definitions used across the preparation pipeline.
-
-Note: CD (Congressional District) constants will be added in a
-future PR.
+type definitions used across the preparation pipeline for
+states and congressional districts.
 """
 
 from enum import Enum
@@ -19,6 +17,7 @@ class AreaType(Enum):
     """Type of sub-national area."""
 
     STATE = "state"
+    CD = "cd"
 
 
 # --- AGI range definitions ---
@@ -42,6 +41,24 @@ STATE_AGI_CUTS: List[float] = [
 # Number of non-total AGI stubs
 STATE_NUM_AGI_STUBS = len(STATE_AGI_CUTS) - 1  # 10
 
+# CD AGI stubs: 9 bins (IRS SOI Congressional District data)
+# Same as state stubs 1-8, with stubs 9+10 merged into "$500K+"
+# agistub 0 = total, agistubs 1-9 = bins
+CD_AGI_CUTS: List[float] = [
+    -np.inf,
+    1,
+    10_000,
+    25_000,
+    50_000,
+    75_000,
+    100_000,
+    200_000,
+    500_000,
+    np.inf,
+]
+
+CD_NUM_AGI_STUBS = len(CD_AGI_CUTS) - 1  # 9
+
 
 def build_agi_labels(area_type: AreaType) -> pd.DataFrame:
     """
@@ -52,6 +69,8 @@ def build_agi_labels(area_type: AreaType) -> pd.DataFrame:
     """
     if area_type == AreaType.STATE:
         cuts = STATE_AGI_CUTS
+    elif area_type == AreaType.CD:
+        cuts = CD_AGI_CUTS
     else:
         raise ValueError(f"Unsupported area_type: {area_type}")
 
@@ -98,6 +117,24 @@ SOI_STATE_CSV_PATTERNS: Dict[int, str] = {
     2021: "21in55cmcsv.csv",
     2022: "22in55cmcsv.csv",
 }
+
+# CD SOI CSV files by year
+SOI_CD_CSV_PATTERNS: Dict[int, str] = {
+    2021: "21incd.csv",
+    2022: "22incd.csv",
+}
+
+# At-large states: single CD coded as CONG_DISTRICT=0 in SOI data
+AT_LARGE_STATES: List[str] = [
+    "AK",
+    "DC",
+    "DE",
+    "MT",
+    "ND",
+    "SD",
+    "VT",
+    "WY",
+]
 
 
 # --- Variable classifications ---
@@ -193,6 +230,25 @@ STATE_INFO: Dict[str, Dict[int, int]] = {
 
 # All valid 2-letter state codes (uppercase)
 ALL_STATES: List[str] = sorted(STATE_INFO.keys())
+
+
+def get_agi_cuts(area_type: AreaType) -> List[float]:
+    """Return AGI cut points for the given area type."""
+    if area_type == AreaType.STATE:
+        return STATE_AGI_CUTS
+    if area_type == AreaType.CD:
+        return CD_AGI_CUTS
+    raise ValueError(f"Unsupported area_type: {area_type}")
+
+
+def get_num_agi_stubs(area_type: AreaType) -> int:
+    """Return the number of non-total AGI stubs for the given area type."""
+    if area_type == AreaType.STATE:
+        return STATE_NUM_AGI_STUBS
+    if area_type == AreaType.CD:
+        return CD_NUM_AGI_STUBS
+    raise ValueError(f"Unsupported area_type: {area_type}")
+
 
 # Faux area prefixes used for testing
 FAUX_AREA_PREFIXES: List[str] = [
