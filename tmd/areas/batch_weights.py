@@ -204,16 +204,23 @@ def _solve_one_area(area):
         out=out,
     )
 
-    # Assign per-constraint slack penalties
-    per_constraint_penalties = _assign_slack_penalties(
-        labels, default_penalty=slack_penalty
-    )
-    n_reduced = int((per_constraint_penalties < slack_penalty).sum())
-    if n_reduced > 0:
-        out.write(
-            f"SLACK PENALTIES: {n_reduced}/{len(labels)}"
-            f" constraints have reduced penalty\n"
+    # Assign per-constraint slack penalties for CDs only.
+    # States are well-conditioned and hit all targets with uniform
+    # penalties.  CDs have extreme areas (e.g., Manhattan) where
+    # reduced penalties on noisy low-AGI targets prevent the solver
+    # from distorting weights globally to satisfy them.
+    if multiplier_max > AREA_MULTIPLIER_MAX:
+        per_constraint_penalties = _assign_slack_penalties(
+            labels, default_penalty=slack_penalty
         )
+        n_reduced = int((per_constraint_penalties < slack_penalty).sum())
+        if n_reduced > 0:
+            out.write(
+                f"SLACK PENALTIES: {n_reduced}/{len(labels)}"
+                f" constraints have reduced penalty\n"
+            )
+    else:
+        per_constraint_penalties = None
 
     # Check for per-record multiplier caps (from exhaustion limiting)
     caps_path = wgt_dir / f"{area}_record_caps.npy"
