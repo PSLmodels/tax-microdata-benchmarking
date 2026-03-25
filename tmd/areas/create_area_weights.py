@@ -28,12 +28,15 @@ Follows the same QP construction as tmd/utils/reweight.py.
 import sys
 import time
 
+import re
+
 import clarabel
 import numpy as np
 import pandas as pd
 import yaml
+from scipy.optimize import linprog
 from scipy.sparse import (
-    csc_matrix,
+    coo_matrix,
     diags as spdiags,
     eye as speye,
     hstack,
@@ -65,17 +68,25 @@ CACHED_TC_OUTPUTS = [
 # Default solver parameters
 AREA_CONSTRAINT_TOL = 0.005
 AREA_SLACK_PENALTY = 1e6
+AREA_REDUCED_SLACK_PENALTY = 1e3
 AREA_MAX_ITER = 2000
 AREA_MULTIPLIER_MIN = 0.0
 AREA_MULTIPLIER_MAX = 25.0
+CD_MULTIPLIER_MAX = 50.0
 
-# Default target/weight directories for states
+# Default target/weight directories
 STATE_TARGET_DIR = AREAS_FOLDER / "targets" / "states"
 STATE_WEIGHT_DIR = AREAS_FOLDER / "weights" / "states"
+CD_TARGET_DIR = AREAS_FOLDER / "targets" / "cds"
+CD_WEIGHT_DIR = AREAS_FOLDER / "weights" / "cds"
 
 
 def _load_taxcalc_data():
-    """Load TMD data with cached AGI and selected Tax-Calculator outputs."""
+    """Load TMD data with cached AGI and selected Tax-Calculator outputs.
+
+    After loading, drops columns not used by the solver to reduce
+    per-worker memory (~150 MB savings with 109 → ~25 columns).
+    """
     vdf = pd.read_csv(INFILE_PATH)
     vdf["c00100"] = np.load(TAXCALC_AGI_CACHE)
     if CACHED_ALLVARS_PATH.exists():
@@ -87,6 +98,19 @@ def _load_taxcalc_data():
     if "p22250" in vdf.columns and "p23250" in vdf.columns:
         vdf["capgains_net"] = vdf["p22250"] + vdf["p23250"]
     assert np.all(vdf.s006 > 0), "Not all weights are positive"
+    # Drop columns not used by the solver to reduce memory.
+    # Keep infrastructure columns + any column that could be a target
+    # variable (e*, c*, p* prefixes, plus synthetic variables).
+    # This adapts automatically as target specs change.
+    _INFRA_COLS = {"s006", "MARS", "data_source", "XTOT", "RECID"}
+    _SYNTH_COLS = {"capgains_net", "eitc", "ctc_total"}
+    keep = set()
+    for col in vdf.columns:
+        if col in _INFRA_COLS or col in _SYNTH_COLS:
+            keep.add(col)
+        elif col[:1] in ("e", "c", "p") and col[1:2].isdigit():
+            keep.add(col)
+    vdf = vdf[sorted(keep)]
     return vdf
 
 
@@ -145,10 +169,29 @@ def _build_constraint_matrix(area, vardf, out, target_dir=None):
     targets_file = target_dir / f"{area}_targets.csv"
     tdf = pd.read_csv(targets_file, comment="#")
 
+    # Pre-cache column arrays to avoid repeated DataFrame lookups
+    c00100_arr = vardf["c00100"].values.astype(float)
+    mars_arr = vardf["MARS"].values.astype(float)
+    data_source_arr = vardf["data_source"].values
+    scope1_mask = (data_source_arr == 1).astype(float)
+    scope2_mask = (data_source_arr == 0).astype(float)
+    ones_arr = np.ones(numobs, dtype=float)
+
+    unique_vars = tdf.loc[tdf["count"] != 1, "varname"].unique()
+    var_cache = {}
+    for vname in unique_vars:
+        var_cache[vname] = vardf[vname].astype(float).values
+
     targets_list = []
     labels_list = []
-    columns = []
     pop_share = None
+    w0 = None
+
+    # Build B matrix directly in sparse COO format, avoiding dense
+    # intermediates that would require ~620 MB for 215K × 179.
+    row_indices = []
+    col_indices = []
+    data_values = []
 
     for row_idx, row in enumerate(tdf.itertuples(index=False)):
         line = f"{area}:target{row_idx + 1}"
@@ -179,76 +222,314 @@ def _build_constraint_matrix(area, vardf, out, target_dir=None):
                 f" / {national_population:.0f}"
                 f" = {pop_share:.6f}\n"
             )
+            w0 = pop_share * vardf.s006.values
 
-        # construct variable array for this target
+        # construct variable array from cache
         assert 0 <= row.count <= 4, f"count {row.count} not in [0,4] on {line}"
         if row.count == 0:
-            var_array = vardf[row.varname].astype(float).values
+            var_array = var_cache[row.varname]
         elif row.count == 1:
-            var_array = np.ones(numobs, dtype=float)
+            var_array = ones_arr
         elif row.count == 2:
-            var_array = (vardf[row.varname] != 0).astype(float).values
+            var_array = (var_cache[row.varname] != 0).astype(float)
         elif row.count == 3:
-            var_array = (vardf[row.varname] > 0).astype(float).values
+            var_array = (var_cache[row.varname] > 0).astype(float)
         else:
-            var_array = (vardf[row.varname] < 0).astype(float).values
+            var_array = (var_cache[row.varname] < 0).astype(float)
 
-        # construct mask
-        mask = np.ones(numobs, dtype=float)
+        # construct mask using cached arrays
         assert 0 <= row.scope <= 2, f"scope {row.scope} not in [0,2] on {line}"
         if row.scope == 1:
-            mask *= (vardf.data_source == 1).values.astype(float)
+            mask = scope1_mask.copy()
         elif row.scope == 2:
-            mask *= (vardf.data_source == 0).values.astype(float)
+            mask = scope2_mask.copy()
+        else:
+            mask = ones_arr.copy()
 
-        in_agi_bin = (vardf.c00100 >= row.agilo) & (vardf.c00100 < row.agihi)
-        mask *= in_agi_bin.values.astype(float)
+        mask *= (c00100_arr >= row.agilo) & (c00100_arr < row.agihi)
 
         assert (
             0 <= row.fstatus <= 5
         ), f"fstatus {row.fstatus} not in [0,5] on {line}"
         if row.fstatus > 0:
-            mask *= (vardf.MARS == row.fstatus).values.astype(float)
+            mask *= mars_arr == row.fstatus
 
-        # A[j,i] = mask * var_array (data values for this constraint)
-        columns.append(mask * var_array)
+        # B[j,i] = w0[i] * mask[i] * var_array[i]
+        # Store only nonzero entries (sparse COO format)
+        b_row = w0 * mask * var_array
+        nz = np.nonzero(b_row)[0]
+        if len(nz) > 0:
+            row_indices.append(np.full(len(nz), row_idx, dtype=np.int32))
+            col_indices.append(nz.astype(np.int32))
+            data_values.append(b_row[nz])
 
     assert pop_share is not None, "XTOT target not found"
 
-    # A matrix: n_records x n_targets (each column is a constraint)
-    A_dense = np.column_stack(columns)
-
-    # B = diag(w0) @ A where w0 = pop_share * s006
-    w0 = pop_share * vardf.s006.values
-    B_dense = w0[:, np.newaxis] * A_dense
-
-    # convert to sparse (n_targets x n_records) for Clarabel
-    B_csc = csc_matrix(B_dense.T)
+    # Assemble sparse B directly from COO — no dense intermediate
+    n_targets = len(targets_list)
+    B_csc = coo_matrix(
+        (
+            np.concatenate(data_values),
+            (np.concatenate(row_indices), np.concatenate(col_indices)),
+        ),
+        shape=(n_targets, numobs),
+    ).tocsc()
 
     targets_arr = np.array(targets_list)
     return B_csc, targets_arr, labels_list, pop_share
 
 
-def _drop_impossible_targets(B_csc, targets, labels, out):
-    """Drop targets where all constraint matrix values are zero."""
-    col_sums = np.abs(np.asarray(B_csc.sum(axis=1))).ravel()
-    all_zero = col_sums == 0
-    if all_zero.any():
-        n_drop = int(all_zero.sum())
-        for i in np.where(all_zero)[0]:
+def _drop_impossible_targets(
+    B_csc,
+    targets,
+    labels,
+    out,
+    multiplier_min=AREA_MULTIPLIER_MIN,
+    multiplier_max=AREA_MULTIPLIER_MAX,
+    constraint_tol=AREA_CONSTRAINT_TOL,
+):
+    """
+    Drop targets that cannot be reached within tolerance.
+
+    A target is impossible if:
+      - All B matrix values are zero (no records contribute), or
+      - The target is outside the achievable range even with all
+        multipliers at their extreme bounds.
+    """
+    m = len(targets)
+    drop = np.zeros(m, dtype=bool)
+
+    for j in range(m):
+        # Extract one sparse row at a time — avoids 310 MB dense copy
+        row = B_csc.getrow(j).toarray().ravel()
+        pos = row > 0
+        neg = row < 0
+
+        # All zeros
+        if not pos.any() and not neg.any():
             out.write(
-                f"DROPPING impossible target" f" (all zeros): {labels[i]}\n"
+                f"DROPPING impossible target" f" (all zeros): {labels[j]}\n"
             )
-        keep = ~all_zero
-        B_dense = B_csc.toarray()
-        B_csc = csc_matrix(B_dense[keep, :])
+            drop[j] = True
+            continue
+
+        # Compute achievable range
+        max_val = (
+            multiplier_max * row[pos].sum() + multiplier_min * row[neg].sum()
+        )
+        min_val = (
+            multiplier_min * row[pos].sum() + multiplier_max * row[neg].sum()
+        )
+
+        tgt = targets[j]
+        tol = abs(tgt) * constraint_tol
+        if max_val < tgt - tol or min_val > tgt + tol:
+            out.write(
+                f"DROPPING unreachable target: {labels[j]}"
+                f" (target={tgt:.0f},"
+                f" achievable=[{min_val:.0f}, {max_val:.0f}])\n"
+            )
+            drop[j] = True
+
+    n_drop = int(drop.sum())
+    if n_drop > 0:
+        keep = ~drop
+        # Slice sparse matrix directly — no dense conversion
+        keep_idx = np.where(keep)[0]
+        B_csc = B_csc[keep_idx, :]
         targets = targets[keep]
         labels = [lab for lab, k in zip(labels, keep) if k]
         out.write(
-            f"Dropped {n_drop} impossible targets,"
+            f"Dropped {n_drop} impossible/unreachable targets,"
             f" {len(targets)} remaining\n"
         )
     return B_csc, targets, labels
+
+
+def _check_feasibility(
+    B_csc,
+    targets,
+    labels,
+    n_records,
+    constraint_tol=AREA_CONSTRAINT_TOL,
+    multiplier_min=AREA_MULTIPLIER_MIN,
+    multiplier_max=AREA_MULTIPLIER_MAX,
+    out=None,
+):
+    """
+    Fast LP feasibility check before running the full QP.
+
+    Solves: minimize 0 subject to
+        cl <= Bx + s_lo - s_hi <= cu
+        multiplier_min <= x <= multiplier_max
+        s_lo, s_hi >= 0
+
+    If infeasible, identifies which constraints contribute most
+    to the infeasibility by solving a relaxed LP that minimizes
+    total slack.
+
+    Returns
+    -------
+    dict with keys:
+        feasible : bool
+        slack_needed : np.ndarray or None
+            Per-constraint slack needed (0 if feasible).
+        worst_labels : list of (label, slack_amount)
+            Top constraints requiring the most slack.
+    """
+    if out is None:
+        out = sys.stdout
+
+    m = len(targets)
+    abs_targets = np.abs(targets)
+    tol_band = abs_targets * constraint_tol
+    cl = targets - tol_band
+    cu = targets + tol_band
+
+    # LP: minimize sum(s_lo + s_hi)
+    # Variables: [x (n_records), s_lo (m), s_hi (m)]
+    n_total = n_records + 2 * m
+
+    # Objective: minimize sum of slacks
+    c_obj = np.zeros(n_total)
+    c_obj[n_records:] = 1.0  # minimize total slack
+
+    # Constraints: cl <= Bx + s_lo - s_hi <= cu
+    # Rewrite as:
+    #   Bx + s_lo - s_hi >= cl  =>  -Bx - s_lo + s_hi <= -cl
+    #   Bx + s_lo - s_hi <= cu
+    # Build entirely in sparse format to avoid ~1.2 GB dense alloc
+    I_m = speye(m, format="csc")
+    # [B | I | -I] x <= cu
+    A_upper = hstack([B_csc, I_m, -I_m], format="csc")
+    # [-B | -I | I] x <= -cl
+    A_lower = hstack([-B_csc, -I_m, I_m], format="csc")
+    A_ub = vstack([A_upper, A_lower], format="csc")
+    b_ub = np.concatenate([cu, -cl])
+
+    # Bounds
+    if isinstance(multiplier_max, np.ndarray):
+        x_ub = multiplier_max
+    else:
+        x_ub = np.full(n_records, multiplier_max)
+    bounds = np.column_stack(
+        [
+            np.concatenate(
+                [
+                    np.full(n_records, multiplier_min),
+                    np.zeros(2 * m),
+                ]
+            ),
+            np.concatenate(
+                [
+                    x_ub,
+                    np.full(2 * m, np.inf),
+                ]
+            ),
+        ]
+    )
+
+    result = linprog(
+        c_obj,
+        A_ub=A_ub,
+        b_ub=b_ub,
+        bounds=bounds,
+        method="highs",
+        options={"presolve": True, "time_limit": 30},
+    )
+
+    info = {"feasible": False, "slack_needed": None, "worst_labels": []}
+
+    if result.success:
+        s_lo = result.x[n_records : n_records + m]
+        s_hi = result.x[n_records + m :]
+        total_slack = s_lo + s_hi
+        info["feasible"] = total_slack.max() < 1e-6
+        info["slack_needed"] = total_slack
+
+        if not info["feasible"]:
+            # Report constraints needing the most slack
+            worst_idx = np.argsort(total_slack)[::-1]
+            worst = []
+            for idx in worst_idx[:10]:
+                if total_slack[idx] > 1e-6:
+                    rel = total_slack[idx] / max(abs(targets[idx]), 1)
+                    worst.append((labels[idx], total_slack[idx], rel))
+            info["worst_labels"] = worst
+
+            out.write(
+                f"PRE-SOLVE FEASIBILITY: INFEASIBLE"
+                f" — {len(worst)} constraints need slack\n"
+            )
+            for lbl, slk, rel in worst[:5]:
+                out.write(
+                    f"  {lbl}: slack={slk:.0f}" f" ({rel:.1%} of target)\n"
+                )
+        else:
+            out.write("PRE-SOLVE FEASIBILITY: OK\n")
+    else:
+        out.write(
+            f"PRE-SOLVE FEASIBILITY: LP solver failed" f" ({result.message})\n"
+        )
+
+    return info
+
+
+def _assign_slack_penalties(
+    labels,
+    default_penalty=AREA_SLACK_PENALTY,
+    reduced_penalty=AREA_REDUCED_SLACK_PENALTY,
+):
+    """
+    Assign per-constraint slack penalties based on label content.
+
+    Most constraints get the default (high) penalty. Constraints
+    involving variables and AGI bins where SOI-to-TMD mapping is
+    inherently noisy get a reduced penalty — the solver will still
+    try to hit them but will relax them before distorting weights.
+
+    Reduced-penalty targets:
+      - e02400, e00300, e26270 amounts in AGI stubs 1-3 (<$25K).
+        These income types are concentrated among high-income or
+        elderly filers; low-AGI bin targets are noisy and can
+        conflict with other constraints in extreme CDs.
+      - Filing-status counts (fs=1,2,4) in stubs 1-2 (<$10K).
+        Very small cells in the lowest income bins.
+
+    Returns
+    -------
+    np.ndarray
+        Penalty value for each constraint, same length as labels.
+    """
+    penalties = np.full(len(labels), default_penalty)
+    reduced_vars = {"e02400", "e00300", "e26270"}
+
+    for i, label in enumerate(labels):
+        parts = label.split("/")
+        varname = parts[0]
+        attrs = {}
+        for p in parts[1:]:
+            if "=" in p:
+                k, v = p.split("=", 1)
+                attrs[k] = v
+
+        cnt = int(attrs.get("cnt", -1))
+        fs = int(attrs.get("fs", 0))
+        agi_raw = attrs.get("agi", "")
+
+        # Parse AGI upper bound from "[lo,hi)"
+        agihi = 9e99
+        m = re.match(r"\[([^,]+),([^)]+)\)", agi_raw)
+        if m:
+            agihi = float(m.group(2))
+
+        # Reduced penalty for problematic variable-bin combos
+        if varname in reduced_vars and cnt == 0 and agihi <= 25000:
+            penalties[i] = reduced_penalty
+        elif cnt == 1 and fs > 0 and agihi <= 10000:
+            penalties[i] = reduced_penalty
+
+    return penalties
 
 
 def _solve_area_qp(  # pylint: disable=unused-argument
@@ -258,6 +539,7 @@ def _solve_area_qp(  # pylint: disable=unused-argument
     n_records,
     constraint_tol=AREA_CONSTRAINT_TOL,
     slack_penalty=AREA_SLACK_PENALTY,
+    slack_penalties=None,
     max_iter=AREA_MAX_ITER,
     multiplier_min=AREA_MULTIPLIER_MIN,
     multiplier_max=AREA_MULTIPLIER_MAX,
@@ -269,6 +551,12 @@ def _solve_area_qp(  # pylint: disable=unused-argument
 
     Parameters
     ----------
+    slack_penalty : float
+        Default penalty for constraint slack (used when
+        slack_penalties is None).
+    slack_penalties : np.ndarray, optional
+        Per-constraint slack penalties (length m). Overrides
+        slack_penalty when provided.
     weight_penalty : float
         Penalty weight on (x-1)^2 relative to constraint
         slack. Higher values keep multipliers closer to 1.0
@@ -289,9 +577,14 @@ def _solve_area_qp(  # pylint: disable=unused-argument
     cu = targets + tol_band
 
     # diagonal Hessian: 2*alpha for x, 2*M for slacks
+    # Each slack pair (s_lo, s_hi) gets the same penalty
     hess_diag = np.empty(n_total)
     hess_diag[:n_records] = 2.0 * weight_penalty
-    hess_diag[n_records:] = 2.0 * slack_penalty
+    if slack_penalties is not None:
+        hess_diag[n_records : n_records + m] = 2.0 * slack_penalties
+        hess_diag[n_records + m :] = 2.0 * slack_penalties
+    else:
+        hess_diag[n_records:] = 2.0 * slack_penalty
     P = spdiags(hess_diag, format="csc")
 
     # linear term: -2*alpha for x
@@ -366,6 +659,7 @@ def _solve_area_qp(  # pylint: disable=unused-argument
         "iterations": result.iterations,
         "solve_time": elapsed,
         "clarabel_solve_time": result.solve_time,
+        "dual": np.array(result.z) if result.z is not None else None,
     }
 
     return x_opt, s_lo, s_hi, info
@@ -556,13 +850,16 @@ def create_area_weights_file(
     out.write(f"  max  |relative error|: {rel_err_x1.max():.6f}\n")
 
     # solve QP
+    per_constraint_penalties = _assign_slack_penalties(
+        labels, default_penalty=slack_penalty
+    )
     x_opt, s_lo, s_hi, _info = _solve_area_qp(
         B_csc,
         targets,
         labels,
         n_records,
         constraint_tol=constraint_tol,
-        slack_penalty=slack_penalty,
+        slack_penalties=per_constraint_penalties,
         max_iter=max_iter,
         multiplier_min=multiplier_min,
         multiplier_max=multiplier_max,

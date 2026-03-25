@@ -14,6 +14,15 @@ from tmd.imputation_assumptions import TAXYEAR
 np.seterr(all="raise")
 
 
+def pytest_addoption(parser):
+    parser.addoption(
+        "--update-fingerprint",
+        action="store_true",
+        default=False,
+        help="Save current results as reference fingerprint",
+    )
+
+
 def create_tmd_records(
     data_path, weights_path, growfactors_path, exact_calculations=True
 ):

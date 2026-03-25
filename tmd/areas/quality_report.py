@@ -760,7 +760,7 @@ def main():
     args = parser.parse_args()
 
     areas = None
-    if args.scope:
+    if args.scope and args.scope.lower() != "states":
         areas = [s.strip().upper() for s in args.scope.split(",")]
 
     report = generate_report(areas)

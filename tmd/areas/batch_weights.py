@@ -22,22 +22,34 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import yaml
+from scipy.sparse import csc_matrix
 
-# Module-level cache for TMD data (one per worker process)
+# Module-level globals shared across workers via fork copy-on-write.
+#
+# _WORKER_VDF and _WORKER_POP are loaded ONCE in the parent process
+# (by _preload_data) before ProcessPoolExecutor forks workers.
+# On Linux, forked children inherit these pages read-only; the OS
+# shares the physical memory until a child writes to it.  This saves
+# ~190 MB × (num_workers - 1) compared to loading per-worker.
+#
+# The remaining globals are per-worker configuration set by
+# _init_worker (called as the executor's initializer).
 _WORKER_VDF = None
 _WORKER_POP = None
 _WORKER_TARGET_DIR = None
 _WORKER_WEIGHT_DIR = None
+_WORKER_MULTIPLIER_MAX = None
+_WORKER_OVERRIDES = None
 
 
-def _init_worker(target_dir=None, weight_dir=None):
-    """Load TMD data once per worker process."""
+def _preload_data():
+    """Load TMD data in the parent process before forking workers.
+
+    On Linux (fork), child processes share the parent's memory
+    pages copy-on-write. Loading here instead of per-worker avoids
+    duplicating ~190 MB × N workers.
+    """
     global _WORKER_VDF, _WORKER_POP
-    global _WORKER_TARGET_DIR, _WORKER_WEIGHT_DIR
-    if target_dir is not None:
-        _WORKER_TARGET_DIR = Path(target_dir)
-    if weight_dir is not None:
-        _WORKER_WEIGHT_DIR = Path(weight_dir)
     if _WORKER_VDF is not None:
         return
     from tmd.areas.create_area_weights import (
@@ -48,6 +60,34 @@ def _init_worker(target_dir=None, weight_dir=None):
     _WORKER_VDF = _load_taxcalc_data()
     with open(POPFILE_PATH, "r", encoding="utf-8") as pf:
         _WORKER_POP = yaml.safe_load(pf.read())
+
+
+def _init_worker(
+    target_dir=None,
+    weight_dir=None,
+    multiplier_max=None,
+    override_path=None,
+):
+    """Initialize per-worker state (directories, overrides).
+
+    TMD data is already loaded in the parent via _preload_data()
+    and shared copy-on-write through fork.
+    """
+    global _WORKER_TARGET_DIR, _WORKER_WEIGHT_DIR
+    global _WORKER_MULTIPLIER_MAX, _WORKER_OVERRIDES
+    if target_dir is not None:
+        _WORKER_TARGET_DIR = Path(target_dir)
+    if weight_dir is not None:
+        _WORKER_WEIGHT_DIR = Path(weight_dir)
+    if multiplier_max is not None:
+        _WORKER_MULTIPLIER_MAX = multiplier_max
+    if override_path is not None:
+        from tmd.areas.solver_overrides import load_overrides
+
+        _WORKER_OVERRIDES = load_overrides(Path(override_path))
+    # Fallback: load data if not preloaded (e.g. single-area solve)
+    if _WORKER_VDF is None:
+        _preload_data()
 
 
 def _solve_one_area(area):
@@ -65,7 +105,9 @@ def _solve_one_area(area):
         AREA_SLACK_PENALTY,
         FIRST_YEAR,
         LAST_YEAR,
+        _assign_slack_penalties,
         _build_constraint_matrix,
+        _check_feasibility,
         _drop_impossible_targets,
         _print_multiplier_diagnostics,
         _print_slack_diagnostics,
@@ -82,6 +124,29 @@ def _solve_one_area(area):
     tgt_dir = _WORKER_TARGET_DIR
     wgt_dir = _WORKER_WEIGHT_DIR
     params = _read_params(area, out, target_dir=tgt_dir)
+
+    # Apply solver overrides (centralized file takes precedence)
+    if _WORKER_OVERRIDES is not None:
+        from tmd.areas.solver_overrides import (
+            get_area_overrides,
+            get_drop_targets,
+        )
+
+        area_ovr = get_area_overrides(_WORKER_OVERRIDES, area)
+        # Override params with centralized overrides
+        for key in (
+            "constraint_tol",
+            "slack_penalty",
+            "max_iter",
+            "multiplier_min",
+            "multiplier_max",
+        ):
+            if key in area_ovr:
+                params[key] = area_ovr[key]
+        drop_patterns = get_drop_targets(_WORKER_OVERRIDES, area)
+    else:
+        drop_patterns = []
+
     constraint_tol = params.get(
         "constraint_tol",
         params.get("target_ratio_tolerance", AREA_CONSTRAINT_TOL),
@@ -89,16 +154,73 @@ def _solve_one_area(area):
     slack_penalty = params.get("slack_penalty", AREA_SLACK_PENALTY)
     max_iter = params.get("max_iter", AREA_MAX_ITER)
     multiplier_min = params.get("multiplier_min", AREA_MULTIPLIER_MIN)
-    multiplier_max = params.get("multiplier_max", AREA_MULTIPLIER_MAX)
+    default_max = (
+        _WORKER_MULTIPLIER_MAX
+        if _WORKER_MULTIPLIER_MAX is not None
+        else AREA_MULTIPLIER_MAX
+    )
+    multiplier_max = params.get("multiplier_max", default_max)
 
     B_csc, targets, labels, pop_share = _build_constraint_matrix(
         area, vdf, out, target_dir=tgt_dir
     )
     B_csc, targets, labels = _drop_impossible_targets(
-        B_csc, targets, labels, out
+        B_csc,
+        targets,
+        labels,
+        out,
+        multiplier_max=multiplier_max,
+        constraint_tol=constraint_tol,
     )
 
+    # Apply per-area target drops from override file
+    if drop_patterns:
+        from tmd.areas.solver_overrides import should_drop_target
+
+        keep = [not should_drop_target(lbl, drop_patterns) for lbl in labels]
+        n_drop = sum(1 for k in keep if not k)
+        if n_drop > 0:
+            keep_arr = np.array(keep)
+            B_dense = B_csc.toarray()
+            B_csc = csc_matrix(B_dense[keep_arr, :])
+            targets = targets[keep_arr]
+            labels = [lbl2 for lbl2, k in zip(labels, keep) if k]
+            out.write(
+                f"OVERRIDE: dropped {n_drop} targets,"
+                f" {len(targets)} remaining\n"
+            )
+
     n_records = B_csc.shape[1]
+
+    # Pre-solve feasibility check
+    _check_feasibility(
+        B_csc,
+        targets,
+        labels,
+        n_records,
+        constraint_tol=constraint_tol,
+        multiplier_min=multiplier_min,
+        multiplier_max=multiplier_max,
+        out=out,
+    )
+
+    # Assign per-constraint slack penalties for CDs only.
+    # States are well-conditioned and hit all targets with uniform
+    # penalties.  CDs have extreme areas (e.g., Manhattan) where
+    # reduced penalties on noisy low-AGI targets prevent the solver
+    # from distorting weights globally to satisfy them.
+    if multiplier_max > AREA_MULTIPLIER_MAX:
+        per_constraint_penalties = _assign_slack_penalties(
+            labels, default_penalty=slack_penalty
+        )
+        n_reduced = int((per_constraint_penalties < slack_penalty).sum())
+        if n_reduced > 0:
+            out.write(
+                f"SLACK PENALTIES: {n_reduced}/{len(labels)}"
+                f" constraints have reduced penalty\n"
+            )
+    else:
+        per_constraint_penalties = None
 
     # Check for per-record multiplier caps (from exhaustion limiting)
     caps_path = wgt_dir / f"{area}_record_caps.npy"
@@ -117,7 +239,7 @@ def _solve_one_area(area):
         labels,
         n_records,
         constraint_tol=constraint_tol,
-        slack_penalty=slack_penalty,
+        slack_penalties=per_constraint_penalties,
         max_iter=max_iter,
         multiplier_min=multiplier_min,
         multiplier_max=multiplier_max,
@@ -207,6 +329,8 @@ def run_batch(
     force=False,
     target_dir=None,
     weight_dir=None,
+    multiplier_max=None,
+    override_path=None,
 ):
     """
     Run area weight optimization for multiple areas in parallel.
@@ -272,9 +396,11 @@ def run_batch(
         - 1
     )  # subtract header
     n = len(areas)
+    max_total = n * n_targets
     print(
         f"Processing {n} areas"
-        f" (up to {n_targets} targets each)"
+        f" (up to {n_targets} targets each,"
+        f" {max_total:,} max total)"
         f" with {num_workers} workers..."
     )
     print(
@@ -285,6 +411,10 @@ def run_batch(
     # Ensure weights directory exists
     weight_dir.mkdir(parents=True, exist_ok=True)
 
+    # Load TMD data in parent before forking — workers share via
+    # copy-on-write, saving ~190 MB × (num_workers - 1).
+    _preload_data()
+
     t_start = time.time()
     completed = 0
     violated_areas = []
@@ -294,7 +424,12 @@ def run_batch(
     with ProcessPoolExecutor(
         max_workers=num_workers,
         initializer=_init_worker,
-        initargs=(str(target_dir), str(weight_dir)),
+        initargs=(
+            str(target_dir),
+            str(weight_dir),
+            multiplier_max,
+            str(override_path) if override_path else None,
+        ),
     ) as executor:
         futures = {
             executor.submit(_solve_one_area, area): area for area in areas
@@ -328,7 +463,11 @@ def run_batch(
         sys.stdout.write("\n")
 
     total = time.time() - t_start
-    print(f"\nCompleted {completed}/{n} areas in {total:.1f}s")
+    m, s = divmod(total, 60)
+    print(
+        f"\nCompleted {completed}/{n} areas in"
+        f" {total:.1f}s ({int(m)}m {s:.0f}s)"
+    )
     if violated_areas:
         total_viol = sum(v for _, v in violated_areas)
         print(
