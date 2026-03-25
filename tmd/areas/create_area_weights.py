@@ -82,7 +82,11 @@ CD_WEIGHT_DIR = AREAS_FOLDER / "weights" / "cds"
 
 
 def _load_taxcalc_data():
-    """Load TMD data with cached AGI and selected Tax-Calculator outputs."""
+    """Load TMD data with cached AGI and selected Tax-Calculator outputs.
+
+    After loading, drops columns not used by the solver to reduce
+    per-worker memory (~150 MB savings with 109 → ~25 columns).
+    """
     vdf = pd.read_csv(INFILE_PATH)
     vdf["c00100"] = np.load(TAXCALC_AGI_CACHE)
     if CACHED_ALLVARS_PATH.exists():
@@ -94,6 +98,19 @@ def _load_taxcalc_data():
     if "p22250" in vdf.columns and "p23250" in vdf.columns:
         vdf["capgains_net"] = vdf["p22250"] + vdf["p23250"]
     assert np.all(vdf.s006 > 0), "Not all weights are positive"
+    # Drop columns not used by the solver to reduce memory.
+    # Keep infrastructure columns + any column that could be a target
+    # variable (e*, c*, p* prefixes, plus synthetic variables).
+    # This adapts automatically as target specs change.
+    _INFRA_COLS = {"s006", "MARS", "data_source", "XTOT", "RECID"}
+    _SYNTH_COLS = {"capgains_net", "eitc", "ctc_total"}
+    keep = set()
+    for col in vdf.columns:
+        if col in _INFRA_COLS or col in _SYNTH_COLS:
+            keep.add(col)
+        elif col[:1] in ("e", "c", "p") and col[1:2].isdigit():
+            keep.add(col)
+    vdf = vdf[sorted(keep)]
     return vdf
 
 

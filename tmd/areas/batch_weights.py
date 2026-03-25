@@ -24,7 +24,16 @@ import pandas as pd
 import yaml
 from scipy.sparse import csc_matrix
 
-# Module-level cache for TMD data (one per worker process)
+# Module-level globals shared across workers via fork copy-on-write.
+#
+# _WORKER_VDF and _WORKER_POP are loaded ONCE in the parent process
+# (by _preload_data) before ProcessPoolExecutor forks workers.
+# On Linux, forked children inherit these pages read-only; the OS
+# shares the physical memory until a child writes to it.  This saves
+# ~190 MB × (num_workers - 1) compared to loading per-worker.
+#
+# The remaining globals are per-worker configuration set by
+# _init_worker (called as the executor's initializer).
 _WORKER_VDF = None
 _WORKER_POP = None
 _WORKER_TARGET_DIR = None
@@ -33,14 +42,37 @@ _WORKER_MULTIPLIER_MAX = None
 _WORKER_OVERRIDES = None
 
 
+def _preload_data():
+    """Load TMD data in the parent process before forking workers.
+
+    On Linux (fork), child processes share the parent's memory
+    pages copy-on-write. Loading here instead of per-worker avoids
+    duplicating ~190 MB × N workers.
+    """
+    global _WORKER_VDF, _WORKER_POP
+    if _WORKER_VDF is not None:
+        return
+    from tmd.areas.create_area_weights import (
+        POPFILE_PATH,
+        _load_taxcalc_data,
+    )
+
+    _WORKER_VDF = _load_taxcalc_data()
+    with open(POPFILE_PATH, "r", encoding="utf-8") as pf:
+        _WORKER_POP = yaml.safe_load(pf.read())
+
+
 def _init_worker(
     target_dir=None,
     weight_dir=None,
     multiplier_max=None,
     override_path=None,
 ):
-    """Load TMD data once per worker process."""
-    global _WORKER_VDF, _WORKER_POP
+    """Initialize per-worker state (directories, overrides).
+
+    TMD data is already loaded in the parent via _preload_data()
+    and shared copy-on-write through fork.
+    """
     global _WORKER_TARGET_DIR, _WORKER_WEIGHT_DIR
     global _WORKER_MULTIPLIER_MAX, _WORKER_OVERRIDES
     if target_dir is not None:
@@ -53,16 +85,9 @@ def _init_worker(
         from tmd.areas.solver_overrides import load_overrides
 
         _WORKER_OVERRIDES = load_overrides(Path(override_path))
-    if _WORKER_VDF is not None:
-        return
-    from tmd.areas.create_area_weights import (
-        POPFILE_PATH,
-        _load_taxcalc_data,
-    )
-
-    _WORKER_VDF = _load_taxcalc_data()
-    with open(POPFILE_PATH, "r", encoding="utf-8") as pf:
-        _WORKER_POP = yaml.safe_load(pf.read())
+    # Fallback: load data if not preloaded (e.g. single-area solve)
+    if _WORKER_VDF is None:
+        _preload_data()
 
 
 def _solve_one_area(area):
@@ -378,6 +403,10 @@ def run_batch(
 
     # Ensure weights directory exists
     weight_dir.mkdir(parents=True, exist_ok=True)
+
+    # Load TMD data in parent before forking — workers share via
+    # copy-on-write, saving ~190 MB × (num_workers - 1).
+    _preload_data()
 
     t_start = time.time()
     completed = 0
