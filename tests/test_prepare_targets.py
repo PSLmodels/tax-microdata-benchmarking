@@ -98,6 +98,23 @@ class TestSOIShares:
         share = mn_agi["soi_share"].values[0]
         assert 0.01 < share < 0.03
 
+    def test_no_duplicate_shares(self, shares_data):
+        """Each (area, var, count, fstatus, agistub) has one share."""
+        state_shares = shares_data[~shares_data["stabbr"].isin(_EXCLUDE)]
+        group_cols = [
+            "stabbr",
+            "basesoivname",
+            "count",
+            "fstatus",
+            "agistub",
+        ]
+        counts = state_shares.groupby(group_cols).size()
+        dupes = counts[counts > 1]
+        assert len(dupes) == 0, (
+            f"Found {len(dupes)} duplicate share groups. "
+            f"First few: {dupes.head(5).to_dict()}"
+        )
+
     def test_xtot_equals_us_population(self):
         """XTOT 51-state sum equals US Census population."""
         pop_df = get_state_population(2022)

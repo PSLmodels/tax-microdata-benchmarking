@@ -539,7 +539,7 @@ def generate_report(
         display_df = df
     else:
         lines.append(
-            "PER-AREA DETAIL (top 20 by violations / weight distortion):"
+            "PER-AREA DETAIL" + " (top 20 by violations / weight distortion):"
         )
         # Always include failed areas, then sort solved by
         # violations desc, then weight RMSE desc
@@ -899,8 +899,8 @@ def _weight_distribution_by_stub(
     return lines
 
 
-def _weight_diagnostics(
-    _areas, _weight_dir, target_dir, tmd, s006, state_weights, n_loaded
+def _weight_diagnostics(  # pylint: disable=unused-argument
+    areas, weight_dir, target_dir, tmd, s006, state_weights, n_loaded
 ):
     """
     Combined weight diagnostics: exhaustion + national aggregation.
@@ -1017,7 +1017,8 @@ def _weight_diagnostics(
         f" for SELECTED VARIABLES ({n_loaded} areas):"
     )
     lines.append(
-        "  Do area weights preserve national totals?  Diff% near 0 = good."
+        "  Do area weights preserve national totals?"
+        + "  Diff% near 0 = good."
     )
     lines.append(
         f"  {'Variable':<30} {'National':>16}"

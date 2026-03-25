@@ -1,5 +1,4 @@
-# pylint: disable=import-outside-toplevel,inconsistent-quotes,global-statement
-# pylint: disable=reimported,redefined-outer-name,unused-variable
+# pylint: disable=import-outside-toplevel,inconsistent-quotes
 """
 Developer mode — iterative LP/QP auto-relaxation for area weights.
 
@@ -130,7 +129,7 @@ def _solve_with_params(
     Returns dict with solve results.
     """
     out = io.StringIO()
-    B_csc, targets, labels, pop_share = _build_constraint_matrix(
+    B_csc, targets, labels, _pop_share = _build_constraint_matrix(
         area, vdf, out, target_dir=target_dir
     )
     B_csc, targets, labels = _drop_impossible_targets(
@@ -165,7 +164,7 @@ def _solve_with_params(
     )
 
     # Solve QP
-    x_opt, s_lo, s_hi, info = _solve_area_qp(
+    x_opt, _s_lo, _s_hi, info = _solve_area_qp(
         B_csc,
         targets,
         labels,
@@ -336,9 +335,11 @@ _WORKER_VERBOSE = False
 
 def _init_worker(target_dir, multiplier_max, constraint_tol, verbose):
     """Initialize worker process with TMD data."""
+    # pylint: disable=global-statement
     global _WORKER_VDF, _WORKER_TARGET_DIR
     global _WORKER_MULTIPLIER_MAX, _WORKER_CONSTRAINT_TOL
     global _WORKER_VERBOSE
+    # pylint: enable=global-statement
     _WORKER_TARGET_DIR = Path(target_dir)
     _WORKER_MULTIPLIER_MAX = multiplier_max
     _WORKER_CONSTRAINT_TOL = constraint_tol
@@ -658,8 +659,6 @@ def target_difficulty(area, target_dir=None):
     Returns a DataFrame sorted by |gap_pct| descending, and prints
     a formatted report.
     """
-    from tmd.areas.create_area_weights import _load_taxcalc_data
-
     if target_dir is None:
         target_dir = CD_TARGET_DIR
 
@@ -809,16 +808,6 @@ def dual_analysis(area, target_dir=None):
     Usage:
         python -m tmd.areas.developer_mode --dual AL01
     """
-    import io
-
-    from tmd.areas.create_area_weights import (
-        _assign_slack_penalties,
-        _build_constraint_matrix,
-        _drop_impossible_targets,
-        _load_taxcalc_data,
-        _solve_area_qp,
-    )
-
     if target_dir is None:
         target_dir = CD_TARGET_DIR
 
@@ -826,7 +815,7 @@ def dual_analysis(area, target_dir=None):
     n_records = len(vardf)
     out = io.StringIO()
 
-    B_csc, targets, labels, pop_share = _build_constraint_matrix(
+    B_csc, targets, labels, _pop_share = _build_constraint_matrix(
         area.lower(), vardf, out, target_dir=target_dir
     )
     B_csc, targets, labels = _drop_impossible_targets(
