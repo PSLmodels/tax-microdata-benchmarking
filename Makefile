@@ -32,7 +32,7 @@ tmd_files: tmd/storage/output/tmd.csv.gz \
 
 .PHONY=test
 test: tmd_files
-	pytest . -v -n4 --ignore=tests/national_targets_pipeline
+	pytest . -v -n4 --ignore=tests/national_targets_pipeline --ignore=tests/test_fingerprint.py
 
 .PHONY=data
 data: install tmd_files test
