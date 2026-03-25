@@ -36,7 +36,7 @@ import pandas as pd
 import yaml
 from scipy.optimize import linprog
 from scipy.sparse import (
-    csc_matrix,
+    coo_matrix,
     diags as spdiags,
     eye as speye,
     hstack,
@@ -152,10 +152,29 @@ def _build_constraint_matrix(area, vardf, out, target_dir=None):
     targets_file = target_dir / f"{area}_targets.csv"
     tdf = pd.read_csv(targets_file, comment="#")
 
+    # Pre-cache column arrays to avoid repeated DataFrame lookups
+    c00100_arr = vardf["c00100"].values.astype(float)
+    mars_arr = vardf["MARS"].values.astype(float)
+    data_source_arr = vardf["data_source"].values
+    scope1_mask = (data_source_arr == 1).astype(float)
+    scope2_mask = (data_source_arr == 0).astype(float)
+    ones_arr = np.ones(numobs, dtype=float)
+
+    unique_vars = tdf.loc[tdf["count"] != 1, "varname"].unique()
+    var_cache = {}
+    for vname in unique_vars:
+        var_cache[vname] = vardf[vname].astype(float).values
+
     targets_list = []
     labels_list = []
-    columns = []
     pop_share = None
+    w0 = None
+
+    # Build B matrix directly in sparse COO format, avoiding dense
+    # intermediates that would require ~620 MB for 215K × 179.
+    row_indices = []
+    col_indices = []
+    data_values = []
 
     for row_idx, row in enumerate(tdf.itertuples(index=False)):
         line = f"{area}:target{row_idx + 1}"
@@ -186,51 +205,58 @@ def _build_constraint_matrix(area, vardf, out, target_dir=None):
                 f" / {national_population:.0f}"
                 f" = {pop_share:.6f}\n"
             )
+            w0 = pop_share * vardf.s006.values
 
-        # construct variable array for this target
+        # construct variable array from cache
         assert 0 <= row.count <= 4, f"count {row.count} not in [0,4] on {line}"
         if row.count == 0:
-            var_array = vardf[row.varname].astype(float).values
+            var_array = var_cache[row.varname]
         elif row.count == 1:
-            var_array = np.ones(numobs, dtype=float)
+            var_array = ones_arr
         elif row.count == 2:
-            var_array = (vardf[row.varname] != 0).astype(float).values
+            var_array = (var_cache[row.varname] != 0).astype(float)
         elif row.count == 3:
-            var_array = (vardf[row.varname] > 0).astype(float).values
+            var_array = (var_cache[row.varname] > 0).astype(float)
         else:
-            var_array = (vardf[row.varname] < 0).astype(float).values
+            var_array = (var_cache[row.varname] < 0).astype(float)
 
-        # construct mask
-        mask = np.ones(numobs, dtype=float)
+        # construct mask using cached arrays
         assert 0 <= row.scope <= 2, f"scope {row.scope} not in [0,2] on {line}"
         if row.scope == 1:
-            mask *= (vardf.data_source == 1).values.astype(float)
+            mask = scope1_mask.copy()
         elif row.scope == 2:
-            mask *= (vardf.data_source == 0).values.astype(float)
+            mask = scope2_mask.copy()
+        else:
+            mask = ones_arr.copy()
 
-        in_agi_bin = (vardf.c00100 >= row.agilo) & (vardf.c00100 < row.agihi)
-        mask *= in_agi_bin.values.astype(float)
+        mask *= (c00100_arr >= row.agilo) & (c00100_arr < row.agihi)
 
         assert (
             0 <= row.fstatus <= 5
         ), f"fstatus {row.fstatus} not in [0,5] on {line}"
         if row.fstatus > 0:
-            mask *= (vardf.MARS == row.fstatus).values.astype(float)
+            mask *= mars_arr == row.fstatus
 
-        # A[j,i] = mask * var_array (data values for this constraint)
-        columns.append(mask * var_array)
+        # B[j,i] = w0[i] * mask[i] * var_array[i]
+        # Store only nonzero entries (sparse COO format)
+        b_row = w0 * mask * var_array
+        nz = np.nonzero(b_row)[0]
+        if len(nz) > 0:
+            row_indices.append(np.full(len(nz), row_idx, dtype=np.int32))
+            col_indices.append(nz.astype(np.int32))
+            data_values.append(b_row[nz])
 
     assert pop_share is not None, "XTOT target not found"
 
-    # A matrix: n_records x n_targets (each column is a constraint)
-    A_dense = np.column_stack(columns)
-
-    # B = diag(w0) @ A where w0 = pop_share * s006
-    w0 = pop_share * vardf.s006.values
-    B_dense = w0[:, np.newaxis] * A_dense
-
-    # convert to sparse (n_targets x n_records) for Clarabel
-    B_csc = csc_matrix(B_dense.T)
+    # Assemble sparse B directly from COO — no dense intermediate
+    n_targets = len(targets_list)
+    B_csc = coo_matrix(
+        (
+            np.concatenate(data_values),
+            (np.concatenate(row_indices), np.concatenate(col_indices)),
+        ),
+        shape=(n_targets, numobs),
+    ).tocsc()
 
     targets_arr = np.array(targets_list)
     return B_csc, targets_arr, labels_list, pop_share
@@ -253,12 +279,12 @@ def _drop_impossible_targets(
       - The target is outside the achievable range even with all
         multipliers at their extreme bounds.
     """
-    B_dense = B_csc.toarray()
     m = len(targets)
     drop = np.zeros(m, dtype=bool)
 
     for j in range(m):
-        row = B_dense[j, :]
+        # Extract one sparse row at a time — avoids 310 MB dense copy
+        row = B_csc.getrow(j).toarray().ravel()
         pos = row > 0
         neg = row < 0
 
@@ -291,7 +317,9 @@ def _drop_impossible_targets(
     n_drop = int(drop.sum())
     if n_drop > 0:
         keep = ~drop
-        B_csc = csc_matrix(B_dense[keep, :])
+        # Slice sparse matrix directly — no dense conversion
+        keep_idx = np.where(keep)[0]
+        B_csc = B_csc[keep_idx, :]
         targets = targets[keep]
         labels = [lab for lab, k in zip(labels, keep) if k]
         out.write(
@@ -341,8 +369,6 @@ def _check_feasibility(
     cl = targets - tol_band
     cu = targets + tol_band
 
-    B_dense = B_csc.toarray()
-
     # LP: minimize sum(s_lo + s_hi)
     # Variables: [x (n_records), s_lo (m), s_hi (m)]
     n_total = n_records + 2 * m
@@ -355,24 +381,36 @@ def _check_feasibility(
     # Rewrite as:
     #   Bx + s_lo - s_hi >= cl  =>  -Bx - s_lo + s_hi <= -cl
     #   Bx + s_lo - s_hi <= cu
-    I_m = np.eye(m)
+    # Build entirely in sparse format to avoid ~1.2 GB dense alloc
+    I_m = speye(m, format="csc")
     # [B | I | -I] x <= cu
-    A_upper = np.hstack([B_dense, I_m, -I_m])
+    A_upper = hstack([B_csc, I_m, -I_m], format="csc")
     # [-B | -I | I] x <= -cl
-    A_lower = np.hstack([-B_dense, -I_m, I_m])
-    A_ub = np.vstack([A_upper, A_lower])
+    A_lower = hstack([-B_csc, -I_m, I_m], format="csc")
+    A_ub = vstack([A_upper, A_lower], format="csc")
     b_ub = np.concatenate([cu, -cl])
 
     # Bounds
-    bounds = []
-    for i in range(n_records):
-        lb = multiplier_min
-        ub = multiplier_max
-        if isinstance(multiplier_max, np.ndarray):
-            ub = multiplier_max[i]
-        bounds.append((lb, ub))
-    for _ in range(2 * m):
-        bounds.append((0.0, None))
+    if isinstance(multiplier_max, np.ndarray):
+        x_ub = multiplier_max
+    else:
+        x_ub = np.full(n_records, multiplier_max)
+    bounds = np.column_stack(
+        [
+            np.concatenate(
+                [
+                    np.full(n_records, multiplier_min),
+                    np.zeros(2 * m),
+                ]
+            ),
+            np.concatenate(
+                [
+                    x_ub,
+                    np.full(2 * m, np.inf),
+                ]
+            ),
+        ]
+    )
 
     result = linprog(
         c_obj,
