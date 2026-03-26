@@ -168,3 +168,9 @@ eitc,0,1,0,-9e+99,9e+99,EITC amount all bins
 eitc,2,1,0,-9e+99,9e+99,EITC nz-count all bins
 ctc_total,0,1,0,-9e+99,9e+99,Child tax credit amount all bins
 ctc_total,2,1,0,-9e+99,9e+99,Child tax credit nz-count all bins
+ctc_total,0,1,0,10000.0,25000.0,CTC+ACTC amount $10K-$25K
+ctc_total,0,1,0,25000.0,50000.0,CTC+ACTC amount $25K-$50K
+ctc_total,0,1,0,50000.0,75000.0,CTC+ACTC amount $50K-$75K
+ctc_total,2,1,0,10000.0,25000.0,CTC+ACTC nz-count $10K-$25K
+ctc_total,2,1,0,25000.0,50000.0,CTC+ACTC nz-count $25K-$50K
+ctc_total,2,1,0,50000.0,75000.0,CTC+ACTC nz-count $50K-$75K
