@@ -216,7 +216,7 @@ def _run_detail_test(scope, areas, weight_dir, update):
     not _has_weight_files(STATE_WEIGHT_DIR, ALL_STATES),
     reason="No state weight files — run solve_weights first",
 )
-class TestStateFingerprint:
+class TestStatesFingerprint:
     """Fingerprint tests for state weights."""
 
     # pylint: disable=redefined-outer-name
@@ -240,14 +240,14 @@ _CD_AREAS = _discover_cd_areas()
     not _has_weight_files(CD_WEIGHT_DIR, _CD_AREAS),
     reason="No CD weight files — run solve_weights --scope cds first",
 )
-class TestCDFingerprint:
+class TestCdsFingerprint:
     """Fingerprint tests for congressional district weights."""
 
     # pylint: disable=redefined-outer-name
-    def test_cd_weights_match_reference(self, update_mode):
+    def test_cds_weights_match_reference(self, update_mode):
         """Compare weight integer sums against saved reference."""
         _run_fingerprint_test("cds", _CD_AREAS, CD_WEIGHT_DIR, update_mode)
 
-    def test_cd_per_area_sums_match(self, update_mode):
+    def test_cds_per_area_sums_match(self, update_mode):
         """Identify which CDs changed."""
         _run_detail_test("cds", _CD_AREAS, CD_WEIGHT_DIR, update_mode)

@@ -11,6 +11,7 @@
 # Override worker count: make -C tmd/areas cds WORKERS=16
 
 WORKERS ?= 8
+ROOT := $(realpath $(CURDIR)/../..)
 
 # --- State pipeline ---
 
@@ -26,8 +27,8 @@ state-weights: state-targets
 	python -m tmd.areas.solve_weights --scope states --workers $(WORKERS)
 
 states: state-weights
-	python -m pytest tests/test_prepare_targets.py -v -k "not CD"
-	python -m pytest tests/test_state_weight_results.py -v
+	python -m pytest $(ROOT)/tests/test_prepare_targets.py -v -k "not CD"
+	python -m pytest $(ROOT)/tests/test_state_weight_results.py -v
 	python -m tmd.areas.quality_report --scope states
 
 # --- Congressional district pipeline ---
@@ -44,5 +45,5 @@ cd-weights: cd-targets
 	python -m tmd.areas.solve_weights --scope cds --workers $(WORKERS)
 
 cds: cd-weights
-	python -m pytest tests/test_prepare_targets.py -v -k CD
+	python -m pytest $(ROOT)/tests/test_prepare_targets.py -v -k CD
 	python -m tmd.areas.quality_report --scope cds

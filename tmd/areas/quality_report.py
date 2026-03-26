@@ -12,7 +12,7 @@ Parses solver logs for all areas and produces a summary showing:
   - Bystander checks (untargeted variables + per-bin analysis)
 
 Usage:
-    python -m tmd.areas.quality_report
+    python -m tmd.areas.quality_report --scope states
     python -m tmd.areas.quality_report --scope cds
     python -m tmd.areas.quality_report --scope cds --output
     python -m tmd.areas.quality_report --scope CA,WY -o report.txt
@@ -410,8 +410,7 @@ def generate_report(
         avg_time = solved["solve_time"].mean()
         lines.append(
             f"Cumulative solve time: {cum_time:.0f}s"
-            f" (avg {avg_time:.1f}s per area;"
-            f" ~{cum_time / 16:.0f}s wall @ 16 workers)"
+            f" (avg {avg_time:.1f}s per area)"
         )
     lines.append("")
 
