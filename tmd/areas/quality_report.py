@@ -12,7 +12,7 @@ Parses solver logs for all areas and produces a summary showing:
   - Bystander checks (untargeted variables + per-bin analysis)
 
 Usage:
-    python -m tmd.areas.quality_report
+    python -m tmd.areas.quality_report --scope states
     python -m tmd.areas.quality_report --scope cds
     python -m tmd.areas.quality_report --scope cds --output
     python -m tmd.areas.quality_report --scope CA,WY -o report.txt
@@ -410,8 +410,7 @@ def generate_report(
         avg_time = solved["solve_time"].mean()
         lines.append(
             f"Cumulative solve time: {cum_time:.0f}s"
-            f" (avg {avg_time:.1f}s per area;"
-            f" ~{cum_time / 16:.0f}s wall @ 16 workers)"
+            f" (avg {avg_time:.1f}s per area)"
         )
     lines.append("")
 
@@ -539,7 +538,7 @@ def generate_report(
         display_df = df
     else:
         lines.append(
-            "PER-AREA DETAIL (top 20 by violations / weight distortion):"
+            "PER-AREA DETAIL" + " (top 20 by violations / weight distortion):"
         )
         # Always include failed areas, then sort solved by
         # violations desc, then weight RMSE desc
@@ -899,8 +898,8 @@ def _weight_distribution_by_stub(
     return lines
 
 
-def _weight_diagnostics(
-    _areas, _weight_dir, target_dir, tmd, s006, state_weights, n_loaded
+def _weight_diagnostics(  # pylint: disable=unused-argument
+    areas, weight_dir, target_dir, tmd, s006, state_weights, n_loaded
 ):
     """
     Combined weight diagnostics: exhaustion + national aggregation.
@@ -1017,7 +1016,8 @@ def _weight_diagnostics(
         f" for SELECTED VARIABLES ({n_loaded} areas):"
     )
     lines.append(
-        "  Do area weights preserve national totals?  Diff% near 0 = good."
+        "  Do area weights preserve national totals?"
+        + "  Diff% near 0 = good."
     )
     lines.append(
         f"  {'Variable':<30} {'National':>16}"

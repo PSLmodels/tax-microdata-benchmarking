@@ -1,4 +1,4 @@
-# pylint: disable=import-outside-toplevel
+# pylint: disable=import-outside-toplevel,inconsistent-quotes
 """
 Prepare area target files from SOI data and TMD national totals.
 
@@ -249,10 +249,9 @@ def prepare_targets_from_spec(
 
     # 2. Read shares
     shares = pd.read_csv(shares_path)
-    n_areas = shares["area"].nunique()
     print(
         f"Shares: {len(shares):,} rows,"
-        f" {n_areas} areas"
+        f" {shares['area'].nunique()} areas"
         f" from {shares_path.name}"
     )
 
@@ -260,8 +259,7 @@ def prepare_targets_from_spec(
     if scope_lower not in ("cds", "states", "all"):
         codes = [c.strip().upper() for c in scope.split(",")]
         shares = shares[shares["area"].isin(codes)]
-        n_filtered = shares["area"].nunique()
-        print(f"  Filtered to {n_filtered} areas")
+        print(f"  Filtered to {shares['area'].nunique()} areas")
 
     # 3. Compute TMD national sums (base + extended)
     all_mappings = ALL_SHARING_MAPPINGS + EXTENDED_SHARING_MAPPINGS

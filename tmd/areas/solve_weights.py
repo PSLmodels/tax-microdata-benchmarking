@@ -1,25 +1,25 @@
 # pylint: disable=import-outside-toplevel
 """
-Solve for state weights using Clarabel QP optimizer.
+Solve for area weights using Clarabel QP optimizer.
 
-Reads per-state target CSV files (produced by prepare_targets.py)
+Reads per-area target CSV files (produced by prepare_targets.py)
 and runs the Clarabel constrained QP solver to find weight
 multipliers that hit area-specific targets within tolerance.
 
 Optional exhaustion limiting (--max-exhaustion) runs a two-pass
 solve: first unconstrained, then with per-record multiplier caps
-to keep cross-state weight exhaustion within bounds.
+to keep cross-area weight exhaustion within bounds.
 
 Usage:
     # All states, 8 parallel workers:
     python -m tmd.areas.solve_weights --scope states --workers 8
 
-    # With exhaustion cap of 5x:
-    python -m tmd.areas.solve_weights --scope states --workers 8 \
-        --max-exhaustion 5
+    # All congressional districts:
+    python -m tmd.areas.solve_weights --scope cds --workers 16
 
-    # Specific states:
+    # Specific areas:
     python -m tmd.areas.solve_weights --scope MN,CA,TX --workers 4
+    python -m tmd.areas.solve_weights --scope MN01,CA52 --workers 4
 """
 
 import argparse
@@ -30,6 +30,9 @@ import pandas as pd
 
 from tmd.areas.create_area_weights import (
     AREA_MULTIPLIER_MAX,
+    CD_MULTIPLIER_MAX,
+    CD_TARGET_DIR,
+    CD_WEIGHT_DIR,
     STATE_TARGET_DIR,
     STATE_WEIGHT_DIR,
 )
@@ -37,6 +40,12 @@ from tmd.imputation_assumptions import TAXYEAR
 
 _WT_COL = f"WT{TAXYEAR}"
 _MAX_EXHAUST_ITERATIONS = 5
+
+
+def _fmt_time(seconds):
+    """Format seconds as '1034.4s (17m 14s)'."""
+    m, s = divmod(seconds, 60)
+    return f"{seconds:.1f}s ({int(m)}m {s:.0f}s)"
 
 
 def solve_state_weights(
@@ -82,7 +91,7 @@ def solve_state_weights(
 
     if max_exhaustion is None:
         elapsed = time.time() - t0
-        print(f"Total solve time: {elapsed:.1f}s")
+        print(f"Total solve time: {_fmt_time(elapsed)}")
         return
 
     # --- Exhaustion-limited iterative passes ---
@@ -138,7 +147,47 @@ def solve_state_weights(
             )
 
     elapsed = time.time() - t0
-    print(f"Total solve time: {elapsed:.1f}s")
+    print(f"Total solve time: {_fmt_time(elapsed)}")
+
+
+def solve_cd_weights(
+    scope="cds",
+    num_workers=1,
+    force=True,
+):
+    """
+    Run the Clarabel solver for congressional districts.
+
+    Parameters
+    ----------
+    scope : str
+        'cds' or comma-separated CD codes (e.g., 'MN01,CA52').
+    num_workers : int
+        Number of parallel worker processes.
+    force : bool
+        Recompute all areas even if weight files are up-to-date.
+    """
+    from tmd.areas.batch_weights import run_batch
+
+    specific = _parse_cd_scope(scope)
+    if specific:
+        area_filter = ",".join(a.lower() for a in specific)
+    else:
+        area_filter = "cds"
+
+    t0 = time.time()
+    print("Solving CD weights...")
+    run_batch(
+        num_workers=num_workers,
+        area_filter=area_filter,
+        force=force,
+        target_dir=CD_TARGET_DIR,
+        weight_dir=CD_WEIGHT_DIR,
+        multiplier_max=CD_MULTIPLIER_MAX,
+    )
+
+    elapsed = time.time() - t0
+    print(f"Total solve time: {_fmt_time(elapsed)}")
 
 
 def _compute_exhaustion(weight_dir):
@@ -250,15 +299,39 @@ def _parse_scope(scope):
     return [c for c in codes if len(c) == 2 and c not in _EXCLUDE]
 
 
+def _parse_cd_scope(scope):
+    """Parse scope string into list of CD codes or None."""
+    scope_lower = scope.lower().strip()
+    if scope_lower in ("cds", "all"):
+        return None
+    codes = [c.strip().upper() for c in scope.split(",") if c.strip()]
+    return [c for c in codes if len(c) > 2]
+
+
+def _is_cd_scope(scope):
+    """Return True if the scope refers to CDs rather than states."""
+    scope_lower = scope.lower().strip()
+    if scope_lower == "cds":
+        return True
+    if scope_lower == "states":
+        return False
+    # Comma-separated: check first code length
+    first = scope.split(",")[0].strip()
+    return len(first) > 2
+
+
 def main():
     """CLI entry point."""
     parser = argparse.ArgumentParser(
-        description=("Solve for state weights using Clarabel QP optimizer"),
+        description=("Solve for area weights using Clarabel QP optimizer"),
     )
     parser.add_argument(
         "--scope",
         default="states",
-        help=("'states' or comma-separated state codes" " (e.g., 'MN,CA,TX')"),
+        help=(
+            "'states', 'cds', or comma-separated area codes"
+            " (e.g., 'MN,CA,TX' or 'MN01,CA52')"
+        ),
     )
     parser.add_argument(
         "--workers",
@@ -277,18 +350,25 @@ def main():
         type=float,
         default=None,
         help=(
-            "Max per-record cross-state weight exhaustion"
+            "Max per-record cross-area weight exhaustion"
             " (e.g., 5.0). Runs iterative solve to enforce."
         ),
     )
     args = parser.parse_args()
 
-    solve_state_weights(
-        scope=args.scope,
-        num_workers=args.workers,
-        force=args.force,
-        max_exhaustion=args.max_exhaustion,
-    )
+    if _is_cd_scope(args.scope):
+        solve_cd_weights(
+            scope=args.scope,
+            num_workers=args.workers,
+            force=args.force,
+        )
+    else:
+        solve_state_weights(
+            scope=args.scope,
+            num_workers=args.workers,
+            force=args.force,
+            max_exhaustion=args.max_exhaustion,
+        )
 
 
 if __name__ == "__main__":
