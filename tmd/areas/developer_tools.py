@@ -15,9 +15,9 @@ Relaxation cascade (least invasive first):
   Level 5: Raise constraint tolerance
 
 Usage:
-    python -m tmd.areas.developer_mode --scope cds --workers 16
-    python -m tmd.areas.developer_mode --scope cds --lp-only
-    python -m tmd.areas.developer_mode --scope NY12 --verbose
+    python -m tmd.areas.developer_tools --scope cds --workers 16
+    python -m tmd.areas.developer_tools --scope cds --lp-only
+    python -m tmd.areas.developer_tools --scope NY12 --verbose
 """
 
 import argparse
@@ -395,7 +395,7 @@ def _lp_only_area(area):
     )
 
 
-def run_developer_mode(
+def run_developer_tools(
     scope="cds",
     num_workers=1,
     lp_only=False,
@@ -806,7 +806,7 @@ def dual_analysis(area, target_dir=None):
     because they conflict with other targets.
 
     Usage:
-        python -m tmd.areas.developer_mode --dual AL01
+        python -m tmd.areas.developer_tools --dual AL01
     """
     if target_dir is None:
         target_dir = CD_TARGET_DIR
@@ -944,7 +944,7 @@ def main():
         dual_analysis(args.dual, target_dir=tdir)
         return
 
-    run_developer_mode(
+    run_developer_tools(
         scope=args.scope,
         num_workers=args.workers,
         lp_only=args.lp_only,

@@ -237,7 +237,7 @@ Lessons learned from CD pipeline development (436 areas).
 
 ### 1. Target difficulty = gap from proportionate share
 
-Use `python -m tmd.areas.developer_mode --difficulty AL01` to see how
+Use `python -m tmd.areas.developer_tools --difficulty AL01` to see how
 far each target is from what the area would get under population-
 proportionate allocation.  This is the single most useful diagnostic.
 
@@ -349,8 +349,8 @@ Pick 3–4 areas spanning the difficulty spectrum:
 - An area similar to your analysis focus
 
 ```bash
-python -m tmd.areas.developer_mode --difficulty AL01
-python -m tmd.areas.developer_mode --difficulty NY12
+python -m tmd.areas.developer_tools --difficulty AL01
+python -m tmd.areas.developer_tools --difficulty NY12
 ```
 
 For each proposed target, check the gap%.  If most areas show
@@ -377,7 +377,7 @@ Repeat on NY-12 or another difficult CD.  If it fails, the
 auto-relaxation cascade can find which targets to drop:
 
 ```bash
-python -m tmd.areas.developer_mode --scope NY12 --verbose
+python -m tmd.areas.developer_tools --scope NY12 --verbose
 ```
 
 ### Step 5: Run dual analysis on problem areas
@@ -386,7 +386,7 @@ If a target causes unexpected solver difficulty despite a moderate
 gap%, check the shadow prices:
 
 ```bash
-python -m tmd.areas.developer_mode --dual AL01
+python -m tmd.areas.developer_tools --dual AL01
 ```
 
 High duals identify constraints that conflict with each other.
@@ -398,7 +398,7 @@ it pulls against another target in the same record set.
 Once satisfied with representative areas, run the full batch:
 
 ```bash
-python -m tmd.areas.developer_mode --scope cds --workers 16
+python -m tmd.areas.developer_tools --scope cds --workers 16
 python -m tmd.areas.solve_weights --scope cds --workers 16
 python -m tmd.areas.quality_report --scope cds --output
 ```
@@ -440,13 +440,13 @@ Most areas solve at level 0.  A handful of extreme areas (e.g., NY-12
 
 ```bash
 # LP feasibility check only (fast diagnostic):
-python -m tmd.areas.developer_mode --scope cds --lp-only --workers 16
+python -m tmd.areas.developer_tools --scope cds --lp-only --workers 16
 
 # Full relaxation cascade:
-python -m tmd.areas.developer_mode --scope cds --workers 16
+python -m tmd.areas.developer_tools --scope cds --workers 16
 
 # Debug a single area:
-python -m tmd.areas.developer_mode --scope NY12 --verbose
+python -m tmd.areas.developer_tools --scope NY12 --verbose
 ```
 
 ### Output
@@ -495,7 +495,7 @@ customizations automatically.  No manual tuning needed.
 
 5. **Run developer mode:**
    ```bash
-   python -m tmd.areas.developer_mode --scope cds --workers 16
+   python -m tmd.areas.developer_tools --scope cds --workers 16
    ```
 
 6. **Solve weights:**
@@ -563,7 +563,7 @@ tmd/areas/
 │   └── extended_targets.py   # State extended targets (Census, credits)
 ├── prepare_targets.py        # Target file generation (spec-based)
 ├── prepare_shares.py         # Share pre-computation
-├── developer_mode.py         # Auto-relaxation cascade
+├── developer_tools.py         # Auto-relaxation cascade
 ├── solve_weights.py          # QP batch solver
 ├── create_area_weights.py    # QP solver core (Clarabel)
 ├── quality_report.py         # Cross-area quality diagnostics
