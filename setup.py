@@ -2,11 +2,11 @@ from setuptools import setup, find_packages
 
 setup(
     name="tmd",
-    version="1.2.0",
+    version="2.0.0",
     packages=find_packages(),
     python_requires=">=3.11,<3.14",
     install_requires=[
-        "taxcalc>=6.4.1",
+        "taxcalc>=6.5.0",
         "clarabel",
         "scikit-learn",
         "scipy",

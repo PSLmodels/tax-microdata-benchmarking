@@ -1,20 +1,25 @@
 # tax-microdata
 
-This repository contains all working files for a project to develop a
-general-purpose validated microdata file for use in
-[PolicyEngine-US](https://github.com/PolicyEngine/policyengine-us) and
-[Tax-Calculator](https://github.com/PSLmodels/Tax-Calculator).  The
-development will proceed in several phases.
+This repository contains all working files for a project to develop
+validated input files for use in
+[Tax-Calculator](https://github.com/PSLmodels/Tax-Calculator).
 
-The **current version is 1.2.0**, which was released March 1, 2026,
+The **current version is 2.0.0**, which was released on March 29, 2026,
 and includes the following significant improvements:
-- impute values for three variables used in new OBBBA deductions:
-[#397](https://github.com/PSLmodels/tax-microdata-benchmarking/pull/397)
-- fix long-standing bug in IRS PUF data handling:
-[#408](https://github.com/PSLmodels/tax-microdata-benchmarking/pull/408)
+
+- generate national, state, and Congressional district, input files
+for **2022**:
+[#470](https://github.com/PSLmodels/tax-microdata-benchmarking/pull/470)
+[#471](https://github.com/PSLmodels/tax-microdata-benchmarking/pull/471)
+[#472](https://github.com/PSLmodels/tax-microdata-benchmarking/pull/472)
+[#473](https://github.com/PSLmodels/tax-microdata-benchmarking/pull/473)
+[#474](https://github.com/PSLmodels/tax-microdata-benchmarking/pull/474)
+- improve the selection of CPS tax units to represent nonfilers:
+[#438](https://github.com/PSLmodels/tax-microdata-benchmarking/pull/438)
 - vastly improve the reweighting algorithm:
 [#416](https://github.com/PSLmodels/tax-microdata-benchmarking/pull/416)
-
+- impute values for three variables used in new OBBBA deductions:
+[#397](https://github.com/PSLmodels/tax-microdata-benchmarking/pull/397)
 
 ## Usage instructions
 
@@ -31,25 +36,10 @@ To generate the TMD files from the PUF files, do this:
 4. Run `make clean` in the repository's top-level folder
 5. Run `make data` in the repository's top-level folder
 
-The `make data` command creates and tests the three `tmd*csv*` data
-files, which are located in the `tmd/storage/output` folder.  Read
-[this
+The `make data` command creates and tests the three national
+`tmd*csv*` data files, which are located in the `tmd/storage/output`
+folder.  Read [this
 documentation](https://taxcalc.pslmodels.org/usage/data.html#irs-public-use-data-tmd-csv)
 on how to use these three files with Tax-Calculator.  Also, you can
 look at the tests in this repository to see Python code that uses the
 TMD files with Tax-Calculator.
-
-## Examination results
-
-To assess, review the data examination results that compare federal
-agency tax microsimulation estimates for 2023 and 2026 with those
-generated using the national microdata files created in each project
-phase:
-* [phase 1 results](./tmd/examination/results1.md)
-* [phase 2 results](./tmd/examination/results2.md)
-* [phase 3 results](./tmd/examination/results3.md)
-* [phase 4+ results](./tmd/examination/results4.md)
-
-2022 TMD estimates have also been compared with IRS/SOI data on actual
-income tax returns for 2022 in [this
-document](./tmd/examination/2022/results.md).
