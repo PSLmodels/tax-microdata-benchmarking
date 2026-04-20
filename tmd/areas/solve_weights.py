@@ -14,12 +14,18 @@ Usage:
     # All states, 8 parallel workers:
     python -m tmd.areas.solve_weights --scope states --workers 8
 
-    # All congressional districts:
-    python -m tmd.areas.solve_weights --scope cds --workers 16
+    # All congressional districts (118th or 119th Congress):
+    python -m tmd.areas.solve_weights --scope cds --congress 118 --workers 16
+    python -m tmd.areas.solve_weights --scope cds --congress 119 --workers 16
 
     # Specific areas:
     python -m tmd.areas.solve_weights --scope MN,CA,TX --workers 4
-    python -m tmd.areas.solve_weights --scope MN01,CA52 --workers 4
+    python -m tmd.areas.solve_weights --scope MN01,CA52 \
+        --congress 118 --workers 4
+
+For CD scope (or comma-separated CD codes), ``--congress`` is REQUIRED
+and selects which Congressional session's target files and weight
+output directory are used (``cds_118/`` or ``cds_119/``).
 """
 
 import argparse
@@ -31,10 +37,10 @@ import pandas as pd
 from tmd.areas.create_area_weights import (
     AREA_MULTIPLIER_MAX,
     CD_MULTIPLIER_MAX,
-    CD_TARGET_DIR,
-    CD_WEIGHT_DIR,
     STATE_TARGET_DIR,
     STATE_WEIGHT_DIR,
+    cd_target_dir,
+    cd_weight_dir,
 )
 from tmd.imputation_assumptions import TAXYEAR
 
@@ -154,6 +160,7 @@ def solve_cd_weights(
     scope="cds",
     num_workers=1,
     force=True,
+    congress=None,
 ):
     """
     Run the Clarabel solver for congressional districts.
@@ -166,8 +173,17 @@ def solve_cd_weights(
         Number of parallel worker processes.
     force : bool
         Recompute all areas even if weight files are up-to-date.
+    congress : int
+        Congressional session (118 or 119).  REQUIRED: selects the
+        per-congress target directory (``cds_{congress}/``) and
+        weight output directory.
     """
     from tmd.areas.batch_weights import run_batch
+
+    if congress is None:
+        raise ValueError(
+            "congress is required for solve_cd_weights (must be 118 or 119)"
+        )
 
     specific = _parse_cd_scope(scope)
     if specific:
@@ -175,14 +191,17 @@ def solve_cd_weights(
     else:
         area_filter = "cds"
 
+    target_dir = cd_target_dir(congress)
+    weight_dir = cd_weight_dir(congress)
+
     t0 = time.time()
-    print("Solving CD weights...")
+    print(f"Solving CD weights (Congress {congress})...")
     run_batch(
         num_workers=num_workers,
         area_filter=area_filter,
         force=force,
-        target_dir=CD_TARGET_DIR,
-        weight_dir=CD_WEIGHT_DIR,
+        target_dir=target_dir,
+        weight_dir=weight_dir,
         multiplier_max=CD_MULTIPLIER_MAX,
     )
 
@@ -354,13 +373,29 @@ def main():
             " (e.g., 5.0). Runs iterative solve to enforce."
         ),
     )
+    parser.add_argument(
+        "--congress",
+        type=int,
+        choices=(118, 119),
+        default=None,
+        help=(
+            "Congressional session for CD boundaries "
+            "(118 or 119). REQUIRED for CD scope; ignored "
+            "for state scope."
+        ),
+    )
     args = parser.parse_args()
 
     if _is_cd_scope(args.scope):
+        if args.congress is None:
+            parser.error(
+                "--congress is required for CD scope (choose 118 or 119)"
+            )
         solve_cd_weights(
             scope=args.scope,
             num_workers=args.workers,
             force=args.force,
+            congress=args.congress,
         )
     else:
         solve_state_weights(

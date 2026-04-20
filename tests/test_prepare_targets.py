@@ -1,3 +1,4 @@
+# pylint: disable=redefined-outer-name
 """
 Tests for the state target preparation pipeline.
 
@@ -241,15 +242,24 @@ def test_prepare_mn_end_to_end(tmp_path):
 # ---- CD share and target tests ----
 
 
+@pytest.fixture(scope="module", params=[118, 119])
+def congress(request):
+    """Parametrize CD tests over 118th and 119th Congress."""
+    return request.param
+
+
 class TestCDShares:
     """Validate the pre-computed CD shares file."""
 
     @pytest.fixture(scope="class")
-    def cd_shares(self):
-        """Load the pre-computed CD shares CSV."""
-        path = _PREPARE / "data" / "cds_shares.csv"
+    def cd_shares(self, congress):
+        """Load the pre-computed CD shares CSV for the given Congress."""
+        path = _PREPARE / "data" / f"cds_{congress}_shares.csv"
         if not path.exists():
-            pytest.skip("CD shares file not found (run prepare_shares first)")
+            pytest.skip(
+                f"CD shares file for Congress {congress} not found "
+                f"(run prepare_shares --scope cds --congress {congress})"
+            )
         return pd.read_csv(path)
 
     def test_no_duplicate_cd_shares(self, cd_shares):
@@ -292,13 +302,13 @@ class TestCDTargetFiles:
     """Validate CD target file structure (no solving)."""
 
     @pytest.fixture(scope="class")
-    def cd_target_dir(self):
-        """Path to CD target files."""
-        path = REPO_ROOT / "tmd" / "areas" / "targets" / "cds"
+    def cd_target_dir(self, congress):
+        """Path to CD target files for the given Congress."""
+        path = REPO_ROOT / "tmd" / "areas" / "targets" / f"cds_{congress}"
         if not path.exists() or not list(path.glob("*_targets.csv")):
             pytest.skip(
-                "CD target files not found"
-                " (run prepare_targets --scope cds first)"
+                f"CD target files for Congress {congress} not found"
+                f" (run prepare_targets --scope cds --congress {congress})"
             )
         return path
 

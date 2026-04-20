@@ -12,8 +12,13 @@ in ALL_SHARING_MAPPINGS.  XTOT (population) is stored as a fixed
 target value rather than a share.
 
 Usage:
-    python -m tmd.areas.prepare_shares --scope cds
+    python -m tmd.areas.prepare_shares --scope cds --congress 118
+    python -m tmd.areas.prepare_shares --scope cds --congress 119
     python -m tmd.areas.prepare_shares --scope states
+
+For CD scope, ``--congress`` is REQUIRED and selects the target
+Congressional session (118 or 119).  The output filename embeds the
+session: e.g., ``cds_118_shares.csv`` or ``cds_119_shares.csv``.
 """
 
 import argparse
@@ -119,7 +124,7 @@ def _agi_bin_boundaries(agistub, agi_cuts):
     return lo, hi
 
 
-def compute_shares(area_type, area_data_year=2022):
+def compute_shares(area_type, area_data_year=2022, congress=None):
     """
     Compute SOI geographic shares for all areas.
 
@@ -129,17 +134,24 @@ def compute_shares(area_type, area_data_year=2022):
 
     For XTOT rows: soi_share is NaN, fixed_target is population.
     For shared rows: fixed_target is NaN, soi_share is the fraction.
+
+    For CD scope, ``congress`` is REQUIRED and selects the target
+    Congressional session (118 or 119).  Ignored for state scope.
     """
     repo_root = Path(__file__).parent.parent.parent
 
     if area_type == AreaType.CD:
-        return _compute_cd_shares(repo_root, area_data_year)
+        if congress is None:
+            raise ValueError(
+                "congress is required for CD shares (must be 118 or 119)"
+            )
+        return _compute_cd_shares(repo_root, area_data_year, congress)
     if area_type == AreaType.STATE:
         return _compute_state_shares(repo_root, area_data_year)
     raise ValueError(f"Unsupported area_type: {area_type}")
 
 
-def _compute_cd_shares(repo_root, area_data_year):
+def _compute_cd_shares(repo_root, area_data_year, congress):
     """Compute shares for congressional districts."""
     from tmd.areas.prepare.soi_cd_data import (
         apply_crosswalk,
@@ -157,10 +169,12 @@ def _compute_cd_shares(repo_root, area_data_year):
 
     # SOI data ingestion + crosswalk
     cd117_long = create_cd_soilong(soi_dir, years=[area_data_year])
-    crosswalk = load_crosswalk()
-    cd118_long = apply_crosswalk(cd117_long, crosswalk)
-    cd_pop = compute_cd_population()
-    base_targets = create_cd_base_targets(cd118_long, cd_pop, area_data_year)
+    crosswalk = load_crosswalk(congress=congress)
+    cd_target_long = apply_crosswalk(cd117_long, crosswalk)
+    cd_pop = compute_cd_population(congress=congress)
+    base_targets = create_cd_base_targets(
+        cd_target_long, cd_pop, area_data_year
+    )
 
     # Add derived CTC total (07225 + 11070) to base_targets
     # so that shares can be computed for ctc_total
@@ -340,12 +354,22 @@ def _format_shares(
     return result
 
 
-def save_shares(area_type, area_data_year=2022):
-    """Compute and save shares to CSV."""
-    shares = compute_shares(area_type, area_data_year)
+def save_shares(area_type, area_data_year=2022, congress=None):
+    """Compute and save shares to CSV.
 
-    suffix = "cds" if area_type == AreaType.CD else "states"
-    outpath = _SHARES_DIR / f"{suffix}_shares.csv"
+    For CD scope, ``congress`` is REQUIRED and is embedded in the
+    output filename as ``cds_{congress}_shares.csv`` (e.g.,
+    ``cds_118_shares.csv``).  Ignored for state scope.
+    """
+    shares = compute_shares(area_type, area_data_year, congress=congress)
+
+    if area_type == AreaType.CD:
+        if congress is None:
+            raise ValueError("congress is required for saving CD shares")
+        filename = f"cds_{congress}_shares.csv"
+    else:
+        filename = "states_shares.csv"
+    outpath = _SHARES_DIR / filename
     outpath.parent.mkdir(parents=True, exist_ok=True)
     shares.to_csv(outpath, index=False, float_format="%.10g")
 
@@ -370,11 +394,27 @@ def main():
         default=2022,
         help="SOI data year (default: 2022)",
     )
+    parser.add_argument(
+        "--congress",
+        type=int,
+        choices=(118, 119),
+        default=None,
+        help=(
+            "Congressional session for CD boundaries "
+            "(118 or 119). REQUIRED for --scope cds; "
+            "ignored for --scope states."
+        ),
+    )
     args = parser.parse_args()
 
     scope = args.scope.lower().strip()
     if scope == "cds":
-        save_shares(AreaType.CD, args.year)
+        if args.congress is None:
+            parser.error(
+                "--congress is required when --scope is 'cds' "
+                "(choose 118 or 119)"
+            )
+        save_shares(AreaType.CD, args.year, congress=args.congress)
     elif scope == "states":
         save_shares(AreaType.STATE, args.year)
     else:

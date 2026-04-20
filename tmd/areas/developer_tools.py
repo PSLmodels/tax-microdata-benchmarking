@@ -1,4 +1,4 @@
-# pylint: disable=import-outside-toplevel,inconsistent-quotes
+# pylint: disable=import-outside-toplevel,inconsistent-quotes,too-many-lines
 """
 Developer mode — iterative LP/QP auto-relaxation for area weights.
 
@@ -15,9 +15,13 @@ Relaxation cascade (least invasive first):
   Level 5: Raise constraint tolerance
 
 Usage:
-    python -m tmd.areas.developer_tools --scope cds --workers 16
-    python -m tmd.areas.developer_tools --scope cds --lp-only
-    python -m tmd.areas.developer_tools --scope NY12 --verbose
+    python -m tmd.areas.developer_tools --scope cds --congress 118 --workers 16
+    python -m tmd.areas.developer_tools --scope cds --congress 119 --lp-only
+    python -m tmd.areas.developer_tools --scope NY12 --congress 118 --verbose
+
+For CD scope (or a single CD code via --difficulty / --dual), ``--congress``
+is REQUIRED and selects which Congressional session's per-CD target files to
+operate on (``cds_118/`` or ``cds_119/``).
 """
 
 import argparse
@@ -35,8 +39,6 @@ from tmd.areas.create_area_weights import (
     AREA_MULTIPLIER_MIN,
     AREA_SLACK_PENALTY,
     CD_MULTIPLIER_MAX,
-    CD_TARGET_DIR,
-    CD_WEIGHT_DIR,
     STATE_TARGET_DIR,
     STATE_WEIGHT_DIR,
     _assign_slack_penalties,
@@ -45,6 +47,8 @@ from tmd.areas.create_area_weights import (
     _drop_impossible_targets,
     _load_taxcalc_data,
     _solve_area_qp,
+    cd_target_dir,
+    cd_weight_dir,
 )
 from tmd.areas.solver_overrides import write_overrides
 
@@ -400,6 +404,7 @@ def run_developer_tools(
     num_workers=1,
     lp_only=False,
     verbose=False,
+    congress=None,
 ):
     """
     Run developer mode: iterative relaxation for all areas.
@@ -414,14 +419,22 @@ def run_developer_tools(
         If True, only run LP feasibility (no QP solve).
     verbose : bool
         Print per-area progress.
+    congress : int or None
+        Congressional session (118 or 119). REQUIRED for CD scope;
+        ignored for state scope.
     """
     scope_lower = scope.lower().strip()
     first_code = scope.split(",")[0].strip()
     is_cd = scope_lower == "cds" or len(first_code) > 2
 
     if is_cd:
-        target_dir = CD_TARGET_DIR
-        weight_dir = CD_WEIGHT_DIR
+        if congress is None:
+            raise ValueError(
+                "congress is required for CD developer tools "
+                "(must be 118 or 119)"
+            )
+        target_dir = cd_target_dir(congress)
+        weight_dir = cd_weight_dir(congress)
         override_path = _CD_OVERRIDES
         multiplier_max = CD_MULTIPLIER_MAX
     else:
@@ -660,7 +673,10 @@ def target_difficulty(area, target_dir=None):
     a formatted report.
     """
     if target_dir is None:
-        target_dir = CD_TARGET_DIR
+        raise ValueError(
+            "target_dir is required for target_difficulty "
+            "(use cd_target_dir(congress) for CDs)"
+        )
 
     vardf = _load_taxcalc_data()
     s006 = vardf["s006"].values
@@ -806,10 +822,13 @@ def dual_analysis(area, target_dir=None):
     because they conflict with other targets.
 
     Usage:
-        python -m tmd.areas.developer_tools --dual AL01
+        python -m tmd.areas.developer_tools --dual AL01 --congress 118
     """
     if target_dir is None:
-        target_dir = CD_TARGET_DIR
+        raise ValueError(
+            "target_dir is required for dual_analysis "
+            "(use cd_target_dir(congress) for CDs)"
+        )
 
     vardf = _load_taxcalc_data()
     n_records = len(vardf)
@@ -926,29 +945,62 @@ def main():
         metavar="AREA",
         help="Solve a single area and print dual (shadow price) analysis",
     )
+    parser.add_argument(
+        "--congress",
+        type=int,
+        choices=(118, 119),
+        default=None,
+        help=(
+            "Congressional session for CD boundaries "
+            "(118 or 119). REQUIRED for CD scope; "
+            "ignored for state scope."
+        ),
+    )
     args = parser.parse_args()
 
     scope_lower = args.scope.lower()
-    if scope_lower in ("cds", "cd"):
-        tdir = CD_TARGET_DIR
-    elif scope_lower in ("states", "state"):
-        tdir = STATE_TARGET_DIR
-    else:
-        tdir = CD_TARGET_DIR
+    first_code = args.scope.split(",")[0].strip()
+    is_cd = scope_lower in ("cds", "cd") or len(first_code) > 2
 
+    # Single-area tools (--difficulty / --dual) always operate on a
+    # specific area code; infer CD vs state from the area code length.
     if args.difficulty:
+        diff_is_cd = len(args.difficulty.strip()) > 2
+        if diff_is_cd:
+            if args.congress is None:
+                parser.error(
+                    "--congress is required for CD --difficulty "
+                    "(choose 118 or 119)"
+                )
+            tdir = cd_target_dir(args.congress)
+        else:
+            tdir = STATE_TARGET_DIR
         target_difficulty(args.difficulty, target_dir=tdir)
         return
 
     if args.dual:
+        dual_is_cd = len(args.dual.strip()) > 2
+        if dual_is_cd:
+            if args.congress is None:
+                parser.error(
+                    "--congress is required for CD --dual "
+                    "(choose 118 or 119)"
+                )
+            tdir = cd_target_dir(args.congress)
+        else:
+            tdir = STATE_TARGET_DIR
         dual_analysis(args.dual, target_dir=tdir)
         return
+
+    if is_cd and args.congress is None:
+        parser.error("--congress is required for CD scope (choose 118 or 119)")
 
     run_developer_tools(
         scope=args.scope,
         num_workers=args.workers,
         lp_only=args.lp_only,
         verbose=args.verbose,
+        congress=args.congress,
     )
 
 

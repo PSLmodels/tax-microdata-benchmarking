@@ -29,6 +29,7 @@ import sys
 import time
 
 import re
+from pathlib import Path
 
 import clarabel
 import numpy as np
@@ -77,8 +78,31 @@ CD_MULTIPLIER_MAX = 50.0
 # Default target/weight directories
 STATE_TARGET_DIR = AREAS_FOLDER / "targets" / "states"
 STATE_WEIGHT_DIR = AREAS_FOLDER / "weights" / "states"
-CD_TARGET_DIR = AREAS_FOLDER / "targets" / "cds"
-CD_WEIGHT_DIR = AREAS_FOLDER / "weights" / "cds"
+
+
+def cd_target_dir(congress: int) -> "Path":
+    """Return the target-directory path for the given Congress session."""
+    if congress not in (118, 119):
+        raise ValueError(
+            f"Unsupported Congress session: {congress}. Supported: (118, 119)"
+        )
+    return AREAS_FOLDER / "targets" / f"cds_{congress}"
+
+
+def cd_weight_dir(congress: int) -> "Path":
+    """Return the weight-directory path for the given Congress session."""
+    if congress not in (118, 119):
+        raise ValueError(
+            f"Unsupported Congress session: {congress}. Supported: (118, 119)"
+        )
+    return AREAS_FOLDER / "weights" / f"cds_{congress}"
+
+
+# Back-compat aliases (118 only).  New code should call
+# ``cd_target_dir(congress)`` / ``cd_weight_dir(congress)`` with an
+# explicit Congress session.
+CD_TARGET_DIR = cd_target_dir(118)
+CD_WEIGHT_DIR = cd_weight_dir(118)
 
 
 def _load_taxcalc_data():
