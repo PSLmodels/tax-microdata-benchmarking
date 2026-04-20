@@ -993,9 +993,7 @@ def main():
         return
 
     if is_cd and args.congress is None:
-        parser.error(
-            "--congress is required for CD scope (choose 118 or 119)"
-        )
+        parser.error("--congress is required for CD scope (choose 118 or 119)")
 
     run_developer_tools(
         scope=args.scope,
