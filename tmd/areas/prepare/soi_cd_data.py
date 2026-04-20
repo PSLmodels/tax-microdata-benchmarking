@@ -7,8 +7,8 @@ Pipeline:
      At-large states (CONG_DISTRICT=0) are recoded to district 1.
   3. Pivot to long format (one row per area/agistub/variable).
   4. Classify variables, create derived variables, scale amounts.
-  5. Apply 117th→118th Congress crosswalk using population-weighted
-     allocation factors.
+  5. Apply 117th→{118th,119th} Congress crosswalk using population-weighted
+     allocation factors. Choice of target Congress is an explicit argument.
   6. Compute XTOT population targets from N2 (exemptions/dependents).
   7. Produce ``base_targets`` DataFrame.
 """
@@ -34,7 +34,24 @@ from tmd.areas.prepare.soi_state_data import (
 # Default paths
 _DATA_DIR = Path(__file__).parent / "data"
 _SOI_CD_DIR = _DATA_DIR / "soi_cds"
-_CROSSWALK_PATH = _DATA_DIR / "geocorr2022_cd117_to_cd118.csv"
+
+# Crosswalk files by target Congressional session.  Each file is the
+# population-weighted geocorr 2022 crosswalk from 117th Congress CDs
+# (the vintage of all SOI CD data) to the target session boundaries.
+SUPPORTED_CONGRESSES = (118, 119)
+_CROSSWALK_PATHS = {
+    118: _DATA_DIR / "geocorr2022_cd117_to_cd118.csv",
+    119: _DATA_DIR / "geocorr2022_cd117_to_cd119.csv",
+}
+
+
+def _validate_congress(congress: int) -> int:
+    if congress not in _CROSSWALK_PATHS:
+        raise ValueError(
+            f"Unsupported Congress session: {congress}. "
+            f"Supported: {SUPPORTED_CONGRESSES}"
+        )
+    return congress
 
 
 # ---- Read raw CD CSV files ----------------------------------------
@@ -203,42 +220,65 @@ def create_cd_soilong(
 
 
 def load_crosswalk(
+    congress: int = 118,
     crosswalk_path: Path = None,
 ) -> pd.DataFrame:
     """
-    Load the geocorr 117th→118th Congress crosswalk.
+    Load the geocorr 117th→{target}th Congress crosswalk.
+
+    Parameters
+    ----------
+    congress : int
+        Target Congress session (118 or 119).  Selects the default
+        crosswalk file when ``crosswalk_path`` is not given.
+    crosswalk_path : Path, optional
+        Explicit path to a crosswalk CSV.  Overrides the default.
 
     Returns DataFrame with columns:
-      stab, cd117, cd118, afact2 (allocation factor cd117→cd118)
+      stabbr, cd117, cd_target, afact2 (allocation factor cd117→cd_target)
+
+    The target-CD column (``cd118`` or ``cd119``) is renamed to a
+    neutral ``cd_target`` for uniform downstream handling.
 
     The crosswalk has a label/header row at line 2 that is skipped.
     District codes are zero-padded 2-digit strings.
     """
+    _validate_congress(congress)
     if crosswalk_path is None:
-        crosswalk_path = _CROSSWALK_PATH
+        crosswalk_path = _CROSSWALK_PATHS[congress]
     df = pd.read_csv(crosswalk_path, dtype=str)
     # Row 0 after header is a label row — drop it
     df = df.iloc[1:].copy()
     df["afact2"] = df["afact2"].astype(float)
+    # Detect and rename the target-CD column (cd118 or cd119) to
+    # the neutral name ``cd_target``.
+    target_col_candidates = [c for c in df.columns if c in ("cd118", "cd119")]
+    if not target_col_candidates:
+        raise ValueError(
+            f"Crosswalk {crosswalk_path} has no cd118 or cd119 column; "
+            f"columns are {list(df.columns)}"
+        )
+    target_col = target_col_candidates[0]
     # Ensure district codes are zero-padded strings
     df["cd117"] = df["cd117"].str.zfill(2)
-    df["cd118"] = df["cd118"].str.zfill(2)
-    df = df.rename(columns={"stab": "stabbr"})
+    df[target_col] = df[target_col].str.zfill(2)
+    df = df.rename(columns={"stab": "stabbr", target_col: "cd_target"})
     # Strip whitespace from stabbr
     df["stabbr"] = df["stabbr"].str.strip()
 
     # At-large states use "00" for cd117 in the crosswalk.
     # Recode cd117 to "01" to match the SOI data recode.
-    # Do NOT recode cd118 — it reflects the new Congress boundaries
-    # (e.g., MT goes from 1 district (117th) to 2 (118th)).
+    # Do NOT recode cd_target here unless the state is still at-large
+    # — MT, for example, goes from 1 district (117th) to 2 (118th/119th).
     at_large_mask = df["stabbr"].isin(AT_LARGE_STATES)
     df.loc[at_large_mask, "cd117"] = "01"
-    # For states that remain at-large in 118th, cd118 is "00"
-    # (or "98" for DC non-voting delegate) → recode to "01"
-    still_at_large = at_large_mask & df["cd118"].isin(["00", "98"])
-    df.loc[still_at_large, "cd118"] = "01"
+    # For states that remain at-large in the target Congress,
+    # cd_target is "00" (or "98" for DC non-voting delegate) → recode
+    # to "01" to match SOI-style area codes.
+    still_at_large = at_large_mask & df["cd_target"].isin(["00", "98"])
+    df.loc[still_at_large, "cd_target"] = "01"
 
-    return df[["stabbr", "cd117", "cd118", "afact2"]].copy()
+    return df[["stabbr", "cd117", "cd_target", "afact2"]].copy()
 
 
 def apply_crosswalk(
@@ -246,10 +286,10 @@ def apply_crosswalk(
     crosswalk: pd.DataFrame,
 ) -> pd.DataFrame:
     """
-    Convert 117th Congress CD targets to 118th Congress.
+    Convert 117th Congress CD targets to the target Congress boundaries.
 
-    For each (cd118, variable, agistub) combination:
-      value_cd118 = sum over cd117 contributors:
+    For each (cd_target, variable, agistub) combination:
+      value_target = sum over cd117 contributors:
           value_cd117 * afact2
 
     Parameters
@@ -257,18 +297,19 @@ def apply_crosswalk(
     cd117_long : pd.DataFrame
         Long-format CD data with 117th Congress area codes.
     crosswalk : pd.DataFrame
-        Crosswalk with stabbr, cd117, cd118, afact2.
+        Crosswalk with stabbr, cd117, cd_target, afact2 (as returned
+        by ``load_crosswalk``).  Works for any target Congress.
 
     Returns
     -------
     pd.DataFrame
-        Long-format data with 118th Congress area codes.
+        Long-format data with target-Congress area codes.
     """
     # Extract state and district from area code
     df = cd117_long.copy()
     df["cd117"] = df["area"].str[2:].str.zfill(2)
 
-    # Merge with crosswalk to get cd118 mapping and allocation factors
+    # Merge with crosswalk to get target-CD mapping and allocation factors
     merged = df.merge(
         crosswalk,
         on=["stabbr", "cd117"],
@@ -278,8 +319,8 @@ def apply_crosswalk(
     # Apply allocation factor
     merged["value"] = merged["value"] * merged["afact2"]
 
-    # Build new area code with 118th Congress district
-    merged["area"] = merged["stabbr"] + merged["cd118"]
+    # Build new area code with target-Congress district
+    merged["area"] = merged["stabbr"] + merged["cd_target"]
 
     # Aggregate: sum values for same (area, soivname, agistub, year, ...)
     group_cols = [
@@ -306,35 +347,52 @@ def apply_crosswalk(
 # ---- XTOT population from N2 -------------------------------------
 
 
-def compute_cd_population() -> pd.DataFrame:
+def compute_cd_population(congress: int = 118) -> pd.DataFrame:
     """
-    Compute 118th Congress CD population from Census crosswalk.
+    Compute target-Congress CD population from the geocorr crosswalk.
 
-    Uses the geocorr crosswalk ``pop20`` column (2020 Census
-    population) aggregated to 118th Congress districts. This
-    matches the state pipeline's use of Census population for
-    XTOT targets, ensuring pop_share denominators are consistent.
+    Uses the geocorr crosswalk ``pop20`` column (2020 Census population)
+    aggregated to the target-Congress districts.  This matches the state
+    pipeline's use of Census population for XTOT targets, ensuring
+    pop_share denominators are consistent.
 
-    Returns DataFrame with columns (stabbr, area, population)
-    for each CD.
+    Parameters
+    ----------
+    congress : int
+        Target Congress session (118 or 119).
+
+    Returns
+    -------
+    pd.DataFrame
+        Columns (stabbr, area, population) for each CD.
     """
-    xw = pd.read_csv(_CROSSWALK_PATH, dtype=str)
+    _validate_congress(congress)
+    crosswalk_path = _CROSSWALK_PATHS[congress]
+    xw = pd.read_csv(crosswalk_path, dtype=str)
     xw = xw.iloc[1:]  # skip label row
     xw["pop20"] = xw["pop20"].astype(int)
     xw["stabbr"] = xw["stab"].str.strip()
 
     # Exclude territories (PR, etc.) — not in PUF/TMD
     xw = xw[~xw["stabbr"].isin(["PR", "GU", "VI", "AS", "MP"])].copy()
-    xw["cd118"] = xw["cd118"].str.zfill(2)
+
+    # Detect target-CD column (cd118 or cd119) and normalize
+    target_col_candidates = [c for c in xw.columns if c in ("cd118", "cd119")]
+    if not target_col_candidates:
+        raise ValueError(
+            f"Crosswalk {crosswalk_path} has no cd118 or cd119 column"
+        )
+    target_col = target_col_candidates[0]
+    xw[target_col] = xw[target_col].str.zfill(2)
 
     # Recode at-large districts to 01
     # Most at-large states use "00"; DC uses "98" (non-voting delegate)
     at_large_mask = xw["stabbr"].isin(AT_LARGE_STATES)
-    recode_mask = at_large_mask & xw["cd118"].isin(["00", "98"])
-    xw.loc[recode_mask, "cd118"] = "01"
+    recode_mask = at_large_mask & xw[target_col].isin(["00", "98"])
+    xw.loc[recode_mask, target_col] = "01"
 
-    # Aggregate population by 118th Congress district
-    xw["area"] = xw["stabbr"] + xw["cd118"]
+    # Aggregate population by target-Congress district
+    xw["area"] = xw["stabbr"] + xw[target_col]
     cd_pop = (
         xw.groupby(["stabbr", "area"])["pop20"]
         .sum()

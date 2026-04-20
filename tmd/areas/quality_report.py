@@ -13,10 +13,14 @@ Parses solver logs for all areas and produces a summary showing:
 
 Usage:
     python -m tmd.areas.quality_report --scope states
-    python -m tmd.areas.quality_report --scope cds
-    python -m tmd.areas.quality_report --scope cds --output
+    python -m tmd.areas.quality_report --scope cds --congress 118
+    python -m tmd.areas.quality_report --scope cds --congress 119 --output
     python -m tmd.areas.quality_report --scope CA,WY -o report.txt
-    python -m tmd.areas.quality_report --scope MN01,MN02
+    python -m tmd.areas.quality_report --scope MN01,MN02 --congress 118
+
+For CD scope (or comma-separated CD codes), ``--congress`` is REQUIRED
+and selects which Congressional session's weight/target directory to
+report on (``cds_118/`` or ``cds_119/``).
 """
 
 import argparse
@@ -29,10 +33,10 @@ import pandas as pd
 
 from tmd.areas.create_area_weights import (
     AREA_CONSTRAINT_TOL,
-    CD_TARGET_DIR,
-    CD_WEIGHT_DIR,
     STATE_TARGET_DIR,
     STATE_WEIGHT_DIR,
+    cd_target_dir,
+    cd_weight_dir,
 )
 from tmd.imputation_assumptions import TAXYEAR
 
@@ -1389,17 +1393,28 @@ def main():
             " filename in weight directory. Or specify a path."
         ),
     )
+    parser.add_argument(
+        "--congress",
+        type=int,
+        choices=(118, 119),
+        default=None,
+        help=(
+            "Congressional session for CD boundaries "
+            "(118 or 119). REQUIRED for CD scope; "
+            "ignored for state scope."
+        ),
+    )
     args = parser.parse_args()
 
     areas = None
     weight_dir = None
     target_dir = None
     scope_label = "states"
+    is_cd_scope = False
     if args.scope:
         scope_lower = args.scope.lower().strip()
         if scope_lower == "cds":
-            weight_dir = CD_WEIGHT_DIR
-            target_dir = CD_TARGET_DIR
+            is_cd_scope = True
             scope_label = "cds"
         elif scope_lower == "states":
             weight_dir = STATE_WEIGHT_DIR
@@ -1409,12 +1424,20 @@ def main():
             codes = [s.strip().upper() for s in args.scope.split(",")]
             # Detect CDs vs states by code length
             if codes and len(codes[0]) > 2:
-                weight_dir = CD_WEIGHT_DIR
-                target_dir = CD_TARGET_DIR
+                is_cd_scope = True
                 scope_label = f"cds ({len(codes)} selected)"
             else:
                 scope_label = f"states ({len(codes)} selected)"
             areas = codes
+
+    if is_cd_scope:
+        if args.congress is None:
+            parser.error(
+                "--congress is required for CD scope (choose 118 or 119)"
+            )
+        weight_dir = cd_weight_dir(args.congress)
+        target_dir = cd_target_dir(args.congress)
+        scope_label = f"{scope_label} [Congress {args.congress}]"
 
     if weight_dir is None:
         weight_dir = STATE_WEIGHT_DIR

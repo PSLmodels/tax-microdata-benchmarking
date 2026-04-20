@@ -21,6 +21,7 @@ import time
 from pathlib import Path
 
 from tmd.areas import AREAS_FOLDER
+from tmd.areas.create_area_weights import cd_target_dir
 
 # --- Default paths ---
 
@@ -29,9 +30,12 @@ _RECIPES = _REPO_ROOT / "tmd" / "areas" / "prepare" / "recipes"
 _STATE_RECIPE = _RECIPES / "states.json"
 _STATE_VARMAP = _RECIPES / "state_variable_mapping.csv"
 _STATE_TARGET_DIR = AREAS_FOLDER / "targets" / "states"
+# CD recipe and variable mapping are SHARED across Congress sessions —
+# only the set of area codes and the underlying geographic shares
+# differ between 118 and 119.  The output directory depends on the
+# target Congress session (see ``cd_target_dir``).
 _CD_RECIPE = _RECIPES / "cds.json"
 _CD_VARMAP = _RECIPES / "cd_variable_mapping.csv"
-_CD_TARGET_DIR = AREAS_FOLDER / "targets" / "cds"
 _CACHED_ALLVARS = (
     _REPO_ROOT / "tmd" / "storage" / "output" / "cached_allvars.csv"
 )
@@ -120,6 +124,7 @@ def prepare_cd_targets(
     scope="cds",
     area_data_year=2022,
     national_data_year=0,
+    congress=None,
 ):
     """
     Build enhanced targets and write per-CD target CSV files.
@@ -132,19 +137,30 @@ def prepare_cd_targets(
         SOI data year for geographic distribution.
     national_data_year : int
         TMD data year for national levels (0 = same as area_data_year).
+    congress : int
+        Target Congressional session (118 or 119).  Required — no default.
+        Outputs are written to ``targets/cds_{congress}/``.
 
     Returns
     -------
     dict
         Mapping of area code → target count for each area processed.
     """
+    if congress is None:
+        raise ValueError(
+            "prepare_cd_targets requires an explicit congress argument "
+            "(118 or 119)."
+        )
     from tmd.areas.prepare.constants import AreaType
     from tmd.areas.prepare.target_file_writer import write_area_target_files
     from tmd.areas.prepare.target_sharing import prepare_area_targets
 
     specific = _parse_cd_scope(scope)
 
-    print(f"Preparing CD targets (SOI year {area_data_year})...")
+    print(
+        f"Preparing CD targets for Congress {congress} "
+        f"(SOI year {area_data_year})..."
+    )
     t0 = time.time()
 
     # Step 1: Build base targets (recipe-driven, TMD × SOI shares)
@@ -152,6 +168,7 @@ def prepare_cd_targets(
         area_type=AreaType.CD,
         area_data_year=area_data_year,
         national_data_year=national_data_year,
+        congress=congress,
     )
     if specific:
         enhanced = enhanced[enhanced["area"].isin(specific)]
@@ -161,7 +178,7 @@ def prepare_cd_targets(
         recipe_path=_CD_RECIPE,
         enhanced_targets=enhanced,
         variable_mapping_path=_CD_VARMAP,
-        output_dir=_CD_TARGET_DIR,
+        output_dir=cd_target_dir(congress),
     )
 
     elapsed = time.time() - t0
@@ -178,17 +195,31 @@ def prepare_cd_targets(
 
 _CD_SPEC = _RECIPES / "cd_target_spec.csv"
 _STATE_SPEC = _RECIPES / "state_target_spec.csv"
-_CD_SHARES = (
-    _REPO_ROOT / "tmd" / "areas" / "prepare" / "data" / "cds_shares.csv"
-)
 _STATE_SHARES = (
     _REPO_ROOT / "tmd" / "areas" / "prepare" / "data" / "states_shares.csv"
 )
 
 
+def cd_shares_path(congress: int) -> Path:
+    """Return the CD shares CSV path for the given Congress session."""
+    if congress not in (118, 119):
+        raise ValueError(
+            f"Unsupported Congress session: {congress}. Supported: (118, 119)"
+        )
+    return (
+        _REPO_ROOT
+        / "tmd"
+        / "areas"
+        / "prepare"
+        / "data"
+        / f"cds_{congress}_shares.csv"
+    )
+
+
 def prepare_targets_from_spec(
     scope="cds",
     area_data_year=2022,  # pylint: disable=unused-argument
+    congress=None,
 ):
     """
     Build per-area target CSV files from spec + shares + TMD sums.
@@ -204,6 +235,9 @@ def prepare_targets_from_spec(
         'cds', 'states', or comma-separated area codes.
     area_data_year : int
         SOI data year (for selecting the right shares file).
+    congress : int, optional
+        Target Congressional session for CD scope (118 or 119).
+        Required when scope is a CD scope; ignored for states.
     """
     import numpy as np
     import pandas as pd
@@ -227,9 +261,14 @@ def prepare_targets_from_spec(
     )
 
     if is_cd:
+        if congress is None:
+            raise ValueError(
+                "CD scope requires an explicit congress argument "
+                "(118 or 119)."
+            )
         spec_path = _CD_SPEC
-        shares_path = _CD_SHARES
-        output_dir = _CD_TARGET_DIR
+        shares_path = cd_shares_path(congress)
+        output_dir = cd_target_dir(congress)
         agi_cuts = CD_AGI_CUTS
     else:
         spec_path = _STATE_SPEC
@@ -455,11 +494,30 @@ def main():
         default=2022,
         help="SOI area data year (default: 2022)",
     )
+    parser.add_argument(
+        "--congress",
+        type=int,
+        choices=(118, 119),
+        default=None,
+        help=(
+            "Target Congressional session (118 or 119). "
+            "REQUIRED for CD scope; ignored for state scope."
+        ),
+    )
     args = parser.parse_args()
+
+    scope_lower = args.scope.lower().strip()
+    first_code = args.scope.split(",")[0].strip()
+    is_cd_scope = scope_lower == "cds" or (
+        scope_lower not in ("states", "all") and len(first_code) > 2
+    )
+    if is_cd_scope and args.congress is None:
+        parser.error("--congress is required for CD scope (choose 118 or 119)")
 
     prepare_targets_from_spec(
         scope=args.scope,
         area_data_year=args.year,
+        congress=args.congress,
     )
 
 

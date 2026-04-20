@@ -562,6 +562,7 @@ def prepare_area_targets(
     pop_year: int = 0,
     cached_allvars_path: Path = None,
     soi_raw_data_dir: Path = None,
+    congress: int = 118,
 ) -> pd.DataFrame:
     """
     End-to-end: SOI data -> base targets -> all-shares targets.
@@ -584,6 +585,9 @@ def prepare_area_targets(
         Path to cached_allvars.csv.
     soi_raw_data_dir : Path, optional
         Directory containing raw SOI CSV files.
+    congress : int, optional
+        Target Congressional session for CD area codes (118 or 119;
+        default 118).  Ignored for ``AreaType.STATE``.
 
     Returns
     -------
@@ -639,11 +643,11 @@ def prepare_area_targets(
         cd117_long = create_cd_soilong(
             soi_raw_data_dir, years=[area_data_year]
         )
-        crosswalk = load_crosswalk()
-        cd118_long = apply_crosswalk(cd117_long, crosswalk)
-        cd_pop = compute_cd_population()
+        crosswalk = load_crosswalk(congress=congress)
+        cd_target_long = apply_crosswalk(cd117_long, crosswalk)
+        cd_pop = compute_cd_population(congress=congress)
         base_targets = create_cd_base_targets(
-            cd118_long, cd_pop, area_data_year
+            cd_target_long, cd_pop, area_data_year
         )
 
         return build_cd_shares_targets(

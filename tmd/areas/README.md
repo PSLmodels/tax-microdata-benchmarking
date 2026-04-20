@@ -101,6 +101,48 @@ distortion, weight exhaustion, and national aggregation checks.
 | `quality_report.py` | Cross-state diagnostics |
 | `sweep_params.py` | Parameter grid search utility |
 
+## Congressional Districts (118th or 119th Congress)
+
+The SOI CD micro-data are published on **117th Congress** boundaries
+for both tax years 2021 and 2022.  The CD pipeline crosswalks those
+data to either 118th or 119th Congress boundaries using a Geocorr
+2022 population-weighted crosswalk.  **Both Congressional sessions
+produce 436 CDs** (435 voting + DC); they differ only in the
+district geography for AL, GA, LA, NY, and NC.
+
+All CD CLI tools require an explicit `--congress 118` or
+`--congress 119` flag — there is no default.
+
+```bash
+# Build shares, targets, and weights for the 118th Congress:
+python -m tmd.areas.prepare_shares  --scope cds --congress 118
+python -m tmd.areas.prepare_targets --scope cds --congress 118
+python -m tmd.areas.solve_weights   --scope cds --congress 118 --workers 16
+
+# Same for the 119th Congress (new AL/GA/LA/NY/NC maps):
+python -m tmd.areas.prepare_shares  --scope cds --congress 119
+python -m tmd.areas.prepare_targets --scope cds --congress 119
+python -m tmd.areas.solve_weights   --scope cds --congress 119 --workers 16
+
+# Or via Makefile convenience targets:
+make -C tmd/areas cds-118 WORKERS=16
+make -C tmd/areas cds-119 WORKERS=16
+```
+
+Outputs are written to per-Congress subdirectories:
+
+- `tmd/areas/targets/cds_118/` and `tmd/areas/targets/cds_119/`
+- `tmd/areas/weights/cds_118/` and `tmd/areas/weights/cds_119/`
+- `tmd/areas/prepare/data/cds_118_shares.csv` and
+  `tmd/areas/prepare/data/cds_119_shares.csv`
+
+The targeting recipe is identical between the two Congressional
+sessions — only the geographic allocation differs.
+
+See [tmd/areas/prepare/data/README.md](prepare/data/README.md) for
+details on the crosswalk files, their Geocorr settings, and
+validation checks.
+
 ## Lessons Learned
 
 See [AREA_WEIGHTING_LESSONS.md](AREA_WEIGHTING_LESSONS.md) for
