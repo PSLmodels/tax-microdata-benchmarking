@@ -24,3 +24,18 @@ claude/
 # local environment
 venv/
 .venv/
+
+# Area weighting run artifacts (logs and reports produced by weighting runs)
+tmd/areas/weights/**/*.log
+tmd/areas/weights/**/quality_report*.txt
+tmd/areas/weights/**/developer_report.txt
+
+# Reweighting run output (timestamped output directories from reweighting runs)
+tmd/storage/output/reweighting/
+
+# Defensive: build caches that were removed from the pipeline but might
+# reappear if anyone experiments locally with R/Quarto tooling
+**/.quarto/
+**/renv/library/
+**/renv/staging/
+**/renv/local/
