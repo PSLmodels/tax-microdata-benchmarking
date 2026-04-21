@@ -1,0 +1,3063 @@
+{
+  "areas": {
+    "AK01": {
+      "max_weight": 594.93868,
+      "n_positive": 120635,
+      "n_records": 215494,
+      "weight_std": 5.481146597042043,
+      "weight_sum": 420829.43010999996
+    },
+    "AL01": {
+      "max_weight": 172.29301,
+      "n_positive": 167025,
+      "n_records": 215494,
+      "weight_std": 3.227388516351592,
+      "weight_sum": 390789.12374999997
+    },
+    "AL02": {
+      "max_weight": 177.16403,
+      "n_positive": 165826,
+      "n_records": 215494,
+      "weight_std": 3.2956378190460183,
+      "weight_sum": 391292.81965
+    },
+    "AL03": {
+      "max_weight": 177.32598,
+      "n_positive": 162513,
+      "n_records": 215494,
+      "weight_std": 3.376864511355578,
+      "weight_sum": 388233.77694999997
+    },
+    "AL04": {
+      "max_weight": 162.29505,
+      "n_positive": 168181,
+      "n_records": 215494,
+      "weight_std": 3.229986174586433,
+      "weight_sum": 381379.64414
+    },
+    "AL05": {
+      "max_weight": 184.43669,
+      "n_positive": 172305,
+      "n_records": 215494,
+      "weight_std": 3.3344957240503836,
+      "weight_sum": 394258.2767200001
+    },
+    "AL06": {
+      "max_weight": 151.23089,
+      "n_positive": 189690,
+      "n_records": 215494,
+      "weight_std": 2.838763526006881,
+      "weight_sum": 386547.42803000007
+    },
+    "AL07": {
+      "max_weight": 289.16498,
+      "n_positive": 174706,
+      "n_records": 215494,
+      "weight_std": 4.0423636455170735,
+      "weight_sum": 400154.42374999996
+    },
+    "AR01": {
+      "max_weight": 166.2255,
+      "n_positive": 162579,
+      "n_records": 215494,
+      "weight_std": 3.5994806616620822,
+      "weight_sum": 400845.67974000005
+    },
+    "AR02": {
+      "max_weight": 119.58597,
+      "n_positive": 185710,
+      "n_records": 215494,
+      "weight_std": 2.9957266917981205,
+      "weight_sum": 412485.14519999997
+    },
+    "AR03": {
+      "max_weight": 487.26105,
+      "n_positive": 171543,
+      "n_records": 215494,
+      "weight_std": 3.9501977198828917,
+      "weight_sum": 406297.42137
+    },
+    "AR04": {
+      "max_weight": 167.6557,
+      "n_positive": 165219,
+      "n_records": 215494,
+      "weight_std": 3.48300847394384,
+      "weight_sum": 403734.86823999987
+    },
+    "AZ01": {
+      "max_weight": 472.17951,
+      "n_positive": 194460,
+      "n_records": 215494,
+      "weight_std": 4.177321373421478,
+      "weight_sum": 471698.22284
+    },
+    "AZ02": {
+      "max_weight": 262.0129,
+      "n_positive": 180890,
+      "n_records": 215494,
+      "weight_std": 3.5330266047253494,
+      "weight_sum": 437165.89346
+    },
+    "AZ03": {
+      "max_weight": 165.16114,
+      "n_positive": 163049,
+      "n_records": 215494,
+      "weight_std": 3.565668267019054,
+      "weight_sum": 438929.81579
+    },
+    "AZ04": {
+      "max_weight": 220.63493,
+      "n_positive": 192108,
+      "n_records": 215494,
+      "weight_std": 3.5295195890285163,
+      "weight_sum": 467942.44503
+    },
+    "AZ05": {
+      "max_weight": 327.2535,
+      "n_positive": 188932,
+      "n_records": 215494,
+      "weight_std": 3.520706102174235,
+      "weight_sum": 433615.93234
+    },
+    "AZ06": {
+      "max_weight": 219.10859,
+      "n_positive": 185330,
+      "n_records": 215494,
+      "weight_std": 3.6062778638971573,
+      "weight_sum": 453026.04306000005
+    },
+    "AZ07": {
+      "max_weight": 118.15851,
+      "n_positive": 170771,
+      "n_records": 215494,
+      "weight_std": 2.9532595387843497,
+      "weight_sum": 434517.33681
+    },
+    "AZ08": {
+      "max_weight": 222.07103,
+      "n_positive": 192894,
+      "n_records": 215494,
+      "weight_std": 3.4535157189480303,
+      "weight_sum": 453324.79358
+    },
+    "AZ09": {
+      "max_weight": 225.66027,
+      "n_positive": 180919,
+      "n_records": 215494,
+      "weight_std": 3.3747220433658476,
+      "weight_sum": 443215.4013799999
+    },
+    "CA01": {
+      "max_weight": 359.91008,
+      "n_positive": 184500,
+      "n_records": 215494,
+      "weight_std": 3.6559453198578447,
+      "weight_sum": 429136.79652
+    },
+    "CA02": {
+      "max_weight": 812.80118,
+      "n_positive": 154806,
+      "n_records": 215494,
+      "weight_std": 9.468118341408823,
+      "weight_sum": 444195.36984
+    },
+    "CA03": {
+      "max_weight": 519.1975,
+      "n_positive": 190797,
+      "n_records": 215494,
+      "weight_std": 4.305548433405406,
+      "weight_sum": 425564.6155500001
+    },
+    "CA04": {
+      "max_weight": 532.12115,
+      "n_positive": 188885,
+      "n_records": 215494,
+      "weight_std": 4.226840800001131,
+      "weight_sum": 433950.8941
+    },
+    "CA05": {
+      "max_weight": 437.50561,
+      "n_positive": 190983,
+      "n_records": 215494,
+      "weight_std": 3.582614762042473,
+      "weight_sum": 414977.43555999995
+    },
+    "CA06": {
+      "max_weight": 380.11799,
+      "n_positive": 188279,
+      "n_records": 215494,
+      "weight_std": 3.364660591857153,
+      "weight_sum": 423926.1949100001
+    },
+    "CA07": {
+      "max_weight": 380.81621,
+      "n_positive": 187510,
+      "n_records": 215494,
+      "weight_std": 3.344559029081202,
+      "weight_sum": 425612.65126000013
+    },
+    "CA08": {
+      "max_weight": 572.43507,
+      "n_positive": 182683,
+      "n_records": 215494,
+      "weight_std": 5.967932962990265,
+      "weight_sum": 429606.58035000006
+    },
+    "CA09": {
+      "max_weight": 382.77976,
+      "n_positive": 180507,
+      "n_records": 215494,
+      "weight_std": 3.4424860489454288,
+      "weight_sum": 408976.90479999996
+    },
+    "CA10": {
+      "max_weight": 643.60224,
+      "n_positive": 176560,
+      "n_records": 215494,
+      "weight_std": 7.028938109272742,
+      "weight_sum": 420526.57444000005
+    },
+    "CA11": {
+      "max_weight": 846.369,
+      "n_positive": 122294,
+      "n_records": 215494,
+      "weight_std": 12.640628423521855,
+      "weight_sum": 489510.9384600001
+    },
+    "CA12": {
+      "max_weight": 642.14787,
+      "n_positive": 165842,
+      "n_records": 215494,
+      "weight_std": 7.45820425260788,
+      "weight_sum": 457003.32652999996
+    },
+    "CA13": {
+      "max_weight": 240.55215,
+      "n_positive": 172606,
+      "n_records": 215494,
+      "weight_std": 3.055858073859287,
+      "weight_sum": 405443.8250899999
+    },
+    "CA14": {
+      "max_weight": 710.10639,
+      "n_positive": 163130,
+      "n_records": 215494,
+      "weight_std": 7.48771564003845,
+      "weight_sum": 412429.26301999995
+    },
+    "CA15": {
+      "max_weight": 846.21962,
+      "n_positive": 131302,
+      "n_records": 215494,
+      "weight_std": 11.089422477561348,
+      "weight_sum": 445949.18574000004
+    },
+    "CA16": {
+      "max_weight": 902.07887,
+      "n_positive": 61974,
+      "n_records": 215494,
+      "weight_std": 16.66384515520793,
+      "weight_sum": 425742.23626
+    },
+    "CA17": {
+      "max_weight": 1082.15242,
+      "n_positive": 159618,
+      "n_records": 215494,
+      "weight_std": 7.647712337183255,
+      "weight_sum": 428523.61424
+    },
+    "CA18": {
+      "max_weight": 576.4781,
+      "n_positive": 180838,
+      "n_records": 215494,
+      "weight_std": 5.488673483908143,
+      "weight_sum": 432022.69003999996
+    },
+    "CA19": {
+      "max_weight": 658.29883,
+      "n_positive": 172768,
+      "n_records": 215494,
+      "weight_std": 6.975848745094305,
+      "weight_sum": 429269.44332
+    },
+    "CA20": {
+      "max_weight": 350.91301,
+      "n_positive": 184443,
+      "n_records": 215494,
+      "weight_std": 3.0749963134384917,
+      "weight_sum": 402963.0739200001
+    },
+    "CA21": {
+      "max_weight": 288.65373,
+      "n_positive": 179168,
+      "n_records": 215494,
+      "weight_std": 3.0842527760576064,
+      "weight_sum": 398977.13965
+    },
+    "CA22": {
+      "max_weight": 236.319,
+      "n_positive": 171146,
+      "n_records": 215494,
+      "weight_std": 3.364122744187155,
+      "weight_sum": 409313.4703099999
+    },
+    "CA23": {
+      "max_weight": 278.77341,
+      "n_positive": 169534,
+      "n_records": 215494,
+      "weight_std": 3.264516610271549,
+      "weight_sum": 407253.34625000006
+    },
+    "CA24": {
+      "max_weight": 577.47942,
+      "n_positive": 181810,
+      "n_records": 215494,
+      "weight_std": 5.492030029900892,
+      "weight_sum": 437907.2391500001
+    },
+    "CA25": {
+      "max_weight": 376.85211,
+      "n_positive": 181404,
+      "n_records": 215494,
+      "weight_std": 3.4897524376144426,
+      "weight_sum": 434478.01939999993
+    },
+    "CA26": {
+      "max_weight": 572.94026,
+      "n_positive": 181515,
+      "n_records": 215494,
+      "weight_std": 6.11523697861777,
+      "weight_sum": 429053.82366999995
+    },
+    "CA27": {
+      "max_weight": 574.07977,
+      "n_positive": 174602,
+      "n_records": 215494,
+      "weight_std": 5.2817916025247404,
+      "weight_sum": 416312.9905499999
+    },
+    "CA28": {
+      "max_weight": 572.31576,
+      "n_positive": 180151,
+      "n_records": 215494,
+      "weight_std": 6.129778663819005,
+      "weight_sum": 450191.83872
+    },
+    "CA29": {
+      "max_weight": 380.48016,
+      "n_positive": 176634,
+      "n_records": 215494,
+      "weight_std": 4.479325154648604,
+      "weight_sum": 447906.60478
+    },
+    "CA30": {
+      "max_weight": 770.05597,
+      "n_positive": 161855,
+      "n_records": 215494,
+      "weight_std": 8.513375221055568,
+      "weight_sum": 477041.66422999994
+    },
+    "CA31": {
+      "max_weight": 380.38522,
+      "n_positive": 178093,
+      "n_records": 215494,
+      "weight_std": 3.9497309150971067,
+      "weight_sum": 439137.27663000004
+    },
+    "CA32": {
+      "max_weight": 845.3991,
+      "n_positive": 156368,
+      "n_records": 215494,
+      "weight_std": 9.732553339422077,
+      "weight_sum": 453210.5929800001
+    },
+    "CA33": {
+      "max_weight": 380.36312,
+      "n_positive": 176337,
+      "n_records": 215494,
+      "weight_std": 3.5765778787398257,
+      "weight_sum": 419366.22958000004
+    },
+    "CA34": {
+      "max_weight": 380.60222,
+      "n_positive": 177610,
+      "n_records": 215494,
+      "weight_std": 5.182772364864068,
+      "weight_sum": 466067.55900000007
+    },
+    "CA35": {
+      "max_weight": 382.93548,
+      "n_positive": 164849,
+      "n_records": 215494,
+      "weight_std": 3.6590960268439927,
+      "weight_sum": 426547.64402
+    },
+    "CA36": {
+      "max_weight": 1019.39255,
+      "n_positive": 119065,
+      "n_records": 215494,
+      "weight_std": 13.954960001139623,
+      "weight_sum": 458472.82655
+    },
+    "CA37": {
+      "max_weight": 570.37202,
+      "n_positive": 181982,
+      "n_records": 215494,
+      "weight_std": 5.3784595639064525,
+      "weight_sum": 458818.04694999993
+    },
+    "CA38": {
+      "max_weight": 501.55708,
+      "n_positive": 178584,
+      "n_records": 215494,
+      "weight_std": 4.769826671098288,
+      "weight_sum": 435574.90428
+    },
+    "CA39": {
+      "max_weight": 305.26421,
+      "n_positive": 162083,
+      "n_records": 215494,
+      "weight_std": 3.2405714873943565,
+      "weight_sum": 413333.88065999997
+    },
+    "CA40": {
+      "max_weight": 576.59459,
+      "n_positive": 179428,
+      "n_records": 215494,
+      "weight_std": 7.104537113985734,
+      "weight_sum": 430541.83679
+    },
+    "CA41": {
+      "max_weight": 433.79399,
+      "n_positive": 175669,
+      "n_records": 215494,
+      "weight_std": 4.675059593657823,
+      "weight_sum": 407973.99045
+    },
+    "CA42": {
+      "max_weight": 380.19535,
+      "n_positive": 174599,
+      "n_records": 215494,
+      "weight_std": 3.916356872049891,
+      "weight_sum": 434272.8038
+    },
+    "CA43": {
+      "max_weight": 379.18619,
+      "n_positive": 173760,
+      "n_records": 215494,
+      "weight_std": 4.076398030248287,
+      "weight_sum": 438716.03657999996
+    },
+    "CA44": {
+      "max_weight": 462.26777,
+      "n_positive": 177205,
+      "n_records": 215494,
+      "weight_std": 4.183439061753923,
+      "weight_sum": 433399.2326399999
+    },
+    "CA45": {
+      "max_weight": 572.81415,
+      "n_positive": 183930,
+      "n_records": 215494,
+      "weight_std": 5.3583951962396315,
+      "weight_sum": 442311.32619000005
+    },
+    "CA46": {
+      "max_weight": 395.35611,
+      "n_positive": 182523,
+      "n_records": 215494,
+      "weight_std": 3.8352436482603993,
+      "weight_sum": 438450.01272999996
+    },
+    "CA47": {
+      "max_weight": 744.88436,
+      "n_positive": 173354,
+      "n_records": 215494,
+      "weight_std": 8.523520215546991,
+      "weight_sum": 444467.88875000004
+    },
+    "CA48": {
+      "max_weight": 572.86399,
+      "n_positive": 184143,
+      "n_records": 215494,
+      "weight_std": 4.816983021582929,
+      "weight_sum": 414475.7197800001
+    },
+    "CA49": {
+      "max_weight": 763.97925,
+      "n_positive": 163822,
+      "n_records": 215494,
+      "weight_std": 9.03110742988301,
+      "weight_sum": 428738.9453099999
+    },
+    "CA50": {
+      "max_weight": 573.40392,
+      "n_positive": 182925,
+      "n_records": 215494,
+      "weight_std": 6.369810999837492,
+      "weight_sum": 439283.08846000006
+    },
+    "CA51": {
+      "max_weight": 572.54985,
+      "n_positive": 185134,
+      "n_records": 215494,
+      "weight_std": 5.651385420798494,
+      "weight_sum": 446882.5906100001
+    },
+    "CA52": {
+      "max_weight": 274.24182,
+      "n_positive": 173105,
+      "n_records": 215494,
+      "weight_std": 3.084395217492826,
+      "weight_sum": 424965.37084000005
+    },
+    "CO01": {
+      "max_weight": 373.19041,
+      "n_positive": 190609,
+      "n_records": 215494,
+      "weight_std": 4.2430111550057,
+      "weight_sum": 463465.801
+    },
+    "CO02": {
+      "max_weight": 712.63654,
+      "n_positive": 191372,
+      "n_records": 215494,
+      "weight_std": 3.7891588434049517,
+      "weight_sum": 426020.89504999993
+    },
+    "CO03": {
+      "max_weight": 430.26378,
+      "n_positive": 187925,
+      "n_records": 215494,
+      "weight_std": 3.396005117140785,
+      "weight_sum": 419946.42461000005
+    },
+    "CO04": {
+      "max_weight": 440.9612,
+      "n_positive": 192731,
+      "n_records": 215494,
+      "weight_std": 3.1721407374726938,
+      "weight_sum": 398645.15314
+    },
+    "CO05": {
+      "max_weight": 312.19023,
+      "n_positive": 181287,
+      "n_records": 215494,
+      "weight_std": 3.21340034676349,
+      "weight_sum": 407740.13795000006
+    },
+    "CO06": {
+      "max_weight": 274.34477,
+      "n_positive": 193973,
+      "n_records": 215494,
+      "weight_std": 3.0561014645465514,
+      "weight_sum": 419146.54998000007
+    },
+    "CO07": {
+      "max_weight": 390.63538,
+      "n_positive": 192800,
+      "n_records": 215494,
+      "weight_std": 3.166403114509644,
+      "weight_sum": 433062.3596999999
+    },
+    "CO08": {
+      "max_weight": 334.88962,
+      "n_positive": 192537,
+      "n_records": 215494,
+      "weight_std": 3.015947652333578,
+      "weight_sum": 417678.53135
+    },
+    "CT01": {
+      "max_weight": 162.59123,
+      "n_positive": 191673,
+      "n_records": 215494,
+      "weight_std": 3.073585965485758,
+      "weight_sum": 431534.22669
+    },
+    "CT02": {
+      "max_weight": 140.76571,
+      "n_positive": 190849,
+      "n_records": 215494,
+      "weight_std": 3.2251865319361075,
+      "weight_sum": 428924.7399999999
+    },
+    "CT03": {
+      "max_weight": 130.65843,
+      "n_positive": 194103,
+      "n_records": 215494,
+      "weight_std": 3.1088611378755497,
+      "weight_sum": 433511.85504999995
+    },
+    "CT04": {
+      "max_weight": 625.87964,
+      "n_positive": 166187,
+      "n_records": 215494,
+      "weight_std": 8.482241766681291,
+      "weight_sum": 408532.3461999999
+    },
+    "CT05": {
+      "max_weight": 116.47466,
+      "n_positive": 194757,
+      "n_records": 215494,
+      "weight_std": 2.819417025786229,
+      "weight_sum": 423056.24809999985
+    },
+    "DC01": {
+      "max_weight": 672.67749,
+      "n_positive": 164707,
+      "n_records": 215494,
+      "weight_std": 7.0383578333052785,
+      "weight_sum": 452286.38271000003
+    },
+    "DE01": {
+      "max_weight": 301.04874,
+      "n_positive": 192732,
+      "n_records": 215494,
+      "weight_std": 4.387075587713578,
+      "weight_sum": 577896.42709
+    },
+    "FL01": {
+      "max_weight": 298.15428,
+      "n_positive": 150247,
+      "n_records": 215494,
+      "weight_std": 4.1841032718433615,
+      "weight_sum": 432093.5094999999
+    },
+    "FL02": {
+      "max_weight": 228.56875,
+      "n_positive": 139729,
+      "n_records": 215494,
+      "weight_std": 3.768925293827962,
+      "weight_sum": 434850.25099
+    },
+    "FL03": {
+      "max_weight": 373.24481,
+      "n_positive": 135387,
+      "n_records": 215494,
+      "weight_std": 4.000035334573749,
+      "weight_sum": 433558.46441000013
+    },
+    "FL04": {
+      "max_weight": 221.0386,
+      "n_positive": 146418,
+      "n_records": 215494,
+      "weight_std": 3.625228724123032,
+      "weight_sum": 436732.82910999993
+    },
+    "FL05": {
+      "max_weight": 452.97052,
+      "n_positive": 146025,
+      "n_records": 215494,
+      "weight_std": 5.103803995621791,
+      "weight_sum": 429062.4064300001
+    },
+    "FL06": {
+      "max_weight": 402.12618,
+      "n_positive": 141067,
+      "n_records": 215494,
+      "weight_std": 4.498872585866956,
+      "weight_sum": 450720.00202
+    },
+    "FL07": {
+      "max_weight": 414.9587,
+      "n_positive": 135340,
+      "n_records": 215494,
+      "weight_std": 4.530648339818128,
+      "weight_sum": 454609.73273
+    },
+    "FL08": {
+      "max_weight": 325.59682,
+      "n_positive": 159971,
+      "n_records": 215494,
+      "weight_std": 4.613030627147274,
+      "weight_sum": 450967.74548000004
+    },
+    "FL09": {
+      "max_weight": 458.76511,
+      "n_positive": 136459,
+      "n_records": 215494,
+      "weight_std": 3.9999010773321437,
+      "weight_sum": 421707.81898000004
+    },
+    "FL10": {
+      "max_weight": 367.7366,
+      "n_positive": 136052,
+      "n_records": 215494,
+      "weight_std": 4.340718213528036,
+      "weight_sum": 444510.84157999995
+    },
+    "FL11": {
+      "max_weight": 374.08769,
+      "n_positive": 141521,
+      "n_records": 215494,
+      "weight_std": 4.058735649353622,
+      "weight_sum": 442375.60540999996
+    },
+    "FL12": {
+      "max_weight": 384.76093,
+      "n_positive": 139065,
+      "n_records": 215494,
+      "weight_std": 4.788107150159503,
+      "weight_sum": 444500.60531999986
+    },
+    "FL13": {
+      "max_weight": 391.74859,
+      "n_positive": 152223,
+      "n_records": 215494,
+      "weight_std": 4.5541222413243005,
+      "weight_sum": 468560.95187000005
+    },
+    "FL14": {
+      "max_weight": 364.61747,
+      "n_positive": 145208,
+      "n_records": 215494,
+      "weight_std": 4.796261172117577,
+      "weight_sum": 460967.84713
+    },
+    "FL15": {
+      "max_weight": 420.05273,
+      "n_positive": 142208,
+      "n_records": 215494,
+      "weight_std": 4.177077825617944,
+      "weight_sum": 445286.34635999997
+    },
+    "FL16": {
+      "max_weight": 366.71799,
+      "n_positive": 162328,
+      "n_records": 215494,
+      "weight_std": 4.784705613889908,
+      "weight_sum": 435949.3508699999
+    },
+    "FL17": {
+      "max_weight": 448.6864,
+      "n_positive": 162707,
+      "n_records": 215494,
+      "weight_std": 4.746512564188184,
+      "weight_sum": 445399.20978000003
+    },
+    "FL18": {
+      "max_weight": 446.38007,
+      "n_positive": 145025,
+      "n_records": 215494,
+      "weight_std": 3.9274046592395067,
+      "weight_sum": 433608.20357
+    },
+    "FL19": {
+      "max_weight": 664.95167,
+      "n_positive": 165892,
+      "n_records": 215494,
+      "weight_std": 6.986059630353836,
+      "weight_sum": 451329.42548000015
+    },
+    "FL20": {
+      "max_weight": 666.62259,
+      "n_positive": 156526,
+      "n_records": 215494,
+      "weight_std": 4.597466202953491,
+      "weight_sum": 451693.3689599999
+    },
+    "FL21": {
+      "max_weight": 510.33679,
+      "n_positive": 169156,
+      "n_records": 215494,
+      "weight_std": 5.804155499824793,
+      "weight_sum": 441462.98338
+    },
+    "FL22": {
+      "max_weight": 1492.65907,
+      "n_positive": 165138,
+      "n_records": 215494,
+      "weight_std": 8.288444094108257,
+      "weight_sum": 459552.99587999994
+    },
+    "FL23": {
+      "max_weight": 600.34936,
+      "n_positive": 162383,
+      "n_records": 215494,
+      "weight_std": 7.328262671731927,
+      "weight_sum": 465659.2583800001
+    },
+    "FL24": {
+      "max_weight": 818.84587,
+      "n_positive": 161332,
+      "n_records": 215494,
+      "weight_std": 5.628835304844892,
+      "weight_sum": 466686.62878
+    },
+    "FL25": {
+      "max_weight": 771.75258,
+      "n_positive": 157139,
+      "n_records": 215494,
+      "weight_std": 5.969463639021969,
+      "weight_sum": 449199.99546000006
+    },
+    "FL26": {
+      "max_weight": 910.73005,
+      "n_positive": 153354,
+      "n_records": 215494,
+      "weight_std": 6.480326132670886,
+      "weight_sum": 457944.38584000006
+    },
+    "FL27": {
+      "max_weight": 910.73005,
+      "n_positive": 146888,
+      "n_records": 215494,
+      "weight_std": 8.711836150038694,
+      "weight_sum": 470169.28959
+    },
+    "FL28": {
+      "max_weight": 903.40366,
+      "n_positive": 150332,
+      "n_records": 215494,
+      "weight_std": 6.728897360038807,
+      "weight_sum": 448624.21043
+    },
+    "GA01": {
+      "max_weight": 155.25055,
+      "n_positive": 189297,
+      "n_records": 215494,
+      "weight_std": 2.8987796225720412,
+      "weight_sum": 417608.23767
+    },
+    "GA02": {
+      "max_weight": 342.08679,
+      "n_positive": 169994,
+      "n_records": 215494,
+      "weight_std": 4.13042486534419,
+      "weight_sum": 419764.6960000001
+    },
+    "GA03": {
+      "max_weight": 253.95919,
+      "n_positive": 190495,
+      "n_records": 215494,
+      "weight_std": 2.861112654694346,
+      "weight_sum": 416613.26618000004
+    },
+    "GA04": {
+      "max_weight": 146.51399,
+      "n_positive": 195320,
+      "n_records": 215494,
+      "weight_std": 2.9243700922193034,
+      "weight_sum": 430972.0279099999
+    },
+    "GA05": {
+      "max_weight": 336.96427,
+      "n_positive": 192291,
+      "n_records": 215494,
+      "weight_std": 4.289801399750248,
+      "weight_sum": 461964.77463999996
+    },
+    "GA06": {
+      "max_weight": 276.25572,
+      "n_positive": 194749,
+      "n_records": 215494,
+      "weight_std": 3.2957636498696004,
+      "weight_sum": 439584.89914
+    },
+    "GA07": {
+      "max_weight": 373.19373,
+      "n_positive": 196476,
+      "n_records": 215494,
+      "weight_std": 2.9965319094682084,
+      "weight_sum": 418355.53356000007
+    },
+    "GA08": {
+      "max_weight": 270.44233,
+      "n_positive": 179395,
+      "n_records": 215494,
+      "weight_std": 3.4024964390079533,
+      "weight_sum": 411835.46921000007
+    },
+    "GA09": {
+      "max_weight": 174.39383,
+      "n_positive": 192739,
+      "n_records": 215494,
+      "weight_std": 2.655465581538843,
+      "weight_sum": 410627.708
+    },
+    "GA10": {
+      "max_weight": 230.25856,
+      "n_positive": 192214,
+      "n_records": 215494,
+      "weight_std": 2.801256119525803,
+      "weight_sum": 416712.1528700001
+    },
+    "GA11": {
+      "max_weight": 250.6789,
+      "n_positive": 197374,
+      "n_records": 215494,
+      "weight_std": 2.886987627169526,
+      "weight_sum": 426325.27623
+    },
+    "GA12": {
+      "max_weight": 266.12573,
+      "n_positive": 180626,
+      "n_records": 215494,
+      "weight_std": 3.3362802404422993,
+      "weight_sum": 413443.3272
+    },
+    "GA13": {
+      "max_weight": 221.53591,
+      "n_positive": 189408,
+      "n_records": 215494,
+      "weight_std": 3.1701895302977583,
+      "weight_sum": 431875.9482699999
+    },
+    "GA14": {
+      "max_weight": 166.39268,
+      "n_positive": 191464,
+      "n_records": 215494,
+      "weight_std": 2.6795233098743356,
+      "weight_sum": 411735.39236000006
+    },
+    "HI01": {
+      "max_weight": 548.53178,
+      "n_positive": 173149,
+      "n_records": 215494,
+      "weight_std": 4.7173090147512005,
+      "weight_sum": 427608.38115000003
+    },
+    "HI02": {
+      "max_weight": 550.40529,
+      "n_positive": 172506,
+      "n_records": 215494,
+      "weight_std": 4.273182110579257,
+      "weight_sum": 415201.37352
+    },
+    "IA01": {
+      "max_weight": 165.13649,
+      "n_positive": 187420,
+      "n_records": 215494,
+      "weight_std": 3.264876642061361,
+      "weight_sum": 440602.67183999997
+    },
+    "IA02": {
+      "max_weight": 303.83328,
+      "n_positive": 180857,
+      "n_records": 215494,
+      "weight_std": 3.709011374080079,
+      "weight_sum": 444468.36911999993
+    },
+    "IA03": {
+      "max_weight": 201.091,
+      "n_positive": 192664,
+      "n_records": 215494,
+      "weight_std": 3.0180335261196407,
+      "weight_sum": 438988.07775000005
+    },
+    "IA04": {
+      "max_weight": 483.64452,
+      "n_positive": 177842,
+      "n_records": 215494,
+      "weight_std": 4.1168238580703695,
+      "weight_sum": 440706.8870700001
+    },
+    "ID01": {
+      "max_weight": 587.3819,
+      "n_positive": 186539,
+      "n_records": 215494,
+      "weight_std": 4.251134955797374,
+      "weight_sum": 476081.0093600001
+    },
+    "ID02": {
+      "max_weight": 459.38146,
+      "n_positive": 191041,
+      "n_records": 215494,
+      "weight_std": 3.909725478418091,
+      "weight_sum": 492301.39287999994
+    },
+    "IL01": {
+      "max_weight": 207.51057,
+      "n_positive": 189548,
+      "n_records": 215494,
+      "weight_std": 3.3558798118842366,
+      "weight_sum": 437732.06392
+    },
+    "IL02": {
+      "max_weight": 342.89956,
+      "n_positive": 174272,
+      "n_records": 215494,
+      "weight_std": 3.511938304174472,
+      "weight_sum": 435700.05804000003
+    },
+    "IL03": {
+      "max_weight": 249.03009,
+      "n_positive": 194773,
+      "n_records": 215494,
+      "weight_std": 3.2567976625262256,
+      "weight_sum": 439219.9969600001
+    },
+    "IL04": {
+      "max_weight": 329.08976,
+      "n_positive": 193273,
+      "n_records": 215494,
+      "weight_std": 3.2194268659759917,
+      "weight_sum": 437441.49808000005
+    },
+    "IL05": {
+      "max_weight": 389.02193,
+      "n_positive": 194788,
+      "n_records": 215494,
+      "weight_std": 4.487095235840176,
+      "weight_sum": 451710.99253
+    },
+    "IL06": {
+      "max_weight": 204.49151,
+      "n_positive": 194373,
+      "n_records": 215494,
+      "weight_std": 3.1031618165617854,
+      "weight_sum": 428115.57418000005
+    },
+    "IL07": {
+      "max_weight": 312.37808,
+      "n_positive": 187560,
+      "n_records": 215494,
+      "weight_std": 4.740201833127534,
+      "weight_sum": 463429.59461000003
+    },
+    "IL08": {
+      "max_weight": 295.00407,
+      "n_positive": 193156,
+      "n_records": 215494,
+      "weight_std": 3.3377179472865315,
+      "weight_sum": 427694.52667999995
+    },
+    "IL09": {
+      "max_weight": 408.96696,
+      "n_positive": 195316,
+      "n_records": 215494,
+      "weight_std": 4.387312925930144,
+      "weight_sum": 437369.1371800001
+    },
+    "IL10": {
+      "max_weight": 374.89106,
+      "n_positive": 196537,
+      "n_records": 215494,
+      "weight_std": 3.927850388527646,
+      "weight_sum": 416371.29254999995
+    },
+    "IL11": {
+      "max_weight": 243.91789,
+      "n_positive": 188287,
+      "n_records": 215494,
+      "weight_std": 3.5445896083561816,
+      "weight_sum": 408720.5272
+    },
+    "IL12": {
+      "max_weight": 215.00652,
+      "n_positive": 165718,
+      "n_records": 215494,
+      "weight_std": 3.529943645606904,
+      "weight_sum": 419769.75138000015
+    },
+    "IL13": {
+      "max_weight": 152.45543,
+      "n_positive": 173679,
+      "n_records": 215494,
+      "weight_std": 3.5972760108100954,
+      "weight_sum": 430002.93314999994
+    },
+    "IL14": {
+      "max_weight": 206.02099,
+      "n_positive": 186632,
+      "n_records": 215494,
+      "weight_std": 3.282569092286449,
+      "weight_sum": 415097.3995800001
+    },
+    "IL15": {
+      "max_weight": 195.37191,
+      "n_positive": 175112,
+      "n_records": 215494,
+      "weight_std": 3.594085288411873,
+      "weight_sum": 422926.29226000013
+    },
+    "IL16": {
+      "max_weight": 171.49798,
+      "n_positive": 176668,
+      "n_records": 215494,
+      "weight_std": 3.479825685904589,
+      "weight_sum": 428308.8048499999
+    },
+    "IL17": {
+      "max_weight": 215.64766,
+      "n_positive": 167334,
+      "n_records": 215494,
+      "weight_std": 3.4143971616421096,
+      "weight_sum": 430227.4477399999
+    },
+    "IN01": {
+      "max_weight": 230.04758,
+      "n_positive": 182128,
+      "n_records": 215494,
+      "weight_std": 3.1419850073859066,
+      "weight_sum": 429547.84855999995
+    },
+    "IN02": {
+      "max_weight": 98.54172,
+      "n_positive": 177544,
+      "n_records": 215494,
+      "weight_std": 3.0711477262049867,
+      "weight_sum": 420375.40788
+    },
+    "IN03": {
+      "max_weight": 178.43125,
+      "n_positive": 175890,
+      "n_records": 215494,
+      "weight_std": 3.1745602237624313,
+      "weight_sum": 416247.2044699999
+    },
+    "IN04": {
+      "max_weight": 182.0967,
+      "n_positive": 174642,
+      "n_records": 215494,
+      "weight_std": 3.233787079545276,
+      "weight_sum": 420085.95623000007
+    },
+    "IN05": {
+      "max_weight": 417.1528,
+      "n_positive": 192199,
+      "n_records": 215494,
+      "weight_std": 3.1540970995206496,
+      "weight_sum": 415372.93637999997
+    },
+    "IN06": {
+      "max_weight": 118.73323,
+      "n_positive": 173065,
+      "n_records": 215494,
+      "weight_std": 3.039095712068871,
+      "weight_sum": 424316.8810999999
+    },
+    "IN07": {
+      "max_weight": 111.14194,
+      "n_positive": 188302,
+      "n_records": 215494,
+      "weight_std": 2.822886590983691,
+      "weight_sum": 430271.45435
+    },
+    "IN08": {
+      "max_weight": 289.51785,
+      "n_positive": 166962,
+      "n_records": 215494,
+      "weight_std": 3.52726112888011,
+      "weight_sum": 424069.1977599999
+    },
+    "IN09": {
+      "max_weight": 117.19211,
+      "n_positive": 172766,
+      "n_records": 215494,
+      "weight_std": 3.2737699869011947,
+      "weight_sum": 424378.0778999999
+    },
+    "KS01": {
+      "max_weight": 237.65092,
+      "n_positive": 166961,
+      "n_records": 215494,
+      "weight_std": 3.307289613415777,
+      "weight_sum": 400545.46435
+    },
+    "KS02": {
+      "max_weight": 107.73238,
+      "n_positive": 187158,
+      "n_records": 215494,
+      "weight_std": 2.9093853708995954,
+      "weight_sum": 405946.22268999997
+    },
+    "KS03": {
+      "max_weight": 324.3078,
+      "n_positive": 195655,
+      "n_records": 215494,
+      "weight_std": 2.829942558327285,
+      "weight_sum": 405306.32252000005
+    },
+    "KS04": {
+      "max_weight": 97.09341,
+      "n_positive": 185870,
+      "n_records": 215494,
+      "weight_std": 2.82619672290097,
+      "weight_sum": 406520.33848
+    },
+    "KY01": {
+      "max_weight": 260.79972,
+      "n_positive": 161351,
+      "n_records": 215494,
+      "weight_std": 3.5444897824112958,
+      "weight_sum": 406115.34423999995
+    },
+    "KY02": {
+      "max_weight": 244.83899,
+      "n_positive": 171661,
+      "n_records": 215494,
+      "weight_std": 3.09572553887796,
+      "weight_sum": 405136.56804000004
+    },
+    "KY03": {
+      "max_weight": 161.88009,
+      "n_positive": 191603,
+      "n_records": 215494,
+      "weight_std": 3.0225598065041854,
+      "weight_sum": 442294.43205
+    },
+    "KY04": {
+      "max_weight": 137.39185,
+      "n_positive": 188052,
+      "n_records": 215494,
+      "weight_std": 2.8709632852403404,
+      "weight_sum": 412066.8192000001
+    },
+    "KY05": {
+      "max_weight": 280.08492,
+      "n_positive": 151116,
+      "n_records": 215494,
+      "weight_std": 4.440673186138018,
+      "weight_sum": 397714.7237199999
+    },
+    "KY06": {
+      "max_weight": 190.07344,
+      "n_positive": 185727,
+      "n_records": 215494,
+      "weight_std": 3.094283605821545,
+      "weight_sum": 419395.90018
+    },
+    "LA01": {
+      "max_weight": 468.50789,
+      "n_positive": 188152,
+      "n_records": 215494,
+      "weight_std": 3.7370486173685182,
+      "weight_sum": 428425.36622999987
+    },
+    "LA02": {
+      "max_weight": 432.6601,
+      "n_positive": 178642,
+      "n_records": 215494,
+      "weight_std": 4.324485810963721,
+      "weight_sum": 440634.33200999995
+    },
+    "LA03": {
+      "max_weight": 203.97961,
+      "n_positive": 173212,
+      "n_records": 215494,
+      "weight_std": 3.481646219964797,
+      "weight_sum": 418661.0438900001
+    },
+    "LA04": {
+      "max_weight": 294.88415,
+      "n_positive": 167294,
+      "n_records": 215494,
+      "weight_std": 3.848968774187119,
+      "weight_sum": 417207.96940000006
+    },
+    "LA05": {
+      "max_weight": 265.3208,
+      "n_positive": 175886,
+      "n_records": 215494,
+      "weight_std": 3.638667593095534,
+      "weight_sum": 418374.3186900001
+    },
+    "LA06": {
+      "max_weight": 250.52276,
+      "n_positive": 175875,
+      "n_records": 215494,
+      "weight_std": 3.661697366526397,
+      "weight_sum": 421402.10190999997
+    },
+    "MA01": {
+      "max_weight": 133.22072,
+      "n_positive": 193010,
+      "n_records": 215494,
+      "weight_std": 2.9771381523173908,
+      "weight_sum": 473247.76866000006
+    },
+    "MA02": {
+      "max_weight": 167.78512,
+      "n_positive": 196371,
+      "n_records": 215494,
+      "weight_std": 3.064419014423887,
+      "weight_sum": 468808.5039799999
+    },
+    "MA03": {
+      "max_weight": 399.1256,
+      "n_positive": 195644,
+      "n_records": 215494,
+      "weight_std": 3.0986221169708297,
+      "weight_sum": 456190.24082999997
+    },
+    "MA04": {
+      "max_weight": 268.14638,
+      "n_positive": 194959,
+      "n_records": 215494,
+      "weight_std": 4.027167765262517,
+      "weight_sum": 447608.99486000004
+    },
+    "MA05": {
+      "max_weight": 439.24344,
+      "n_positive": 193650,
+      "n_records": 215494,
+      "weight_std": 4.578279961566461,
+      "weight_sum": 467091.1482399999
+    },
+    "MA06": {
+      "max_weight": 362.70235,
+      "n_positive": 194614,
+      "n_records": 215494,
+      "weight_std": 3.9396410386734977,
+      "weight_sum": 458314.5496000001
+    },
+    "MA07": {
+      "max_weight": 271.7225,
+      "n_positive": 191204,
+      "n_records": 215494,
+      "weight_std": 5.255109252854429,
+      "weight_sum": 509700.9122300001
+    },
+    "MA08": {
+      "max_weight": 227.78751,
+      "n_positive": 195510,
+      "n_records": 215494,
+      "weight_std": 3.863830113264331,
+      "weight_sum": 481996.03682
+    },
+    "MA09": {
+      "max_weight": 272.87574,
+      "n_positive": 194392,
+      "n_records": 215494,
+      "weight_std": 3.526945158952596,
+      "weight_sum": 477307.27011999994
+    },
+    "MD01": {
+      "max_weight": 583.53491,
+      "n_positive": 187407,
+      "n_records": 215494,
+      "weight_std": 4.246354087794071,
+      "weight_sum": 441495.23481000005
+    },
+    "MD02": {
+      "max_weight": 582.14394,
+      "n_positive": 183567,
+      "n_records": 215494,
+      "weight_std": 5.000328861696364,
+      "weight_sum": 451264.6163500001
+    },
+    "MD03": {
+      "max_weight": 582.76844,
+      "n_positive": 177382,
+      "n_records": 215494,
+      "weight_std": 5.682994445568548,
+      "weight_sum": 452988.7063599999
+    },
+    "MD04": {
+      "max_weight": 685.26818,
+      "n_positive": 134626,
+      "n_records": 215494,
+      "weight_std": 8.1963061164938,
+      "weight_sum": 459016.90425
+    },
+    "MD05": {
+      "max_weight": 754.92238,
+      "n_positive": 132520,
+      "n_records": 215494,
+      "weight_std": 8.790830130450036,
+      "weight_sum": 453168.3488999999
+    },
+    "MD06": {
+      "max_weight": 587.38387,
+      "n_positive": 187983,
+      "n_records": 215494,
+      "weight_std": 5.116331612597,
+      "weight_sum": 442395.81362000003
+    },
+    "MD07": {
+      "max_weight": 579.38087,
+      "n_positive": 183320,
+      "n_records": 215494,
+      "weight_std": 4.874294031369727,
+      "weight_sum": 448869.12208999996
+    },
+    "MD08": {
+      "max_weight": 669.56518,
+      "n_positive": 182681,
+      "n_records": 215494,
+      "weight_std": 6.685354091406288,
+      "weight_sum": 439628.59629
+    },
+    "ME01": {
+      "max_weight": 397.68392,
+      "n_positive": 189932,
+      "n_records": 215494,
+      "weight_std": 3.1256313522530625,
+      "weight_sum": 413339.80776000005
+    },
+    "ME02": {
+      "max_weight": 232.1522,
+      "n_positive": 174468,
+      "n_records": 215494,
+      "weight_std": 3.107202547143165,
+      "weight_sum": 399906.73959000007
+    },
+    "MI01": {
+      "max_weight": 223.72506,
+      "n_positive": 181397,
+      "n_records": 215494,
+      "weight_std": 3.938366002431016,
+      "weight_sum": 455418.97192000004
+    },
+    "MI02": {
+      "max_weight": 147.72424,
+      "n_positive": 185308,
+      "n_records": 215494,
+      "weight_std": 3.3311760310906413,
+      "weight_sum": 440925.3916799999
+    },
+    "MI03": {
+      "max_weight": 126.85354,
+      "n_positive": 189327,
+      "n_records": 215494,
+      "weight_std": 3.051040558320951,
+      "weight_sum": 438347.17180999997
+    },
+    "MI04": {
+      "max_weight": 98.64853,
+      "n_positive": 189032,
+      "n_records": 215494,
+      "weight_std": 3.112914832906962,
+      "weight_sum": 439942.9285200001
+    },
+    "MI05": {
+      "max_weight": 160.1494,
+      "n_positive": 184858,
+      "n_records": 215494,
+      "weight_std": 3.3586157496272304,
+      "weight_sum": 441115.66595999995
+    },
+    "MI06": {
+      "max_weight": 160.88638,
+      "n_positive": 192601,
+      "n_records": 215494,
+      "weight_std": 3.2700337949852427,
+      "weight_sum": 449560.89622
+    },
+    "MI07": {
+      "max_weight": 215.43862,
+      "n_positive": 188677,
+      "n_records": 215494,
+      "weight_std": 3.511565798938455,
+      "weight_sum": 443175.16310999996
+    },
+    "MI08": {
+      "max_weight": 307.93222,
+      "n_positive": 170898,
+      "n_records": 215494,
+      "weight_std": 3.7026098716756963,
+      "weight_sum": 450705.87692
+    },
+    "MI09": {
+      "max_weight": 200.76526,
+      "n_positive": 185490,
+      "n_records": 215494,
+      "weight_std": 3.59763384197764,
+      "weight_sum": 446271.9672899999
+    },
+    "MI10": {
+      "max_weight": 153.76226,
+      "n_positive": 193921,
+      "n_records": 215494,
+      "weight_std": 3.238277929166271,
+      "weight_sum": 465699.31938000006
+    },
+    "MI11": {
+      "max_weight": 164.7304,
+      "n_positive": 195212,
+      "n_records": 215494,
+      "weight_std": 3.3066885707590594,
+      "weight_sum": 455774.6443800002
+    },
+    "MI12": {
+      "max_weight": 218.43312,
+      "n_positive": 189273,
+      "n_records": 215494,
+      "weight_std": 3.8874473212988794,
+      "weight_sum": 452429.22215
+    },
+    "MI13": {
+      "max_weight": 219.20675,
+      "n_positive": 189152,
+      "n_records": 215494,
+      "weight_std": 4.01519256645981,
+      "weight_sum": 453317.30139000004
+    },
+    "MN01": {
+      "max_weight": 207.32532,
+      "n_positive": 183449,
+      "n_records": 215494,
+      "weight_std": 3.136353699916325,
+      "weight_sum": 404632.28703
+    },
+    "MN02": {
+      "max_weight": 245.29772,
+      "n_positive": 190094,
+      "n_records": 215494,
+      "weight_std": 3.037143547086418,
+      "weight_sum": 390443.29303999996
+    },
+    "MN03": {
+      "max_weight": 538.6515,
+      "n_positive": 194127,
+      "n_records": 215494,
+      "weight_std": 4.005456775099988,
+      "weight_sum": 394692.37326
+    },
+    "MN04": {
+      "max_weight": 281.4521,
+      "n_positive": 194582,
+      "n_records": 215494,
+      "weight_std": 2.9249803555104443,
+      "weight_sum": 417327.73629000003
+    },
+    "MN05": {
+      "max_weight": 358.30841,
+      "n_positive": 193199,
+      "n_records": 215494,
+      "weight_std": 3.75789265383141,
+      "weight_sum": 443936.5947200001
+    },
+    "MN06": {
+      "max_weight": 223.653,
+      "n_positive": 187511,
+      "n_records": 215494,
+      "weight_std": 3.0706976780804136,
+      "weight_sum": 379117.02641000005
+    },
+    "MN07": {
+      "max_weight": 346.33258,
+      "n_positive": 167364,
+      "n_records": 215494,
+      "weight_std": 3.574088967950683,
+      "weight_sum": 397376.67367
+    },
+    "MN08": {
+      "max_weight": 159.94037,
+      "n_positive": 177125,
+      "n_records": 215494,
+      "weight_std": 3.2002085635642143,
+      "weight_sum": 407901.64035000006
+    },
+    "MO01": {
+      "max_weight": 255.31446,
+      "n_positive": 190785,
+      "n_records": 215494,
+      "weight_std": 3.7911629630924866,
+      "weight_sum": 464723.13122
+    },
+    "MO02": {
+      "max_weight": 335.94573,
+      "n_positive": 193947,
+      "n_records": 215494,
+      "weight_std": 3.916996578840128,
+      "weight_sum": 425800.93536
+    },
+    "MO03": {
+      "max_weight": 156.4573,
+      "n_positive": 188376,
+      "n_records": 215494,
+      "weight_std": 3.2276181096658307,
+      "weight_sum": 424283.38355
+    },
+    "MO04": {
+      "max_weight": 212.04445,
+      "n_positive": 179173,
+      "n_records": 215494,
+      "weight_std": 3.2970945886418446,
+      "weight_sum": 423013.8135
+    },
+    "MO05": {
+      "max_weight": 86.44335,
+      "n_positive": 187022,
+      "n_records": 215494,
+      "weight_std": 3.039293481358872,
+      "weight_sum": 444937.14949000004
+    },
+    "MO06": {
+      "max_weight": 158.36933,
+      "n_positive": 184916,
+      "n_records": 215494,
+      "weight_std": 3.129499638177617,
+      "weight_sum": 421177.7412399999
+    },
+    "MO07": {
+      "max_weight": 201.97292,
+      "n_positive": 177095,
+      "n_records": 215494,
+      "weight_std": 3.440188088666534,
+      "weight_sum": 424468.36299999995
+    },
+    "MO08": {
+      "max_weight": 245.68278,
+      "n_positive": 174172,
+      "n_records": 215494,
+      "weight_std": 3.49819878084565,
+      "weight_sum": 417162.83281999984
+    },
+    "MS01": {
+      "max_weight": 149.00938,
+      "n_positive": 169148,
+      "n_records": 215494,
+      "weight_std": 2.9485484071436034,
+      "weight_sum": 395160.54256000003
+    },
+    "MS02": {
+      "max_weight": 385.70952,
+      "n_positive": 156394,
+      "n_records": 215494,
+      "weight_std": 4.162018438839671,
+      "weight_sum": 403375.96014999994
+    },
+    "MS03": {
+      "max_weight": 172.282,
+      "n_positive": 182627,
+      "n_records": 215494,
+      "weight_std": 3.1458251931861896,
+      "weight_sum": 396114.92469
+    },
+    "MS04": {
+      "max_weight": 169.36521,
+      "n_positive": 172038,
+      "n_records": 215494,
+      "weight_std": 3.2448287128534665,
+      "weight_sum": 395024.71773
+    },
+    "MT01": {
+      "max_weight": 404.34367,
+      "n_positive": 185345,
+      "n_records": 215494,
+      "weight_std": 2.5778266743435765,
+      "weight_sum": 315152.3867
+    },
+    "MT02": {
+      "max_weight": 404.3432,
+      "n_positive": 185345,
+      "n_records": 215494,
+      "weight_std": 2.5778286883086596,
+      "weight_sum": 315153.06025
+    },
+    "NC01": {
+      "max_weight": 185.3739,
+      "n_positive": 174269,
+      "n_records": 215494,
+      "weight_std": 3.1551998968432637,
+      "weight_sum": 414080.3003600001
+    },
+    "NC02": {
+      "max_weight": 454.55711,
+      "n_positive": 193436,
+      "n_records": 215494,
+      "weight_std": 3.201508497390963,
+      "weight_sum": 415057.9438100001
+    },
+    "NC03": {
+      "max_weight": 223.6895,
+      "n_positive": 176987,
+      "n_records": 215494,
+      "weight_std": 3.0816268356275165,
+      "weight_sum": 411028.55258
+    },
+    "NC04": {
+      "max_weight": 386.4696,
+      "n_positive": 194487,
+      "n_records": 215494,
+      "weight_std": 2.9681463167873474,
+      "weight_sum": 419578.72070999997
+    },
+    "NC05": {
+      "max_weight": 140.79606,
+      "n_positive": 188222,
+      "n_records": 215494,
+      "weight_std": 2.8063272678844604,
+      "weight_sum": 414786.47986
+    },
+    "NC06": {
+      "max_weight": 146.83056,
+      "n_positive": 185968,
+      "n_records": 215494,
+      "weight_std": 2.7386231426140633,
+      "weight_sum": 411513.68935999984
+    },
+    "NC07": {
+      "max_weight": 206.84394,
+      "n_positive": 188836,
+      "n_records": 215494,
+      "weight_std": 2.849352900022464,
+      "weight_sum": 413284.8050200001
+    },
+    "NC08": {
+      "max_weight": 164.6893,
+      "n_positive": 192752,
+      "n_records": 215494,
+      "weight_std": 2.508416379315878,
+      "weight_sum": 397820.1550899999
+    },
+    "NC09": {
+      "max_weight": 132.63994,
+      "n_positive": 188736,
+      "n_records": 215494,
+      "weight_std": 2.6838889165227964,
+      "weight_sum": 408412.3772299999
+    },
+    "NC10": {
+      "max_weight": 159.70577,
+      "n_positive": 188802,
+      "n_records": 215494,
+      "weight_std": 2.7908315070032543,
+      "weight_sum": 415419.60504
+    },
+    "NC11": {
+      "max_weight": 334.65859,
+      "n_positive": 183794,
+      "n_records": 215494,
+      "weight_std": 3.611547508350762,
+      "weight_sum": 430664.64258
+    },
+    "NC12": {
+      "max_weight": 120.81673,
+      "n_positive": 193676,
+      "n_records": 215494,
+      "weight_std": 2.8518332112016536,
+      "weight_sum": 435616.34746
+    },
+    "NC13": {
+      "max_weight": 236.69356,
+      "n_positive": 192379,
+      "n_records": 215494,
+      "weight_std": 2.718191532824201,
+      "weight_sum": 415228.46739999996
+    },
+    "NC14": {
+      "max_weight": 77.52396,
+      "n_positive": 190688,
+      "n_records": 215494,
+      "weight_std": 2.7454422180843,
+      "weight_sum": 417957.44807999994
+    },
+    "ND01": {
+      "max_weight": 685.79633,
+      "n_positive": 159099,
+      "n_records": 215494,
+      "weight_std": 5.536733016570328,
+      "weight_sum": 438905.0037299999
+    },
+    "NE01": {
+      "max_weight": 205.81674,
+      "n_positive": 179779,
+      "n_records": 215494,
+      "weight_std": 2.833068874895672,
+      "weight_sum": 362274.08456999995
+    },
+    "NE02": {
+      "max_weight": 216.21267,
+      "n_positive": 183786,
+      "n_records": 215494,
+      "weight_std": 2.8549314660738205,
+      "weight_sum": 361806.43225
+    },
+    "NE03": {
+      "max_weight": 533.78312,
+      "n_positive": 156335,
+      "n_records": 215494,
+      "weight_std": 3.8045605185500184,
+      "weight_sum": 357157.95521
+    },
+    "NH01": {
+      "max_weight": 375.41739,
+      "n_positive": 155835,
+      "n_records": 215494,
+      "weight_std": 4.923920849599174,
+      "weight_sum": 409002.8100799999
+    },
+    "NH02": {
+      "max_weight": 323.69628,
+      "n_positive": 162011,
+      "n_records": 215494,
+      "weight_std": 4.414516065943612,
+      "weight_sum": 404551.98203999986
+    },
+    "NJ01": {
+      "max_weight": 204.73468,
+      "n_positive": 187095,
+      "n_records": 215494,
+      "weight_std": 3.6310229292782488,
+      "weight_sum": 446989.86004000006
+    },
+    "NJ02": {
+      "max_weight": 149.10164,
+      "n_positive": 191674,
+      "n_records": 215494,
+      "weight_std": 3.2357129835460077,
+      "weight_sum": 456371.82197000005
+    },
+    "NJ03": {
+      "max_weight": 241.5827,
+      "n_positive": 194646,
+      "n_records": 215494,
+      "weight_std": 4.392079813434502,
+      "weight_sum": 441368.2033400001
+    },
+    "NJ04": {
+      "max_weight": 281.15078,
+      "n_positive": 194171,
+      "n_records": 215494,
+      "weight_std": 4.89786056428004,
+      "weight_sum": 429781.9433600001
+    },
+    "NJ05": {
+      "max_weight": 543.92032,
+      "n_positive": 187639,
+      "n_records": 215494,
+      "weight_std": 7.416195679077726,
+      "weight_sum": 428981.65175
+    },
+    "NJ06": {
+      "max_weight": 238.98212,
+      "n_positive": 194655,
+      "n_records": 215494,
+      "weight_std": 4.068831940199971,
+      "weight_sum": 442012.69696000003
+    },
+    "NJ07": {
+      "max_weight": 555.24088,
+      "n_positive": 176795,
+      "n_records": 215494,
+      "weight_std": 7.990734356898753,
+      "weight_sum": 436591.70384000003
+    },
+    "NJ08": {
+      "max_weight": 295.34378,
+      "n_positive": 185751,
+      "n_records": 215494,
+      "weight_std": 3.8091112294657616,
+      "weight_sum": 476432.91650999995
+    },
+    "NJ09": {
+      "max_weight": 312.26393,
+      "n_positive": 192934,
+      "n_records": 215494,
+      "weight_std": 4.49890217131867,
+      "weight_sum": 449822.34712000005
+    },
+    "NJ10": {
+      "max_weight": 326.64049,
+      "n_positive": 188095,
+      "n_records": 215494,
+      "weight_std": 4.48099687879182,
+      "weight_sum": 451489.51609000005
+    },
+    "NJ11": {
+      "max_weight": 539.78411,
+      "n_positive": 186597,
+      "n_records": 215494,
+      "weight_std": 7.416914284099468,
+      "weight_sum": 431757.67402000003
+    },
+    "NJ12": {
+      "max_weight": 353.52857,
+      "n_positive": 194739,
+      "n_records": 215494,
+      "weight_std": 4.902713339797674,
+      "weight_sum": 437621.80977999995
+    },
+    "NM01": {
+      "max_weight": 152.78253,
+      "n_positive": 186663,
+      "n_records": 215494,
+      "weight_std": 3.1845730167878443,
+      "weight_sum": 419902.27696000005
+    },
+    "NM02": {
+      "max_weight": 209.86047,
+      "n_positive": 173831,
+      "n_records": 215494,
+      "weight_std": 3.327221706784194,
+      "weight_sum": 400864.9183500001
+    },
+    "NM03": {
+      "max_weight": 157.99499,
+      "n_positive": 179811,
+      "n_records": 215494,
+      "weight_std": 3.2400264041427116,
+      "weight_sum": 406053.5028
+    },
+    "NV01": {
+      "max_weight": 304.12318,
+      "n_positive": 176921,
+      "n_records": 215494,
+      "weight_std": 3.589622059920847,
+      "weight_sum": 458434.5197900001
+    },
+    "NV02": {
+      "max_weight": 269.98773,
+      "n_positive": 187401,
+      "n_records": 215494,
+      "weight_std": 3.8305992008347824,
+      "weight_sum": 454753.80711999995
+    },
+    "NV03": {
+      "max_weight": 263.48728,
+      "n_positive": 177910,
+      "n_records": 215494,
+      "weight_std": 3.8137513336038853,
+      "weight_sum": 455135.79974999995
+    },
+    "NV04": {
+      "max_weight": 306.92607,
+      "n_positive": 146505,
+      "n_records": 215494,
+      "weight_std": 3.7193198389037607,
+      "weight_sum": 443095.80415999994
+    },
+    "NY01": {
+      "max_weight": 628.7059,
+      "n_positive": 183921,
+      "n_records": 215494,
+      "weight_std": 8.241415674273076,
+      "weight_sum": 449167.4485599999
+    },
+    "NY02": {
+      "max_weight": 564.23243,
+      "n_positive": 181806,
+      "n_records": 215494,
+      "weight_std": 7.403196449342245,
+      "weight_sum": 447856.02881000005
+    },
+    "NY03": {
+      "max_weight": 690.83487,
+      "n_positive": 165891,
+      "n_records": 215494,
+      "weight_std": 10.485414001222503,
+      "weight_sum": 434071.97540999996
+    },
+    "NY04": {
+      "max_weight": 664.6236,
+      "n_positive": 175325,
+      "n_records": 215494,
+      "weight_std": 8.412959079419306,
+      "weight_sum": 446290.85814000014
+    },
+    "NY05": {
+      "max_weight": 605.42612,
+      "n_positive": 150026,
+      "n_records": 215494,
+      "weight_std": 4.969673910692422,
+      "weight_sum": 466987.53225
+    },
+    "NY06": {
+      "max_weight": 684.37202,
+      "n_positive": 170505,
+      "n_records": 215494,
+      "weight_std": 5.347788066061427,
+      "weight_sum": 466988.23976999987
+    },
+    "NY07": {
+      "max_weight": 674.29059,
+      "n_positive": 160671,
+      "n_records": 215494,
+      "weight_std": 8.046230241558675,
+      "weight_sum": 490110.38328
+    },
+    "NY08": {
+      "max_weight": 586.72388,
+      "n_positive": 175124,
+      "n_records": 215494,
+      "weight_std": 5.292786970115334,
+      "weight_sum": 477912.3001
+    },
+    "NY09": {
+      "max_weight": 674.28972,
+      "n_positive": 166361,
+      "n_records": 215494,
+      "weight_std": 7.229879671910627,
+      "weight_sum": 475785.27741999994
+    },
+    "NY10": {
+      "max_weight": 866.19066,
+      "n_positive": 134173,
+      "n_records": 215494,
+      "weight_std": 11.415568363517998,
+      "weight_sum": 487831.72238000005
+    },
+    "NY11": {
+      "max_weight": 674.28972,
+      "n_positive": 173728,
+      "n_records": 215494,
+      "weight_std": 7.208283074692514,
+      "weight_sum": 458946.9904499999
+    },
+    "NY12": {
+      "max_weight": 1928.63963,
+      "n_positive": 39112,
+      "n_records": 215494,
+      "weight_std": 20.730043490465604,
+      "weight_sum": 511880.07677999994
+    },
+    "NY13": {
+      "max_weight": 498.80387,
+      "n_positive": 175731,
+      "n_records": 215494,
+      "weight_std": 5.126428597153107,
+      "weight_sum": 491152.2845800001
+    },
+    "NY14": {
+      "max_weight": 586.72312,
+      "n_positive": 176424,
+      "n_records": 215494,
+      "weight_std": 5.071052780442164,
+      "weight_sum": 472874.24007999996
+    },
+    "NY15": {
+      "max_weight": 541.72218,
+      "n_positive": 183845,
+      "n_records": 215494,
+      "weight_std": 4.566793530231958,
+      "weight_sum": 459026.8575100001
+    },
+    "NY16": {
+      "max_weight": 662.56588,
+      "n_positive": 168768,
+      "n_records": 215494,
+      "weight_std": 7.986618203375401,
+      "weight_sum": 448442.39713
+    },
+    "NY17": {
+      "max_weight": 634.09343,
+      "n_positive": 180994,
+      "n_records": 215494,
+      "weight_std": 8.023057721505776,
+      "weight_sum": 429480.76476
+    },
+    "NY18": {
+      "max_weight": 313.99612,
+      "n_positive": 195622,
+      "n_records": 215494,
+      "weight_std": 4.3495253043684805,
+      "weight_sum": 446734.93807
+    },
+    "NY19": {
+      "max_weight": 159.35624,
+      "n_positive": 191282,
+      "n_records": 215494,
+      "weight_std": 3.3992781057811325,
+      "weight_sum": 454559.08443
+    },
+    "NY20": {
+      "max_weight": 205.75303,
+      "n_positive": 194995,
+      "n_records": 215494,
+      "weight_std": 3.397454846158168,
+      "weight_sum": 461039.7398599999
+    },
+    "NY21": {
+      "max_weight": 174.09858,
+      "n_positive": 179119,
+      "n_records": 215494,
+      "weight_std": 3.5607691731286653,
+      "weight_sum": 447219.7551300002
+    },
+    "NY22": {
+      "max_weight": 163.24517,
+      "n_positive": 180537,
+      "n_records": 215494,
+      "weight_std": 3.410609180332675,
+      "weight_sum": 451241.61874
+    },
+    "NY23": {
+      "max_weight": 177.92155,
+      "n_positive": 183955,
+      "n_records": 215494,
+      "weight_std": 3.473912314600814,
+      "weight_sum": 448981.03994
+    },
+    "NY24": {
+      "max_weight": 181.47154,
+      "n_positive": 185771,
+      "n_records": 215494,
+      "weight_std": 3.3417692607451017,
+      "weight_sum": 450170.76334999996
+    },
+    "NY25": {
+      "max_weight": 123.81292,
+      "n_positive": 188521,
+      "n_records": 215494,
+      "weight_std": 3.3177102614160963,
+      "weight_sum": 459470.70472000015
+    },
+    "NY26": {
+      "max_weight": 173.03166,
+      "n_positive": 182176,
+      "n_records": 215494,
+      "weight_std": 3.6728950049986833,
+      "weight_sum": 464111.1642300001
+    },
+    "OH01": {
+      "max_weight": 141.11451,
+      "n_positive": 193350,
+      "n_records": 215494,
+      "weight_std": 3.132482123735227,
+      "weight_sum": 447657.7761300001
+    },
+    "OH02": {
+      "max_weight": 183.27549,
+      "n_positive": 191605,
+      "n_records": 215494,
+      "weight_std": 3.240789887170567,
+      "weight_sum": 446195.64233000006
+    },
+    "OH03": {
+      "max_weight": 95.36696,
+      "n_positive": 191204,
+      "n_records": 215494,
+      "weight_std": 3.0399610357618445,
+      "weight_sum": 455435.43708999996
+    },
+    "OH04": {
+      "max_weight": 193.92036,
+      "n_positive": 190269,
+      "n_records": 215494,
+      "weight_std": 3.3287198653056,
+      "weight_sum": 448027.7291600001
+    },
+    "OH05": {
+      "max_weight": 198.89823,
+      "n_positive": 178058,
+      "n_records": 215494,
+      "weight_std": 3.6048746712667965,
+      "weight_sum": 453780.9508000001
+    },
+    "OH06": {
+      "max_weight": 293.9253,
+      "n_positive": 165588,
+      "n_records": 215494,
+      "weight_std": 3.871266905203769,
+      "weight_sum": 451987.09288
+    },
+    "OH07": {
+      "max_weight": 233.9297,
+      "n_positive": 187725,
+      "n_records": 215494,
+      "weight_std": 3.6514272149693348,
+      "weight_sum": 463299.41591
+    },
+    "OH08": {
+      "max_weight": 149.64163,
+      "n_positive": 187258,
+      "n_records": 215494,
+      "weight_std": 3.2823677810954783,
+      "weight_sum": 443522.4524200001
+    },
+    "OH09": {
+      "max_weight": 204.41536,
+      "n_positive": 181149,
+      "n_records": 215494,
+      "weight_std": 3.474166467028316,
+      "weight_sum": 459380.36504999996
+    },
+    "OH10": {
+      "max_weight": 162.26668,
+      "n_positive": 182320,
+      "n_records": 215494,
+      "weight_std": 3.34794583176079,
+      "weight_sum": 453951.1381799999
+    },
+    "OH11": {
+      "max_weight": 254.33848,
+      "n_positive": 191419,
+      "n_records": 215494,
+      "weight_std": 3.975730426937186,
+      "weight_sum": 473052.4258
+    },
+    "OH12": {
+      "max_weight": 268.46165,
+      "n_positive": 192981,
+      "n_records": 215494,
+      "weight_std": 3.2104541513754734,
+      "weight_sum": 444998.0070400002
+    },
+    "OH13": {
+      "max_weight": 213.39796,
+      "n_positive": 187829,
+      "n_records": 215494,
+      "weight_std": 3.4700944135743637,
+      "weight_sum": 461962.40873
+    },
+    "OH14": {
+      "max_weight": 208.56418,
+      "n_positive": 191503,
+      "n_records": 215494,
+      "weight_std": 3.5255779772122247,
+      "weight_sum": 467368.07618
+    },
+    "OH15": {
+      "max_weight": 129.93418,
+      "n_positive": 189820,
+      "n_records": 215494,
+      "weight_std": 3.0397373928563693,
+      "weight_sum": 449618.26758
+    },
+    "OK01": {
+      "max_weight": 169.22851,
+      "n_positive": 190814,
+      "n_records": 215494,
+      "weight_std": 3.142109352062986,
+      "weight_sum": 429512.7276299999
+    },
+    "OK02": {
+      "max_weight": 231.90053,
+      "n_positive": 164546,
+      "n_records": 215494,
+      "weight_std": 3.5778238672790277,
+      "weight_sum": 418062.7871000001
+    },
+    "OK03": {
+      "max_weight": 301.93633,
+      "n_positive": 180326,
+      "n_records": 215494,
+      "weight_std": 3.479426680669318,
+      "weight_sum": 422516.1268900001
+    },
+    "OK04": {
+      "max_weight": 216.64042,
+      "n_positive": 176982,
+      "n_records": 215494,
+      "weight_std": 3.3337201941961285,
+      "weight_sum": 426571.53181000013
+    },
+    "OK05": {
+      "max_weight": 196.93804,
+      "n_positive": 190688,
+      "n_records": 215494,
+      "weight_std": 3.2301678763772985,
+      "weight_sum": 434550.04298
+    },
+    "OR01": {
+      "max_weight": 533.28848,
+      "n_positive": 186390,
+      "n_records": 215494,
+      "weight_std": 4.144930585226214,
+      "weight_sum": 412657.7021
+    },
+    "OR02": {
+      "max_weight": 497.23919,
+      "n_positive": 183402,
+      "n_records": 215494,
+      "weight_std": 3.5815968959031714,
+      "weight_sum": 402093.9300200001
+    },
+    "OR03": {
+      "max_weight": 533.28848,
+      "n_positive": 177824,
+      "n_records": 215494,
+      "weight_std": 4.652769488384136,
+      "weight_sum": 430142.5794100001
+    },
+    "OR04": {
+      "max_weight": 423.5697,
+      "n_positive": 180692,
+      "n_records": 215494,
+      "weight_std": 3.704688684277744,
+      "weight_sum": 413774.1544300001
+    },
+    "OR05": {
+      "max_weight": 533.28848,
+      "n_positive": 185629,
+      "n_records": 215494,
+      "weight_std": 3.6635531281306717,
+      "weight_sum": 406005.00271
+    },
+    "OR06": {
+      "max_weight": 533.29074,
+      "n_positive": 188069,
+      "n_records": 215494,
+      "weight_std": 3.866714479171102,
+      "weight_sum": 405309.02456
+    },
+    "PA01": {
+      "max_weight": 307.01513,
+      "n_positive": 192994,
+      "n_records": 215494,
+      "weight_std": 3.6307728616533916,
+      "weight_sum": 433523.19982
+    },
+    "PA02": {
+      "max_weight": 376.63022,
+      "n_positive": 152568,
+      "n_records": 215494,
+      "weight_std": 4.380693534723879,
+      "weight_sum": 443907.2474499999
+    },
+    "PA03": {
+      "max_weight": 361.42076,
+      "n_positive": 191688,
+      "n_records": 215494,
+      "weight_std": 4.988396366538892,
+      "weight_sum": 480229.54428
+    },
+    "PA04": {
+      "max_weight": 407.49757,
+      "n_positive": 194853,
+      "n_records": 215494,
+      "weight_std": 3.5762690142819,
+      "weight_sum": 431459.3436899999
+    },
+    "PA05": {
+      "max_weight": 162.30755,
+      "n_positive": 196682,
+      "n_records": 215494,
+      "weight_std": 3.1242574529275475,
+      "weight_sum": 440121.13871999993
+    },
+    "PA06": {
+      "max_weight": 325.14179,
+      "n_positive": 195780,
+      "n_records": 215494,
+      "weight_std": 3.2356793302575317,
+      "weight_sum": 427894.95742000005
+    },
+    "PA07": {
+      "max_weight": 194.03346,
+      "n_positive": 189453,
+      "n_records": 215494,
+      "weight_std": 3.0395441135270524,
+      "weight_sum": 447982.5009300001
+    },
+    "PA08": {
+      "max_weight": 155.00929,
+      "n_positive": 179065,
+      "n_records": 215494,
+      "weight_std": 3.2334054967199823,
+      "weight_sum": 450192.3734200001
+    },
+    "PA09": {
+      "max_weight": 181.54443,
+      "n_positive": 175410,
+      "n_records": 215494,
+      "weight_std": 3.4570020397773713,
+      "weight_sum": 439092.36314999993
+    },
+    "PA10": {
+      "max_weight": 194.3577,
+      "n_positive": 189732,
+      "n_records": 215494,
+      "weight_std": 3.1042998085703997,
+      "weight_sum": 444117.05157
+    },
+    "PA11": {
+      "max_weight": 105.72101,
+      "n_positive": 187758,
+      "n_records": 215494,
+      "weight_std": 3.1207846595849777,
+      "weight_sum": 430183.55698999995
+    },
+    "PA12": {
+      "max_weight": 193.82418,
+      "n_positive": 188138,
+      "n_records": 215494,
+      "weight_std": 3.624948311109191,
+      "weight_sum": 470484.86277000007
+    },
+    "PA13": {
+      "max_weight": 196.74204,
+      "n_positive": 172269,
+      "n_records": 215494,
+      "weight_std": 3.637568431856902,
+      "weight_sum": 441078.21644999995
+    },
+    "PA14": {
+      "max_weight": 332.3392,
+      "n_positive": 174159,
+      "n_records": 215494,
+      "weight_std": 4.026558557705156,
+      "weight_sum": 446779.48147999996
+    },
+    "PA15": {
+      "max_weight": 405.48603,
+      "n_positive": 161601,
+      "n_records": 215494,
+      "weight_std": 4.046525305346556,
+      "weight_sum": 441034.91358000005
+    },
+    "PA16": {
+      "max_weight": 153.5005,
+      "n_positive": 178641,
+      "n_records": 215494,
+      "weight_std": 3.5599820521285808,
+      "weight_sum": 444986.34157000005
+    },
+    "PA17": {
+      "max_weight": 244.77411,
+      "n_positive": 189016,
+      "n_records": 215494,
+      "weight_std": 3.751804286810315,
+      "weight_sum": 451361.1902400001
+    },
+    "RI01": {
+      "max_weight": 100.67004,
+      "n_positive": 192509,
+      "n_records": 215494,
+      "weight_std": 2.09068837781673,
+      "weight_sum": 335810.84800999996
+    },
+    "RI02": {
+      "max_weight": 69.7901,
+      "n_positive": 190539,
+      "n_records": 215494,
+      "weight_std": 2.191079614483727,
+      "weight_sum": 337900.58836999995
+    },
+    "SC01": {
+      "max_weight": 292.64187,
+      "n_positive": 193248,
+      "n_records": 215494,
+      "weight_std": 3.294595676088476,
+      "weight_sum": 417213.62078999996
+    },
+    "SC02": {
+      "max_weight": 151.9761,
+      "n_positive": 182450,
+      "n_records": 215494,
+      "weight_std": 2.9330920492331662,
+      "weight_sum": 408037.39691
+    },
+    "SC03": {
+      "max_weight": 145.31735,
+      "n_positive": 173237,
+      "n_records": 215494,
+      "weight_std": 2.9845041114028787,
+      "weight_sum": 399874.0675900002
+    },
+    "SC04": {
+      "max_weight": 170.38142,
+      "n_positive": 187070,
+      "n_records": 215494,
+      "weight_std": 2.765656193660491,
+      "weight_sum": 406059.8646700001
+    },
+    "SC05": {
+      "max_weight": 172.09883,
+      "n_positive": 180567,
+      "n_records": 215494,
+      "weight_std": 2.740989365405908,
+      "weight_sum": 398688.7512
+    },
+    "SC06": {
+      "max_weight": 216.66106,
+      "n_positive": 185929,
+      "n_records": 215494,
+      "weight_std": 3.2505706093887765,
+      "weight_sum": 425747.09517
+    },
+    "SC07": {
+      "max_weight": 192.48868,
+      "n_positive": 176828,
+      "n_records": 215494,
+      "weight_std": 3.397824512843411,
+      "weight_sum": 426702.6424700001
+    },
+    "SD01": {
+      "max_weight": 680.36883,
+      "n_positive": 138558,
+      "n_records": 215494,
+      "weight_std": 5.856907026133667,
+      "weight_sum": 492855.63844
+    },
+    "TN01": {
+      "max_weight": 296.01244,
+      "n_positive": 130975,
+      "n_records": 215494,
+      "weight_std": 3.917814924880279,
+      "weight_sum": 429345.48889000004
+    },
+    "TN02": {
+      "max_weight": 394.8856,
+      "n_positive": 138801,
+      "n_records": 215494,
+      "weight_std": 4.4561956632112745,
+      "weight_sum": 430851.95690000005
+    },
+    "TN03": {
+      "max_weight": 262.31238,
+      "n_positive": 144485,
+      "n_records": 215494,
+      "weight_std": 3.8291557673870757,
+      "weight_sum": 426900.47305999993
+    },
+    "TN04": {
+      "max_weight": 323.81729,
+      "n_positive": 134327,
+      "n_records": 215494,
+      "weight_std": 3.95377274470398,
+      "weight_sum": 417251.4720199999
+    },
+    "TN05": {
+      "max_weight": 331.38005,
+      "n_positive": 150186,
+      "n_records": 215494,
+      "weight_std": 4.172527766283101,
+      "weight_sum": 437960.82793
+    },
+    "TN06": {
+      "max_weight": 343.95224,
+      "n_positive": 143016,
+      "n_records": 215494,
+      "weight_std": 4.098021034022817,
+      "weight_sum": 430725.69336
+    },
+    "TN07": {
+      "max_weight": 375.9163,
+      "n_positive": 149191,
+      "n_records": 215494,
+      "weight_std": 4.269683621930242,
+      "weight_sum": 428946.78228
+    },
+    "TN08": {
+      "max_weight": 393.22491,
+      "n_positive": 136590,
+      "n_records": 215494,
+      "weight_std": 4.252904211418537,
+      "weight_sum": 414448.4007900001
+    },
+    "TN09": {
+      "max_weight": 311.2817,
+      "n_positive": 127221,
+      "n_records": 215494,
+      "weight_std": 4.306011259376176,
+      "weight_sum": 437675.82556
+    },
+    "TX01": {
+      "max_weight": 303.3732,
+      "n_positive": 128947,
+      "n_records": 215494,
+      "weight_std": 3.8356910658340175,
+      "weight_sum": 407661.7213700001
+    },
+    "TX02": {
+      "max_weight": 638.52498,
+      "n_positive": 121564,
+      "n_records": 215494,
+      "weight_std": 6.158023234843789,
+      "weight_sum": 408804.24048999994
+    },
+    "TX03": {
+      "max_weight": 777.92283,
+      "n_positive": 116327,
+      "n_records": 215494,
+      "weight_std": 8.362150012032327,
+      "weight_sum": 388101.3915899999
+    },
+    "TX04": {
+      "max_weight": 777.92283,
+      "n_positive": 119375,
+      "n_records": 215494,
+      "weight_std": 6.833233474979568,
+      "weight_sum": 387243.4153
+    },
+    "TX05": {
+      "max_weight": 509.0067,
+      "n_positive": 134862,
+      "n_records": 215494,
+      "weight_std": 5.126934803052507,
+      "weight_sum": 417163.77015000005
+    },
+    "TX06": {
+      "max_weight": 563.75939,
+      "n_positive": 123922,
+      "n_records": 215494,
+      "weight_std": 4.944279086074566,
+      "weight_sum": 414750.15385999996
+    },
+    "TX07": {
+      "max_weight": 607.64302,
+      "n_positive": 125007,
+      "n_records": 215494,
+      "weight_std": 5.893380879039513,
+      "weight_sum": 421797.8482099999
+    },
+    "TX08": {
+      "max_weight": 638.52498,
+      "n_positive": 124169,
+      "n_records": 215494,
+      "weight_std": 6.686799808641821,
+      "weight_sum": 406328.51869999996
+    },
+    "TX09": {
+      "max_weight": 405.76161,
+      "n_positive": 124891,
+      "n_records": 215494,
+      "weight_std": 4.422564900748153,
+      "weight_sum": 420749.96261
+    },
+    "TX10": {
+      "max_weight": 544.77176,
+      "n_positive": 128512,
+      "n_records": 215494,
+      "weight_std": 5.655899875855329,
+      "weight_sum": 414945.4460799999
+    },
+    "TX11": {
+      "max_weight": 964.9045,
+      "n_positive": 114654,
+      "n_records": 215494,
+      "weight_std": 6.4696578771494435,
+      "weight_sum": 405179.59326
+    },
+    "TX12": {
+      "max_weight": 491.69426,
+      "n_positive": 141049,
+      "n_records": 215494,
+      "weight_std": 4.98268144777103,
+      "weight_sum": 408835.0898599999
+    },
+    "TX13": {
+      "max_weight": 438.93199,
+      "n_positive": 123015,
+      "n_records": 215494,
+      "weight_std": 4.608915868471329,
+      "weight_sum": 409528.12999
+    },
+    "TX14": {
+      "max_weight": 524.61704,
+      "n_positive": 118557,
+      "n_records": 215494,
+      "weight_std": 5.345182576134956,
+      "weight_sum": 410528.28786999994
+    },
+    "TX15": {
+      "max_weight": 306.15104,
+      "n_positive": 114825,
+      "n_records": 215494,
+      "weight_std": 3.9719002015499707,
+      "weight_sum": 396214.58012
+    },
+    "TX16": {
+      "max_weight": 228.59527,
+      "n_positive": 125960,
+      "n_records": 215494,
+      "weight_std": 3.5689718107566115,
+      "weight_sum": 414701.8724200001
+    },
+    "TX17": {
+      "max_weight": 406.9636,
+      "n_positive": 127687,
+      "n_records": 215494,
+      "weight_std": 4.402535282088953,
+      "weight_sum": 415155.74517999997
+    },
+    "TX18": {
+      "max_weight": 414.93034,
+      "n_positive": 126185,
+      "n_records": 215494,
+      "weight_std": 4.746428519757905,
+      "weight_sum": 430420.97432999994
+    },
+    "TX19": {
+      "max_weight": 367.50194,
+      "n_positive": 119586,
+      "n_records": 215494,
+      "weight_std": 4.364181163483515,
+      "weight_sum": 410989.78208999994
+    },
+    "TX20": {
+      "max_weight": 328.24036,
+      "n_positive": 121066,
+      "n_records": 215494,
+      "weight_std": 4.009568201171377,
+      "weight_sum": 424668.98893
+    },
+    "TX21": {
+      "max_weight": 555.99792,
+      "n_positive": 136578,
+      "n_records": 215494,
+      "weight_std": 6.663447364926928,
+      "weight_sum": 439945.22163000004
+    },
+    "TX22": {
+      "max_weight": 777.92283,
+      "n_positive": 115078,
+      "n_records": 215494,
+      "weight_std": 7.796864042873362,
+      "weight_sum": 387623.9199200001
+    },
+    "TX23": {
+      "max_weight": 425.77354,
+      "n_positive": 117801,
+      "n_records": 215494,
+      "weight_std": 4.51166540448427,
+      "weight_sum": 395042.4379300001
+    },
+    "TX24": {
+      "max_weight": 639.67307,
+      "n_positive": 127644,
+      "n_records": 215494,
+      "weight_std": 7.161856196895981,
+      "weight_sum": 424610.42778
+    },
+    "TX25": {
+      "max_weight": 577.93962,
+      "n_positive": 127253,
+      "n_records": 215494,
+      "weight_std": 5.281025219938318,
+      "weight_sum": 407172.93471999996
+    },
+    "TX26": {
+      "max_weight": 777.92283,
+      "n_positive": 116778,
+      "n_records": 215494,
+      "weight_std": 8.009711817860138,
+      "weight_sum": 394163.88700000005
+    },
+    "TX27": {
+      "max_weight": 301.29183,
+      "n_positive": 119471,
+      "n_records": 215494,
+      "weight_std": 4.053247862850094,
+      "weight_sum": 415096.3606799999
+    },
+    "TX28": {
+      "max_weight": 268.8257,
+      "n_positive": 119596,
+      "n_records": 215494,
+      "weight_std": 3.795237120752919,
+      "weight_sum": 405299.4087900002
+    },
+    "TX29": {
+      "max_weight": 292.79352,
+      "n_positive": 115598,
+      "n_records": 215494,
+      "weight_std": 4.089952675899258,
+      "weight_sum": 411185.37323
+    },
+    "TX30": {
+      "max_weight": 323.7585,
+      "n_positive": 152996,
+      "n_records": 215494,
+      "weight_std": 3.8672337328061825,
+      "weight_sum": 429023.3846499998
+    },
+    "TX31": {
+      "max_weight": 750.41386,
+      "n_positive": 121928,
+      "n_records": 215494,
+      "weight_std": 6.699762469523908,
+      "weight_sum": 396146.9672999999
+    },
+    "TX32": {
+      "max_weight": 634.44365,
+      "n_positive": 134882,
+      "n_records": 215494,
+      "weight_std": 6.1350223893128515,
+      "weight_sum": 426756.36652000004
+    },
+    "TX33": {
+      "max_weight": 284.15213,
+      "n_positive": 128454,
+      "n_records": 215494,
+      "weight_std": 3.812656945753843,
+      "weight_sum": 421052.55156000005
+    },
+    "TX34": {
+      "max_weight": 305.92318,
+      "n_positive": 115590,
+      "n_records": 215494,
+      "weight_std": 3.7821034548208217,
+      "weight_sum": 397085.12506000005
+    },
+    "TX35": {
+      "max_weight": 272.0208,
+      "n_positive": 130770,
+      "n_records": 215494,
+      "weight_std": 4.063081521298909,
+      "weight_sum": 434968.54474
+    },
+    "TX36": {
+      "max_weight": 539.41845,
+      "n_positive": 117422,
+      "n_records": 215494,
+      "weight_std": 5.416056412352403,
+      "weight_sum": 402170.00375
+    },
+    "TX37": {
+      "max_weight": 528.69334,
+      "n_positive": 132071,
+      "n_records": 215494,
+      "weight_std": 6.070295253943642,
+      "weight_sum": 422601.28562999994
+    },
+    "TX38": {
+      "max_weight": 638.52498,
+      "n_positive": 124580,
+      "n_records": 215494,
+      "weight_std": 6.920681747765945,
+      "weight_sum": 418363.15049
+    },
+    "UT01": {
+      "max_weight": 410.8467,
+      "n_positive": 190250,
+      "n_records": 215494,
+      "weight_std": 3.756625373441261,
+      "weight_sum": 410811.20668
+    },
+    "UT02": {
+      "max_weight": 410.8467,
+      "n_positive": 189807,
+      "n_records": 215494,
+      "weight_std": 3.5753120225929087,
+      "weight_sum": 440186.6022500001
+    },
+    "UT03": {
+      "max_weight": 489.89371,
+      "n_positive": 186301,
+      "n_records": 215494,
+      "weight_std": 4.696006671315695,
+      "weight_sum": 420905.55762
+    },
+    "UT04": {
+      "max_weight": 433.4391,
+      "n_positive": 182217,
+      "n_records": 215494,
+      "weight_std": 3.964314668654541,
+      "weight_sum": 421121.79616
+    },
+    "VA01": {
+      "max_weight": 203.68922,
+      "n_positive": 193231,
+      "n_records": 215494,
+      "weight_std": 3.2101459466158886,
+      "weight_sum": 426964.9678100001
+    },
+    "VA02": {
+      "max_weight": 189.68931,
+      "n_positive": 193891,
+      "n_records": 215494,
+      "weight_std": 3.0313257578091175,
+      "weight_sum": 448984.7687099999
+    },
+    "VA03": {
+      "max_weight": 214.55933,
+      "n_positive": 184273,
+      "n_records": 215494,
+      "weight_std": 3.1991474173054932,
+      "weight_sum": 448400.66305
+    },
+    "VA04": {
+      "max_weight": 304.18355,
+      "n_positive": 193143,
+      "n_records": 215494,
+      "weight_std": 3.094561710835115,
+      "weight_sum": 455411.4211400001
+    },
+    "VA05": {
+      "max_weight": 206.27866,
+      "n_positive": 192874,
+      "n_records": 215494,
+      "weight_std": 3.112609101297717,
+      "weight_sum": 443753.44961000007
+    },
+    "VA06": {
+      "max_weight": 115.97266,
+      "n_positive": 195262,
+      "n_records": 215494,
+      "weight_std": 2.888772210837489,
+      "weight_sum": 438774.57631
+    },
+    "VA07": {
+      "max_weight": 259.35321,
+      "n_positive": 195396,
+      "n_records": 215494,
+      "weight_std": 3.345991791154803,
+      "weight_sum": 430115.42501000006
+    },
+    "VA08": {
+      "max_weight": 560.29564,
+      "n_positive": 186282,
+      "n_records": 215494,
+      "weight_std": 6.387134315835424,
+      "weight_sum": 472927.9179800001
+    },
+    "VA09": {
+      "max_weight": 157.16971,
+      "n_positive": 174786,
+      "n_records": 215494,
+      "weight_std": 4.021062570982315,
+      "weight_sum": 441058.09213999996
+    },
+    "VA10": {
+      "max_weight": 426.44595,
+      "n_positive": 194806,
+      "n_records": 215494,
+      "weight_std": 4.842924080443277,
+      "weight_sum": 405335.21137000003
+    },
+    "VA11": {
+      "max_weight": 442.16654,
+      "n_positive": 193924,
+      "n_records": 215494,
+      "weight_std": 5.323760212982727,
+      "weight_sum": 434473.05658000003
+    },
+    "VT01": {
+      "max_weight": 307.77167,
+      "n_positive": 188262,
+      "n_records": 215494,
+      "weight_std": 2.940295570196602,
+      "weight_sum": 392418.57777
+    },
+    "WA01": {
+      "max_weight": 783.03875,
+      "n_positive": 116772,
+      "n_records": 215494,
+      "weight_std": 8.859052933822717,
+      "weight_sum": 427630.18013999995
+    },
+    "WA02": {
+      "max_weight": 682.04454,
+      "n_positive": 120307,
+      "n_records": 215494,
+      "weight_std": 7.5203401098884575,
+      "weight_sum": 443968.61646999995
+    },
+    "WA03": {
+      "max_weight": 282.56885,
+      "n_positive": 180362,
+      "n_records": 215494,
+      "weight_std": 3.578707235238657,
+      "weight_sum": 429751.21947
+    },
+    "WA04": {
+      "max_weight": 339.6027,
+      "n_positive": 129855,
+      "n_records": 215494,
+      "weight_std": 3.9199766769253737,
+      "weight_sum": 408449.9056099999
+    },
+    "WA05": {
+      "max_weight": 372.81139,
+      "n_positive": 140152,
+      "n_records": 215494,
+      "weight_std": 4.166333231634214,
+      "weight_sum": 435704.72874000005
+    },
+    "WA06": {
+      "max_weight": 446.98345,
+      "n_positive": 128263,
+      "n_records": 215494,
+      "weight_std": 5.913853832244645,
+      "weight_sum": 448388.01344999985
+    },
+    "WA07": {
+      "max_weight": 780.63698,
+      "n_positive": 97163,
+      "n_records": 215494,
+      "weight_std": 11.319273757338356,
+      "weight_sum": 487085.0398300001
+    },
+    "WA08": {
+      "max_weight": 780.82361,
+      "n_positive": 113696,
+      "n_records": 215494,
+      "weight_std": 9.09470250903231,
+      "weight_sum": 406335.91816000006
+    },
+    "WA09": {
+      "max_weight": 740.2214,
+      "n_positive": 118223,
+      "n_records": 215494,
+      "weight_std": 8.580511182805793,
+      "weight_sum": 447875.36302
+    },
+    "WA10": {
+      "max_weight": 512.20834,
+      "n_positive": 119881,
+      "n_records": 215494,
+      "weight_std": 5.871199558511313,
+      "weight_sum": 431580.33836000005
+    },
+    "WI01": {
+      "max_weight": 113.04545,
+      "n_positive": 190398,
+      "n_records": 215494,
+      "weight_std": 2.961866223696772,
+      "weight_sum": 426290.77932000015
+    },
+    "WI02": {
+      "max_weight": 189.61375,
+      "n_positive": 192016,
+      "n_records": 215494,
+      "weight_std": 3.108257442518565,
+      "weight_sum": 435869.53962999996
+    },
+    "WI03": {
+      "max_weight": 161.43394,
+      "n_positive": 176510,
+      "n_records": 215494,
+      "weight_std": 3.4592444917127843,
+      "weight_sum": 422687.42788000003
+    },
+    "WI04": {
+      "max_weight": 155.50857,
+      "n_positive": 189335,
+      "n_records": 215494,
+      "weight_std": 3.1784443980750487,
+      "weight_sum": 431179.7504000001
+    },
+    "WI05": {
+      "max_weight": 178.91937,
+      "n_positive": 191693,
+      "n_records": 215494,
+      "weight_std": 3.2574211857132114,
+      "weight_sum": 420674.17713
+    },
+    "WI06": {
+      "max_weight": 139.97642,
+      "n_positive": 188802,
+      "n_records": 215494,
+      "weight_std": 3.311409745135045,
+      "weight_sum": 427528.71391000005
+    },
+    "WI07": {
+      "max_weight": 194.66043,
+      "n_positive": 180156,
+      "n_records": 215494,
+      "weight_std": 3.5136971455037473,
+      "weight_sum": 421018.7901800001
+    },
+    "WI08": {
+      "max_weight": 233.24222,
+      "n_positive": 184352,
+      "n_records": 215494,
+      "weight_std": 3.38783408366251,
+      "weight_sum": 418294.88048000005
+    },
+    "WV01": {
+      "max_weight": 241.13579,
+      "n_positive": 156676,
+      "n_records": 215494,
+      "weight_std": 4.76696859547865,
+      "weight_sum": 496942.0443400001
+    },
+    "WV02": {
+      "max_weight": 359.57645,
+      "n_positive": 161890,
+      "n_records": 215494,
+      "weight_std": 4.588615116217996,
+      "weight_sum": 509415.55268
+    },
+    "WY01": {
+      "max_weight": 502.12033,
+      "n_positive": 163831,
+      "n_records": 215494,
+      "weight_std": 3.2902617743994353,
+      "weight_sum": 321901.5401900001
+    }
+  },
+  "metadata": {
+    "generated": "2026-04-21",
+    "n_areas": 436,
+    "scope": "cds_119",
+    "taxcalc_version": "6.5.2",
+    "taxyear": 2022
+  }
+}

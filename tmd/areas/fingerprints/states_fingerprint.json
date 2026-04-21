@@ -1,57 +1,368 @@
 {
-  "n_areas": 51,
-  "per_area_int_sums": {
-    "AK": 415949,
-    "AL": 2759074,
-    "AR": 1629150,
-    "AZ": 4133101,
-    "CA": 22170281,
-    "CO": 3431419,
-    "CT": 2125371,
-    "DC": 434395,
-    "DE": 585531,
-    "FL": 13041846,
-    "GA": 6019480,
-    "HI": 832299,
-    "IA": 1765323,
-    "ID": 1027854,
-    "IL": 7243625,
-    "IN": 3845172,
-    "KS": 1616857,
-    "KY": 2474425,
-    "LA": 2505736,
-    "MA": 4202718,
-    "MD": 3601911,
-    "ME": 831809,
-    "MI": 5792787,
-    "MN": 3262630,
-    "MO": 3447294,
-    "MS": 1576252,
-    "MT": 645826,
-    "NC": 5922530,
-    "ND": 432642,
-    "NE": 1081251,
-    "NH": 825287,
-    "NJ": 5322410,
-    "NM": 1220302,
-    "NV": 1845078,
-    "NY": 11693444,
-    "OH": 6778580,
-    "OK": 2155854,
-    "OR": 2454389,
-    "PA": 7520348,
-    "RI": 664801,
-    "SC": 2960073,
-    "SD": 506100,
-    "TN": 3902635,
-    "TX": 16289516,
-    "UT": 1755116,
-    "VA": 4907377,
-    "VT": 392971,
-    "WA": 4422084,
-    "WI": 3411408,
-    "WV": 989510,
-    "WY": 319371
+  "areas": {
+    "AK": {
+      "max_weight": 371.86559,
+      "n_positive": 121743,
+      "n_records": 215494,
+      "weight_std": 5.103199504640999,
+      "weight_sum": 416112.91701000003
+    },
+    "AL": {
+      "max_weight": 1165.05067,
+      "n_positive": 192483,
+      "n_records": 215494,
+      "weight_std": 22.451131928935244,
+      "weight_sum": 2763279.12409
+    },
+    "AR": {
+      "max_weight": 653.9756,
+      "n_positive": 186465,
+      "n_records": 215494,
+      "weight_std": 12.840429108264544,
+      "weight_sum": 1636641.7860100004
+    },
+    "AZ": {
+      "max_weight": 784.32567,
+      "n_positive": 208315,
+      "n_records": 215494,
+      "weight_std": 29.29094079797242,
+      "weight_sum": 4139772.871170001
+    },
+    "CA": {
+      "max_weight": 19938.94922,
+      "n_positive": 201565,
+      "n_records": 215494,
+      "weight_std": 254.54104417494926,
+      "weight_sum": 22173257.6246
+    },
+    "CO": {
+      "max_weight": 1611.16828,
+      "n_positive": 210306,
+      "n_records": 215494,
+      "weight_std": 24.99419869364211,
+      "weight_sum": 3436096.510920001
+    },
+    "CT": {
+      "max_weight": 1138.84541,
+      "n_positive": 209703,
+      "n_records": 215494,
+      "weight_std": 16.146374887495583,
+      "weight_sum": 2131173.5868699998
+    },
+    "DC": {
+      "max_weight": 396.27072,
+      "n_positive": 161039,
+      "n_records": 215494,
+      "weight_std": 6.716239163886607,
+      "weight_sum": 439268.61817000003
+    },
+    "DE": {
+      "max_weight": 294.59247,
+      "n_positive": 190251,
+      "n_records": 215494,
+      "weight_std": 4.615125692374436,
+      "weight_sum": 594113.37427
+    },
+    "FL": {
+      "max_weight": 6846.95538,
+      "n_positive": 181714,
+      "n_records": 215494,
+      "weight_std": 121.1838425824172,
+      "weight_sum": 13041659.6618
+    },
+    "GA": {
+      "max_weight": 1878.23054,
+      "n_positive": 212923,
+      "n_records": 215494,
+      "weight_std": 40.00133578832567,
+      "weight_sum": 6030621.436050001
+    },
+    "HI": {
+      "max_weight": 629.33311,
+      "n_positive": 175545,
+      "n_records": 215494,
+      "weight_std": 8.919788466995795,
+      "weight_sum": 835536.8841699999
+    },
+    "IA": {
+      "max_weight": 625.26992,
+      "n_positive": 195496,
+      "n_records": 215494,
+      "weight_std": 13.547755579485703,
+      "weight_sum": 1773345.2172
+    },
+    "ID": {
+      "max_weight": 364.7949,
+      "n_positive": 193467,
+      "n_records": 215494,
+      "weight_std": 7.963958628861524,
+      "weight_sum": 1032725.1150400001
+    },
+    "IL": {
+      "max_weight": 1702.30279,
+      "n_positive": 213266,
+      "n_records": 215494,
+      "weight_std": 46.37253100232277,
+      "weight_sum": 7252832.968720001
+    },
+    "IN": {
+      "max_weight": 1078.0383,
+      "n_positive": 199048,
+      "n_records": 215494,
+      "weight_std": 27.622374444801345,
+      "weight_sum": 3852251.85535
+    },
+    "KS": {
+      "max_weight": 463.60848,
+      "n_positive": 200759,
+      "n_records": 215494,
+      "weight_std": 11.089194203975786,
+      "weight_sum": 1625388.42713
+    },
+    "KY": {
+      "max_weight": 933.43351,
+      "n_positive": 197406,
+      "n_records": 215494,
+      "weight_std": 18.335621279980856,
+      "weight_sum": 2480456.75682
+    },
+    "LA": {
+      "max_weight": 1041.5231,
+      "n_positive": 194567,
+      "n_records": 215494,
+      "weight_std": 20.05930155114335,
+      "weight_sum": 2511147.98296
+    },
+    "MA": {
+      "max_weight": 1128.22422,
+      "n_positive": 212626,
+      "n_records": 215494,
+      "weight_std": 29.014258444545632,
+      "weight_sum": 4210246.602689999
+    },
+    "MD": {
+      "max_weight": 3003.53469,
+      "n_positive": 187851,
+      "n_records": 215494,
+      "weight_std": 45.38418459807239,
+      "weight_sum": 3605652.0631999997
+    },
+    "ME": {
+      "max_weight": 170.34569,
+      "n_positive": 193741,
+      "n_records": 215494,
+      "weight_std": 5.983461643725111,
+      "weight_sum": 834738.37856
+    },
+    "MI": {
+      "max_weight": 2450.6748,
+      "n_positive": 208015,
+      "n_records": 215494,
+      "weight_std": 40.79201176489603,
+      "weight_sum": 5801885.938309999
+    },
+    "MN": {
+      "max_weight": 1435.19368,
+      "n_positive": 209351,
+      "n_records": 215494,
+      "weight_std": 22.69742771553185,
+      "weight_sum": 3265639.6588199995
+    },
+    "MO": {
+      "max_weight": 1002.06488,
+      "n_positive": 205990,
+      "n_records": 215494,
+      "weight_std": 23.910747770364868,
+      "weight_sum": 3450607.0154999997
+    },
+    "MS": {
+      "max_weight": 927.38471,
+      "n_positive": 184344,
+      "n_records": 215494,
+      "weight_std": 12.796861589104413,
+      "weight_sum": 1583199.6610599998
+    },
+    "MT": {
+      "max_weight": 349.04538,
+      "n_positive": 191428,
+      "n_records": 215494,
+      "weight_std": 5.197284893709584,
+      "weight_sum": 651830.37251
+    },
+    "NC": {
+      "max_weight": 1368.28295,
+      "n_positive": 209719,
+      "n_records": 215494,
+      "weight_std": 38.74105253220701,
+      "weight_sum": 5933263.02713
+    },
+    "ND": {
+      "max_weight": 411.59256,
+      "n_positive": 153307,
+      "n_records": 215494,
+      "weight_std": 4.953139887680432,
+      "weight_sum": 437557.17312
+    },
+    "NE": {
+      "max_weight": 528.95146,
+      "n_positive": 188213,
+      "n_records": 215494,
+      "weight_std": 8.390043264164898,
+      "weight_sum": 1085948.91086
+    },
+    "NH": {
+      "max_weight": 709.47511,
+      "n_positive": 167434,
+      "n_records": 215494,
+      "weight_std": 9.200604660721655,
+      "weight_sum": 829429.9017200001
+    },
+    "NJ": {
+      "max_weight": 3322.56788,
+      "n_positive": 211558,
+      "n_records": 215494,
+      "weight_std": 53.792859739848616,
+      "weight_sum": 5331770.691709999
+    },
+    "NM": {
+      "max_weight": 489.27416,
+      "n_positive": 188733,
+      "n_records": 215494,
+      "weight_std": 9.640161572866788,
+      "weight_sum": 1224794.6563500003
+    },
+    "NV": {
+      "max_weight": 708.40715,
+      "n_positive": 189983,
+      "n_records": 215494,
+      "weight_std": 14.808815895184809,
+      "weight_sum": 1851770.07267
+    },
+    "NY": {
+      "max_weight": 8348.9909,
+      "n_positive": 200607,
+      "n_records": 215494,
+      "weight_std": 113.6899986091973,
+      "weight_sum": 11691201.663749998
+    },
+    "OH": {
+      "max_weight": 3519.58137,
+      "n_positive": 207050,
+      "n_records": 215494,
+      "weight_std": 48.65048274087684,
+      "weight_sum": 6788826.5318599995
+    },
+    "OK": {
+      "max_weight": 743.60414,
+      "n_positive": 198375,
+      "n_records": 215494,
+      "weight_std": 16.465677900598408,
+      "weight_sum": 2161941.8749499996
+    },
+    "OR": {
+      "max_weight": 1839.5601,
+      "n_positive": 198603,
+      "n_records": 215494,
+      "weight_std": 22.58900191610611,
+      "weight_sum": 2459843.4161400003
+    },
+    "PA": {
+      "max_weight": 1867.80798,
+      "n_positive": 211809,
+      "n_records": 215494,
+      "weight_std": 49.91174415203007,
+      "weight_sum": 7530177.019679998
+    },
+    "RI": {
+      "max_weight": 145.81729,
+      "n_positive": 197372,
+      "n_records": 215494,
+      "weight_std": 4.366518030290862,
+      "weight_sum": 670594.7323000001
+    },
+    "SC": {
+      "max_weight": 979.42475,
+      "n_positive": 203572,
+      "n_records": 215494,
+      "weight_std": 20.72845466321772,
+      "weight_sum": 2963944.717570001
+    },
+    "SD": {
+      "max_weight": 461.42103,
+      "n_positive": 143838,
+      "n_records": 215494,
+      "weight_std": 5.346638842282279,
+      "weight_sum": 509512.84628999996
+    },
+    "TN": {
+      "max_weight": 2948.73911,
+      "n_positive": 159186,
+      "n_records": 215494,
+      "weight_std": 34.26752946106241,
+      "weight_sum": 3908092.0759400004
+    },
+    "TX": {
+      "max_weight": 15229.00932,
+      "n_positive": 143696,
+      "n_records": 215494,
+      "weight_std": 180.9644133160239,
+      "weight_sum": 16289998.3214
+    },
+    "UT": {
+      "max_weight": 1612.21551,
+      "n_positive": 200324,
+      "n_records": 215494,
+      "weight_std": 16.809410480516267,
+      "weight_sum": 1763479.8131699997
+    },
+    "VA": {
+      "max_weight": 2179.82745,
+      "n_positive": 212919,
+      "n_records": 215494,
+      "weight_std": 33.026268892244794,
+      "weight_sum": 4917285.096340001
+    },
+    "VT": {
+      "max_weight": 293.74564,
+      "n_positive": 187472,
+      "n_records": 215494,
+      "weight_std": 3.0699703389526625,
+      "weight_sum": 394100.85357999994
+    },
+    "WA": {
+      "max_weight": 3947.73469,
+      "n_positive": 141083,
+      "n_records": 215494,
+      "weight_std": 59.72129105666766,
+      "weight_sum": 4425837.11859
+    },
+    "WI": {
+      "max_weight": 772.4038,
+      "n_positive": 206538,
+      "n_records": 215494,
+      "weight_std": 23.99180544731458,
+      "weight_sum": 3416103.3711899994
+    },
+    "WV": {
+      "max_weight": 472.27512,
+      "n_positive": 165496,
+      "n_records": 215494,
+      "weight_std": 8.723250119746657,
+      "weight_sum": 992867.77216
+    },
+    "WY": {
+      "max_weight": 225.96264,
+      "n_positive": 149161,
+      "n_records": 215494,
+      "weight_std": 3.292553765741064,
+      "weight_sum": 325057.5097399999
+    }
   },
-  "weight_hash": "4cbaad6f10ed3a04"
+  "metadata": {
+    "generated": "2026-04-21",
+    "n_areas": 51,
+    "scope": "states",
+    "taxcalc_version": "6.5.2",
+    "taxyear": 2022
+  }
 }
