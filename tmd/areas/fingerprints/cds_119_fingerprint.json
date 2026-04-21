@@ -3054,9 +3054,10 @@
     }
   },
   "metadata": {
-    "generated": "2026-04-20",
+    "generated": "2026-04-21",
     "n_areas": 436,
     "scope": "cds_119",
+    "taxcalc_version": "6.5.2",
     "taxyear": 2022
   }
 }

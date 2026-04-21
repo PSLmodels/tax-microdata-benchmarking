@@ -30,6 +30,18 @@ replaces the previous integer-rounded sum + SHA-256 hash approach
 (issue #477), which was insensitive to small areas, distribution-
 blind, and produced rounding-boundary false positives across
 machines.
+
+Tax-Calculator version metadata: each fingerprint JSON records the
+``taxcalc.__version__`` that was installed when the fingerprint was
+generated. When the test fails AND the installed Tax-Calculator
+version differs from the one recorded in the reference fingerprint,
+the failure message explicitly flags the version drift as a likely
+cause and points to the regeneration command. Because area-weight
+statistics are downstream of Tax-Calculator output, a version bump
+can legitimately shift them. A version difference alone does not
+fail the test — only statistic mismatches do — so a new
+Tax-Calculator version whose changes stay within ``rtol=1e-3``
+passes silently.
 """
 
 # pylint: disable=too-few-public-methods
@@ -42,6 +54,7 @@ from datetime import date
 import numpy as np
 import pandas as pd
 import pytest
+import taxcalc
 
 from tmd.areas import AREAS_FOLDER
 from tmd.areas.prepare.constants import ALL_STATES
@@ -136,6 +149,7 @@ def _compute_fingerprint(areas, weight_dir, scope, taxyear):
             "taxyear": taxyear,
             "n_areas": len(per_area),
             "generated": date.today().isoformat(),
+            "taxcalc_version": taxcalc.__version__,
         },
         "areas": per_area,
     }
@@ -240,10 +254,26 @@ def _run_fingerprint_test(scope, areas, weight_dir, update):
     assert cur_n == ref_n, f"Area count: reference={ref_n}, current={cur_n}"
 
     mismatches = _compare_fingerprints(reference, current)
-    assert not mismatches, (
-        f"{len(mismatches)} statistic mismatch(es) in {scope} fingerprint:\n"
-        + "\n".join(mismatches)
-    )
+    if mismatches:
+        msg_parts = [
+            f"{len(mismatches)} statistic mismatch(es) in {scope} "
+            f"fingerprint:",
+            *mismatches,
+        ]
+        ref_version = reference.get("metadata", {}).get("taxcalc_version")
+        cur_version = taxcalc.__version__
+        if ref_version and ref_version != cur_version:
+            msg_parts.append("")
+            msg_parts.append(
+                f"Tax-Calculator version drift: fingerprint generated "
+                f"under {ref_version}, currently installed "
+                f"{cur_version}. Area-weight statistics are downstream "
+                f"of Tax-Calculator output, so a version change is a "
+                f"likely cause of these mismatches. If the new version "
+                f"is intentional, regenerate the reference with: "
+                f"pytest tests/test_fingerprint.py --update-fingerprint"
+            )
+        pytest.fail("\n".join(msg_parts))
 
 
 # --- State tests ---
