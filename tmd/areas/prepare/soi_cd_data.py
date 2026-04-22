@@ -108,7 +108,8 @@ def read_soi_cd_csv(
                 "cong_district": "cd117_district",
             }
         )
-        df["year"] = yr
+        year_col = pd.Series(yr, index=df.index, name="year")
+        df = pd.concat([df, year_col], axis=1)
 
         # Drop US-total row
         df = df[df["stabbr"] != "US"].copy()
