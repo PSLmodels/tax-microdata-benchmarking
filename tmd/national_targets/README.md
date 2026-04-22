@@ -11,18 +11,34 @@ You don't need to run this pipeline. The repo ships a vetted `soi.csv` and
 ## For maintainers
 
 The pipeline is how `soi.csv` gets created and updated. Run it when adding
-a new tax year or correcting an extraction error:
+a new tax year or correcting an extraction error. The stages are wired
+together in `tmd/national_targets/Makefile`:
+
+```bash
+# Run the full pipeline (all three stages) and the pipeline tests:
+make -C tmd/national_targets all
+
+# Individual stages (each depends on the prior stage):
+make -C tmd/national_targets extract   # stage 1: IRS Excel -> per-table CSVs
+make -C tmd/national_targets build     # stages 1 + 2: -> irs_aggregate_values.csv
+make -C tmd/national_targets soi       # stages 1 + 2 + 3: -> soi.csv
+make -C tmd/national_targets test      # pipeline tests only
+
+# Stage 1 skips per-table CSVs that already exist; force re-extraction with:
+make -C tmd/national_targets extract OVERWRITE=1
+
+# Verify the full build still passes:
+make clean && make data
+```
+
+The manual command sequence below is equivalent to `make -C tmd/national_targets all`
+and is retained for reference:
 
 ```bash
 python -m tmd.national_targets.extract_irs_to_csv --overwrite
 python -m tmd.national_targets.build_targets
 python -m tmd.national_targets.potential_targets_to_soi
-
-# Pipeline-specific tests (not part of make data)
 python -m pytest tests/national_targets_pipeline -v
-
-# Verify the full build still passes
-make clean && make data
 ```
 
 See [docs/adding_a_new_year.md](docs/adding_a_new_year.md) for step-by-step
