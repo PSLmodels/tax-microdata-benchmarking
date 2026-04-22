@@ -13,27 +13,35 @@ clean:
 	rm -f tmd/storage/output/tmd*
 	rm -f tmd/storage/output/cached*
 	rm -f tmd/storage/output/preimpute_tmd.csv.gz
-	rm -f tmd/storage/output/make_data.log
+	rm -f tmd/storage/output/make_data_*.log
 
-# Main imputation/calibration pipeline.  Output is tee'd to
-# make_data.log so that warnings emitted during the run (pandas,
-# numpy, taxcalc, etc.) are captured and can be reviewed afterward via
-# `make warnings`.  On-screen output during the build is unchanged.
+# Each of the five build stages below tees its stdout+stderr to a
+# per-stage log file in tmd/storage/output/.  On-screen output during
+# `make data` is unchanged; the log files are a byproduct so that any
+# warnings emitted during the run (pandas, numpy, taxcalc, scipy,
+# etc.) can be reviewed afterward via `make warnings`.  Per-stage
+# (rather than shared) log files avoid interleaving when the recipes
+# are run with `make -j`.
+
 tmd/storage/output/tmd.csv.gz:
 	python tmd/create_taxcalc_input_variables.py 2>&1 \
-	    | tee tmd/storage/output/make_data.log
+	    | tee tmd/storage/output/make_data_tmd.log
 
 tmd/storage/output/tmd_weights.csv.gz:
-	python tmd/create_taxcalc_sampling_weights.py
+	python tmd/create_taxcalc_sampling_weights.py 2>&1 \
+	    | tee tmd/storage/output/make_data_weights.log
 
 tmd/storage/output/tmd_growfactors.csv:
-	python tmd/create_taxcalc_growth_factors.py
+	python tmd/create_taxcalc_growth_factors.py 2>&1 \
+	    | tee tmd/storage/output/make_data_growfactors.log
 
 tmd/storage/output/cached_files:
-	python tmd/create_taxcalc_cached_files.py
+	python tmd/create_taxcalc_cached_files.py 2>&1 \
+	    | tee tmd/storage/output/make_data_cached.log
 
 tmd/storage/output/preimpute_tmd.csv.gz:
-	python tmd/create_taxcalc_imputed_variables.py
+	python tmd/create_taxcalc_imputed_variables.py 2>&1 \
+	    | tee tmd/storage/output/make_data_preimpute.log
 
 .PHONY=tmd_files
 tmd_files: tmd/storage/output/tmd.csv.gz \
@@ -56,15 +64,16 @@ data: install tmd_files test
 
 .PHONY=warnings
 warnings:
-	@log=tmd/storage/output/make_data.log; \
-	if [ ! -f "$$log" ]; then \
-	    echo "No $$log found; run 'make data' first."; \
+	@logs=$$(ls tmd/storage/output/make_data_*.log 2>/dev/null || true); \
+	if [ -z "$$logs" ]; then \
+	    echo "No tmd/storage/output/make_data_*.log files found; run 'make data' first."; \
 	else \
-	    hits=$$(grep -niE 'warning|deprecat' "$$log" || true); \
+	    hits=$$(grep -niHE 'warning|deprecat' $$logs || true); \
 	    if [ -z "$$hits" ]; then \
-	        echo "No warnings found in $$log."; \
+	        echo "No warnings found in pipeline logs:"; \
+	        for f in $$logs; do echo "  $$f"; done; \
 	    else \
-	        echo "Warnings in $$log:"; \
+	        echo "Warnings in pipeline logs:"; \
 	        echo "$$hits"; \
 	    fi; \
 	fi
