@@ -33,6 +33,9 @@ tmd/areas/weights/**/developer_report.txt
 # Reweighting run output (timestamped output directories from reweighting runs)
 tmd/storage/output/reweighting/
 
+# Pipeline warning log produced by `make data` (see `make warnings`)
+tmd/storage/output/make_data.log
+
 # Defensive: build caches that were removed from the pipeline but might
 # reappear if anyone experiments locally with R/Quarto tooling
 **/.quarto/

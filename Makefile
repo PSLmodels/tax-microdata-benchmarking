@@ -1,3 +1,9 @@
+# Force bash with pipefail so that a failure in the first stage of a
+# pipeline (e.g., `python ... 2>&1 | tee log`) propagates as a recipe
+# failure instead of being masked by tee's exit status.
+SHELL := /bin/bash
+.SHELLFLAGS := -eo pipefail -c
+
 .PHONY=install
 install:
 	pip install -e .
@@ -7,9 +13,15 @@ clean:
 	rm -f tmd/storage/output/tmd*
 	rm -f tmd/storage/output/cached*
 	rm -f tmd/storage/output/preimpute_tmd.csv.gz
+	rm -f tmd/storage/output/make_data.log
 
+# Main imputation/calibration pipeline.  Output is tee'd to
+# make_data.log so that warnings emitted during the run (pandas,
+# numpy, taxcalc, etc.) are captured and can be reviewed afterward via
+# `make warnings`.  On-screen output during the build is unchanged.
 tmd/storage/output/tmd.csv.gz:
-	python tmd/create_taxcalc_input_variables.py
+	python tmd/create_taxcalc_input_variables.py 2>&1 \
+	    | tee tmd/storage/output/make_data.log
 
 tmd/storage/output/tmd_weights.csv.gz:
 	python tmd/create_taxcalc_sampling_weights.py
@@ -41,6 +53,21 @@ test: tmd_files
 
 .PHONY=data
 data: install tmd_files test
+
+.PHONY=warnings
+warnings:
+	@log=tmd/storage/output/make_data.log; \
+	if [ ! -f "$$log" ]; then \
+	    echo "No $$log found; run 'make data' first."; \
+	else \
+	    hits=$$(grep -niE 'warning|deprecat' "$$log" || true); \
+	    if [ -z "$$hits" ]; then \
+	        echo "No warnings found in $$log."; \
+	    else \
+	        echo "Warnings in $$log:"; \
+	        echo "$$hits"; \
+	    fi; \
+	fi
 
 .PHONY=format
 format:
