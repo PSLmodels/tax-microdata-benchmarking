@@ -96,7 +96,8 @@ def read_soi_state_csvs(
         df = pd.read_csv(fpath, thousands=",")
         df.columns = [c.lower() for c in df.columns]
         df = df.rename(columns={"state": "stabbr", "agi_stub": "agistub"})
-        df["year"] = yr
+        year_col = pd.Series(yr, index=df.index, name="year")
+        df = pd.concat([df, year_col], axis=1)
         frames.append(df)
     return pd.concat(frames, ignore_index=True)
 
