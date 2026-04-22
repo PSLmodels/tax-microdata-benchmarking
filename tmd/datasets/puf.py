@@ -2,7 +2,6 @@ from pathlib import Path
 import json
 import numpy as np
 import pandas as pd
-from microdf import MicroDataFrame
 import taxcalc
 from tmd.storage import STORAGE_FOLDER
 from tmd.datasets.uprate_puf import uprate_puf
@@ -64,18 +63,8 @@ def impute_missing_demographics(
         [puf_without_demographics, predicted_demographics], axis=1
     )
 
-    weighted_puf_with_demographics = MicroDataFrame(
-        puf_with_demographics, weights="S006"
-    )
-    weighted_puf_with_imputed_demographics = MicroDataFrame(
-        puf_with_imputed_demographics, weights="S006"
-    )
-
     puf_combined = pd.concat(
-        [
-            weighted_puf_with_demographics,
-            weighted_puf_with_imputed_demographics,
-        ]
+        [puf_with_demographics, puf_with_imputed_demographics]
     )
 
     return puf_combined
