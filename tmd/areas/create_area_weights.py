@@ -112,15 +112,23 @@ def _load_taxcalc_data():
     per-worker memory (~150 MB savings with 109 → ~25 columns).
     """
     vdf = pd.read_csv(INFILE_PATH)
-    vdf["c00100"] = np.load(TAXCALC_AGI_CACHE)
+    new_cols = {"c00100": np.load(TAXCALC_AGI_CACHE)}
     if CACHED_ALLVARS_PATH.exists():
         allvars = pd.read_csv(CACHED_ALLVARS_PATH, usecols=CACHED_TC_OUTPUTS)
         for col in CACHED_TC_OUTPUTS:
             if col in allvars.columns:
-                vdf[col] = allvars[col].values
+                new_cols[col] = allvars[col].values
+    vdf = pd.concat([vdf, pd.DataFrame(new_cols, index=vdf.index)], axis=1)
     # Synthetic combined variable for net capital gains targeting
     if "p22250" in vdf.columns and "p23250" in vdf.columns:
-        vdf["capgains_net"] = vdf["p22250"] + vdf["p23250"]
+        capgains_net = vdf["p22250"].values + vdf["p23250"].values
+        vdf = pd.concat(
+            [
+                vdf,
+                pd.DataFrame({"capgains_net": capgains_net}, index=vdf.index),
+            ],
+            axis=1,
+        )
     assert np.all(vdf.s006 > 0), "Not all weights are positive"
     # Drop columns not used by the solver to reduce memory.
     # Keep infrastructure columns + any column that could be a target
