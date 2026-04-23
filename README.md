@@ -4,7 +4,11 @@ This repository contains all working files for a project to develop
 validated input files for use in
 [Tax-Calculator](https://github.com/PSLmodels/Tax-Calculator).
 
-The **current version is 2.0.0**, which was released on March 29, 2026,
+For Tax-Calculator results generated when using these TMD input files,
+see [this
+folder](https://github.com/PSLmodels/Tax-Calculator/tree/master/taxcalc/cli/input_data_tests).
+
+The **current TMD version is 2.0.0**, which was released on March 29, 2026,
 and includes the following significant improvements:
 
 - generate national, state, and Congressional district, input files
