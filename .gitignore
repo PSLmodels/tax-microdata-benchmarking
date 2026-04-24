@@ -39,3 +39,8 @@ tmd/storage/output/reweighting/
 **/renv/library/
 **/renv/staging/
 **/renv/local/
+
+# Reference SOI PDFs and any pdftotext outputs derived from them
+# (see tmd/national_targets/docs/README.md for download links)
+tmd/national_targets/docs/*.pdf
+tmd/national_targets/docs/*.txt
