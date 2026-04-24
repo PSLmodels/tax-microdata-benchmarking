@@ -31,9 +31,9 @@ the test fails AND the installed version differs from the recorded one,
 the failure message flags the version drift as a likely cause and
 points to the regeneration command.
 
-Replaces ``tests/test_tmd_stats.py`` (skipped; exact-text diff of
-``df.describe()`` output, which fails on bit-different floating-point
-results across machines).
+Replaces the previously-skipped ``test_tmd_stats`` pattern (exact-text
+diff of ``df.describe()`` output, which failed on bit-different
+floating-point results across machines).
 """
 
 import json
