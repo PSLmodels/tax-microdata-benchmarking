@@ -60,7 +60,7 @@ test: tmd_files
 	    --ignore=tests/test_prepare_targets.py
 
 .PHONY=data
-data: install tmd_files test
+data: install tmd_files test warnings
 
 .PHONY=warnings
 warnings:
@@ -68,7 +68,7 @@ warnings:
 	if [ -z "$$logs" ]; then \
 	    echo "No tmd/storage/output/make_data_*.log files found; run 'make data' first."; \
 	else \
-	    hits=$$(grep -niHE 'warning|deprecat' $$logs || true); \
+	    hits=$$(grep -nHE '[Ww]arning|[Dd]eprecat|Traceback|\bERROR\b|Error:' $$logs || true); \
 	    if [ -z "$$hits" ]; then \
 	        echo "No warnings found in pipeline logs:"; \
 	        for f in $$logs; do echo "  $$f"; done; \
