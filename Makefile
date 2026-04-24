@@ -1,3 +1,9 @@
+# Force bash with pipefail so that a failure in the first stage of a
+# pipeline (e.g., `python ... 2>&1 | tee log`) propagates as a recipe
+# failure instead of being masked by tee's exit status.
+SHELL := /bin/bash
+.SHELLFLAGS := -eo pipefail -c
+
 .PHONY=install
 install:
 	pip install -e .
@@ -7,21 +13,35 @@ clean:
 	rm -f tmd/storage/output/tmd*
 	rm -f tmd/storage/output/cached*
 	rm -f tmd/storage/output/preimpute_tmd.csv.gz
+	rm -f tmd/storage/output/make_data_*.log
+
+# Each of the five build stages below tees its stdout+stderr to a
+# per-stage log file in tmd/storage/output/.  On-screen output during
+# `make data` is unchanged; the log files are a byproduct so that any
+# warnings emitted during the run (pandas, numpy, taxcalc, scipy,
+# etc.) can be reviewed afterward via `make warnings`.  Per-stage
+# (rather than shared) log files avoid interleaving when the recipes
+# are run with `make -j`.
 
 tmd/storage/output/tmd.csv.gz:
-	python tmd/create_taxcalc_input_variables.py
+	python tmd/create_taxcalc_input_variables.py 2>&1 \
+	    | tee tmd/storage/output/make_data_tmd.log
 
 tmd/storage/output/tmd_weights.csv.gz:
-	python tmd/create_taxcalc_sampling_weights.py
+	python tmd/create_taxcalc_sampling_weights.py 2>&1 \
+	    | tee tmd/storage/output/make_data_weights.log
 
 tmd/storage/output/tmd_growfactors.csv:
-	python tmd/create_taxcalc_growth_factors.py
+	python tmd/create_taxcalc_growth_factors.py 2>&1 \
+	    | tee tmd/storage/output/make_data_growfactors.log
 
 tmd/storage/output/cached_files:
-	python tmd/create_taxcalc_cached_files.py
+	python tmd/create_taxcalc_cached_files.py 2>&1 \
+	    | tee tmd/storage/output/make_data_cached.log
 
 tmd/storage/output/preimpute_tmd.csv.gz:
-	python tmd/create_taxcalc_imputed_variables.py
+	python tmd/create_taxcalc_imputed_variables.py 2>&1 \
+	    | tee tmd/storage/output/make_data_preimpute.log
 
 .PHONY=tmd_files
 tmd_files: tmd/storage/output/tmd.csv.gz \
@@ -40,7 +60,23 @@ test: tmd_files
 	    --ignore=tests/test_prepare_targets.py
 
 .PHONY=data
-data: install tmd_files test
+data: install tmd_files test warnings
+
+.PHONY=warnings
+warnings:
+	@logs=$$(ls tmd/storage/output/make_data_*.log 2>/dev/null || true); \
+	if [ -z "$$logs" ]; then \
+	    echo "No tmd/storage/output/make_data_*.log files found; run 'make data' first."; \
+	else \
+	    hits=$$(grep -nHE '[Ww]arning|[Dd]eprecat|Traceback|\bERROR\b|Error:' $$logs || true); \
+	    if [ -z "$$hits" ]; then \
+	        echo "No warnings found in pipeline logs:"; \
+	        for f in $$logs; do echo "  $$f"; done; \
+	    else \
+	        echo "Warnings in pipeline logs:"; \
+	        echo "$$hits"; \
+	    fi; \
+	fi
 
 .PHONY=format
 format:
