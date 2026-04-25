@@ -522,6 +522,7 @@ def generate_report(
 
     # Load TMD data and weight files (once, shared by all diagnostics)
     report_data = _load_report_data(areas, weight_dir)
+    per_area_metrics = {}
     if report_data is not None:
         tmd, s006, state_weights, n_loaded = report_data
         # Weight distribution by AGI stub (old vs new)
@@ -530,6 +531,31 @@ def generate_report(
                 tmd, s006, state_weights, n_loaded, target_dir
             )
         )
+        pop_shares = {
+            r["area"]: r.get("pop_share")
+            for _, r in df.iterrows()
+            if r.get("pop_share") is not None
+        }
+        per_area_metrics = _compute_per_area_metrics(
+            areas, target_dir, tmd, s006, state_weights, pop_shares
+        )
+
+    # Attach per-area metrics to the dataframe
+    for col in ("returns", "agi", "avg_agi", "ess", "unusualness"):
+        df[col] = df["area"].map(
+            lambda a, c=col: (per_area_metrics.get(a) or {}).get(c)
+        )
+
+    # Compute pct_zero column for CSV / table
+    def _pct_zero(row):
+        dist = row.get("dist_bins", {})
+        n_rec = row.get("n_records", 0) or 0
+        if not isinstance(dist, dict) or n_rec == 0:
+            return None
+        n_zero = dist.get((0.0, 0.0), {}).get("count", 0)
+        return 100.0 * n_zero / n_rec
+
+    df["pct_zero"] = df.apply(_pct_zero, axis=1)
 
     # Per-area table
     # For small area counts (states), show all areas.
@@ -568,6 +594,16 @@ def generate_report(
         "  wP05/wMed/wP95/wMax = multiplier percentiles."
         "  %zero = records excluded."
     )
+    lines.append(
+        "  AvgAGI = weighted AGI per return ($K)."
+        "  Unusual% = mean |area_target - pop_share*national|"
+        " / |pop_share*national| across targets"
+    )
+    lines.append(
+        "  (0% = looks exactly like the nation; higher ="
+        " more unlike the nation)."
+        "  ESS = Kish effective sample size (sum w)^2 / sum(w^2)."
+    )
     max_id = max(
         (len(str(row["area"])) for _, row in display_df.iterrows()),
         default=4,
@@ -577,7 +613,8 @@ def generate_report(
         f"{'Area':<{id_w}} {'Status':<14} {'Hit':>5} {'Tot':>5} "
         f"{'Viol':>5} {'MeanErr':>8} {'MaxErr':>8} "
         f"{'wRMSE':>7} {'wP05':>7} {'wMed':>7} "
-        f"{'wP95':>7} {'wMax':>8} {'%zero':>6}"
+        f"{'wP95':>7} {'wMax':>8} {'%zero':>6} "
+        f"{'AvgAGI':>8} {'Unusual%':>8} {'ESS':>9}"
     )
     lines.append(header)
     lines.append("-" * len(header))
@@ -592,18 +629,26 @@ def generate_report(
         med = row.get("w_median", 0)
         p95 = row.get("w_p95", 0)
         wmax = row.get("w_max", 0)
-        dist = row.get("dist_bins", {})
-        n_rec = row.get("n_records", 0)
-        n_zero = 0
-        if isinstance(dist, dict):
-            n_zero = dist.get((0.0, 0.0), {}).get("count", 0)
-        pct_zero = 100 * n_zero / n_rec if n_rec > 0 else 0
+        pct_zero = row.get("pct_zero")
+        if pct_zero is None:
+            pct_zero = 0.0
+        avg_agi = row.get("avg_agi")
+        unusual = row.get("unusualness")
+        ess = row.get("ess")
+        avg_agi_s = (
+            f"${avg_agi / 1000:>6.1f}K" if avg_agi is not None else "       -"
+        )
+        unusual_s = (
+            f"{unusual * 100:>7.1f}%" if unusual is not None else "       -"
+        )
+        ess_s = f"{ess:>9,.0f}" if ess is not None else "        -"
         area_str = str(row["area"])
         lines.append(
             f"{area_str:<{id_w}} {row['status']:<14} {hit:>5} {tot:>5} "
             f"{viol:>5} {me:>8.4f} {mx:>8.4f} "
             f"{rmse:>7.3f} {p5:>7.3f} {med:>7.3f} "
-            f"{p95:>7.3f} {wmax:>8.1f} {pct_zero:>5.1f}%"
+            f"{p95:>7.3f} {wmax:>8.1f} {pct_zero:>5.1f}% "
+            f"{avg_agi_s} {unusual_s} {ess_s}"
         )
     if not show_all:
         n_omitted = n_areas - len(display_df)
@@ -697,6 +742,39 @@ def generate_report(
             )
         )
 
+    # Write per-area CSV for ALL areas (regardless of which were
+    # displayed in the table above) for further analysis.
+    csv_cols = [
+        "area",
+        "status",
+        "pop_share",
+        "solve_time",
+        "targets_hit",
+        "targets_total",
+        "n_violated",
+        "mean_err",
+        "max_err",
+        "w_rmse",
+        "w_min",
+        "w_p5",
+        "w_median",
+        "w_p95",
+        "w_max",
+        "pct_zero",
+        "n_records",
+        "returns",
+        "agi",
+        "avg_agi",
+        "unusualness",
+        "ess",
+    ]
+    csv_df = df.reindex(columns=csv_cols)
+    csv_path = weight_dir / "quality_report_per_area.csv"
+    csv_df.to_csv(csv_path, index=False)
+    lines.append("")
+    lines.append(f"Per-area metrics for ALL {n_areas} areas saved to:")
+    lines.append(f"  {csv_path}")
+
     report = "\n".join(lines)
     return report
 
@@ -782,6 +860,117 @@ def _load_report_data(areas, weight_dir):
     if n_loaded == 0:
         return None
     return tmd, s006, state_weights, n_loaded
+
+
+def _compute_per_area_metrics(
+    areas, target_dir, tmd, s006, state_weights, pop_shares
+):
+    """
+    Per-area metrics computed from weights and target files:
+      - returns: sum of area weights
+      - agi: weighted total AGI
+      - avg_agi: AGI per return
+      - ess: Kish effective sample size = (sum w)^2 / sum(w^2)
+      - unusualness: mean over targets of
+          |area_target - pop_share * national| / |pop_share * national|
+        where national is computed by applying the target's recipe
+        (varname, count, scope, agi range, fstatus) to the full TMD
+        with s006 weighting. The XTOT population target is excluded
+        because by definition pop_share * national_pop = area_pop.
+    """
+    metrics = {}
+    if "c00100" not in tmd.columns:
+        return metrics
+
+    c00100 = tmd["c00100"].values
+    mars_arr = tmd["MARS"].values.astype(float)
+    data_source_arr = tmd["data_source"].values
+    n_records = len(tmd)
+    ones_arr = np.ones(n_records, dtype=float)
+
+    # Cache national totals per recipe to avoid recomputation across areas
+    nat_cache = {}
+
+    def national_for_recipe(varname, count, scope, lo, hi, fstatus):
+        key = (varname, count, scope, lo, hi, fstatus)
+        if key in nat_cache:
+            return nat_cache[key]
+        if varname not in tmd.columns:
+            nat_cache[key] = None
+            return None
+        var_arr = tmd[varname].values.astype(float)
+        if count == 0:
+            vals = var_arr
+        elif count == 1:
+            vals = ones_arr
+        elif count == 2:
+            vals = (var_arr != 0).astype(float)
+        elif count == 3:
+            vals = (var_arr > 0).astype(float)
+        elif count == 4:
+            vals = (var_arr < 0).astype(float)
+        else:
+            nat_cache[key] = None
+            return None
+        if scope == 1:
+            mask = (data_source_arr == 1).astype(float)
+        elif scope == 2:
+            mask = (data_source_arr == 0).astype(float)
+        else:
+            mask = ones_arr.copy()
+        mask = mask * ((c00100 >= lo) & (c00100 < hi))
+        if fstatus > 0:
+            mask = mask * (mars_arr == fstatus)
+        nat = float((s006 * vals * mask).sum())
+        nat_cache[key] = nat
+        return nat
+
+    for area in areas:
+        if area not in state_weights:
+            continue
+        w = state_weights[area]
+        sum_w = float(w.sum())
+        sum_w2 = float((w * w).sum())
+        returns = sum_w
+        agi = float((w * c00100).sum())
+        avg_agi = agi / returns if returns > 0 else 0.0
+        ess = (sum_w * sum_w) / sum_w2 if sum_w2 > 0 else 0.0
+
+        unusual = None
+        pop_share = pop_shares.get(area)
+        tgt_path = target_dir / f"{area}_targets.csv"
+        if pop_share is not None and tgt_path.exists():
+            tdf = pd.read_csv(tgt_path, comment="#")
+            gaps = []
+            for _, row in tdf.iterrows():
+                # Skip the XTOT population row (gap is zero by construction)
+                if row.varname == "XTOT" and float(row.agilo) < -8e99:
+                    continue
+                nat = national_for_recipe(
+                    row.varname,
+                    int(row["count"]),
+                    int(row.scope),
+                    float(row.agilo),
+                    float(row.agihi),
+                    int(row.fstatus),
+                )
+                if nat is None:
+                    continue
+                prop = pop_share * nat
+                if abs(prop) < 1.0:
+                    continue
+                gaps.append(abs(float(row.target) - prop) / abs(prop))
+            if gaps:
+                unusual = float(np.mean(gaps))
+
+        metrics[area] = {
+            "returns": returns,
+            "agi": agi,
+            "avg_agi": avg_agi,
+            "ess": ess,
+            "unusualness": unusual,
+        }
+    return metrics
 
 
 def _weight_distribution_by_stub(
