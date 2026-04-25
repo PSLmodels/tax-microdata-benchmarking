@@ -22,25 +22,32 @@ clean:
 # etc.) can be reviewed afterward via `make warnings`.  Per-stage
 # (rather than shared) log files avoid interleaving when the recipes
 # are run with `make -j`.
+#
+# `python -u` forces unbuffered stdout/stderr.  Without it, piping
+# python through `tee` causes python to switch from line buffering
+# (its default when stdout is a terminal) to block buffering (its
+# default when stdout is a pipe), which makes long-running stages
+# appear silent on the terminal until the buffer flushes.  The `-u`
+# flag preserves the pre-tee behavior of seeing progress in real time.
 
 tmd/storage/output/tmd.csv.gz:
-	python tmd/create_taxcalc_input_variables.py 2>&1 \
+	python -u tmd/create_taxcalc_input_variables.py 2>&1 \
 	    | tee tmd/storage/output/make_data_tmd.log
 
 tmd/storage/output/tmd_weights.csv.gz:
-	python tmd/create_taxcalc_sampling_weights.py 2>&1 \
+	python -u tmd/create_taxcalc_sampling_weights.py 2>&1 \
 	    | tee tmd/storage/output/make_data_weights.log
 
 tmd/storage/output/tmd_growfactors.csv:
-	python tmd/create_taxcalc_growth_factors.py 2>&1 \
+	python -u tmd/create_taxcalc_growth_factors.py 2>&1 \
 	    | tee tmd/storage/output/make_data_growfactors.log
 
 tmd/storage/output/cached_files:
-	python tmd/create_taxcalc_cached_files.py 2>&1 \
+	python -u tmd/create_taxcalc_cached_files.py 2>&1 \
 	    | tee tmd/storage/output/make_data_cached.log
 
 tmd/storage/output/preimpute_tmd.csv.gz:
-	python tmd/create_taxcalc_imputed_variables.py 2>&1 \
+	python -u tmd/create_taxcalc_imputed_variables.py 2>&1 \
 	    | tee tmd/storage/output/make_data_preimpute.log
 
 .PHONY=tmd_files
