@@ -47,3 +47,15 @@ documentation](https://taxcalc.pslmodels.org/usage/data.html#irs-public-use-data
 on how to use these three files with Tax-Calculator.  Also, you can
 look at the tests in this repository to see Python code that uses the
 TMD files with Tax-Calculator.
+
+## Sub-national area weights
+
+The repository also produces **per-area weight files** that adapt
+the national TMD microdata to a specific state or Congressional
+district.  The records do not change; only the weights do, so that
+weighted sums match state-level (or CD-level) totals from IRS
+Statistics of Income (SOI) and other published sources.
+
+See [`tmd/areas/README.md`](tmd/areas/README.md) for how to build
+the weights, what files you get, and how to use them — with or
+without Tax-Calculator.
