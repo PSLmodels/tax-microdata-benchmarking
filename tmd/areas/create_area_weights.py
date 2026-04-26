@@ -23,6 +23,19 @@ Elastic slack variables handle infeasibility gracefully:
     subject to  lb_j <= (Bx)_j + s_lo - s_hi <= ub_j,  s >= 0
 
 Follows the same QP construction as tmd/utils/reweight.py.
+
+This module is a library, not a CLI.  It is called by
+``tmd.areas.solve_weights`` (parallel batch solver, the production
+entry point), ``tmd.areas.developer_tools`` (relaxation cascade),
+and ``tmd.areas.make_all`` (CI driver).  Key public entry points:
+
+    create_area_weights_file(area, ...)   — solve one area, write
+                                             ``<area>_tmd_weights.csv.gz``
+                                             and ``<area>.log``.
+    cd_target_dir(congress)               — directory of CD target
+                                             files for the given session.
+    cd_weight_dir(congress)               — directory of CD weight
+                                             files for the given session.
 """
 
 import sys

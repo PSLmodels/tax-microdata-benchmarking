@@ -1,7 +1,40 @@
 # Area Weighting Guide
 
-How area-specific weights are constructed for TMD, and how to update
-them for new data.
+How area-specific weights are constructed for TMD, and how to extend
+or update them.
+
+> **Audience.**  This guide is for developers and analysts who need
+> to understand the methodology, extend the targeting recipe, or
+> maintain the pipeline as the underlying SOI / Census data evolves.
+> If you only want to *use* existing area weights — build them, run
+> a quality report, or load a weight file into Tax-Calculator — see
+> [README.md](README.md) instead.
+
+## Contents
+
+- [Overview](#overview) — the optimization problem, why QP, AL-01
+  worked example.
+- [Shares: separating geography from levels](#shares-separating-geography-from-levels) —
+  the share × national-sum decomposition.
+- [Architecture](#architecture) — pipeline diagram and the three
+  artifact-change frequencies.
+- [Variable name mapping](#variable-name-mapping) — bridging SOI,
+  TMD, and Tax-Calculator naming.
+- [The target spec](#the-target-spec) — the CSV recipe format that
+  drives production.
+- [Searching for proxies](#searching-for-proxies) — what to do when
+  a TMD variable has no direct SOI counterpart.
+- [Establishing base targets and expanding incrementally](#establishing-base-targets-and-expanding-incrementally) —
+  conservative recipe-extension strategy.
+- [Targeting rules of thumb](#targeting-rules-of-thumb) — eight
+  lessons from CD-pipeline development.
+- [Developer workflow: expanding a recipe](#developer-workflow-expanding-a-recipe) —
+  step-by-step process for adding new targets.
+- [Developer mode](#developer-mode) — the auto-relaxation cascade
+  and override YAML.
+- [Updating for a new year](#updating-for-a-new-year) — SOI
+  vintages, TMD rebuilds, new variables, new area types.
+- [File locations](#file-locations) — where modules and data live.
 
 ## Overview
 
@@ -35,10 +68,14 @@ example, "total wages in the $50K-$75K AGI bin for Alabama CD-1
 should be $2.01 billion."  The constraint matrix `B` encodes which
 records contribute to each target and by how much.
 
-Targets come from IRS Statistics of Income (SOI) data, which
-publishes geographic breakdowns of income, deductions, and credits.
-We scale SOI geographic proportions by TMD national totals to get
-area-level targets that sum exactly to national TMD values.
+Targets come primarily from IRS Statistics of Income (SOI) data,
+which publishes geographic breakdowns of income, deductions, and
+credits.  Census state-and-local-finance data fills in where SOI is
+weak (notably the SALT components, which behave very differently
+under the post-TCJA $10K cap than the SOI deduction series suggests).
+In every case the geographic proportions from the external source are
+scaled by TMD national totals so that area-level targets sum exactly
+to national TMD values.
 
 ### Why this formulation works
 
@@ -88,8 +125,9 @@ two things:
 2. What are national wages in that bin?
    (national level — from TMD)
 
-Item 1 comes from IRS SOI data and changes only with a new SOI
-vintage (~annually).  Item 2 comes from TMD and changes every time
+Item 1 comes from IRS SOI data (or Census state/local-finance data
+for SALT) and changes only when a new vintage of those sources is
+adopted (~annually).  Item 2 comes from TMD and changes every time
 imputations are updated.
 
     share  = area_SOI_value / national_SOI_value
@@ -237,9 +275,10 @@ Lessons learned from CD pipeline development (436 areas).
 
 ### 1. Target difficulty = gap from proportionate share
 
-Use `python -m tmd.areas.developer_tools --difficulty AL01` to see how
-far each target is from what the area would get under population-
-proportionate allocation.  This is the single most useful diagnostic.
+Use `python -m tmd.areas.developer_tools --difficulty AL01 --congress 118`
+to see how far each target is from what the area would get under
+population-proportionate allocation.  This is the single most useful
+diagnostic.
 
 - **Easy (<5% gap):** Solver barely moves weights.  Free to add.
 - **Moderate (5–20%):** Some weight distortion.  Generally fine.
@@ -349,8 +388,8 @@ Pick 3–4 areas spanning the difficulty spectrum:
 - An area similar to your analysis focus
 
 ```bash
-python -m tmd.areas.developer_tools --difficulty AL01
-python -m tmd.areas.developer_tools --difficulty NY12
+python -m tmd.areas.developer_tools --difficulty AL01 --congress 118
+python -m tmd.areas.developer_tools --difficulty NY12 --congress 118
 ```
 
 For each proposed target, check the gap%.  If most areas show
@@ -362,8 +401,8 @@ show >100% gap, consider total-only instead of per-bin.
 Add the new targets to the spec and solve one easy area:
 
 ```bash
-python -m tmd.areas.prepare_targets --scope AL01
-python -m tmd.areas.solve_weights --scope AL01
+python -m tmd.areas.prepare_targets --scope AL01 --congress 118
+python -m tmd.areas.solve_weights   --scope AL01 --congress 118
 ```
 
 Check solve time, violations, and RMSE.  If solve time jumps
@@ -377,7 +416,7 @@ Repeat on NY-12 or another difficult CD.  If it fails, the
 auto-relaxation cascade can find which targets to drop:
 
 ```bash
-python -m tmd.areas.developer_tools --scope NY12 --verbose
+python -m tmd.areas.developer_tools --scope NY12 --congress 118 --verbose
 ```
 
 ### Step 5: Run dual analysis on problem areas
@@ -386,7 +425,7 @@ If a target causes unexpected solver difficulty despite a moderate
 gap%, check the shadow prices:
 
 ```bash
-python -m tmd.areas.developer_tools --dual AL01
+python -m tmd.areas.developer_tools --dual AL01 --congress 118
 ```
 
 High duals identify constraints that conflict with each other.
@@ -398,9 +437,9 @@ it pulls against another target in the same record set.
 Once satisfied with representative areas, run the full batch:
 
 ```bash
-python -m tmd.areas.developer_tools --scope cds --workers 16
-python -m tmd.areas.solve_weights --scope cds --workers 16
-python -m tmd.areas.quality_report --scope cds --output
+python -m tmd.areas.developer_tools --scope cds --congress 118 --workers 16
+python -m tmd.areas.solve_weights   --scope cds --congress 118 --workers 16
+python -m tmd.areas.quality_report  --scope cds --congress 118 --output
 ```
 
 Compare the quality report against the previous version.
@@ -440,20 +479,23 @@ Most areas solve at level 0.  A handful of extreme areas (e.g., NY-12
 
 ```bash
 # LP feasibility check only (fast diagnostic):
-python -m tmd.areas.developer_tools --scope cds --lp-only --workers 16
+python -m tmd.areas.developer_tools --scope cds --congress 118 --lp-only --workers 16
 
 # Full relaxation cascade:
-python -m tmd.areas.developer_tools --scope cds --workers 16
+python -m tmd.areas.developer_tools --scope cds --congress 118 --workers 16
 
 # Debug a single area:
-python -m tmd.areas.developer_tools --scope NY12 --verbose
+python -m tmd.areas.developer_tools --scope NY12 --congress 118 --verbose
 ```
+
+`--congress` is required for any CD scope; state runs do not take
+that flag.
 
 ### Output
 - **Override YAML:** `prepare/recipes/cd_solver_overrides.yaml` —
-  committed to repo, read by production solver
-- **Developer report:** `weights/cds/developer_report.txt` —
-  per-area relaxation details
+  committed to repo, read by production solver.
+- **Developer report:** `weights/cds_118/developer_report.txt` (or
+  `cds_119/...`) — per-area relaxation details.
 
 ### Override file format
 
@@ -485,32 +527,36 @@ customizations automatically.  No manual tuning needed.
 3. **Recompute shares:**
    ```bash
    python -m tmd.areas.prepare_shares --scope states --year 2023
-   python -m tmd.areas.prepare_shares --scope cds --year 2023
+   python -m tmd.areas.prepare_shares --scope cds --congress 118 --year 2023
+   python -m tmd.areas.prepare_shares --scope cds --congress 119 --year 2023
    ```
 
 4. **Regenerate targets:**
    ```bash
-   python -m tmd.areas.prepare_targets --scope cds
+   python -m tmd.areas.prepare_targets --scope cds --congress 118
    ```
 
 5. **Run developer mode:**
    ```bash
-   python -m tmd.areas.developer_tools --scope cds --workers 16
+   python -m tmd.areas.developer_tools --scope cds --congress 118 --workers 16
    ```
 
 6. **Solve weights:**
    ```bash
-   python -m tmd.areas.solve_weights --scope cds --workers 16
+   python -m tmd.areas.solve_weights --scope cds --congress 118 --workers 16
    ```
 
 7. **Quality check:**
    ```bash
-   python -m tmd.areas.quality_report --scope cds --output
+   python -m tmd.areas.quality_report --scope cds --congress 118 --output
    ```
+
+Repeat steps 4–7 with `--congress 119` (and analogous state-scope
+commands) to refresh the other geographies.
 
 ### New TMD rebuild (same SOI year)
 
-Only steps 4-7 needed — shares don't change.
+Only steps 4–7 needed — shares don't change.
 
 ### Adding a new target variable
 
@@ -519,9 +565,12 @@ Only steps 4-7 needed — shares don't change.
 
 2. Add the mapping to `EXTENDED_SHARING_MAPPINGS` in `prepare_shares.py`.
 
-3. Recompute shares: `python -m tmd.areas.prepare_shares --scope cds`
+3. Recompute shares:
+   `python -m tmd.areas.prepare_shares --scope cds --congress 118`.
 
-4. Add a row to the target spec CSV.
+4. Add a row to the target spec CSV (`cd_target_spec.csv` or
+   `state_target_spec.csv` — see
+   [prepare/recipes/README.md](prepare/recipes/README.md)).
 
 5. Regenerate targets and run developer mode to check feasibility.
 
@@ -544,49 +593,51 @@ Only steps 4-7 needed — shares don't change.
 ```
 tmd/areas/
 ├── prepare/
-│   ├── constants.py          # AGI cuts, ALL_SHARING_MAPPINGS, AreaType
-│   ├── recipes/
-│   │   ├── cd_target_spec.csv      # CD recipe (92 targets)
-│   │   ├── state_target_spec.csv   # State recipe (179 targets)
-│   │   ├── cd_solver_overrides.yaml # Per-area solver params
-│   │   ├── cds.json                # [legacy] JSON recipe
-│   │   └── states.json             # [legacy] JSON recipe
-│   ├── data/
+│   ├── constants.py            # AGI cuts, ALL_SHARING_MAPPINGS, AreaType
+│   ├── recipes/                # See prepare/recipes/README.md
+│   │   ├── cd_target_spec.csv      # current — CD recipe (~107 targets)
+│   │   ├── state_target_spec.csv   # current — state recipe (~175 targets)
+│   │   ├── cd_solver_overrides.yaml # current — per-CD solver overrides
+│   │   ├── state_variable_mapping.csv # supports legacy JSON path
+│   │   └── states.json             # legacy — used only by tests
+│   ├── data/                       # See prepare/data/README.md
 │   │   ├── soi_states/             # Raw SOI state CSVs
-│   │   ├── soi_cds/                # Raw SOI CD CSVs
-│   │   ├── cds_shares.csv          # Pre-computed CD shares
-│   │   └── states_shares.csv       # Pre-computed state shares
-│   ├── target_sharing.py     # Share computation, TMD national sums
-│   ├── target_file_writer.py # [legacy] Recipe-based target writing
-│   ├── soi_state_data.py     # State SOI data ingestion
-│   ├── soi_cd_data.py        # CD SOI data + crosswalk
-│   └── extended_targets.py   # State extended targets (Census, credits)
-├── prepare_targets.py        # Target file generation (spec-based)
-├── prepare_shares.py         # Share pre-computation
-├── developer_tools.py         # Auto-relaxation cascade
-├── solve_weights.py          # QP batch solver
-├── create_area_weights.py    # QP solver core (Clarabel)
-├── quality_report.py         # Cross-area quality diagnostics
-├── solver_overrides.py       # Per-area override management
-├── targets/
-│   ├── states/               # Per-state target CSVs
-│   └── cds/                  # Per-CD target CSVs
-└── weights/
-    ├── states/               # Per-state weight files + logs
-    └── cds/                  # Per-CD weight files + logs
+│   │   ├── soi_cds/                # Raw SOI CD CSVs (117th boundaries)
+│   │   ├── states_shares.csv       # Pre-computed state shares
+│   │   ├── cds_118_shares.csv      # Pre-computed CD shares (118th)
+│   │   ├── cds_119_shares.csv      # Pre-computed CD shares (119th)
+│   │   ├── geocorr2022_cd117_to_cd118.csv
+│   │   └── geocorr2022_cd117_to_cd119.csv
+│   ├── target_sharing.py       # Share computation, TMD national sums
+│   ├── target_file_writer.py   # Legacy JSON-recipe target writing (tests)
+│   ├── soi_state_data.py       # State SOI data ingestion
+│   ├── soi_cd_data.py          # CD SOI data + crosswalk
+│   ├── extended_targets.py     # State extended targets (Census, credits)
+│   ├── census_population.py    # State population data
+│   └── validate_crosswalk.py   # CD crosswalk validation
+├── prepare_shares.py           # Share pre-computation (states or cds)
+├── prepare_targets.py          # Target file generation (CSV-spec-based)
+├── solve_weights.py            # Parallel batch QP solver
+├── create_area_weights.py      # Single-area QP solver core (Clarabel)
+├── batch_weights.py            # Parallel-runner support
+├── solver_overrides.py         # Read per-area override YAML
+├── developer_tools.py          # Difficulty / dual / relaxation cascade
+├── quality_report.py           # Multi- and single-area quality reports
+├── sweep_params.py             # Solver parameter grid search
+├── make_all.py                 # End-to-end driver used in CI
+├── targets/                    # Per-area target CSVs (output)
+│   ├── states/
+│   ├── cds_118/
+│   └── cds_119/
+└── weights/                    # Per-area weight files + logs (output)
+    ├── states/
+    ├── cds_118/
+    └── cds_119/
 ```
 
-## Quality Report
+## Quality report
 
-The quality report (`python -m tmd.areas.quality_report --scope cds`)
-provides:
-
-- **Target accuracy:** Per-area hit rates, violation details
-- **Weight distortion:** Multiplier distribution (how far weights moved from population-proportional)
-- **Weight distribution by AGI stub:** National vs sum-of-areas returns and AGI per bin
-- **Weight exhaustion:** Whether records are over/under-used across areas
-- **Cross-area aggregation:** Sum-of-areas vs national for key variables
-- **Bystander analysis:** Distortion of untargeted variables (both aggregate and per-bin)
-
-Use `--output` to auto-save to file.  For CDs/counties, only the top
-20 most-distorted areas are shown in the per-area table.
+For the quality report's contents, the multi-area vs individual-area
+modes, the all-areas `quality_report_per_area.csv` summary, and
+single-area diagnostics (`developer_tools --difficulty` / `--dual`),
+see [README.md](README.md#quality-reports).
