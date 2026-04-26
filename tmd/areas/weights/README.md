@@ -107,7 +107,11 @@ totals are just `(values * area_weights).sum()`.
 
 For variables that live directly on `tmd.csv.gz` — input variables
 like `e00200` (wages) and `e00300` (taxable interest), the
-demographic variables, and so on — you only need pandas:
+demographic variables, and so on — you only need pandas.  The
+values stored on `tmd.csv.gz` are in TMD-base-year (2022) dollars,
+so a weighted sum using the matching `WT2022` column gives the
+2022 area total.  For example, weighted total wages in California
+in 2022:
 
 ```python
 import pandas as pd
@@ -119,8 +123,13 @@ wts = pd.read_csv(
     / "ca_tmd_weights.csv.gz"
 )
 
-ca_wages_2024 = (tmd["e00200"] * wts["WT2024"]).sum()
+ca_wages_2022 = (tmd["e00200"] * wts["WT2022"]).sum()
 ```
+
+For a later year you also need to age the underlying values to that
+year using the TMD growfactors (or use the cached Tax-Calculator
+outputs described in the next section, which already contain
+year-aged values).
 
 ### Tax-Calculator output variables (income tax, payroll tax, etc.)
 
