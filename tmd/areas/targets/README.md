@@ -1,6 +1,8 @@
 # areas / targets
 
-Contains sub-national area targets files.
+Contains sub-national area targets files.  See
+[../README.md](../README.md) for how the targets are built and
+when to rebuild them.
 
 
 ## Targets File Content
