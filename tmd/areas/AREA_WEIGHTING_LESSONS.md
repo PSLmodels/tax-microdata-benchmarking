@@ -178,21 +178,33 @@ and overseas filers) is excluded from state targeting. Raw SOI
 shares (state/US) are rescaled so that the 51 state shares sum
 to 1.0 for each variable-AGI-bin combination.
 
-## Guidance for Congressional Districts
+## Congressional Districts: how the lessons held up
 
-CDs have not been implemented yet. Expected differences from states:
+The CD pipeline is now in production for both the 118th and 119th
+Congresses (436 areas each — 435 voting districts plus DC).  Of the
+expectations carried over from the state pipeline:
 
-- **435 areas** (vs 51) — grid search infeasible; use state-derived
-  parameter settings
-- **9 AGI bins** (vs 10) — no $1M+ separate bin in SOI CD data
-- **Smaller populations** — more CDs will hit multiplier ceilings;
-  may need different `multiplier_max`
-- **Crosswalk complexity** — SOI uses 117th Congress boundaries for
-  both 2021 and 2022 data; need geocorr crosswalk to map to 118th
-  Congress boundaries
-- **Exhaustion will be worse** — 435 areas competing for the same
-  records means much higher potential exhaustion; `multiplier_max`
-  may need to be lower
+- **436 areas, not 51** — grid search is impractical at this scale,
+  so the production parameters were carried over from the state
+  sweep rather than re-optimized for CDs.
+- **9 AGI bins, not 10** — confirmed: SOI CD data has no separate
+  $1M+ bin, so the CD recipe stops at $500K+.
+- **Smaller populations** — confirmed: a small fraction of districts
+  (~3%) need per-area solver overrides; see
+  `prepare/recipes/cd_solver_overrides.yaml`.
+- **Crosswalk complexity** — SOI publishes CD micro-data on **117th
+  Congress** boundaries for both 2021 and 2022.  The pipeline applies
+  a Geocorr 2022 population-weighted crosswalk to remap to either
+  the 118th or 119th Congress.  Both Congressional sessions share
+  the same targeting recipe and produce 436 CDs; only the geography
+  (and therefore the underlying shares) differs, in five states
+  (AL, GA, LA, NY, NC).  See [prepare/data/README.md](prepare/data/README.md)
+  for the crosswalk files and validation checks.
+- **Exhaustion is real but manageable** — competing across 436 areas
+  for the same records does drive exhaustion higher than in the
+  state pipeline.  Production uses `multiplier_max=25` per the
+  state sweep finding above; the per-area override file handles the
+  outliers (notably NY-12 / Manhattan).
 
 ## Running the parameter sweep
 
