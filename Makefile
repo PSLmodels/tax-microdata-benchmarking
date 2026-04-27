@@ -67,7 +67,7 @@ test: tmd_files
 	    --ignore=tests/test_prepare_targets.py
 
 .PHONY=data
-data: install tmd_files test warnings
+data: install clean format lint tmd_files test warnings
 
 .PHONY=warnings
 warnings:

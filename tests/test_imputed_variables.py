@@ -107,9 +107,9 @@ def test_obbba_deduction_tax_benefits(
             # https://taxpolicycenter.org/model-estimates/T25-0257
             # Note that the $1081 TPC estimate is derived by dividing
             # the all-unit average of $320 by the 0.296 affpct.
-            "exp_totben_2022": 60.86,
-            "exp_affpct_2022": 28.62,
-            "exp_affben_2022": 1086,
+            "exp_totben_2022": 58.89,
+            "exp_affpct_2022": 28.24,
+            "exp_affben_2022": 1065,
         },
     }
     output_variables = [

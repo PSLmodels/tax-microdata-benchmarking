@@ -37,8 +37,7 @@ To generate the TMD files from the PUF files, do this:
 1. Copy the two 2015 PUF files to the `tmd/storage/input` folder
 2. Install the SIPP files described in `tmd/storage/input/SIPP24/README.md`
 3. Install the CEX files described in `tmd/storage/input/CEX23/README.md`
-4. Run `make clean` in the repository's top-level folder
-5. Run `make data` in the repository's top-level folder
+4. Run `make data` in the repository's top-level folder
 
 The `make data` command creates and tests the three national
 `tmd*csv*` data files, which are located in the `tmd/storage/output`
