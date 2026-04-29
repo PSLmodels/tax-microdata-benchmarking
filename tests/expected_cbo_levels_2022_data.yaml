@@ -1,0 +1,47 @@
+# Expected calendar-year levels for filer (PUF / data_source==1) records on
+# the TMD file, compared against CBO's individual income tax microsimulation
+# model output. Used by tests/test_revenue_levels_cbo.py.
+#
+# DATA SOURCE
+#   CBO, "The Budget and Economic Outlook: 2026 to 2036," supplemental
+#   data file 51138-2026-02-Revenue.xlsx (publication 61882), sheet
+#   "3.Individual Income Tax Details", February 2026.
+#   https://www.cbo.gov/publication/61882
+#
+# DEFINITIONS
+#   n_returns_mil   : "Number of returns (millions)"
+#                     (returns filed in 2022 plus estimates of future
+#                     additional filers; includes dependents).
+#   agi_bil         : "Adjusted gross income" (calendar-year, billions).
+#   iitax_bil       : "Individual income tax liability" line
+#                     = "Income tax after credits" + "Net investment
+#                       income tax". Matches TaxCalc `iitax`, which also
+#                     equals income tax after credits + NIIT.
+#                     This is NOT the FY "Individual income tax receipts"
+#                     line (the MTS-derived cash-receipts figure, which
+#                     also includes Form 1041, Form 1042, refund-netting,
+#                     and FY-vs-CY timing — see issue #502).
+#
+# COMPARABILITY NOTE
+#   CBO's individual income tax microsimulation model is built on the
+#   same SOI 2022 PUF (Pub. 1304) sample that underlies TMD. Both sides
+#   are calendar-year, 1040-universe liability — apples to apples. The
+#   2022 actual matches TMD essentially exactly (gaps under 0.6% on
+#   each of returns, AGI, and iitax).
+
+2022:  # actual
+  n_returns_mil: 161.3
+  agi_bil: 14821.8
+  iitax_bil: 2149.6
+2026:  # projected
+  n_returns_mil: 169.5
+  agi_bil: 18810.4
+  iitax_bil: 2665.0
+2031:  # projected
+  n_returns_mil: 175.8
+  agi_bil: 22272.4
+  iitax_bil: 3310.2
+2036:  # projected
+  n_returns_mil: 180.5
+  agi_bil: 26787.8
+  iitax_bil: 4103.3
