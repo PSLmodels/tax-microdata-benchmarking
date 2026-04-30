@@ -624,7 +624,6 @@ tmd/areas/
 ├── developer_tools.py          # Difficulty / dual / relaxation cascade
 ├── quality_report.py           # Multi- and single-area quality reports
 ├── sweep_params.py             # Solver parameter grid search
-├── make_all.py                 # End-to-end driver used in CI
 ├── targets/                    # Per-area target CSVs (output)
 │   ├── states/
 │   ├── cds_118/

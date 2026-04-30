@@ -184,7 +184,6 @@ tmd/areas/
 ├── batch_weights.py                parallel-runner support
 ├── solver_overrides.py             read per-area override YAML
 ├── sweep_params.py                 parameter grid-search utility
-├── make_all.py                     end-to-end driver used in CI
 ├── prepare/                        shares + targets building blocks
 │   ├── data/                       SOI inputs and CD crosswalks
 │   ├── recipes/                    target specs

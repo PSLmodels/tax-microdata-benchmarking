@@ -1,2 +1,0 @@
-# allow csv files here because we have small label and mapping files we want to track
-!*.csv
