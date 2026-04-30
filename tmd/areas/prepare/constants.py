@@ -106,21 +106,13 @@ def build_agi_labels(area_type: AreaType) -> pd.DataFrame:
 
 # --- SOI file naming patterns ---
 
-# State SOI CSV files by year (2-digit year substituted into pattern)
+# State SOI CSV files by year
 SOI_STATE_CSV_PATTERNS: Dict[int, str] = {
-    2015: "15in54cmcsv.csv",
-    2016: "16in54cmcsv.csv",
-    2017: "17in54cmcsv.csv",
-    2018: "18in55cmagi.csv",
-    2019: "19in55cmcsv.csv",
-    2020: "20in55cmcsv.csv",
-    2021: "21in55cmcsv.csv",
     2022: "22in55cmcsv.csv",
 }
 
 # CD SOI CSV files by year
 SOI_CD_CSV_PATTERNS: Dict[int, str] = {
-    2021: "21incd.csv",
     2022: "22incd.csv",
 }
 
