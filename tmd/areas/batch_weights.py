@@ -310,6 +310,25 @@ def _list_target_areas(target_dir=None):
     return areas
 
 
+def _time_of_newest_other_dependency():
+    """
+    Return mtime of the newest non-target dependency that should
+    invalidate cached area-weight files.
+    """
+    from tmd.areas import AREAS_FOLDER
+    from tmd.storage import STORAGE_FOLDER
+    from tmd.imputation_assumptions import POPULATION_FILE
+
+    deps = [
+        AREAS_FOLDER / "create_area_weights.py",
+        STORAGE_FOLDER / "output" / "tmd.csv.gz",
+        STORAGE_FOLDER / "output" / "tmd_weights.csv.gz",
+        STORAGE_FOLDER / "output" / "tmd_growfactors.csv",
+        STORAGE_FOLDER / "input" / POPULATION_FILE,
+    ]
+    return max(dpath.stat().st_mtime for dpath in deps)
+
+
 def _filter_areas(areas, area_filter):
     """Filter areas by type: 'states', 'cds', or 'all'."""
     if area_filter == "all":
@@ -366,9 +385,7 @@ def run_batch(
 
     # Filter to out-of-date areas unless force=True
     if not force:
-        from tmd.areas.make_all import time_of_newest_other_dependency
-
-        newest_dep = time_of_newest_other_dependency()
+        newest_dep = _time_of_newest_other_dependency()
         todo = []
         for area in areas:
             wpath = weight_dir / f"{area}_tmd_weights.csv.gz"

@@ -26,8 +26,8 @@ Follows the same QP construction as tmd/utils/reweight.py.
 
 This module is a library, not a CLI.  It is called by
 ``tmd.areas.solve_weights`` (parallel batch solver, the production
-entry point), ``tmd.areas.developer_tools`` (relaxation cascade),
-and ``tmd.areas.make_all`` (CI driver).  Key public entry points:
+entry point) and ``tmd.areas.developer_tools`` (relaxation cascade).
+Key public entry points:
 
     create_area_weights_file(area, ...)   — solve one area, write
                                              ``<area>_tmd_weights.csv.gz``
