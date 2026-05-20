@@ -8,8 +8,10 @@ For Tax-Calculator results generated when using these TMD input files,
 see [this
 folder](https://github.com/PSLmodels/Tax-Calculator/tree/master/taxcalc/cli/input_data_tests).
 
-The **current TMD version is 2.0.0**, which was released on March 29, 2026,
-and includes the following significant improvements:
+The **current TMD version is 2.1.0**, which was released on May 2?,
+2026, and is the same as TMD version 2.0.0 except that Tax-Calculator
+version 6.6.0 is used (instead of 6.5.3).  The TMD 2.0.0 version
+includes the following significant improvements:
 
 - generate national, state, and Congressional district, input files
 for **2022**:
