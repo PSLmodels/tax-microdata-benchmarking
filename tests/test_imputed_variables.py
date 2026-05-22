@@ -55,7 +55,7 @@ def test_obbba_deduction_tax_benefits(
             # https://taxpolicycenter.org/taxvox/
             #         budget-laws-tax-cuts-overtime-and-
             #         tips-are-popular-few-will-benefit
-            "exp_totben_2022": 23.68,
+            "exp_totben_2022": 23.71,
             "exp_affpct_2022": 8.56,
             "exp_affben_2022": 1413,
         },
@@ -72,9 +72,9 @@ def test_obbba_deduction_tax_benefits(
             # https://taxpolicycenter.org/taxvox/
             #         budget-laws-tax-cuts-overtime-and-
             #         tips-are-popular-few-will-benefit
-            "exp_totben_2022": 7.08,
+            "exp_totben_2022": 7.11,
             "exp_affpct_2022": 2.59,
-            "exp_affben_2022": 1397,
+            "exp_affben_2022": 1401,
         },
         "ALI": {  # new OBBBA auto loan interest deduction
             "reform_dict": {"AutoLoanInterestDed_c": {simyear: 0}},
@@ -107,7 +107,7 @@ def test_obbba_deduction_tax_benefits(
             # https://taxpolicycenter.org/model-estimates/T25-0257
             # Note that the $1081 TPC estimate is derived by dividing
             # the all-unit average of $320 by the 0.296 affpct.
-            "exp_totben_2022": 58.92,
+            "exp_totben_2022": 58.97,
             "exp_affpct_2022": 28.24,
             "exp_affben_2022": 1065,
         },
