@@ -76,3 +76,6 @@ POP_FILE = {
     2022: "cbo26_population.yaml",
 }
 POPULATION_FILE = POP_FILE[TAXYEAR]
+
+# Tax-Calculator reform dictionary to produce SOI statistics
+SOI_IITAX_SPEC = {"soi_iitax": {2013: True}}

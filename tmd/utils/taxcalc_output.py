@@ -7,7 +7,7 @@ import pathlib
 import numpy as np
 import pandas as pd
 import taxcalc
-from tmd.imputation_assumptions import CREDIT_CLAIMING
+from tmd.imputation_assumptions import SOI_IITAX_SPEC, CREDIT_CLAIMING
 
 
 def add_taxcalc_outputs(
@@ -47,6 +47,7 @@ def add_taxcalc_outputs(
         weights_scale=1.0,
     )
     pol = taxcalc.Policy()
+    pol.implement_reform(SOI_IITAX_SPEC)
     pol.implement_reform(CREDIT_CLAIMING)
     if reform:
         pol.implement_reform(reform)

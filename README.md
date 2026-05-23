@@ -20,8 +20,7 @@ slightly in the national weights (all the `WT*` columns in the
 unchanged.  When using version 2.1.0 to generate **sub-national
 weights**, there will be (presumably small) differences from the
 sub-national weights generated using version 2.0.0; however, the
-sub-national weights fingerprints have not been updated in this pull
-request.
+sub-national weights fingerprints have not yet been updated.
 
 The prior TMD 2.0.0 version included the following significant
 improvements:
