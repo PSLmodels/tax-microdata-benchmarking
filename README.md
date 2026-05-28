@@ -8,20 +8,19 @@ For Tax-Calculator results generated when using these TMD input files,
 see [this
 folder](https://github.com/PSLmodels/Tax-Calculator/tree/master/taxcalc/cli/input_data_tests).
 
-The **current TMD version is 2.1.0**, which was released on May 22,
+The **current TMD version is 2.1.1**, which was released on May 28,
 2026, and is the same as TMD version 2.0.0 except that Tax-Calculator
-version 6.6.0 (instead of 6.5.3) is used to generate the TMD files.
+version 6.6.1 (instead of 6.5.3) is used to generate the TMD files.
 
-The current TMD 2.1.0 version differs from the 2.0.0 version only
+The current TMD 2.1.1 version differs from the 2.0.0 version only
 slightly in the national weights (all the `WT*` columns in the
 `tmd_weights.csv.gz` file and just the `s006` variable in the
 `tmd.csv.gz` file); the non-weights input variables in the
 `tmd.csv.gz` file and the contents of `tmd_growfactors.csv` file are
-unchanged.  When using version 2.1.0 to generate **sub-national
+unchanged.  When using version 2.1.1 to generate **sub-national
 weights**, there will be (presumably small) differences from the
 sub-national weights generated using version 2.0.0; however, the
-sub-national weights fingerprints have not been updated in this pull
-request.
+sub-national weights fingerprints have not yet been updated.
 
 The prior TMD 2.0.0 version included the following significant
 improvements:

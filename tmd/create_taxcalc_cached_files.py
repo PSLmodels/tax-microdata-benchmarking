@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 import taxcalc
 from tmd.storage import STORAGE_FOLDER, CACHED_TAXCALC_VARIABLES
-from tmd.imputation_assumptions import TAXYEAR, CREDIT_CLAIMING
+from tmd.imputation_assumptions import TAXYEAR, SOI_IITAX_SPEC, CREDIT_CLAIMING
 
 INFILE_PATH = STORAGE_FOLDER / "output" / "tmd.csv.gz"
 WTFILE_PATH = STORAGE_FOLDER / "output" / "tmd_weights.csv.gz"
@@ -22,6 +22,7 @@ def create_cached_files():
     # Construct Records directly (bypassing tmd_constructor which
     # hardcodes start_year=2021 in the taxcalc library).
     pol = taxcalc.Policy()
+    pol.implement_reform(SOI_IITAX_SPEC)
     pol.implement_reform(CREDIT_CLAIMING)
     rec = taxcalc.Records(
         data=pd.read_csv(INFILE_PATH),

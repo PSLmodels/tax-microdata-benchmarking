@@ -10,6 +10,7 @@ from tqdm import tqdm
 import taxcalc
 from tmd.storage import STORAGE_FOLDER
 from tmd.imputation_assumptions import (
+    SOI_IITAX_SPEC,
     CREDIT_CLAIMING,
     CPS_FILER_MIN_INCOME,
     CPS_TAXABLE_INTEREST_FRACTION,
@@ -357,6 +358,7 @@ def _is_tax_filer(tcdf: pd.DataFrame, taxyear: int) -> pd.Series:
         weights_scale=1.0,
     )
     pol = taxcalc.Policy()
+    pol.implement_reform(SOI_IITAX_SPEC)
     pol.implement_reform(CREDIT_CLAIMING)
     calc = taxcalc.Calculator(records=rec, policy=pol)
     calc.advance_to_year(taxyear)

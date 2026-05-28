@@ -18,7 +18,7 @@ import yaml
 import pytest
 import taxcalc
 
-from tmd.imputation_assumptions import TAXYEAR, CREDIT_CLAIMING
+from tmd.imputation_assumptions import TAXYEAR, SOI_IITAX_SPEC, CREDIT_CLAIMING
 
 # Per-year relative tolerance for all three aggregates.
 RELTOL = {
@@ -45,6 +45,7 @@ def test_revenue_levels_cbo(
         exp = yaml.safe_load(f)
 
     pol = taxcalc.Policy()
+    pol.implement_reform(SOI_IITAX_SPEC)
     pol.implement_reform(CREDIT_CLAIMING)
     rec = taxcalc.Records(
         data=tmd_variables,
