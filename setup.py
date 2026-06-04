@@ -6,7 +6,7 @@ setup(
     packages=find_packages(),
     python_requires=">=3.11,<3.14",
     install_requires=[
-        "taxcalc==6.6.1",
+        "taxcalc>=6.6.1",
         "numpy",
         "pandas>=3.0.2",
         "clarabel",
