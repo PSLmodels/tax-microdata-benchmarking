@@ -65,6 +65,7 @@ test: tmd_files
 	    --ignore=tests/test_state_weight_results.py \
 	    --ignore=tests/test_cd_crosswalk.py \
 	    --ignore=tests/test_prepare_targets.py
+	pytest tests/test_tmd_file_fingerprint.py -v
 
 .PHONY=data
 data: install clean format lint tmd_files test warnings
