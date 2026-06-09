@@ -29,11 +29,11 @@ def add_taxcalc_outputs(
     Returns:
         pd.DataFrame: The Tax-Calculator output.
     """
-    if isinstance(weights, pathlib.PosixPath):
+    if isinstance(weights, pathlib.Path):
         wghts = str(weights)
     else:
         wghts = weights
-    if isinstance(growfactors, pathlib.PosixPath):
+    if isinstance(growfactors, pathlib.Path):
         growf = taxcalc.GrowFactors(growfactors_filename=str(growfactors))
     else:
         growf = growfactors
