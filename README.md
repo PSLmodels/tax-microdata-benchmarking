@@ -41,6 +41,13 @@ for **2022**:
 
 ## Usage instructions
 
+If on Windows, it is strongly recommended that you use Microsoft's
+free [Windows Subsystem for
+Linux](https://learn.microsoft.com/en-us/windows/wsl/) to install the
+free Ubuntu Linux operating system, within which you can download the
+repository code.  If not on Windows, there is nothing to do at this
+stage.
+
 In order to use the code in this repository, you need to license the
 2015 PUF from IRS/SOI.  Once you have done that, you will have two
 CSV-formatted files from IRS/SOI: `puf_2015.csv` and
