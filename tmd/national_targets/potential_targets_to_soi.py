@@ -433,7 +433,7 @@ def compare_with_existing_soi(new_df, existing_soi_path, year=2021):
 if __name__ == "__main__":
     from tmd.storage import STORAGE_FOLDER
 
-    print("Converting irs_aggregate_values.csv → soi.csv format...")
+    print("Converting irs_aggregate_values.csv -> soi.csv format...")
     print()
 
     # Exclude rentroyalty and estateincome for 2022 (PUF variables

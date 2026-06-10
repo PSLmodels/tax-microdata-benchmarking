@@ -174,7 +174,7 @@ def test_parse_log_solved():
     ) as f:
         f.write(log_content)
         f.flush()
-        result = parse_log(Path(f.name))
+    result = parse_log(Path(f.name))
 
     assert result["status"] == "Solved"
     assert result["solve_time"] == pytest.approx(3.14)

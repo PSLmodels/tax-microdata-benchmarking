@@ -227,7 +227,7 @@ def extract_all(
 
             df.to_csv(out_path, index=False)
             rel = out_path.relative_to(Path.cwd())
-            print(f"{len(df)} rows → {rel}")
+            print(f"{len(df)} rows -> {rel}")
             count += 1
 
     return count
