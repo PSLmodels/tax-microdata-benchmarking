@@ -37,7 +37,7 @@ def test_taxcalc_results_2022(
 ):
     epath = tests_folder / "expected_taxcalc_results_2022.yaml"
     with open(epath, "r", encoding="utf-8") as f:
-        exp = yaml.safe_load(f)
+        expect = yaml.safe_load(f)
 
     pol = taxcalc.Policy()
     pol.implement_reform(SOI_IITAX_SPEC)
@@ -79,14 +79,14 @@ def test_taxcalc_results_2022(
     for credit in ("eitc", "actc"):
         for metric in ("n_returns_mil", "amount_bil"):
             act = actual[credit][metric]
-            ex = exp[credit][metric]
-            rel_diff = act / ex - 1.0
+            exp = expect[credit][metric]
+            rel_diff = act / exp - 1.0
             if abs(rel_diff) >= MAX_RELATIVE_TOLERANCE[metric]:
                 errors.append(
                     f"{credit}.{metric}: "
-                    f"act={act:.2f} exp={ex:.2f} "
+                    f"act={act:.2f} exp={exp:.2f} "
                     f"rel_diff={rel_diff:+.4f} "
-                    f"tol={MAX_RELATIVE_TOLERANCE[metric]:.2f}"
+                    f"tol={MAX_RELATIVE_TOLERANCE[metric]:.4f}"
                 )
 
     if errors:
