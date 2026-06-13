@@ -1,0 +1,23 @@
+# Expected 2022 EITC and ACTC aggregates from IRS Statistics of Income
+# Publication 1304 (2022), Table A.
+#
+# DATA SOURCE
+#   Internal Revenue Service, "Statistics of Income — 2022 Individual
+#   Income Tax Returns," Publication 1304, Table A — "Selected Income
+#   and Tax Items, by Size and Accumulated Size of Adjusted Gross Income"
+#
+# DEFINITIONS
+#   n_returns_mil  : Number of returns with a positive credit amount (millions).
+#   amount_bil     : Total credit amount (billions of dollars).
+#
+# NOTES
+#   EITC = Earned Income Credit (refundable); taxcalc variable "eitc".
+#   ACTC = Additional Child Tax Credit (refundable); taxcalc variable "c11070".
+
+eitc:
+  n_returns_mil: 24.09
+  amount_bil: 60.07
+
+actc:
+  n_returns_mil: 18.08
+  amount_bil: 34.84
