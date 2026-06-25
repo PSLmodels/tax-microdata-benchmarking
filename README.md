@@ -15,8 +15,9 @@ version 6.7.0 (instead of 6.6.2) is used to generate the TMD files.
 The current TMD 2.1.2 version differs from the prior 2.1.1 version
 only slightly because of the use in Tax-Calculator 6.7.0 of EITC and
 ACTC credit claiming logic that reduces slightly the number of tax
-units added to PUF records from the CPS.  See Tax-Calculator PR 3084
-for details on the tiny changes in income and payroll tax revenue
+units added to PUF records from the CPS.  See [Tax-Calculator PR
+3084]( https://github.com/PSLmodels/Tax-Calculator/pull/3084) for
+details on the small changes in income and payroll tax revenue
 associated with the TMD 2.1.2 input data files.
 
 The older TMD 2.1.1 version differed from the 2.0.0 version only
