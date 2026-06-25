@@ -8,11 +8,18 @@ For Tax-Calculator results generated when using these TMD input files,
 see [this
 folder](https://github.com/PSLmodels/Tax-Calculator/tree/master/taxcalc/cli/input_data_tests).
 
-The **current TMD version is 2.1.1**, which was released on May 28,
-2026, and is the same as TMD version 2.0.0 except that Tax-Calculator
-version 6.7.0 (instead of 6.5.3) is used to generate the TMD files.
+The **current TMD version is 2.1.2**, which was released on June 29,
+2026, and is the same as TMD version 2.1.1 except that Tax-Calculator
+version 6.7.0 (instead of 6.6.2) is used to generate the TMD files.
 
-The current TMD 2.1.1 version differs from the 2.0.0 version only
+The current TMD 2.1.2 version differs from the prior 2.1.1 version
+only slightly because of the use in Tax-Calculator 6.7.0 of EITC and
+ACTC credit claiming logic that reduces slightly the number of tax
+units added to PUF records from the CPS.  See Tax-Calculator PR 3084
+for details on the tiny changes in income and payroll tax revenue
+associated with the TMD 2.1.2 input data files.
+
+The older TMD 2.1.1 version differed from the 2.0.0 version only
 slightly in the national weights (all the `WT*` columns in the
 `tmd_weights.csv.gz` file and just the `s006` variable in the
 `tmd.csv.gz` file); the non-weights input variables in the

@@ -11,21 +11,39 @@ import yaml
 import pytest
 import taxcalc
 
-from tmd.imputation_assumptions import TAXYEAR, SOI_IITAX_SPEC, CREDIT_CLAIMING
+from tmd.imputation_assumptions import (
+    TAXYEAR,
+    SOI_IITAX_SPEC,
+    CLAIM_PROB_SCALE_EXPECTED,
+)
 
-OLD_CREDIT_CLAIMING = False
-CLAIM_PROB_SCALE = {
-    "eitc": 1.04,
-    "actc": 1.57,
-}
-NEW_CREDIT_CLAIMING = {
-    "eitc_claim_prob_scale": {"2022": CLAIM_PROB_SCALE["eitc"]},
-    "actc_claim_prob_scale": {"2022": CLAIM_PROB_SCALE["actc"]},
-}
 MAX_RELATIVE_TOLERANCE = {
-    "n_returns_mil": 0.07,
-    "amount_bil": 0.002,
+    "n_returns_mil": 0.088,
+    "amount_bil": 0.003,
 }
+
+
+def test_claim_prob_scale_defaults_unchanged():
+    """Guard: Tax-Calculator defaults still equal the calibrated values.
+
+    TMD's TAXYEAR EITC/ACTC calibration assumes the Tax-Calculator
+    eitc_claim_prob_scale/actc_claim_prob_scale defaults equal the values in
+    CLAIM_PROB_SCALE_EXPECTED, so TMD no longer sets them as a reform.  This
+    test fails loudly if a future Tax-Calculator release changes those
+    upstream defaults and silently de-calibrates TMD.
+    """
+    pol = taxcalc.Policy()
+    pol.set_year(TAXYEAR)
+    errors = []
+    for name, expected in CLAIM_PROB_SCALE_EXPECTED.items():
+        actual = float(getattr(pol, name)[0])
+        if actual != expected:
+            errors.append(f"{name}: taxcalc={actual} expected={expected}")
+    if errors:
+        raise ValueError(
+            "Tax-Calculator claim_prob_scale defaults have changed; "
+            "TMD calibration may need updating:\n" + "\n".join(errors)
+        )
 
 
 @pytest.mark.skipif(
@@ -41,10 +59,6 @@ def test_taxcalc_results_2022(
 
     pol = taxcalc.Policy()
     pol.implement_reform(SOI_IITAX_SPEC)
-    if OLD_CREDIT_CLAIMING:
-        pol.implement_reform(CREDIT_CLAIMING)
-    else:
-        pol.implement_reform(NEW_CREDIT_CLAIMING)
     recs = taxcalc.Records(
         data=tmd_variables,
         start_year=TAXYEAR,

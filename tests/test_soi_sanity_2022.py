@@ -49,7 +49,7 @@ import pandas as pd
 import taxcalc
 
 from tmd.storage import STORAGE_FOLDER
-from tmd.imputation_assumptions import TAXYEAR, SOI_IITAX_SPEC, CREDIT_CLAIMING
+from tmd.imputation_assumptions import TAXYEAR, SOI_IITAX_SPEC
 
 SOI_YEAR = 2022
 RELATIVE_TOLERANCE = 0.01
@@ -91,7 +91,6 @@ def test_soi_sanity_2022(
     # all five aggregates.
     pol = taxcalc.Policy()
     pol.implement_reform(SOI_IITAX_SPEC)
-    pol.implement_reform(CREDIT_CLAIMING)
     recs = taxcalc.Records(
         data=tmd_variables,
         start_year=TAXYEAR,

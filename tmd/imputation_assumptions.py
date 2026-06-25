@@ -25,6 +25,13 @@ ITMDED_GROW_RATE = 0.02  # for non-SALT itemized deduction amounts
 # general sales, and individual income taxes, from 2015 to 2022, per the
 # Census Bureau Annual Survey of State and Local Government Finances.
 
+# Tax-Calculator 6.7.0 introduced EITC/ACTC claiming behavior as the default.
+# The following parameters are assumed to be the Tax-Calculator default values.
+CLAIM_PROB_SCALE_EXPECTED = {
+    "eitc_claim_prob_scale": 1.04,
+    "actc_claim_prob_scale": 1.10,
+}
+
 # parameters used to impute CPS variables:
 CPS_TAXABLE_INTEREST_FRACTION = 0.680  # from SOI 2020 data
 CPS_QUALIFIED_DIVIDEND_FRACTION = 0.448  # from SOI 2018 data
@@ -36,19 +43,7 @@ FILER_MIN_INCOME = {
     2021: 8600,
     2022: 9300,
 }
-EITC_CLAIM_THD = {
-    2021: 1800,  # reduces 2023 EITC from $82.3b to $71.6b, a claim rate of 87%
-    2022: 1600,  # reduces 2023 EITC from $80.5b to $72.0b, a claim rate of 89%
-}
-ACTC_CLAIM_THD = {
-    2021: 0,  # always leave 2021 value at zero
-    2022: 1500,
-}
 CPS_FILER_MIN_INCOME = FILER_MIN_INCOME[TAXYEAR]
-CREDIT_CLAIMING = {
-    "eitc_claim_thd": {f"{TAXYEAR}": EITC_CLAIM_THD[TAXYEAR]},
-    "actc_claim_thd": {f"{TAXYEAR}": ACTC_CLAIM_THD[TAXYEAR]},
-}
 CPS_WEIGHTS_SCALE = {2021: 1.0, 2022: 1.0}  # for scaling CPS nonfiler weights
 
 # parameters used in creation of national sampling weights:

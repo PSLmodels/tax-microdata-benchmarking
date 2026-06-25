@@ -1,12 +1,11 @@
 import pandas as pd
 import taxcalc
-from tmd.imputation_assumptions import SOI_IITAX_SPEC, CREDIT_CLAIMING
+from tmd.imputation_assumptions import SOI_IITAX_SPEC
 
 
 def taxcalc_to_soi(puf: pd.DataFrame, year: int) -> pd.DataFrame:
     pol = taxcalc.Policy()
     pol.implement_reform(SOI_IITAX_SPEC)
-    pol.implement_reform(CREDIT_CLAIMING)
     rec = taxcalc.Records(
         data=puf,
         start_year=year,
