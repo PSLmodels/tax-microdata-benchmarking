@@ -36,19 +36,13 @@ FILER_MIN_INCOME = {
     2021: 8600,
     2022: 9300,
 }
-EITC_CLAIM_THD = {
-    2021: 1800,  # reduces 2023 EITC from $82.3b to $71.6b, a claim rate of 87%
-    2022: 1600,  # reduces 2023 EITC from $80.5b to $72.0b, a claim rate of 89%
-}
-ACTC_CLAIM_THD = {
-    2021: 0,  # always leave 2021 value at zero
-    2022: 1500,
-}
 CPS_FILER_MIN_INCOME = FILER_MIN_INCOME[TAXYEAR]
-CREDIT_CLAIMING = {
-    "eitc_claim_thd": {f"{TAXYEAR}": EITC_CLAIM_THD[TAXYEAR]},
-    "actc_claim_thd": {f"{TAXYEAR}": ACTC_CLAIM_THD[TAXYEAR]},
-}
+# Tax-Calculator 6.7.0 removed the eitc_claim_thd/actc_claim_thd dollar-
+# threshold parameters and replaced them with eitc_claim_prob_scale/
+# actc_claim_prob_scale, a per-record probabilistic claiming model whose
+# 6.7.0 defaults (1.04 and 1.10) already imply less-than-full claiming.
+# TMD therefore no longer applies an explicit credit-claiming reform and
+# relies on those Tax-Calculator defaults.
 CPS_WEIGHTS_SCALE = {2021: 1.0, 2022: 1.0}  # for scaling CPS nonfiler weights
 
 # parameters used in creation of national sampling weights:
