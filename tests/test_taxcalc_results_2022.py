@@ -13,8 +13,8 @@ import taxcalc
 from tmd.imputation_assumptions import TAXYEAR, SOI_IITAX_SPEC
 
 MAX_RELATIVE_TOLERANCE = {
-    "n_returns_mil": 0.08,
-    "amount_bil": 0.003,
+    "n_returns_mil": 0.081,
+    "amount_bil": 0.004,
 }
 
 

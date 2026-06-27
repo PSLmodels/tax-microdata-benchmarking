@@ -34,16 +34,10 @@ CPS_LONG_TERM_CAPGAIN_FRACTION = 0.880  # from SOI 2012 data
 # parameters used to identify CPS nonfilers:
 FILER_MIN_INCOME = {
     2021: 8600,
-    2022: 9300,
+    2022: 9900,
 }
 CPS_FILER_MIN_INCOME = FILER_MIN_INCOME[TAXYEAR]
-# Tax-Calculator 6.7.0 removed the eitc_claim_thd/actc_claim_thd dollar-
-# threshold parameters and replaced them with eitc_claim_prob_scale/
-# actc_claim_prob_scale, a per-record probabilistic claiming model whose
-# 6.7.0 defaults (1.04 and 1.10) already imply less-than-full claiming.
-# TMD therefore no longer applies an explicit credit-claiming reform and
-# relies on those Tax-Calculator defaults.
-CPS_WEIGHTS_SCALE = {2021: 1, 2022: 1.017}  # for scaling CPS nonfiler weights
+CPS_WEIGHTS_SCALE = {2021: 1.0, 2022: 1.0}  # for scaling CPS nonfiler weights
 
 # parameters used in creation of national sampling weights:
 REWEIGHT_MULTIPLIER_MIN = 0.1
