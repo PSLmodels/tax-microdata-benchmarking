@@ -24,7 +24,7 @@ def test_population(tmd_variables):
     # to December 1, 2026 (NA-EST2025-POP)" table which is at this URL:
     # https://www.census.gov/data/tables/time-series/demo/popest/
     #         2020s-national-total.html
-    r_tol = 0.001
+    r_tol = 0.0001
     assert abs(pop / exp_pop[TAXYEAR] - 1) < r_tol, (
         f"{TAXYEAR} population ({pop:.2f}) not within {(r_tol * 100):.1f}% "
         f"of expected {exp_pop[TAXYEAR]:.2f} million"

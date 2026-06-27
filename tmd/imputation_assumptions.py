@@ -43,7 +43,7 @@ CPS_FILER_MIN_INCOME = FILER_MIN_INCOME[TAXYEAR]
 # 6.7.0 defaults (1.04 and 1.10) already imply less-than-full claiming.
 # TMD therefore no longer applies an explicit credit-claiming reform and
 # relies on those Tax-Calculator defaults.
-CPS_WEIGHTS_SCALE = {2021: 1.0, 2022: 1.0}  # for scaling CPS nonfiler weights
+CPS_WEIGHTS_SCALE = {2021: 1, 2022: 1.017}  # for scaling CPS nonfiler weights
 
 # parameters used in creation of national sampling weights:
 REWEIGHT_MULTIPLIER_MIN = 0.1
