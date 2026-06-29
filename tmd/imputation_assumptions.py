@@ -34,21 +34,9 @@ CPS_LONG_TERM_CAPGAIN_FRACTION = 0.880  # from SOI 2012 data
 # parameters used to identify CPS nonfilers:
 FILER_MIN_INCOME = {
     2021: 8600,
-    2022: 9300,
-}
-EITC_CLAIM_THD = {
-    2021: 1800,  # reduces 2023 EITC from $82.3b to $71.6b, a claim rate of 87%
-    2022: 1600,  # reduces 2023 EITC from $80.5b to $72.0b, a claim rate of 89%
-}
-ACTC_CLAIM_THD = {
-    2021: 0,  # always leave 2021 value at zero
-    2022: 1500,
+    2022: 9900,
 }
 CPS_FILER_MIN_INCOME = FILER_MIN_INCOME[TAXYEAR]
-CREDIT_CLAIMING = {
-    "eitc_claim_thd": {f"{TAXYEAR}": EITC_CLAIM_THD[TAXYEAR]},
-    "actc_claim_thd": {f"{TAXYEAR}": ACTC_CLAIM_THD[TAXYEAR]},
-}
 CPS_WEIGHTS_SCALE = {2021: 1.0, 2022: 1.0}  # for scaling CPS nonfiler weights
 
 # parameters used in creation of national sampling weights:

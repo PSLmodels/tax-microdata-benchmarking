@@ -7,7 +7,7 @@ auto_loan_interest.
 import numpy as np
 import pytest
 import taxcalc
-from tmd.imputation_assumptions import TAXYEAR, SOI_IITAX_SPEC, CREDIT_CLAIMING
+from tmd.imputation_assumptions import TAXYEAR, SOI_IITAX_SPEC
 from tests.conftest import create_tmd_records
 
 
@@ -55,9 +55,9 @@ def test_obbba_deduction_tax_benefits(
             # https://taxpolicycenter.org/taxvox/
             #         budget-laws-tax-cuts-overtime-and-
             #         tips-are-popular-few-will-benefit
-            "exp_totben_2022": 23.71,
-            "exp_affpct_2022": 8.56,
-            "exp_affben_2022": 1413,
+            "exp_totben_2022": 24.47,
+            "exp_affpct_2022": 8.95,
+            "exp_affben_2022": 1398,
         },
         "TIP": {  # new OBBBA tip income deduction
             "reform_dict": {"TipIncomeDed_c": {simyear: 0}},
@@ -72,9 +72,9 @@ def test_obbba_deduction_tax_benefits(
             # https://taxpolicycenter.org/taxvox/
             #         budget-laws-tax-cuts-overtime-and-
             #         tips-are-popular-few-will-benefit
-            "exp_totben_2022": 7.11,
-            "exp_affpct_2022": 2.59,
-            "exp_affben_2022": 1401,
+            "exp_totben_2022": 7.31,
+            "exp_affpct_2022": 2.68,
+            "exp_affben_2022": 1397,
         },
         "ALI": {  # new OBBBA auto loan interest deduction
             "reform_dict": {"AutoLoanInterestDed_c": {simyear: 0}},
@@ -87,9 +87,9 @@ def test_obbba_deduction_tax_benefits(
             # because the Tax Policy Center did not provide any
             # statistics for this new deduction.  However, see the
             # following reform analysis for FOUR reforms.
-            "exp_totben_2022": 7.87,
-            "exp_affpct_2022": 12.28,
-            "exp_affben_2022": 327,
+            "exp_totben_2022": 8.05,
+            "exp_affpct_2022": 12.87,
+            "exp_affben_2022": 319,
         },
         "ALL": {  # above three deductions plus new OBBBA senior deduction
             "reform_dict": {
@@ -107,9 +107,9 @@ def test_obbba_deduction_tax_benefits(
             # https://taxpolicycenter.org/model-estimates/T25-0257
             # Note that the $1081 TPC estimate is derived by dividing
             # the all-unit average of $320 by the 0.296 affpct.
-            "exp_totben_2022": 58.97,
-            "exp_affpct_2022": 28.24,
-            "exp_affben_2022": 1065,
+            "exp_totben_2022": 60.14,
+            "exp_affpct_2022": 29.19,
+            "exp_affben_2022": 1054,
         },
     }
     output_variables = [
@@ -125,7 +125,6 @@ def test_obbba_deduction_tax_benefits(
     # create baseline_sim Calculator object for simyear and get its output
     pol = taxcalc.Policy()
     pol.implement_reform(SOI_IITAX_SPEC)
-    pol.implement_reform(CREDIT_CLAIMING)
     baseline_sim = taxcalc.Calculator(policy=pol, records=recs)
     baseline_sim.advance_to_year(simyear)
     baseline_sim.calc_all()
@@ -143,7 +142,6 @@ def test_obbba_deduction_tax_benefits(
         # create reform Calculator object for simyear
         reform_policy = taxcalc.Policy()
         reform_policy.implement_reform(SOI_IITAX_SPEC)
-        reform_policy.implement_reform(CREDIT_CLAIMING)
         reform_policy.implement_reform(info["reform_dict"])
         reform_sim = taxcalc.Calculator(policy=reform_policy, records=recs)
         reform_sim.advance_to_year(simyear)
