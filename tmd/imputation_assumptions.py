@@ -34,7 +34,7 @@ CPS_LONG_TERM_CAPGAIN_FRACTION = 0.880  # from SOI 2012 data
 # parameters used to identify CPS nonfilers:
 FILER_MIN_INCOME = {
     2021: 8600,
-    2022: 9900,
+    2022: 9990,
 }
 CPS_FILER_MIN_INCOME = FILER_MIN_INCOME[TAXYEAR]
 CPS_WEIGHTS_SCALE = {2021: 1.0, 2022: 1.0}  # for scaling CPS nonfiler weights
