@@ -10,7 +10,7 @@ setup(
         "numpy",
         "pandas>=3.0.2",
         "clarabel",
-        "scikit-learn",
+        "scikit-learn==1.8.0",
         "scipy",
         "xlrd",
         "openpyxl",
