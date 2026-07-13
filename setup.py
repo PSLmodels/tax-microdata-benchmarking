@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="tmd",
-    version="2.1.3",
+    version="2.1.4",
     packages=find_packages(),
     python_requires=">=3.11,<3.14",
     install_requires=[
@@ -10,7 +10,7 @@ setup(
         "numpy",
         "pandas>=3.0.2",
         "clarabel",
-        "scikit-learn==1.8.0",
+        "scikit-learn>=1.9.0",
         "scipy",
         "xlrd",
         "openpyxl",
