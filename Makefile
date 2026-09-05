@@ -11,6 +11,7 @@ install:
 .PHONY=clean
 clean:
 	rm -f tmd/storage/output/tmd*
+	rm -f tmd/storage/output/growfactors.csv
 	rm -f tmd/storage/output/cached*
 	rm -f tmd/storage/output/preimpute_tmd.csv.gz
 	rm -f tmd/storage/output/make_data_*.log
@@ -39,8 +40,10 @@ tmd/storage/output/tmd_weights.csv.gz:
 	    | tee tmd/storage/output/make_data_weights.log
 
 tmd/storage/output/tmd_growfactors.csv:
+	python -u tmd/create_raw_growth_factors.py 2>&1 \
+	    | tee tmd/storage/output/make_data_raw_growfactors.log
 	python -u tmd/create_taxcalc_growth_factors.py 2>&1 \
-	    | tee tmd/storage/output/make_data_growfactors.log
+	    | tee tmd/storage/output/make_data_tmd_growfactors.log
 
 tmd/storage/output/cached_files:
 	python -u tmd/create_taxcalc_cached_files.py 2>&1 \
@@ -69,6 +72,8 @@ test: tmd_files
 
 .PHONY=data
 data: install clean format lint tmd_files test warnings
+	diff tmd/storage/output/growfactors.csv tmd/storage/output/old_growfactors.csv
+	diff tmd/storage/output/tmd_growfactors.csv tmd/storage/output/old_tmd_growfactors.csv
 
 .PHONY=warnings
 warnings:

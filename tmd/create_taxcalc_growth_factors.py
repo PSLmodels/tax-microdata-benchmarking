@@ -19,11 +19,7 @@ ACGNS_INDEX = 13
 ASOCSEC_INDEX = 14
 AUCOMP_INDEX = 15
 
-INPUT_FILE = {
-    2021: "taxdata25_growfactors.csv",
-    2022: "taxdata26_growfactors.csv",
-}
-INFILE = STORAGE_FOLDER / "input" / INPUT_FILE[TAXYEAR]
+INFILE = STORAGE_FOLDER / "output" / "growfactors.csv"
 OUTFILE = STORAGE_FOLDER / "output" / "tmd_growfactors.csv"
 
 
