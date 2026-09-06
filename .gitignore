@@ -9,6 +9,8 @@
 tmd/storage/output/cached_files
 tmd/storage/output/tax_expenditures
 !tmd/storage/input/*.csv
+!tmd/growfactors/data/*.csv
+!tmd/growfactors/docs/*.csv
 !tmd/areas/targets/*.csv
 !tmd/areas/prepare/data/soi_cds/*.csv
 !tmd/areas/prepare/recipes/*.csv
