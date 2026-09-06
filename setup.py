@@ -24,4 +24,13 @@ setup(
         "pytest",
         "pytest-xdist",
     ],
+    extras_require={
+        # Needed only by the annual growth-factors source-data refresh
+        # scripts in tmd/growfactors/update, which are never run by
+        # `make data`.  See tmd/growfactors/docs/annual_update.md.
+        "growfactors-update": [
+            "requests_html",
+            "jinja2",
+        ],
+    },
 )
