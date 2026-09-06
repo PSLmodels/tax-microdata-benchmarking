@@ -64,6 +64,7 @@ tmd_files: tmd/storage/output/tmd.csv.gz \
 test: tmd_files
 	pytest . -v -n4 \
 	    --ignore=tests/national_targets_pipeline \
+	    --ignore=tests/growfactors_pipeline \
 	    --ignore=tests/test_fingerprint.py \
 	    --ignore=tests/test_state_weight_results.py \
 	    --ignore=tests/test_cd_crosswalk.py \
