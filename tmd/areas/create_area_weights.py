@@ -58,13 +58,13 @@ from scipy.sparse import (
 )
 
 from tmd.areas import AREAS_FOLDER
-from tmd.imputation_assumptions import POPULATION_FILE, TAXYEAR
+from tmd.imputation_assumptions import TAXYEAR
 from tmd.storage import STORAGE_FOLDER
+from tmd.utils.weight_growth import cumulative_growth
 
 FIRST_YEAR = TAXYEAR
 LAST_YEAR = 2034
 INFILE_PATH = STORAGE_FOLDER / "output" / "tmd.csv.gz"
-POPFILE_PATH = STORAGE_FOLDER / "input" / POPULATION_FILE
 TAXCALC_AGI_CACHE = STORAGE_FOLDER / "output" / "cached_c00100.npy"
 CACHED_ALLVARS_PATH = STORAGE_FOLDER / "output" / "cached_allvars.csv"
 
@@ -923,19 +923,17 @@ def create_area_weights_file(
     if not write_file:
         return 0
 
-    # write area weights file with population extrapolation
+    # write area weights file, extrapolated the same way as the national
+    # weights in tmd/create_taxcalc_sampling_weights.py so that area
+    # weights stay consistent with national weights in every year
     w0 = pop_share * vdf.s006.values
     wght_area = x_opt * w0
 
-    with open(POPFILE_PATH, "r", encoding="utf-8") as pf:
-        pop = yaml.safe_load(pf.read())
+    growth = cumulative_growth(FIRST_YEAR, LAST_YEAR)
 
-    wdict = {f"WT{FIRST_YEAR}": wght_area}
-    cum_pop_growth = 1.0
-    for year in range(FIRST_YEAR + 1, LAST_YEAR + 1):
-        annual_pop_growth = pop[year] / pop[year - 1]
-        cum_pop_growth *= annual_pop_growth
-        wdict[f"WT{year}"] = wght_area * cum_pop_growth
+    wdict = {}
+    for year in range(FIRST_YEAR, LAST_YEAR + 1):
+        wdict[f"WT{year}"] = wght_area * growth[year]
 
     wdf = pd.DataFrame.from_dict(wdict)
     wdf.to_csv(

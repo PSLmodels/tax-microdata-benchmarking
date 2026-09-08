@@ -317,15 +317,19 @@ def _time_of_newest_other_dependency():
     """
     from tmd.areas import AREAS_FOLDER
     from tmd.storage import STORAGE_FOLDER
-    from tmd.imputation_assumptions import POPULATION_FILE
+    from tmd.imputation_assumptions import POPULATION_FILE, RETURNS_FILE
+    from tmd.utils import weight_growth
 
     deps = [
         AREAS_FOLDER / "create_area_weights.py",
+        Path(weight_growth.__file__),
         STORAGE_FOLDER / "output" / "tmd.csv.gz",
         STORAGE_FOLDER / "output" / "tmd_weights.csv.gz",
         STORAGE_FOLDER / "output" / "tmd_growfactors.csv",
         STORAGE_FOLDER / "input" / POPULATION_FILE,
     ]
+    if RETURNS_FILE:
+        deps.append(STORAGE_FOLDER / "input" / RETURNS_FILE)
     return max(dpath.stat().st_mtime for dpath in deps)
 
 

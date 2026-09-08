@@ -59,11 +59,20 @@ ALI_convert_zero_prob = {2021: 0.060, 2022: 0.060}
 ALI_scale = {2021: 4.0, 2022: 4.0}
 
 # population projection file used to extrapolate TAXYEAR sampling weights
+# beyond the last year covered by the tax return projection file
 POP_FILE = {
     2021: "cbo25_population.yaml",
     2022: "cbo26_population.yaml",
 }
 POPULATION_FILE = POP_FILE[TAXYEAR]
+
+# tax return projection file used to extrapolate TAXYEAR sampling weights;
+# None means the weights grow with population in every year
+RET_FILE = {
+    2021: None,
+    2022: "cbo26_returns.yaml",
+}
+RETURNS_FILE = RET_FILE[TAXYEAR]
 
 # Tax-Calculator reform dictionary to produce SOI statistics
 SOI_IITAX_SPEC = {"soi_iitax": {2013: True}}
