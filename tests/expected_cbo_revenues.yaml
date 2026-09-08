@@ -1,0 +1,62 @@
+# Expected calendar-year aggregate individual income tax revenue for each
+# year in the 2022 through 2035 range.
+#
+# DATA SOURCE
+#   CBO, "The Budget and Economic Outlook: 2026 to 2036," supplemental
+#   data file 51138-2026-02-Revenue.xlsx (publication 61882), sheet
+#   "3.Individual Income Tax Details", February 2026.
+#   https://www.cbo.gov/publication/61882
+#   This is the same workbook and the same sheet that underlie
+#   tests/expected_cbo_levels_2022_data.yaml.
+#
+# DEFINITIONS
+#   iitax_bil       : "Individual income tax liability" line
+#                     = "Income tax after credits" + "Net investment
+#                       income tax".  Calendar-year liability in
+#                       billions of dollars.  Matches TaxCalc `iitax`,
+#                       which also equals income tax after credits
+#                       plus NIIT.
+#                     This is NOT the fiscal-year "Individual income tax
+#                       receipts" line (the MTS-derived cash-receipts
+#                       figure, which also includes Form 1041, Form
+#                       1042, refund-netting, and FY-vs-CY timing --
+#                       see issue #502).
+#
+# COMPARABILITY NOTE
+#   CBO's individual income tax microsimulation model is built on the
+#   same SOI 2022 PUF (Pub. 1304) sample that underlies TMD.  Both
+#   sides are calendar-year, 1040-universe liability -- apples to
+#   apples.  The 2022 actual matches TMD essentially exactly.
+#
+#   Per the sheet's own column headings, only 2022 is an actual; every
+#   later year is a projection under CBO's February 2026 baseline,
+#   which reflects law in effect at that time.
+
+2022:  # actual
+  iitax_bil: 2149.6
+2023:  # projected
+  iitax_bil: 2171.9
+2024:  # projected
+  iitax_bil: 2408.4
+2025:  # projected
+  iitax_bil: 2493.7
+2026:  # projected
+  iitax_bil: 2665.0
+2027:  # projected
+  iitax_bil: 2776.8
+2028:  # projected
+  iitax_bil: 2860.0
+2029:  # projected
+  iitax_bil: 3039.1
+2030:  # projected
+  iitax_bil: 3196.7
+2031:  # projected
+  iitax_bil: 3310.2
+2032:  # projected
+  iitax_bil: 3452.3
+2033:  # projected
+  iitax_bil: 3599.4
+2034:  # projected
+  iitax_bil: 3760.4
+2035:  # projected
+  iitax_bil: 3929.3
