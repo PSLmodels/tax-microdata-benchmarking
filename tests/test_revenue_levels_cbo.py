@@ -38,13 +38,20 @@ DUMP = False  # if True, always fail with full output table
     reason="expected values are calibrated to TAXYEAR=2022",
 )
 def test_revenue_levels_cbo(
-    tests_folder, tmd_variables, tmd_weights_path, tmd_growfactors_path
+    tests_folder,
+    tmd_variables,
+    tmd_weights_path,
+    tmd_growfactors_path,
+    policy_growfactors_path,
 ):
     epath = tests_folder / "expected_cbo_levels_2022_data.yaml"
     with open(epath, "r", encoding="utf-8") as f:
         exp = yaml.safe_load(f)
 
-    pol = taxcalc.Policy()
+    policy_gf = taxcalc.GrowFactors(
+        growfactors_filename=str(policy_growfactors_path)
+    )
+    pol = taxcalc.Policy(gfactor=policy_gf)
     pol.implement_reform(SOI_IITAX_SPEC)
     rec = taxcalc.Records(
         data=tmd_variables,

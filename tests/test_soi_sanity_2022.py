@@ -82,14 +82,20 @@ def _soi_target(soi_df, variable, count):
 
 
 def test_soi_sanity_2022(
-    tmd_variables, tmd_weights_path, tmd_growfactors_path
+    tmd_variables,
+    tmd_weights_path,
+    tmd_growfactors_path,
+    policy_growfactors_path,
 ):
     """Five weighted 2022 totals from TMD within 1% of SOI targets."""
     # Run TaxCalc at TAXYEAR to obtain c00100 (AGI) and iitax. e00200,
     # e26270, and s006 are available directly on the input frame but
     # using the post-calc_all arrays keeps one consistent source for
     # all five aggregates.
-    pol = taxcalc.Policy()
+    policy_gf = taxcalc.GrowFactors(
+        growfactors_filename=str(policy_growfactors_path)
+    )
+    pol = taxcalc.Policy(gfactor=policy_gf)
     pol.implement_reform(SOI_IITAX_SPEC)
     recs = taxcalc.Records(
         data=tmd_variables,

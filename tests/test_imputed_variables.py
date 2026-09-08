@@ -16,6 +16,7 @@ def test_obbba_deduction_tax_benefits(
     tmd_variables_path,
     tmd_weights_path,
     tmd_growfactors_path,
+    policy_growfactors_path,
 ):
     """
     Estimate percent of tax-units affected by each new tax deduction and
@@ -123,7 +124,10 @@ def test_obbba_deduction_tax_benefits(
         growfactors_path=tmd_growfactors_path,
     )
     # create baseline_sim Calculator object for simyear and get its output
-    pol = taxcalc.Policy()
+    policy_gf = taxcalc.GrowFactors(
+        growfactors_filename=str(policy_growfactors_path)
+    )
+    pol = taxcalc.Policy(gfactor=policy_gf)
     pol.implement_reform(SOI_IITAX_SPEC)
     baseline_sim = taxcalc.Calculator(policy=pol, records=recs)
     baseline_sim.advance_to_year(simyear)
@@ -140,7 +144,7 @@ def test_obbba_deduction_tax_benefits(
     tolerance_scale = 1.0
     for ded, info in deductions.items():
         # create reform Calculator object for simyear
-        reform_policy = taxcalc.Policy()
+        reform_policy = taxcalc.Policy(gfactor=policy_gf)
         reform_policy.implement_reform(SOI_IITAX_SPEC)
         reform_policy.implement_reform(info["reform_dict"])
         reform_sim = taxcalc.Calculator(policy=reform_policy, records=recs)
