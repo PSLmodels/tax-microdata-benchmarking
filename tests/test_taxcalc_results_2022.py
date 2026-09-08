@@ -23,13 +23,20 @@ MAX_RELATIVE_TOLERANCE = {
     reason="expected values are calibrated to TAXYEAR=2022",
 )
 def test_taxcalc_results_2022(
-    tests_folder, tmd_variables, tmd_weights_path, tmd_growfactors_path
+    tests_folder,
+    tmd_variables,
+    tmd_weights_path,
+    tmd_growfactors_path,
+    policy_growfactors_path,
 ):
     epath = tests_folder / "expected_taxcalc_results_2022.yaml"
     with open(epath, "r", encoding="utf-8") as f:
         expect = yaml.safe_load(f)
 
-    pol = taxcalc.Policy()
+    policy_gf = taxcalc.GrowFactors(
+        growfactors_filename=str(policy_growfactors_path)
+    )
+    pol = taxcalc.Policy(gfactor=policy_gf)
     pol.implement_reform(SOI_IITAX_SPEC)
     recs = taxcalc.Records(
         data=tmd_variables,
