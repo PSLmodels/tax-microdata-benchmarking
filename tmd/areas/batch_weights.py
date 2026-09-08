@@ -21,12 +21,11 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-import yaml
 from scipy.sparse import csc_matrix
 
 # Module-level globals shared across workers via fork copy-on-write.
 #
-# _WORKER_VDF and _WORKER_POP are loaded ONCE in the parent process
+# _WORKER_VDF is loaded ONCE in the parent process
 # (by _preload_data) before ProcessPoolExecutor forks workers.
 # On Linux, forked children inherit these pages read-only; the OS
 # shares the physical memory until a child writes to it.  This saves
@@ -35,7 +34,6 @@ from scipy.sparse import csc_matrix
 # The remaining globals are per-worker configuration set by
 # _init_worker (called as the executor's initializer).
 _WORKER_VDF = None
-_WORKER_POP = None
 _WORKER_TARGET_DIR = None
 _WORKER_WEIGHT_DIR = None
 _WORKER_MULTIPLIER_MAX = None
@@ -49,17 +47,12 @@ def _preload_data():
     pages copy-on-write. Loading here instead of per-worker avoids
     duplicating ~190 MB × N workers.
     """
-    global _WORKER_VDF, _WORKER_POP
+    global _WORKER_VDF
     if _WORKER_VDF is not None:
         return
-    from tmd.areas.create_area_weights import (
-        POPFILE_PATH,
-        _load_taxcalc_data,
-    )
+    from tmd.areas.create_area_weights import _load_taxcalc_data
 
     _WORKER_VDF = _load_taxcalc_data()
-    with open(POPFILE_PATH, "r", encoding="utf-8") as pf:
-        _WORKER_POP = yaml.safe_load(pf.read())
 
 
 def _init_worker(
@@ -115,6 +108,7 @@ def _solve_one_area(area):
         _read_params,
         _solve_area_qp,
     )
+    from tmd.utils.weight_growth import cumulative_growth
 
     t0 = time.time()
     out = io.StringIO()
@@ -272,13 +266,11 @@ def _solve_one_area(area):
     w0 = pop_share * vdf.s006.values
     wght_area = x_opt * w0
 
-    wdict = {f"WT{FIRST_YEAR}": wght_area}
-    cum_pop_growth = 1.0
-    pop = _WORKER_POP
-    for year in range(FIRST_YEAR + 1, LAST_YEAR + 1):
-        annual_pop_growth = pop[year] / pop[year - 1]
-        cum_pop_growth *= annual_pop_growth
-        wdict[f"WT{year}"] = wght_area * cum_pop_growth
+    growth = cumulative_growth(FIRST_YEAR, LAST_YEAR)
+
+    wdict = {}
+    for year in range(FIRST_YEAR, LAST_YEAR + 1):
+        wdict[f"WT{year}"] = wght_area * growth[year]
 
     wdf = pd.DataFrame.from_dict(wdict)
     awpath = wgt_dir / f"{area}_tmd_weights.csv.gz"
