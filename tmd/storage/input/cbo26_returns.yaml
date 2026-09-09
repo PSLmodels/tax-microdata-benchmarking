@@ -1,0 +1,51 @@
+# Projected number of individual income tax returns (millions) used to
+# extrapolate TAXYEAR sampling weights beyond TAXYEAR.
+#
+# SOURCE: CBO, "The Budget and Economic Outlook: 2026 to 2036," supplemental
+# data file 51138-2026-02-Revenue.xlsx (publication 61882), sheet
+# "3.Individual Income Tax Details", addendum row "Number of returns
+# (millions)", February 2026.
+# URL: https://www.cbo.gov/publication/61882
+#
+# Per the sheet's own footnote l, the count is based on returns filed in
+# 2022 plus estimates of future additional filers, and it includes
+# dependents.  Only 2022 is an actual; every later year is a projection.
+#
+# This is the same workbook, sheet, and row that supply the n_returns_mil
+# values in tests/expected_cbo_levels_2022_data.yaml, and it is the return
+# count that corresponds to the AGI and liability series TMD is compared
+# against in tests/test_tmd_revenues.py.  The 2022, 2026, 2031, and 2036
+# values below match that file exactly.
+#
+# WHY RETURNS RATHER THAN POPULATION
+#   Sampling weights were previously extrapolated by total population
+#   growth (cbo26_population.yaml), which holds returns per capita fixed
+#   at its TAXYEAR value.  CBO projects returns growing about twice as
+#   fast as population -- +11.9% versus +5.9% over 2022-2036 -- because
+#   the share of the population that files continues to rise.  Using
+#   population growth therefore made aggregate AGI and income tax
+#   revenue fall progressively further below CBO's projections after
+#   TAXYEAR, reaching -5.1% on revenue by 2035, even though TMD's AGI
+#   per return and tax per dollar of AGI both track CBO within one
+#   percent throughout.
+#
+# EXTRAPOLATION BEYOND THE LAST YEAR
+#   This file ends in 2036, the last year of the CBO projection, while
+#   sampling weights extend to TAXYEAR+53.  After 2036 the weights grow
+#   at the rate of population growth, which holds returns per capita
+#   fixed at its 2036 level.  See tmd/utils/weight_growth.py.
+2022: 161.3  # actual
+2023: 164.7  # projected
+2024: 167.1
+2025: 168.0
+2026: 169.5
+2027: 170.8
+2028: 172.1
+2029: 173.2
+2030: 174.3
+2031: 175.8
+2032: 176.9
+2033: 177.9
+2034: 178.8
+2035: 179.7
+2036: 180.5

@@ -10,6 +10,11 @@ Comparisons (all tax units, year 2022):
 import yaml
 import pytest
 import taxcalc
+from tmd.storage import (
+    POLICY_GROWFACTORS_PATH,
+    TMD_GROWFACTORS_PATH,
+    TMD_WEIGHTS_PATH,
+)
 from tmd.imputation_assumptions import TAXYEAR, SOI_IITAX_SPEC
 
 MAX_RELATIVE_TOLERANCE = {
@@ -22,28 +27,22 @@ MAX_RELATIVE_TOLERANCE = {
     TAXYEAR != 2022,
     reason="expected values are calibrated to TAXYEAR=2022",
 )
-def test_taxcalc_results_2022(
-    tests_folder,
-    tmd_variables,
-    tmd_weights_path,
-    tmd_growfactors_path,
-    policy_growfactors_path,
-):
+def test_taxcalc_results_2022(tests_folder, tmd_variables):
     epath = tests_folder / "expected_taxcalc_results_2022.yaml"
     with open(epath, "r", encoding="utf-8") as f:
         expect = yaml.safe_load(f)
 
     policy_gf = taxcalc.GrowFactors(
-        growfactors_filename=str(policy_growfactors_path)
+        growfactors_filename=str(POLICY_GROWFACTORS_PATH)
     )
     pol = taxcalc.Policy(gfactor=policy_gf)
     pol.implement_reform(SOI_IITAX_SPEC)
     recs = taxcalc.Records(
         data=tmd_variables,
         start_year=TAXYEAR,
-        weights=str(tmd_weights_path),
+        weights=str(TMD_WEIGHTS_PATH),
         gfactors=taxcalc.GrowFactors(
-            growfactors_filename=str(tmd_growfactors_path)
+            growfactors_filename=str(TMD_GROWFACTORS_PATH)
         ),
         adjust_ratios=None,
         exact_calculations=True,

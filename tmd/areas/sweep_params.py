@@ -18,14 +18,12 @@ import time
 from concurrent.futures import ProcessPoolExecutor, as_completed
 
 import numpy as np
-import yaml
 
 from tmd.areas.create_area_weights import (
     AREA_CONSTRAINT_TOL,
     AREA_MAX_ITER,
     AREA_MULTIPLIER_MIN,
     AREA_SLACK_PENALTY,
-    POPFILE_PATH,
     STATE_TARGET_DIR,
     _build_constraint_matrix,
     _drop_impossible_targets,
@@ -45,17 +43,14 @@ NUM_WORKERS = 8
 
 # Module-level cache
 _VDF = None
-_POP = None
 
 
 def _init():
     """Load data once."""
-    global _VDF, _POP  # pylint: disable=global-statement
+    global _VDF  # pylint: disable=global-statement
     if _VDF is not None:
         return
     _VDF = _load_taxcalc_data()
-    with open(POPFILE_PATH, "r", encoding="utf-8") as pf:
-        _POP = yaml.safe_load(pf.read())
 
 
 def _solve_one(args):

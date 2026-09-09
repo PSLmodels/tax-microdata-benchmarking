@@ -7,17 +7,18 @@ auto_loan_interest.
 import numpy as np
 import pytest
 import taxcalc
+from tmd.storage import (
+    POLICY_GROWFACTORS_PATH,
+    TMD_GROWFACTORS_PATH,
+    TMD_VARIABLES_PATH,
+    TMD_WEIGHTS_PATH,
+)
 from tmd.imputation_assumptions import TAXYEAR, SOI_IITAX_SPEC
 from tests.conftest import create_tmd_records
 
 
 @pytest.mark.obbba_deduction
-def test_obbba_deduction_tax_benefits(
-    tmd_variables_path,
-    tmd_weights_path,
-    tmd_growfactors_path,
-    policy_growfactors_path,
-):
+def test_obbba_deduction_tax_benefits():
     """
     Estimate percent of tax-units affected by each new tax deduction and
     average size of the 2026 dollar effect among those affected.
@@ -56,7 +57,7 @@ def test_obbba_deduction_tax_benefits(
             # https://taxpolicycenter.org/taxvox/
             #         budget-laws-tax-cuts-overtime-and-
             #         tips-are-popular-few-will-benefit
-            "exp_totben_2022": 24.42,
+            "exp_totben_2022": 24.86,
             "exp_affpct_2022": 8.78,
             "exp_affben_2022": 1423,
         },
@@ -73,7 +74,7 @@ def test_obbba_deduction_tax_benefits(
             # https://taxpolicycenter.org/taxvox/
             #         budget-laws-tax-cuts-overtime-and-
             #         tips-are-popular-few-will-benefit
-            "exp_totben_2022": 7.19,
+            "exp_totben_2022": 7.32,
             "exp_affpct_2022": 2.64,
             "exp_affben_2022": 1397,
         },
@@ -88,7 +89,7 @@ def test_obbba_deduction_tax_benefits(
             # because the Tax Policy Center did not provide any
             # statistics for this new deduction.  However, see the
             # following reform analysis for FOUR reforms.
-            "exp_totben_2022": 8.14,
+            "exp_totben_2022": 8.28,
             "exp_affpct_2022": 12.84,
             "exp_affben_2022": 324,
         },
@@ -108,7 +109,7 @@ def test_obbba_deduction_tax_benefits(
             # https://taxpolicycenter.org/model-estimates/T25-0257
             # Note that the $1081 TPC estimate is derived by dividing
             # the all-unit average of $320 by the 0.296 affpct.
-            "exp_totben_2022": 60.07,
+            "exp_totben_2022": 61.15,
             "exp_affpct_2022": 28.97,
             "exp_affben_2022": 1061,
         },
@@ -119,13 +120,13 @@ def test_obbba_deduction_tax_benefits(
     ]
     # create Tax-Calculator Records object
     recs = create_tmd_records(
-        data_path=tmd_variables_path,
-        weights_path=tmd_weights_path,
-        growfactors_path=tmd_growfactors_path,
+        data_path=TMD_VARIABLES_PATH,
+        weights_path=TMD_WEIGHTS_PATH,
+        growfactors_path=TMD_GROWFACTORS_PATH,
     )
     # create baseline_sim Calculator object for simyear and get its output
     policy_gf = taxcalc.GrowFactors(
-        growfactors_filename=str(policy_growfactors_path)
+        growfactors_filename=str(POLICY_GROWFACTORS_PATH)
     )
     pol = taxcalc.Policy(gfactor=policy_gf)
     pol.implement_reform(SOI_IITAX_SPEC)

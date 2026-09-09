@@ -8,32 +8,16 @@ For Tax-Calculator results generated when using these TMD input files,
 see [this
 folder](https://github.com/PSLmodels/Tax-Calculator/tree/master/taxcalc/cli/input_data_tests).
 
-The **current TMD version is 2.1.4**, which was released on July 13,
-2026, and is the same as TMD version 2.1.3 except that a new version
-of `scikit-learn` (1.9.0), which fixed a bug in its weighted imputation
-algorithm, is used (see #534 for details).  Tax-Calculator version 6.8.1
-or higher is required to generate the TMD files.
+The **current TMD version is 2.2.0**, which was released on September
+9, 2026, and is the same as TMD version 2.1.4 except that post-2022
+weights are grown using a CBO returns projection (rather than using a
+CBO population projection as in prior versions).  See PR #546 for details.
 
-When using version 2.1.4 to generate **sub-national weights**, there
-will be (presumably small) differences from the sub-national weights
-generated using earlier versions.  Note that the 118th Congressional
-district weight fingerprints have not yet been updated.
-
-The earlier TMD 2.0.0 version introduced the following significant
-improvements:
-- generate national, state, and Congressional district, input files
-for **2022**:
-[#470](https://github.com/PSLmodels/tax-microdata-benchmarking/pull/470)
-[#471](https://github.com/PSLmodels/tax-microdata-benchmarking/pull/471)
-[#472](https://github.com/PSLmodels/tax-microdata-benchmarking/pull/472)
-[#473](https://github.com/PSLmodels/tax-microdata-benchmarking/pull/473)
-[#474](https://github.com/PSLmodels/tax-microdata-benchmarking/pull/474)
-- improve the selection of CPS tax units to represent nonfilers:
-[#438](https://github.com/PSLmodels/tax-microdata-benchmarking/pull/438)
-- vastly improve the reweighting algorithm:
-[#416](https://github.com/PSLmodels/tax-microdata-benchmarking/pull/416)
-- impute values for three variables used in new OBBBA deductions:
-[#397](https://github.com/PSLmodels/tax-microdata-benchmarking/pull/397)
+When using version 2.2.0 to generate national or sub-national weights,
+the 2022 weights (and hence, the fingerprints) are the same as for
+version 2.1.4.  However, all the post-2022 weights are larger.  Note
+that the 118th Congressional district weight fingerprints have not
+been updated.
 
 ## Usage instructions
 
