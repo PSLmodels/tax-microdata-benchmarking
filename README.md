@@ -12,7 +12,9 @@ The **current TMD version is 2.2.0**, which was released on September
 9, 2026, and is the same as the prior TMD version 2.1.4 except that
 post-2022 weights are extrapolated using a CBO returns projection
 (rather than using a CBO population projection as in prior versions).
-See PR #546 for details.
+See [PR
+546](https://github.com/PSLmodels/tax-microdata-benchmarking/pull/546)
+for details.
 
 When using version 2.2.0 to generate national or sub-national weights,
 the 2022 weights (and hence, the fingerprints) are the same as for the
