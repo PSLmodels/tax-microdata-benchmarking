@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 import taxcalc
-from tmd.storage import STORAGE_FOLDER
+from tmd.storage import STORAGE_FOLDER, POLICY_GROWFACTORS_PATH
 from tmd.imputation_assumptions import (
     SOI_IITAX_SPEC,
     CPS_FILER_MIN_INCOME,
@@ -356,7 +356,10 @@ def _is_tax_filer(tcdf: pd.DataFrame, taxyear: int) -> pd.Series:
         exact_calculations=True,
         weights_scale=1.0,
     )
-    pol = taxcalc.Policy()
+    policy_gf = taxcalc.GrowFactors(
+        growfactors_filename=str(POLICY_GROWFACTORS_PATH)
+    )
+    pol = taxcalc.Policy(gfactor=policy_gf)
     pol.implement_reform(SOI_IITAX_SPEC)
     calc = taxcalc.Calculator(records=rec, policy=pol)
     calc.advance_to_year(taxyear)

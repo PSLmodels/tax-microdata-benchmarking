@@ -7,6 +7,7 @@ import pathlib
 import numpy as np
 import pandas as pd
 import taxcalc
+from tmd.storage import POLICY_GROWFACTORS_PATH
 from tmd.imputation_assumptions import SOI_IITAX_SPEC
 
 
@@ -46,7 +47,10 @@ def add_taxcalc_outputs(
         exact_calculations=True,
         weights_scale=1.0,
     )
-    pol = taxcalc.Policy()
+    policy_gf = taxcalc.GrowFactors(
+        growfactors_filename=str(POLICY_GROWFACTORS_PATH)
+    )
+    pol = taxcalc.Policy(gfactor=policy_gf)
     pol.implement_reform(SOI_IITAX_SPEC)
     if reform:
         pol.implement_reform(reform)
