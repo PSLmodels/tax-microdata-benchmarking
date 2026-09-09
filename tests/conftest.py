@@ -7,7 +7,7 @@ import pytest
 import numpy as np
 import pandas as pd
 import taxcalc
-from tmd.storage import STORAGE_FOLDER
+from tmd.storage import TMD_VARIABLES_PATH
 from tmd.imputation_assumptions import TAXYEAR
 
 # convert all numpy floating-point execeptions into errors
@@ -50,24 +50,4 @@ def tests_folder():
 
 @pytest.fixture(scope="session")
 def tmd_variables():
-    return pd.read_csv(STORAGE_FOLDER / "output" / "tmd.csv.gz")
-
-
-@pytest.fixture(scope="session")
-def tmd_variables_path():
-    return STORAGE_FOLDER / "output" / "tmd.csv.gz"
-
-
-@pytest.fixture(scope="session")
-def tmd_weights_path():
-    return STORAGE_FOLDER / "output" / "tmd_weights.csv.gz"
-
-
-@pytest.fixture(scope="session")
-def tmd_growfactors_path():
-    return STORAGE_FOLDER / "output" / "tmd_growfactors.csv"
-
-
-@pytest.fixture(scope="session")
-def policy_growfactors_path():
-    return STORAGE_FOLDER / "output" / "growfactors.csv"
+    return pd.read_csv(TMD_VARIABLES_PATH)

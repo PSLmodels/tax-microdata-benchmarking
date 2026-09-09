@@ -18,6 +18,11 @@ import yaml
 import pytest
 import taxcalc
 
+from tmd.storage import (
+    POLICY_GROWFACTORS_PATH,
+    TMD_GROWFACTORS_PATH,
+    TMD_WEIGHTS_PATH,
+)
 from tmd.imputation_assumptions import TAXYEAR, SOI_IITAX_SPEC
 
 # Per-year relative tolerance for all three aggregates.
@@ -37,19 +42,13 @@ DUMP = False  # if True, always fail with full output table
     TAXYEAR != 2022,
     reason="expected values are calibrated to TAXYEAR=2022",
 )
-def test_revenue_levels_cbo(
-    tests_folder,
-    tmd_variables,
-    tmd_weights_path,
-    tmd_growfactors_path,
-    policy_growfactors_path,
-):
+def test_revenue_levels_cbo(tests_folder, tmd_variables):
     epath = tests_folder / "expected_cbo_levels_2022_data.yaml"
     with open(epath, "r", encoding="utf-8") as f:
         exp = yaml.safe_load(f)
 
     policy_gf = taxcalc.GrowFactors(
-        growfactors_filename=str(policy_growfactors_path)
+        growfactors_filename=str(POLICY_GROWFACTORS_PATH)
     )
     pol = taxcalc.Policy(gfactor=policy_gf)
     pol.implement_reform(SOI_IITAX_SPEC)
@@ -57,9 +56,9 @@ def test_revenue_levels_cbo(
         data=tmd_variables,
         start_year=TAXYEAR,
         gfactors=taxcalc.GrowFactors(
-            growfactors_filename=str(tmd_growfactors_path)
+            growfactors_filename=str(TMD_GROWFACTORS_PATH)
         ),
-        weights=str(tmd_weights_path),
+        weights=str(TMD_WEIGHTS_PATH),
         adjust_ratios=None,
         exact_calculations=True,
         weights_scale=1.0,

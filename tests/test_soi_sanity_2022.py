@@ -48,7 +48,12 @@ S-corp check that was previously in ``test_misc.py`` with a loose
 import pandas as pd
 import taxcalc
 
-from tmd.storage import STORAGE_FOLDER
+from tmd.storage import (
+    STORAGE_FOLDER,
+    POLICY_GROWFACTORS_PATH,
+    TMD_GROWFACTORS_PATH,
+    TMD_WEIGHTS_PATH,
+)
 from tmd.imputation_assumptions import TAXYEAR, SOI_IITAX_SPEC
 
 SOI_YEAR = 2022
@@ -81,28 +86,23 @@ def _soi_target(soi_df, variable, count):
     return float(rows["Value"].iloc[0])
 
 
-def test_soi_sanity_2022(
-    tmd_variables,
-    tmd_weights_path,
-    tmd_growfactors_path,
-    policy_growfactors_path,
-):
+def test_soi_sanity_2022(tmd_variables):
     """Five weighted 2022 totals from TMD within 1% of SOI targets."""
     # Run TaxCalc at TAXYEAR to obtain c00100 (AGI) and iitax. e00200,
     # e26270, and s006 are available directly on the input frame but
     # using the post-calc_all arrays keeps one consistent source for
     # all five aggregates.
     policy_gf = taxcalc.GrowFactors(
-        growfactors_filename=str(policy_growfactors_path)
+        growfactors_filename=str(POLICY_GROWFACTORS_PATH)
     )
     pol = taxcalc.Policy(gfactor=policy_gf)
     pol.implement_reform(SOI_IITAX_SPEC)
     recs = taxcalc.Records(
         data=tmd_variables,
         start_year=TAXYEAR,
-        weights=str(tmd_weights_path),
+        weights=str(TMD_WEIGHTS_PATH),
         gfactors=taxcalc.GrowFactors(
-            growfactors_filename=str(tmd_growfactors_path)
+            growfactors_filename=str(TMD_GROWFACTORS_PATH)
         ),
         adjust_ratios=None,
         exact_calculations=True,

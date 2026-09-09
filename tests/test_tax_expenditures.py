@@ -5,7 +5,11 @@ against expected tax expenditure values in the tests folder.
 
 import pytest
 import numpy as np
-from tmd.storage import STORAGE_FOLDER
+from tmd.storage import (
+    STORAGE_FOLDER,
+    TMD_GROWFACTORS_PATH,
+    TMD_WEIGHTS_PATH,
+)
 from tmd.imputation_assumptions import TAXYEAR
 from tmd.utils.tax_expenditures import get_tax_expenditure_results
 
@@ -14,15 +18,13 @@ from tmd.utils.tax_expenditures import get_tax_expenditure_results
 def test_tax_exp_diffs(
     tests_folder,
     tmd_variables,
-    tmd_weights_path,
-    tmd_growfactors_path,
 ):
     _ = get_tax_expenditure_results(
         tmd_variables,
         TAXYEAR,  # input variables data year
         2023,  # simulation year for tax expenditure estimates
-        tmd_weights_path,
-        tmd_growfactors_path,
+        TMD_WEIGHTS_PATH,
+        TMD_GROWFACTORS_PATH,
     )
     act_path = STORAGE_FOLDER / "output" / "tax_expenditures"
     with open(act_path, "r", encoding="utf-8") as actfile:
