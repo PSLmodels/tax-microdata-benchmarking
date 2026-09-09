@@ -9,13 +9,14 @@ see [this
 folder](https://github.com/PSLmodels/Tax-Calculator/tree/master/taxcalc/cli/input_data_tests).
 
 The **current TMD version is 2.2.0**, which was released on September
-9, 2026, and is the same as TMD version 2.1.4 except that post-2022
-weights are grown using a CBO returns projection (rather than using a
-CBO population projection as in prior versions).  See PR #546 for details.
+9, 2026, and is the same as the prior TMD version 2.1.4 except that
+post-2022 weights are extrapolated using a CBO returns projection
+(rather than using a CBO population projection as in prior versions).
+See PR #546 for details.
 
 When using version 2.2.0 to generate national or sub-national weights,
-the 2022 weights (and hence, the fingerprints) are the same as for
-version 2.1.4.  However, all the post-2022 weights are larger.  Note
+the 2022 weights (and hence, the fingerprints) are the same as for the
+prior version.  However, all the post-2022 weights are larger.  Note
 that the 118th Congressional district weight fingerprints have not
 been updated.
 
