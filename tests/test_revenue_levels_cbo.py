@@ -28,9 +28,9 @@ from tmd.imputation_assumptions import TAXYEAR, SOI_IITAX_SPEC
 # Per-year relative tolerance for all three aggregates.
 RELTOL = {
     2022: 0.01,
-    2026: 0.02,
-    2031: 0.05,
-    2036: 0.06,
+    2026: 0.01,
+    2031: 0.01,
+    2036: 0.01,
 }
 
 VARIABLES = ("n_returns_mil", "agi_bil", "iitax_bil")
