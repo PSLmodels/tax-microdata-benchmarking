@@ -10,8 +10,8 @@ install:
 
 .PHONY=clean
 clean:
-	rm -f tmd/storage/output/tmd*
 	rm -f tmd/storage/output/growfactors.csv
+	rm -f tmd/storage/output/tmd*
 	rm -f tmd/storage/output/cached*
 	rm -f tmd/storage/output/preimpute_tmd.csv.gz
 	rm -f tmd/storage/output/make_data_*.log
