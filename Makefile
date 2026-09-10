@@ -10,8 +10,8 @@ install:
 
 .PHONY=clean
 clean:
-	rm -f tmd/storage/output/tmd*
 	rm -f tmd/storage/output/growfactors.csv
+	rm -f tmd/storage/output/tmd*
 	rm -f tmd/storage/output/cached*
 	rm -f tmd/storage/output/preimpute_tmd.csv.gz
 	rm -f tmd/storage/output/make_data_*.log
@@ -80,8 +80,6 @@ test: tmd_files
 
 .PHONY=data
 data: install clean format lint tmd_files test warnings
-	diff tmd/storage/output/growfactors.csv tmd/storage/output/old_growfactors.csv
-	diff tmd/storage/output/tmd_growfactors.csv tmd/storage/output/old_tmd_growfactors.csv
 
 .PHONY=warnings
 warnings:

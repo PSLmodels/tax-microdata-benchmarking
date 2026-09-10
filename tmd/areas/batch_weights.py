@@ -308,16 +308,21 @@ def _time_of_newest_other_dependency():
     invalidate cached area-weight files.
     """
     from tmd.areas import AREAS_FOLDER
-    from tmd.storage import STORAGE_FOLDER
+    from tmd.storage import (
+        STORAGE_FOLDER,
+        TMD_VARIABLES_PATH,
+        TMD_WEIGHTS_PATH,
+        TMD_GROWFACTORS_PATH,
+    )
     from tmd.imputation_assumptions import POPULATION_FILE, RETURNS_FILE
     from tmd.utils import weight_growth
 
     deps = [
         AREAS_FOLDER / "create_area_weights.py",
         Path(weight_growth.__file__),
-        STORAGE_FOLDER / "output" / "tmd.csv.gz",
-        STORAGE_FOLDER / "output" / "tmd_weights.csv.gz",
-        STORAGE_FOLDER / "output" / "tmd_growfactors.csv",
+        TMD_VARIABLES_PATH,
+        TMD_WEIGHTS_PATH,
+        TMD_GROWFACTORS_PATH,
         STORAGE_FOLDER / "input" / POPULATION_FILE,
     ]
     if RETURNS_FILE:

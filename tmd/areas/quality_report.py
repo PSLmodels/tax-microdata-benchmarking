@@ -789,9 +789,9 @@ def _load_report_data(areas, weight_dir):
     Returns (tmd, s006, state_weights, n_loaded) or None if
     no weight files found.
     """
-    from tmd.storage import STORAGE_FOLDER
+    from tmd.storage import STORAGE_FOLDER, TMD_VARIABLES_PATH
 
-    tmd_path = STORAGE_FOLDER / "output" / "tmd.csv.gz"
+    tmd_path = TMD_VARIABLES_PATH
     tmd_cols = [
         "RECID",
         "s006",

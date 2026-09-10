@@ -45,10 +45,10 @@ import pandas as pd
 import pytest
 import taxcalc
 
-from tmd.storage import STORAGE_FOLDER
+from tmd.storage import TMD_VARIABLES_PATH
 from tmd.imputation_assumptions import TAXYEAR
 
-TMD_FILE = STORAGE_FOLDER / "output" / "tmd.csv.gz"
+TMD_FILE = TMD_VARIABLES_PATH
 FINGERPRINT_DIR = Path(__file__).parent / "fingerprints"
 FINGERPRINT_PATH = FINGERPRINT_DIR / "tmd_file_fingerprint.json"
 

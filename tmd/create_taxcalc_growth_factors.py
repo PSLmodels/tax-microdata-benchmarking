@@ -5,7 +5,7 @@ covers the years from FIRST_YEAR through LAST_YEAR.
 
 import pandas as pd
 import numpy as np
-from tmd.storage import STORAGE_FOLDER
+from tmd.storage import POLICY_GROWFACTORS_PATH, TMD_GROWFACTORS_PATH
 from tmd.imputation_assumptions import TAXYEAR
 
 FIRST_YEAR = TAXYEAR
@@ -19,8 +19,8 @@ ACGNS_INDEX = 13
 ASOCSEC_INDEX = 14
 AUCOMP_INDEX = 15
 
-INFILE = STORAGE_FOLDER / "output" / "growfactors.csv"
-OUTFILE = STORAGE_FOLDER / "output" / "tmd_growfactors.csv"
+INFILE = POLICY_GROWFACTORS_PATH
+OUTFILE = TMD_GROWFACTORS_PATH
 
 
 def create_factors_file():

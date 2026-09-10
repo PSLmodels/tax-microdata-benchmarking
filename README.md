@@ -9,7 +9,7 @@ see [this
 folder](https://github.com/PSLmodels/Tax-Calculator/tree/master/taxcalc/cli/input_data_tests).
 
 The **current TMD version is 2.2.0**, which was released on September
-9, 2026, and is the same as the prior TMD version 2.1.4 except that
+10, 2026, and is the same as the prior TMD version 2.1.4 except that
 post-2022 weights are extrapolated using a CBO returns projection
 (rather than using a CBO population projection as in prior versions).
 See [PR

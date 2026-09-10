@@ -59,12 +59,12 @@ from scipy.sparse import (
 
 from tmd.areas import AREAS_FOLDER
 from tmd.imputation_assumptions import TAXYEAR
-from tmd.storage import STORAGE_FOLDER
+from tmd.storage import STORAGE_FOLDER, TMD_VARIABLES_PATH
 from tmd.utils.weight_growth import cumulative_growth
 
 FIRST_YEAR = TAXYEAR
 LAST_YEAR = 2034
-INFILE_PATH = STORAGE_FOLDER / "output" / "tmd.csv.gz"
+INFILE_PATH = TMD_VARIABLES_PATH
 TAXCALC_AGI_CACHE = STORAGE_FOLDER / "output" / "cached_c00100.npy"
 CACHED_ALLVARS_PATH = STORAGE_FOLDER / "output" / "cached_allvars.csv"
 

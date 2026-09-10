@@ -3,7 +3,7 @@ Construct raw growfactors.csv, a Tax-Calculator-style GrowFactors file.
 """
 
 import pandas as pd
-from tmd.storage import STORAGE_FOLDER
+from tmd.storage import STORAGE_FOLDER, POLICY_GROWFACTORS_PATH
 from tmd.imputation_assumptions import TAXYEAR
 
 INPUT_FILE = {
@@ -11,7 +11,7 @@ INPUT_FILE = {
     2022: "taxdata26_growfactors.csv",
 }
 INFILE = STORAGE_FOLDER / "input" / INPUT_FILE[TAXYEAR]
-OUTFILE = STORAGE_FOLDER / "output" / "growfactors.csv"
+OUTFILE = POLICY_GROWFACTORS_PATH
 
 
 def create_raw_factors_file():
