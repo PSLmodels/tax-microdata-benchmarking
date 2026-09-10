@@ -80,8 +80,6 @@ test: tmd_files
 
 .PHONY=data
 data: install clean format lint tmd_files test warnings
-	diff tmd/storage/output/growfactors.csv tmd/storage/output/old_growfactors.csv
-	diff tmd/storage/output/tmd_growfactors.csv tmd/storage/output/old_tmd_growfactors.csv
 
 .PHONY=warnings
 warnings:

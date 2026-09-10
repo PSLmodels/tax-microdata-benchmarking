@@ -21,10 +21,14 @@ from tmd.imputation_assumptions import (
     ALI_convert_zero_prob,
     ALI_scale,
 )
-from tmd.storage import STORAGE_FOLDER
+from tmd.storage import (
+    STORAGE_FOLDER,
+    TMD_VARIABLES_PATH,
+    TMD_GROWFACTORS_PATH,
+)
 from tmd.utils.mice import MICE
 
-TMD_PATH = STORAGE_FOLDER / "output" / "tmd.csv.gz"
+TMD_PATH = TMD_VARIABLES_PATH
 TMD_YEAR = TAXYEAR
 SIPP_PATH = STORAGE_FOLDER / "input" / "SIPP24" / "pu2024.csv.gz"
 SIPP_YEAR = 2023  # 2024 SIPP data contain calandar year 2023 information
@@ -36,7 +40,6 @@ CEX_FILES = [
     "fmli241.csv.gz",
 ]
 CEX_YEAR = 2023
-TMD_GROWFACTORS_PATH = STORAGE_FOLDER / "output" / "tmd_growfactors.csv"
 
 
 def growfactor(name: str, year1: int, year2: int) -> float:

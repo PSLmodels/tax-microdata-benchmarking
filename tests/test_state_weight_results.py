@@ -15,7 +15,6 @@ Run after:
 # pylint: disable=redefined-outer-name  # pytest fixture pattern
 
 import io
-from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -31,6 +30,7 @@ from tmd.areas.create_area_weights import (
 )
 from tmd.areas.prepare.constants import ALL_STATES
 from tmd.imputation_assumptions import TAXYEAR
+from tmd.storage import STORAGE_FOLDER, TMD_VARIABLES_PATH
 
 # Skip entire module if weight files haven't been generated
 _WEIGHT_FILES = list(STATE_WEIGHT_DIR.glob("*_tmd_weights.csv.gz"))
@@ -40,10 +40,10 @@ pytestmark = pytest.mark.skipif(
 )
 
 # Also need cached data files for target accuracy checks
-_CACHED = Path(__file__).parent.parent / "tmd" / "storage" / "output"
-_HAS_CACHED = (_CACHED / "tmd.csv.gz").exists() and (
-    _CACHED / "cached_c00100.npy"
-).exists()
+_CACHED = STORAGE_FOLDER / "output"
+_HAS_CACHED = (
+    TMD_VARIABLES_PATH.exists() and (_CACHED / "cached_c00100.npy").exists()
+)
 
 
 class TestStateWeightFiles:

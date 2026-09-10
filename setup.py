@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="tmd",
-    version="2.1.4",
+    version="2.2.0",
     packages=find_packages(),
     python_requires=">=3.12,<3.15",
     install_requires=[

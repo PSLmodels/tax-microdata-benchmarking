@@ -5,14 +5,14 @@ create_taxcalc_input_variable.py script.
 """
 
 import pandas as pd
-from tmd.storage import STORAGE_FOLDER
+from tmd.storage import TMD_VARIABLES_PATH, TMD_WEIGHTS_PATH
 from tmd.imputation_assumptions import TAXYEAR
 from tmd.utils.weight_growth import cumulative_growth
 
 FIRST_YEAR = TAXYEAR
 LAST_YEAR = TAXYEAR + 53
-VARFILE = STORAGE_FOLDER / "output" / "tmd.csv.gz"
-WGTFILE = STORAGE_FOLDER / "output" / "tmd_weights.csv.gz"
+VARFILE = TMD_VARIABLES_PATH
+WGTFILE = TMD_WEIGHTS_PATH
 
 
 def create_weights_file():

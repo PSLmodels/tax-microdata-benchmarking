@@ -9,12 +9,15 @@ from tmd.storage import (
     STORAGE_FOLDER,
     CACHED_TAXCALC_VARIABLES,
     POLICY_GROWFACTORS_PATH,
+    TMD_VARIABLES_PATH,
+    TMD_WEIGHTS_PATH,
+    TMD_GROWFACTORS_PATH,
 )
 from tmd.imputation_assumptions import TAXYEAR, SOI_IITAX_SPEC
 
-INFILE_PATH = STORAGE_FOLDER / "output" / "tmd.csv.gz"
-WTFILE_PATH = STORAGE_FOLDER / "output" / "tmd_weights.csv.gz"
-GFFILE_PATH = STORAGE_FOLDER / "output" / "tmd_growfactors.csv"
+INFILE_PATH = TMD_VARIABLES_PATH
+WTFILE_PATH = TMD_WEIGHTS_PATH
+GFFILE_PATH = TMD_GROWFACTORS_PATH
 
 
 def create_cached_files():

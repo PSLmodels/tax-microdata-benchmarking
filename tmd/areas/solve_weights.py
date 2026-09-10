@@ -215,10 +215,10 @@ def _compute_exhaustion(weight_dir):
 
     Returns (exhaustion_array, state_weights_dict).
     """
-    from tmd.storage import STORAGE_FOLDER
+    from tmd.storage import TMD_VARIABLES_PATH
 
     s006 = pd.read_csv(
-        STORAGE_FOLDER / "output" / "tmd.csv.gz",
+        TMD_VARIABLES_PATH,
         usecols=["s006"],
     )["s006"].values
     n = len(s006)
@@ -251,14 +251,14 @@ def _write_exhaustion_caps(
 
     Returns list of affected area codes.
     """
-    from tmd.storage import STORAGE_FOLDER
+    from tmd.storage import TMD_VARIABLES_PATH
 
     s006 = pd.read_csv(
-        STORAGE_FOLDER / "output" / "tmd.csv.gz",
+        TMD_VARIABLES_PATH,
         usecols=["s006"],
     )["s006"].values
     nat_pop = pd.read_csv(
-        STORAGE_FOLDER / "output" / "tmd.csv.gz",
+        TMD_VARIABLES_PATH,
         usecols=["s006", "XTOT"],
     )
     nat_pop = (nat_pop["s006"] * nat_pop["XTOT"]).sum()

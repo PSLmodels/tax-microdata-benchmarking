@@ -13,7 +13,7 @@ from tmd.imputation_assumptions import (
     W2_WAGES_RATIO,
     CPS_WEIGHTS_SCALE,
 )
-from tmd.storage import STORAGE_FOLDER
+from tmd.storage import STORAGE_FOLDER, TMD_VARIABLES_PATH
 
 DUMP_ALL_UNROUNDED_VARIABLES = False
 
@@ -59,7 +59,7 @@ def create_variable_file(write_file=True):
         vdf[var] = vdf[f"{var}p"] + vdf[f"{var}s"]
     # write input-variables-only dataframe to CSV-formatted file
     if write_file:
-        fname = STORAGE_FOLDER / "output" / "tmd.csv.gz"
+        fname = TMD_VARIABLES_PATH
         print(f"Writing PUF+CPS file... [{fname}]")
         vdf.to_csv(fname, index=False, float_format="%.5f")
 
