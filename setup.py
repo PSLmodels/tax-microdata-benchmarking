@@ -2,11 +2,11 @@ from setuptools import setup, find_packages
 
 setup(
     name="tmd",
-    version="2.2.0",
+    version="2.2.1",
     packages=find_packages(),
     python_requires=">=3.12,<3.15",
     install_requires=[
-        "taxcalc>=6.8.1",
+        "taxcalc>=6.8.4",
         "numpy",
         "pandas>=3.0.2",
         "clarabel",
