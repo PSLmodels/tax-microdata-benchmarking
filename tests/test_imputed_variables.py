@@ -58,8 +58,8 @@ def test_obbba_deduction_tax_benefits():
             #         budget-laws-tax-cuts-overtime-and-
             #         tips-are-popular-few-will-benefit
             "exp_totben_2022": 24.86,
-            "exp_affpct_2022": 8.78,
-            "exp_affben_2022": 1423,
+            "exp_affpct_2022": 8.80,
+            "exp_affben_2022": 1420,
         },
         "TIP": {  # new OBBBA tip income deduction
             "reform_dict": {"TipIncomeDed_c": {simyear: 0}},
@@ -89,8 +89,8 @@ def test_obbba_deduction_tax_benefits():
             # because the Tax Policy Center did not provide any
             # statistics for this new deduction.  However, see the
             # following reform analysis for FOUR reforms.
-            "exp_totben_2022": 8.28,
-            "exp_affpct_2022": 12.84,
+            "exp_totben_2022": 8.22,
+            "exp_affpct_2022": 12.78,
             "exp_affben_2022": 324,
         },
         "ALL": {  # above three deductions plus new OBBBA senior deduction
@@ -109,7 +109,7 @@ def test_obbba_deduction_tax_benefits():
             # https://taxpolicycenter.org/model-estimates/T25-0257
             # Note that the $1081 TPC estimate is derived by dividing
             # the all-unit average of $320 by the 0.296 affpct.
-            "exp_totben_2022": 61.15,
+            "exp_totben_2022": 61.09,
             "exp_affpct_2022": 28.97,
             "exp_affben_2022": 1061,
         },
