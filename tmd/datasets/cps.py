@@ -666,7 +666,7 @@ def create_taxcalc_cps(taxyear: int) -> (pd.DataFrame, pd.Series):
             renames[variable] = variable.upper()
         elif variable.lower() in taxcalc_variable_metadata["read"]:
             renames[variable] = variable.lower()
-    tcdf.rename(columns=renames, inplace=True)
+    tcdf.columns = [renames.get(col, col) for col in tcdf.columns]
 
     # drop tax units with zero weight
     nonzero_wt = tcdf["s006"] > 0

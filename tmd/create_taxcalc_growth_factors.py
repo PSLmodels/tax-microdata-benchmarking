@@ -34,7 +34,7 @@ def create_factors_file():
 
     # drop gfdf rows before FIRST_YEAR
     drop_row_index_list = range(0, FIRST_YEAR - first_puf_year)
-    gfdf.drop(drop_row_index_list, inplace=True)
+    gfdf = gfdf.drop(drop_row_index_list)
 
     # set all FIRST_YEAR growfactors to one
     gfdf.iloc[0, 1:] = 1.0

@@ -507,7 +507,7 @@ def create_taxcalc_puf(taxyear: int) -> pd.DataFrame:
             renames[variable] = variable.upper()
         elif variable.lower() in taxcalc_variable_metadata["read"]:
             renames[variable] = variable.lower()
-    tcdf.rename(columns=renames, inplace=True)
+    tcdf = tcdf.rename(columns=renames)
 
     # return the Tax-Calculator DataFrame
     return tcdf
