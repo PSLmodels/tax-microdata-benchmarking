@@ -8,11 +8,10 @@ For Tax-Calculator results generated when using these TMD input files,
 see [this
 folder](https://github.com/PSLmodels/Tax-Calculator/tree/master/taxcalc/cli/input_data_tests).
 
-The **current TMD version is 2.2.2**, which was released on October
-13, 2026, and is the same as the prior TMD version 2.2.1 except for
-minor changes in the generated `tmd.csv.gz` and `tmd_weights.csv.gz`
-files caused by the bug fixes in Tax-Calculator 6.8.5 version.
-See PR #553 for details on the minor changes in TMD test results.
+The **current TMD version is 2.2.3**, which was released on October
+28, 2026, and is the same as the prior TMD version 2.2.2 except that
+it requires Tax-Calculator 6.9.0 or later.
+See PR #554 for details.
 
 Note that the state fingerprints have been updated, but the
 Congressional district fingerprints have not been updated since

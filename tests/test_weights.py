@@ -45,15 +45,15 @@ def test_weights(tmd_variables):
         },
         "tmd2022": {
             "n": 215406,
-            "total": 189292164.1,
-            "mean": 878.7733,
-            "sdev": 1088.892,
+            "total": 189298377.1,
+            "mean": 878.7981,
+            "sdev": 1088.950,
             "min": 0.10804,
             "p25": 21.7881,
             "p50": 396.865,
             "p75": 1437.48,
             "max": 16580.30,
-            "sum_sq": 421747343556.86,
+            "sum_sq": 421785944775.49,
         },
     }
     # all float stats checked with np.allclose defaults
