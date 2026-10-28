@@ -271,7 +271,7 @@ def update_socsec(url, baseline, text_args):
     cost_data["cost"] = cost_data["cost"].astype(float)
     # rate we'll use to extrapolate costs to final year we'll need
     pct_change = cost_data["cost"].pct_change() + 1
-    cost_data.set_index("year", inplace=True)
+    cost_data = cost_data.set_index("year")
     cost_data = cost_data.transpose()
     cost_data.index = ["SOCSEC"]
     # create values for years not included in the report

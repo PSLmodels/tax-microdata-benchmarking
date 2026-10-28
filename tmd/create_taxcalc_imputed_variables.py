@@ -49,7 +49,7 @@ def growfactor(name: str, year1: int, year2: int) -> float:
     assert year1 <= year2
     columns_to_read = ["YEAR", name]
     gfdf = pd.read_csv(TMD_GROWFACTORS_PATH, usecols=columns_to_read)
-    gfdf.set_index("YEAR", inplace=True)
+    gfdf = gfdf.set_index("YEAR")
     cgf = 1.0
     for year in range(year1 + 1, year2 + 1):
         cgf *= gfdf.loc[year, name]
@@ -364,7 +364,7 @@ def read_cex_for_imputation() -> pd.DataFrame:
     del xdf
     cdf["age"] = pd.to_numeric(cdf["age"], errors="coerce")
     cdf["mars2"] = np.where(cdf["marital_status"] == 1, 1, 0)
-    cdf.drop(columns=["marital_status"], inplace=True)
+    cdf = cdf.drop(columns=["marital_status"])
     cdf["income"] = (
         pd.to_numeric(cdf["income"], errors="coerce")
         .fillna(0.0)
@@ -424,16 +424,16 @@ def read_tmd_for_cex_imputation(column_order: list[str]) -> pd.DataFrame:
     used_cols = core_needed_vars + income_components
     udf = pd.read_csv(TMD_PATH, usecols=used_cols)
     # rename some variables
-    udf.rename(columns={"s006": "weight", "age_head": "age"}, inplace=True)
+    udf = udf.rename(columns={"s006": "weight", "age_head": "age"})
     # construct mars2 variable
     udf["mars2"] = np.where(udf["MARS"] == 2, 1, 0)
-    udf.drop(columns=["MARS"], inplace=True)
+    udf = udf.drop(columns=["MARS"])
     # construct income variable and drop income components
     income = np.zeros_like(udf["RECID"])
     for icomp in income_components:
         income += udf[icomp].to_numpy()
     udf["income"] = np.round(np.clip(income, 0.0, np.inf)).astype("int64")
-    udf.drop(columns=income_components, inplace=True)
+    udf = udf.drop(columns=income_components)
     # specify auto_loan_interest as missing
     udf["auto_loan_interest"] = np.nan
     # return udf dataframe using specified column_order
@@ -691,8 +691,8 @@ def create_augmented_file(
 
     # apply tmd_udf imputed values to whole TMD dataframe, all_udf
     all_udf = pd.read_csv(TMD_PATH)
-    all_udf.sort_values(by="RECID", inplace=True)
-    tmd_udf.sort_values(by="RECID", inplace=True)
+    all_udf = all_udf.sort_values(by="RECID")
+    tmd_udf = tmd_udf.sort_values(by="RECID")
     all_udf["overtime_income"] = (
         tmd_udf["overtime_income"].round(0).astype("int32")
     )
@@ -769,8 +769,8 @@ def create_augmented_file(
         print(f"ALI:I:wt_ALI($B)= {((wght * ali).sum() * 1e-9): .3f}")
 
     # apply tmd_udf imputed values to whole TMD dataframe, all_udf
-    all_udf.sort_values(by="RECID", inplace=True)
-    tmd_udf.sort_values(by="RECID", inplace=True)
+    all_udf = all_udf.sort_values(by="RECID")
+    tmd_udf = tmd_udf.sort_values(by="RECID")
     all_udf["auto_loan_interest"] = np.round(
         tmd_udf["auto_loan_interest"].to_numpy(), 0
     ).astype("int32")

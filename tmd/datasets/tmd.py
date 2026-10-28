@@ -29,8 +29,8 @@ def create_tmd_dataframe(taxyear: int) -> pd.DataFrame:
     print(f"Adding Tax-Calculator outputs for {taxyear}...")
     combined = add_taxcalc_outputs(combined, taxyear, taxyear)
     # ... drop CPS records with positive income tax amount
-    idx = combined[((combined.data_source == 0) & (combined.iitax > 0))].index
-    combined.drop(idx, inplace=True)
+    drop = (combined.data_source == 0) & (combined.iitax > 0)
+    combined = combined[~drop].copy()
 
     print("Reweighting...")
     combined["s006_original"] = combined["s006"].values

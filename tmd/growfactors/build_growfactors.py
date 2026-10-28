@@ -104,7 +104,7 @@ def benefit_growth_factors(years):
     for year in range(FIRST_DATA_YEAR, FIRST_BENEFIT_YEAR):
         row = pd.DataFrame(data=[ones], columns=GF_BENEFIT_NAMES, index=[year])
         bgf = pd.concat([bgf, row], verify_integrity=True)
-    bgf.sort_index(inplace=True)
+    bgf = bgf.sort_index()
 
     # Pad with rows of ones for any year beyond the last year in
     # benefit_growth_rates.csv.  Without this, benefit factors for those
@@ -145,7 +145,7 @@ def create_growfactors_file(vintage):
         "ABENEFITS",
     ]:
         data[var] = data[var] / pop
-    data.rename(columns={"ABENEFITS": "ABENOTHER"}, inplace=True)
+    data = data.rename(columns={"ABENEFITS": "ABENOTHER"})
 
     # convert factors into "one plus annual proportion change" format
     data = 1.0 + data.pct_change()
