@@ -8,14 +8,14 @@ For Tax-Calculator results generated when using these TMD input files,
 see [this
 folder](https://github.com/PSLmodels/Tax-Calculator/tree/master/taxcalc/cli/input_data_tests).
 
-The **current TMD version is 2.2.3**, which was released on October
-29, 2026, and is the same as the prior TMD version 2.2.2 except that
-it requires Tax-Calculator 6.9.0 or later.
-See PRs #554 and #555 for details.
+The **current TMD version is 2.2.4**, which was released on November
+9, 2026, and is the same as the prior TMD version 2.2.3 except that
+it requires Tax-Calculator 6.9.1 or later for all the tests to pass.
+The three TMD 2.2.4 input data files are identical to the 2.2.2 and
+2.2.3 input data files.  See PR #556 for details on the test changes.
 
-Note that the state fingerprints have been updated, but the
-Congressional district fingerprints have not been updated since
-TMD version 2.2.0 was released.
+Note that both the state and 119th Congressional district fingerprints
+have been updated.
 
 ## Usage instructions
 

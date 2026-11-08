@@ -15,7 +15,7 @@
 #   ACTC = Additional Child Tax Credit (refundable); taxcalc variable "c11070".
 
 eitc:
-  n_returns_mil: 24.09
+  n_returns_mil: 23.72
   amount_bil: 60.07
 
 actc:
